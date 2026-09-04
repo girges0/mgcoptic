@@ -130,13 +130,81 @@
       }
     }
 
+    // حقن أنماط مؤشر التحميل الخاصة بنماذج تسجيل الدخول وإنشاء الحساب
+    if (typeof document !== 'undefined' && !document.getElementById('mg-auth-service-styles')) {
+      const st = document.createElement('style');
+      st.id = 'mg-auth-service-styles';
+      st.textContent = `
+        @keyframes authSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .auth-btn-spinner {
+          animation: authSpin 0.75s linear infinite !important;
+          display: inline-block;
+          vertical-align: middle;
+          flex-shrink: 0;
+        }
+        .auth-btn-loading {
+          opacity: 0.88 !important;
+          cursor: wait !important;
+          pointer-events: none !important;
+        }
+        .auth-status-loading-box {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          background: rgba(107, 21, 48, 0.08) !important;
+          border: 1px solid rgba(168, 130, 58, 0.3) !important;
+          color: var(--madder, #6B1530) !important;
+          font-weight: 700;
+          font-size: 0.88rem;
+          margin-bottom: 14px;
+          box-shadow: 0 2px 8px rgba(36, 27, 18, 0.05);
+          transition: all 0.25s ease;
+        }
+        .auth-status-success-box {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          background: rgba(47, 125, 70, 0.1) !important;
+          border: 1px solid rgba(47, 125, 70, 0.3) !important;
+          color: #2F7D46 !important;
+          font-weight: 700;
+          font-size: 0.88rem;
+          margin-bottom: 14px;
+          transition: all 0.25s ease;
+        }
+        .auth-status-error-box {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          background: rgba(197, 48, 48, 0.08) !important;
+          border: 1px solid rgba(197, 48, 48, 0.3) !important;
+          color: #C53030 !important;
+          font-weight: 700;
+          font-size: 0.88rem;
+          margin-bottom: 14px;
+          transition: all 0.25s ease;
+        }
+      `;
+      document.head.appendChild(st);
+    }
+
     async function handleAuthSubmit(e, explicitMode) {
       if (e && e.preventDefault) e.preventDefault();
-      const form = (e && e.target && e.target.tagName === 'FORM')
-        ? e.target
-        : (e && e.target && e.target.closest ? e.target.closest('form') : document.getElementById('auth-form'));
 
-      const mode = explicitMode || (form ? form.getAttribute('data-auth-mode') : null) || currentAuthMode || 'signin';
+      const form = (e && e.target && e.target.tagName === 'FORM') ? e.target : document.getElementById('auth-form');
+      const mode = explicitMode || (form ? form.getAttribute('data-auth-mode') : null) || currentAuthMode;
 
       const emailEl = (form && (form.querySelector('[name="email"]') || form.querySelector('#auth-email-input'))) || document.getElementById('auth-email-input');
       const passEl = (form && (form.querySelector('[name="password"]') || form.querySelector('#auth-password-input'))) || document.getElementById('auth-password-input');
@@ -150,56 +218,96 @@
 
       const email = emailEl ? emailEl.value.trim() : '';
       const password = passEl ? passEl.value : '';
+      const formInputs = form ? Array.from(form.querySelectorAll('input, button, select')) : [];
 
-      if (statusEl) {
-        statusEl.style.color = 'var(--ink-soft, #5A4A3E)';
-        statusEl.textContent = 'جارٍ المعالجة...';
+      function resetFormUI(errorMsg) {
+        formInputs.forEach(el => { el.disabled = false; });
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('auth-btn-loading');
+          if (submitBtn.dataset.origHtml) submitBtn.innerHTML = submitBtn.dataset.origHtml;
+        }
+        if (statusEl && errorMsg) {
+          statusEl.className = 'auth-status-msg auth-status-error-box';
+          statusEl.innerHTML = `<span>${errorMsg}</span>`;
+        }
       }
-      if (submitBtn) submitBtn.disabled = true;
+
+      if (submitBtn && !submitBtn.dataset.origHtml) {
+        submitBtn.dataset.origHtml = submitBtn.innerHTML;
+      }
+
+      // 1. التحقق من صحة المدخلات
+      if (mode === 'signup') {
+        const firstName = firstNameEl ? firstNameEl.value.trim() : '';
+        const fatherName = fatherNameEl ? fatherNameEl.value.trim() : '';
+
+        if (firstNameEl && !firstName) {
+          resetFormUI('يرجى إدخال الاسم (إجباري).');
+          firstNameEl.focus();
+          return;
+        }
+
+        if (fatherNameEl && !fatherName) {
+          resetFormUI('يرجى إدخال اسم الأب (إجباري).');
+          fatherNameEl.focus();
+          return;
+        }
+
+        if (confirmPassEl && confirmPassEl.value !== password) {
+          resetFormUI('كلمتا المرور غير متطابقتين.');
+          confirmPassEl.focus();
+          return;
+        }
+
+        if (password.length < 6) {
+          resetFormUI('كلمة المرور يجب أن تكون ٦ أحرف على الأقل.');
+          if (passEl) passEl.focus();
+          return;
+        }
+      }
+
+      if (!email) {
+        resetFormUI('يرجى كتابة البريد الإلكتروني.');
+        if (emailEl) emailEl.focus();
+        return;
+      }
+      if (!password) {
+        resetFormUI('يرجى كتابة كلمة المرور.');
+        if (passEl) passEl.focus();
+        return;
+      }
+
+      // 2. إظهار حالة التحميل الفورية التفاعلية (Spinner & Progress)
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('auth-btn-loading');
+        submitBtn.innerHTML = `
+          <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+            <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+              <path d="M12 2a10 10 0 0 1 10 10"></path>
+            </svg>
+            <span>${mode === 'signup' ? 'جارٍ إنشاء الحساب...' : 'جارٍ تسجيل الدخول...'}</span>
+          </span>
+        `;
+      }
+      if (statusEl) {
+        statusEl.className = 'auth-status-msg auth-status-loading-box';
+        statusEl.innerHTML = `
+          <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10"></path>
+          </svg>
+          <span>${mode === 'signup' ? 'جاري تجهيز حسابك وبياناتك السحابية...' : 'جاري التحقق من بيانات الدخول...'}</span>
+        `;
+      }
+      formInputs.forEach(el => { if (el !== submitBtn) el.disabled = true; });
 
       try {
         if (mode === 'signup') {
           const firstName = firstNameEl ? firstNameEl.value.trim() : '';
           const fatherName = fatherNameEl ? fatherNameEl.value.trim() : '';
-
-          if (firstNameEl && !firstName) {
-            if (statusEl) {
-              statusEl.style.color = 'var(--err, #6B1530)';
-              statusEl.textContent = 'يرجى إدخال الاسم (إجباري).';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-            firstNameEl.focus();
-            return;
-          }
-
-          if (fatherNameEl && !fatherName) {
-            if (statusEl) {
-              statusEl.style.color = 'var(--err, #6B1530)';
-              statusEl.textContent = 'يرجى إدخال اسم الأب (إجباري).';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-            fatherNameEl.focus();
-            return;
-          }
-
-          if (confirmPassEl && confirmPassEl.value !== password) {
-            if (statusEl) {
-              statusEl.style.color = 'var(--err, #6B1530)';
-              statusEl.textContent = 'كلمتا المرور غير متطابقتين.';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-            return;
-          }
-
-          if (password.length < 6) {
-            if (statusEl) {
-              statusEl.style.color = 'var(--err, #6B1530)';
-              statusEl.textContent = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-            return;
-          }
-
           let fullName = '';
           if (firstName || fatherName) {
             fullName = (firstName + ' ' + fatherName).trim();
@@ -229,10 +337,9 @@
             const errMsg = String(signErr.message || '').toLowerCase();
             if (errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists')) {
               if (statusEl) {
-                statusEl.style.color = 'var(--madder, #6B1530)';
-                statusEl.textContent = 'هذا البريد الإلكتروني مسجّل مسبقاً! جاري التحويل لتسجيل الدخول...';
+                statusEl.className = 'auth-status-msg auth-status-loading-box';
+                statusEl.innerHTML = `<span>هذا البريد مسجل مسبقاً! جاري نقلك لتسجيل الدخول...</span>`;
               }
-
               if (document.getElementById('auth-modal')) {
                 setTimeout(() => {
                   switchAuthTab('signin');
@@ -243,12 +350,8 @@
                     passInp.value = password;
                     passInp.focus();
                   }
-                  if (statusEl) {
-                    statusEl.style.color = 'var(--ink-soft, #5A4A3E)';
-                    statusEl.textContent = 'أدخل كلمة المرور واضغط "دخول"';
-                  }
-                  if (submitBtn) submitBtn.disabled = false;
-                }, 1100);
+                  resetFormUI('أدخل كلمة المرور واضغط "دخول".');
+                }, 1200);
                 return;
               } else {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -260,6 +363,16 @@
               }
             }
             throw signErr;
+          }
+
+          if (statusEl) {
+            statusEl.innerHTML = `
+              <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                <path d="M12 2a10 10 0 0 1 10 10"></path>
+              </svg>
+              <span>جاري تهيئة الملف الشخصي والاتصال بالسيرفر...</span>
+            `;
           }
 
           // إذا لم تُرجع الاستجابة جلسة مباشرة، تسجيل الدخول فوراً
@@ -276,16 +389,33 @@
             console.warn('Password profile sync notice:', e);
           }
 
+          if (submitBtn) {
+            submitBtn.innerHTML = `
+              <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>تم إنشاء الحساب بنجاح!</span>
+              </span>
+            `;
+          }
           if (statusEl) {
-            statusEl.style.color = '#2F7D46';
-            statusEl.textContent = 'تم إنشاء الحساب وتسجيل الدخول بنجاح!';
+            statusEl.className = 'auth-status-msg auth-status-success-box';
+            statusEl.innerHTML = `
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2F7D46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>أهلاً بك يا ${firstName || fullName}! جاري نقلك إلى المنصة...</span>
+            `;
           }
 
           setTimeout(async () => {
             await initUserSession();
             handlePostAuthSuccess();
-          }, 600);
+          }, 650);
+
         } else {
+          // Sign In
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
 
@@ -298,30 +428,40 @@
             console.warn('Password login sync notice:', e);
           }
 
+          if (submitBtn) {
+            submitBtn.innerHTML = `
+              <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>تم تسجيل الدخول بنجاح!</span>
+              </span>
+            `;
+          }
           if (statusEl) {
-            statusEl.style.color = '#2F7D46';
-            statusEl.textContent = 'تم تسجيل الدخول بنجاح!';
+            statusEl.className = 'auth-status-msg auth-status-success-box';
+            statusEl.innerHTML = `
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2F7D46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>تم تسجيل الدخول بنجاح! جاري التوجيه...</span>
+            `;
           }
 
           setTimeout(async () => {
             await initUserSession();
             handlePostAuthSuccess();
-          }, 500);
+          }, 550);
         }
       } catch (err) {
-        if (statusEl) {
-          statusEl.style.color = '#C53030';
-          let msg = err.message || 'حدث خطأ أثناء المحاولة';
-          const low = msg.toLowerCase();
-          if (low.includes('invalid login credentials')) {
-            msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-          } else if (low.includes('password should be at least')) {
-            msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
-          }
-          statusEl.textContent = msg;
+        let msg = err.message || 'حدث خطأ أثناء المحاولة';
+        const low = msg.toLowerCase();
+        if (low.includes('invalid login credentials')) {
+          msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+        } else if (low.includes('password should be at least')) {
+          msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
         }
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
+        resetFormUI(msg);
       }
     }
 
