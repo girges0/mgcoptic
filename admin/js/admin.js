@@ -1940,7 +1940,7 @@ function previewWritingExercise(id, text, desc) {
 
   activeAdminTracer = new LetterTracer({
     canvasId: canvas,
-    fontUrl: '../assets/fonts/girges.woff',
+    fontUrl: 'assets/fonts/girges.woff',
     text: cleanText,
     passThreshold: 85,
     minCoverageThreshold: 80,

@@ -5207,7 +5207,7 @@ const CurriculumAdminSystem = (function(){
       if(canvasEl && typeof LetterTracer !== 'undefined'){
         window.previewActiveTracer = new LetterTracer({
           canvasId: canvasEl,
-          fontUrl: '../assets/fonts/girges.woff',
+          fontUrl: 'assets/fonts/girges.woff',
           text: cleanTraceText,
           passThreshold: 85,
           minCoverageThreshold: 80,
