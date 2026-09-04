@@ -6481,10 +6481,8 @@
       (quizCatSettingsRes.data || []).forEach(s => { categoryCounts[s.category] = s.questions_count; });
       quizSettings = { categoryCounts };
 
-      if (window.CopticCalendarService && sb) {
-        window.CopticCalendarService.loadFromSupabase(sb).then(() => {
-          if (typeof window.renderCopticCalendar === 'function') window.renderCopticCalendar();
-        });
+      if (typeof window.renderCopticCalendar === 'function') {
+        window.renderCopticCalendar();
       }
 
       const anyError = lettersRes.error || vocabRes.error || grammarRes.error || articlesRes.error || quizRes.error;
@@ -6565,14 +6563,6 @@
           .on('postgres_changes', { event: '*', schema: 'public', table: 'vocabulary' }, () => {
             console.log('⚡ Realtime: تم تحديث الكلمات والمفردات من الداشبورد');
             reloadVocabulary();
-          })
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'coptic_calendar' }, () => {
-            console.log('⚡ Realtime: تم تحديث التقويم القبطي من الداشبورد');
-            if (window.CopticCalendarService) {
-              window.CopticCalendarService.loadFromSupabase(sb).then(() => {
-                if (typeof window.renderCopticCalendar === 'function') window.renderCopticCalendar();
-              });
-            }
           })
           .on('postgres_changes', { event: '*', schema: 'public', table: 'grammar_sections' }, () => {
             console.log('⚡ Realtime: تم تحديث القواعد من الداشبورد');

@@ -144,31 +144,7 @@
     }
 
     async loadFromSupabase(sbClient) {
-      if (!sbClient) return this.months;
-      try {
-        const { data, error } = await sbClient
-          .from('coptic_calendar')
-          .select('id, order_index, name_ar, name_coptic, days_count, audio_url')
-          .order('order_index');
-
-        if (!error && data && data.length >= 12) {
-          this.months = data.map(item => {
-            const def = DEFAULT_COPTIC_MONTHS.find(d => d.order_index === item.order_index) || {};
-            return {
-              id: item.id || def.id,
-              order_index: item.order_index || def.order_index,
-              name_ar: item.name_ar || def.name_ar,
-              name_coptic: item.name_coptic || def.name_coptic,
-              days_count: item.days_count || def.days_count || 30,
-              audio_url: item.audio_url || ''
-            };
-          });
-          this.saveLocalMonths();
-          return this.months;
-        }
-      } catch (err) {
-        console.warn('CopticCalendar: Supabase load notice:', err.message);
-      }
+      // Calendar data runs completely offline and locally without database queries
       return this.months;
     }
 

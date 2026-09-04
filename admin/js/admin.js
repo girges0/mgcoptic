@@ -276,14 +276,13 @@ function switchAdminTab(tab, updateUrl = true) {
     }
   }
 
-  if (tab === 'calendar' && typeof window.loadCalendarMonths === 'function') window.loadCalendarMonths();
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
 }
 window.switchAdminTab = switchAdminTab;
 
 function restoreAdminTabFromHash() {
   const hash = (window.location.hash || '').replace('#', '').trim();
-  const validTabs = ['articles', 'letters', 'vocabulary', 'calendar', 'grammar', 'quizzes', 'users', 'curriculum'];
+  const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'curriculum'];
   if (hash && validTabs.includes(hash)) {
     switchAdminTab(hash, false);
   } else {
@@ -326,7 +325,6 @@ window.addEventListener('hashchange', () => {
 
 async function loadAll(){
   const tasks = [loadLetters(), loadVocabulary(), loadGrammar(), loadArticles(), loadQuizzes()];
-  if(typeof window.loadCalendarMonths === 'function') tasks.push(window.loadCalendarMonths());
   if(typeof loadCurriculumFromSupabase === 'function') tasks.push(loadCurriculumFromSupabase());
   else if(typeof window.loadCurriculumFromSupabase === 'function') tasks.push(window.loadCurriculumFromSupabase());
   if(typeof loadUsers === 'function' && window.currentAdminRole === 'super_admin') tasks.push(loadUsers());
@@ -2146,7 +2144,6 @@ async function deleteRow(table, tr, labelAr, reloadFn, extraUrls){
 /* ============ زر "حفظ كل التعديلات" الثابت ============ */
 const SAVE_ALL_TABLES = [
   { tableId:'table-letters',    fn:saveLetter  },
-  { tableId:'table-calendar',   fn:(tr) => window.saveCalendarRow ? window.saveCalendarRow(tr) : false },
   { tableId:'table-vocabulary', fn:saveVocab   },
   { tableId:'table-grammar',    fn:saveGrammar },
   { tableId:'table-articles',   fn:saveArticle },

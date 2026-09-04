@@ -99,10 +99,6 @@
       <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
       <span>الحروف</span>
     </button>
-    <button class="navlink" data-tab="calendar">
-      <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span>التقويم القبطي</span>
-    </button>
     <button class="navlink" data-tab="grammar">
       <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       <span>القواعد</span>
@@ -150,32 +146,6 @@
           <th style="width:70px">ترتيب</th><th>الحرف</th><th>الاسم</th><th>النطق</th>
           <th>النطق الصوتي</th><th>القيمة العددية</th><th>التسجيل الصوتي</th><th></th>
         </tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <section class="panel" id="panel-calendar">
-      <div class="toolbar">
-        <h2>الشهور القبطية</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn" id="add-calendar-month" style="background:#247B6E;">+ شهر جديد</button>
-          <button class="btn" id="reset-calendar-defaults" style="background:#7A5C58;">استعادة الشهور الافتراضية</button>
-        </div>
-      </div>
-      <p style="margin:-6px 0 14px;color:var(--ink-soft);font-size:.86rem;">
-        يمكنك هنا تعديل جميع شهور السنة القبطية الـ 13 ورفع وتسجيل الأصوات وحفظها بكل سهولة.
-      </p>
-      <table id="table-calendar">
-        <thead>
-          <tr>
-            <th style="width:70px">ترتيب</th>
-            <th>الشهر بالعربي</th>
-            <th>الاسم بالقبطية</th>
-            <th style="width:90px">عدد الأيام</th>
-            <th style="min-width:220px">التسجيل الصوتي</th>
-            <th style="width:80px"></th>
-          </tr>
-        </thead>
         <tbody></tbody>
       </table>
     </section>
@@ -1221,7 +1191,6 @@
 
   <!-- Admin Logic Modules -->
   <script src="js/admin.js"></script>
-  <script src="js/admin-calendar.js"></script>
   <script src="js/curriculum-admin.js"></script>
 </body>
 </html>
