@@ -9,8 +9,7 @@
   const MEDIA_BUCKET = 'media';
 
   // Detect whether we are in the admin portal or user frontend
-  const isAdminEnv = window.location.pathname.includes('/admin/') || 
-                     window.location.pathname.endsWith('admin-dashboard.html');
+  const isAdminEnv = window.location.pathname.includes('/admin/');
 
   const authStorageKey = isAdminEnv ? 'mg_coptic_admin_auth_token' : 'mg_coptic_student_auth_token';
 
