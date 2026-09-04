@@ -106,14 +106,27 @@
       }
     }
 
-    .coptic-symbol {
-      font-family: var(--font-coptic);
-      font-size: 2.5rem;
-      color: var(--madder);
-      font-weight: 800;
-      line-height: 1;
-      display: inline-block;
-      margin-bottom: 4px;
+    .auth-logo-badge {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 10px;
+      border-radius: 16px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(36, 27, 18, 0.08);
+      overflow: hidden;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+
+    .auth-logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .auth-header {
@@ -262,7 +275,9 @@
 
   <div class="auth-card">
     <div class="auth-header">
-      <span class="coptic-symbol">Ⲁ</span>
+      <div class="auth-logo-badge">
+        <img src="assets/images/logo.png" alt="MG COPTIC">
+      </div>
       <h1>إنشاء حساب جديد</h1>
       <p>انضم لرحلة إتقان اللغة القبطية مجانًا</p>
     </div>

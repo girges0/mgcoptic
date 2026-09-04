@@ -406,6 +406,41 @@
       border-radius: 50%;
     }
 
+    .topbar-login-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 14px;
+      height: 38px;
+      font-family: var(--font-display);
+      font-size: .86rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border-radius: 999px;
+      background: var(--madder);
+      color: var(--parchment-card, #FFFDF8);
+      border: 1px solid rgba(168, 130, 58, .35);
+      box-shadow: 0 2px 8px rgba(107, 21, 48, 0.22);
+      cursor: pointer;
+      transition: all .2s ease;
+      box-sizing: border-box;
+      text-decoration: none;
+      line-height: 1.2;
+      outline: none;
+    }
+
+    .topbar-login-btn:hover {
+      background: var(--madder-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.32);
+    }
+
+    .topbar-login-btn:active {
+      transform: scale(0.96);
+    }
+
     /* ============ HOME / HERO (now a swipeable tab-panel) ============ */
     .hero {
       padding: 6px 0 16px;
@@ -2099,6 +2134,13 @@
         flex-shrink: 0;
       }
 
+      .topbar-login-btn {
+        padding: 5px 12px;
+        font-size: 0.82rem;
+        height: 34px;
+        gap: 5px;
+      }
+
       .topbar nav.tabs,
       .map-topbar nav.tabs,
       nav.tabs.desktop-nav-tabs {
@@ -2224,6 +2266,33 @@
         min-width: 35px;
         padding: 1px;
         flex-shrink: 0;
+      }
+
+      .topbar-login-btn {
+        padding: 4px 9px;
+        font-size: 0.78rem;
+        height: 32px;
+        gap: 4px;
+      }
+
+      .brand-text small,
+      .brand-text .brand-sub {
+        display: none !important;
+      }
+    }
+
+    @media (max-width:390px) {
+      .topbar-login-btn {
+        padding: 3px 7px;
+        font-size: 0.74rem;
+        height: 30px;
+        gap: 3px;
+      }
+
+      .topbar-stat-pill,
+      .stat-badge {
+        padding: 2px 5px;
+        font-size: 0.72rem;
       }
     }
 
@@ -5320,9 +5389,14 @@
           </span>
           <span id="topbar-username" style="display:none;">بطل قبطي</span>
         </button>
-        <button type="button" class="btn" id="topbar-login-btn" onclick="openAuthModal('signin')"
-          style="display:none;padding:6px 14px;font-size:.84rem;">
-          <span>تسجيل الدخول</span>
+        <button type="button" class="topbar-login-btn" id="topbar-login-btn" onclick="openAuthModal('signin')"
+          aria-label="تسجيل الدخول">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span class="topbar-login-text">تسجيل الدخول</span>
         </button>
       </div>
     </div>
@@ -7942,7 +8016,7 @@
         if (tbLoginBtn) tbLoginBtn.style.display = 'none';
       } else {
         if (tbAvatar) tbAvatar.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-        if (tbUserChip) tbUserChip.style.display = 'inline-flex';
+        if (tbUserChip) tbUserChip.style.display = 'none';
         if (tbLoginBtn) tbLoginBtn.style.display = 'inline-flex';
       }
 
@@ -10500,7 +10574,9 @@
       <button type="button" onclick="closeAuthModal()"
         style="position:absolute;top:14px;left:14px;border:none;background:none;font-size:1.4rem;cursor:pointer;color:var(--ink-soft);">✕</button>
       <div style="text-align:center;margin-bottom:18px;">
-        <span class="coptic" style="font-size:2.2rem;color:var(--madder);font-weight:800;">Ⲁ</span>
+        <div style="width:64px;height:64px;margin:0 auto 10px;border-radius:16px;background:#FFFDF8;border:1px solid #E7DCC8;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(36,27,18,0.08);overflow:hidden;padding:6px;box-sizing:border-box;">
+          <img src="assets/images/logo.png" alt="MG COPTIC" style="width:100%;height:100%;object-fit:contain;display:block;">
+        </div>
         <h3 id="auth-modal-title"
           style="margin:4px 0 2px 0;font-family:var(--font-display);color:var(--ink);font-size:1.3rem;">تسجيل الدخول
         </h3>
