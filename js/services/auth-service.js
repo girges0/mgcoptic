@@ -141,6 +141,8 @@
       const emailEl = (form && (form.querySelector('[name="email"]') || form.querySelector('#auth-email-input'))) || document.getElementById('auth-email-input');
       const passEl = (form && (form.querySelector('[name="password"]') || form.querySelector('#auth-password-input'))) || document.getElementById('auth-password-input');
       const confirmPassEl = form ? (form.querySelector('[name="confirm_password"]') || form.querySelector('#auth-confirm-password-input')) : null;
+      const firstNameEl = (form && (form.querySelector('[name="first_name"]') || form.querySelector('#auth-firstname-input'))) || document.getElementById('auth-firstname-input');
+      const fatherNameEl = (form && (form.querySelector('[name="father_name"]') || form.querySelector('#auth-fathername-input'))) || document.getElementById('auth-fathername-input');
       const nameEl = (form && (form.querySelector('[name="full_name"]') || form.querySelector('[name="name"]') || form.querySelector('#auth-name-input'))) || document.getElementById('auth-name-input');
       const ageEl = (form && (form.querySelector('[name="age"]') || form.querySelector('#auth-age-input'))) || document.getElementById('auth-age-input');
       const statusEl = (form && (form.querySelector('.auth-status-msg') || form.querySelector('#auth-status-msg'))) || document.getElementById('auth-status-msg');
@@ -157,6 +159,29 @@
 
       try {
         if (mode === 'signup') {
+          const firstName = firstNameEl ? firstNameEl.value.trim() : '';
+          const fatherName = fatherNameEl ? fatherNameEl.value.trim() : '';
+
+          if (firstNameEl && !firstName) {
+            if (statusEl) {
+              statusEl.style.color = 'var(--err, #6B1530)';
+              statusEl.textContent = 'يرجى إدخال الاسم (إجباري).';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            firstNameEl.focus();
+            return;
+          }
+
+          if (fatherNameEl && !fatherName) {
+            if (statusEl) {
+              statusEl.style.color = 'var(--err, #6B1530)';
+              statusEl.textContent = 'يرجى إدخال اسم الأب (إجباري).';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            fatherNameEl.focus();
+            return;
+          }
+
           if (confirmPassEl && confirmPassEl.value !== password) {
             if (statusEl) {
               statusEl.style.color = 'var(--err, #6B1530)';
@@ -175,7 +200,15 @@
             return;
           }
 
-          const fullName = (nameEl && nameEl.value.trim()) || email.split('@')[0];
+          let fullName = '';
+          if (firstName || fatherName) {
+            fullName = (firstName + ' ' + fatherName).trim();
+          } else if (nameEl && nameEl.value.trim()) {
+            fullName = nameEl.value.trim();
+          } else {
+            fullName = email.split('@')[0];
+          }
+
           const age = (ageEl && parseInt(ageEl.value, 10)) || 15;
 
           const { data: signData, error: signErr } = await sb.auth.signUp({
@@ -183,6 +216,8 @@
             password: password,
             options: {
               data: {
+                first_name: firstName,
+                father_name: fatherName,
                 full_name: fullName,
                 age: age,
                 password: password
@@ -233,10 +268,10 @@
             if (logErr) throw logErr;
           }
 
-          // حفظ كلمة المرور في بيانات الحساب لعرضها في لوحة الإدارة
+          // حفظ كلمة المرور والاسم في بيانات الحساب لعرضها في لوحة الإدارة
           try {
             const curU = (signData && signData.user) || (await sb.auth.getUser()).data.user;
-            if (curU) await sb.from('users').update({ password: password }).eq('id', curU.id);
+            if (curU) await sb.from('users').update({ full_name: fullName, password: password }).eq('id', curU.id);
           } catch (e) {
             console.warn('Password profile sync notice:', e);
           }

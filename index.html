@@ -10638,10 +10638,23 @@
 
       <form id="auth-form" onsubmit="handleAuthSubmit(event)">
         <div id="auth-name-group" style="display:none;margin-bottom:12px;">
-          <label style="display:block;font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--ink);">الاسم
-            الكامل</label>
-          <input type="text" id="auth-name-input" class="settings-input" placeholder="اكتب اسمك الثلاثي أو الثنائي..."
-            style="width:100%;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div>
+              <label for="auth-firstname-input" style="display:block;font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--ink);">
+                الاسم <span style="color:var(--madder,#6B1530);">*</span>
+              </label>
+              <input type="text" id="auth-firstname-input" name="first_name" class="settings-input" placeholder="اسمك..."
+                style="width:100%;box-sizing:border-box;">
+            </div>
+            <div>
+              <label for="auth-fathername-input" style="display:block;font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--ink);">
+                اسم الأب <span style="color:var(--madder,#6B1530);">*</span>
+              </label>
+              <input type="text" id="auth-fathername-input" name="father_name" class="settings-input" placeholder="اسم الوالد..."
+                style="width:100%;box-sizing:border-box;">
+            </div>
+          </div>
+          <input type="hidden" id="auth-name-input" name="full_name" value="">
         </div>
 
         <div id="auth-age-group" style="display:none;margin-bottom:12px;">

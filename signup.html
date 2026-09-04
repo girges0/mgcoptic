@@ -283,11 +283,19 @@
     </div>
 
     <form id="auth-form" data-auth-mode="signup" onsubmit="handleAuthSubmit(event, 'signup')">
-      <div class="form-group">
-        <label for="auth-name-input">الاسم الكامل</label>
-        <input type="text" id="auth-name-input" name="full_name" class="settings-input"
-          placeholder="اكتب اسمك الثلاثي أو الثنائي..." required autofocus>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;text-align:right;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="auth-firstname-input">الاسم <span style="color:var(--madder);">*</span></label>
+          <input type="text" id="auth-firstname-input" name="first_name" class="settings-input"
+            placeholder="اسمك..." required autofocus>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="auth-fathername-input">اسم الأب <span style="color:var(--madder);">*</span></label>
+          <input type="text" id="auth-fathername-input" name="father_name" class="settings-input"
+            placeholder="اسم الوالد..." required>
+        </div>
       </div>
+      <input type="hidden" id="auth-name-input" name="full_name" value="">
 
       <div class="form-group">
         <label for="auth-age-input">العمر <span style="font-size:.78rem;font-weight:500;color:var(--ink-soft);">(اختياري)</span></label>
