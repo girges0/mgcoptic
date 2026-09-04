@@ -1,0 +1,135 @@
+/**
+ * MG COPTIC - Minimal Simple Preloader & Error Fallback
+ * Clean, lightweight, ultra-fast
+ */
+
+#mg-preloader {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(251, 248, 241, 0.97);
+  z-index: 99999999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  direction: rtl;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+#mg-preloader.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.mg-simple-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.mg-spinner-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mg-spinner {
+  position: absolute;
+  inset: 0;
+  border: 3.5px solid rgba(107, 21, 48, 0.12);
+  border-top-color: #6B1530;
+  border-right-color: #D4AF37;
+  border-radius: 50%;
+  animation: mgSpin 0.85s linear infinite;
+}
+
+@keyframes mgSpin {
+  to { transform: rotate(360deg); }
+}
+
+.mg-loading-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #6B1530;
+  letter-spacing: 0.3px;
+  animation: mgFadeText 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes mgFadeText {
+  0% { opacity: 0.65; }
+  100% { opacity: 1; }
+}
+
+/* Error Fallback (when loading fails or times out) */
+.mg-loader-error {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+  max-width: 320px;
+}
+
+.mg-loader-error.active {
+  display: flex;
+}
+
+.mg-simple-loader.hidden {
+  display: none;
+}
+
+.mg-error-msg {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #5A4A3E;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.mg-btn-simple-retry {
+  background: #6B1530;
+  color: #FFF;
+  border: none;
+  padding: 8px 22px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(107, 21, 48, 0.2);
+}
+
+.mg-btn-simple-retry:hover {
+  background: #4A0E21;
+  transform: translateY(-1px);
+}
+
+.mg-btn-simple-skip {
+  background: transparent;
+  color: #7A695A;
+  border: none;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+}
+
+.mg-btn-simple-skip:hover {
+  color: #6B1530;
+}

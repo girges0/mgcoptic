@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MG COPTIC — ابدأ رحلتك في تعلم القبطية</title>
+<link rel="icon" type="image/png" href="assets/images/favicon.png">
+<link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
+<meta name="description" content="تدفق الانضمام التفاعلي لمنصة MG Coptic لتعليم اللغة القبطية الكنسية بأسلوب ممتع وشيق.">
+<meta name="theme-color" content="#6B1530">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Noto+Sans+Coptic&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="swal-theme.js"></script>
+<script src="gamification-service.js"></script>
+
+<style>
+  @font-face {
+    font-family: 'girges';
+    src: url('girges.woff') format('woff'),
+         url('assets/fonts/girges.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Coptic Girges';
+    src: url('girges.woff') format('woff'),
+         url('assets/fonts/girges.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root{
+  --parchment: #F3E9D2;        /* الخلفية الأساسية - بيچ/كريمي دافئ */
+  --parchment-soft: #FAF3E4;   /* درجة أفتح للبطاقات والأسطح المرتفعة */
+  --parchment-card: #FAF3E4;   /* أسطح البطاقات */
+  --parchment-2: #E8DCBE;      /* درجة حدود وسطية */
+  --madder: #6B1530;           /* اللون الأساسي - عنابي ملكي غامق (أزرار، عناوين رئيسية) */
+  --madder-light: #8C2438;     /* درجة أفتح من العنابي - للـ hover states */
+  --madder-dark: #4A0E21;      /* عنابي داكن للقواعد والظلال */
+  --gold: #B8892E;             /* اللون الثانوي/التمييز - ذهبي أثري */
+  --gold-light: #D4B96A;       /* ذهبي فاتح - للحدود والخطوط الفاصلة */
+  --gold-pale: #FAF3E4;        /* ذهبي شاحب ناعم */
+  --ink: #2E2018;              /* لون النص الأساسي - بني غامق قريب من الأسود */
+  --ink-soft: #5A4A3E;         /* نص ثانوي/وصفي أقل حدة */
+  --teal: #1A4A4A;
+  --ok: #2E6B3E;
+  --err: #6B1530;
+    --font-display:'Cairo','Tajawal',sans-serif;
+    --font-body:'Tajawal','Cairo',sans-serif;
+    --font-coptic:'girges', 'Coptic Girges', 'Noto Sans Coptic', 'Cairo', serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(168,130,58,.16), transparent 60%),
+      radial-gradient(1000px 520px at 100% 10%, rgba(140,36,48,.10), transparent 55%),
+      radial-gradient(800px 500px at 50% 100%, rgba(168,130,58,.10), transparent 60%),
+      var(--parchment);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.8;
+    overflow-x:hidden;
+  }
+  .coptic{ font-family:var(--font-coptic); }
+
+  /* الرأس العلوي البسيط */
+  header.onboarding-header{
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    max-width:760px;
+    margin:0 auto;
+    width:100%;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:inherit;
+  }
+  .brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:var(--madder);
+    color:var(--gold-pale);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-coptic);
+    font-size:1.3rem;
+    font-weight:900;
+    box-shadow:var(--shadow-sm);
+    border:2px solid var(--gold);
+  }
+  .brand-title{
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    font-weight:900;
+    color:var(--madder);
+    line-height:1.2;
+  }
+  .brand-sub{
+    font-size:.75rem;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .skip-link{
+    font-size:.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:var(--radius-sm);
+    transition:all .2s;
+  }
+  .skip-link:hover{
+    background:rgba(168,130,58,.15);
+    color:var(--madder);
+  }
+
+  /* الحاوية المركزية للبطاقة */
+  main.onboarding-container{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .onboarding-card{
+    background:var(--parchment-card);
+    border:2px solid rgba(168,130,58,.35);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-lg);
+    width:100%;
+    max-width:540px;
+    padding:38px 36px;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter:blur(8px);
+  }
+  .card-glow{
+    position:absolute;
+    width:220px; height:220px;
+    background:radial-gradient(circle, rgba(168,130,58,.18) 0%, transparent 70%);
+    top:-50px; left:-50px;
+    pointer-events:none;
+  }
+
+  /* مؤشر الخطوات (Step Dots) */
+  .step-indicator{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  .step-dot{
+    width:36px;
+    height:8px;
+    border-radius:4px;
+    background:rgba(90,74,52,.2);
+    transition:all .35s ease;
+  }
+  .step-dot.active{
+    width:56px;
+    background:var(--madder);
+    box-shadow:0 0 10px rgba(140,36,48,.35);
+  }
+  .step-dot.done{
+    background:var(--gold);
+  }
+
+  /* شاشات الخطوات */
+  .step-screen{
+    display:none;
+    animation:fadeInUp .35s ease-out forwards;
+  }
+  .step-screen.active{
+    display:block;
+  }
+  @keyframes fadeInUp{
+    from{ opacity:0; transform:translateY(16px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* عناصر الشاشة */
+  .step-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--madder) 0%, var(--madder-dark) 100%);
+    color:var(--gold-pale);
+    font-size:2rem;
+    margin:0 auto 18px;
+    box-shadow:0 8px 20px rgba(140,36,48,.3);
+    border:2px solid var(--gold-light);
+  }
+  .badge-icon{
+    font-family:var(--font-coptic);
+    line-height:1;
+  }
+  .step-title{
+    font-family:var(--font-display);
+    font-size:1.7rem;
+    font-weight:900;
+    color:var(--madder);
+    margin:0 0 8px;
+    text-align:center;
+    letter-spacing:-.3px;
+  }
+  .step-desc{
+    font-size:1rem;
+    color:var(--ink-soft);
+    margin:0 auto 28px;
+    text-align:center;
+    max-width:400px;
+    line-height:1.65;
+  }
+
+  /* حقول الإدخال */
+  .input-group{
+    margin-bottom:24px;
+    text-align:right;
+  }
+  .input-label{
+    display:block;
+    font-weight:700;
+    font-size:.95rem;
+    color:var(--ink);
+    margin-bottom:8px;
+  }
+  .text-input{
+    width:100%;
+    padding:16px 20px;
+    font-size:1.15rem;
+    font-family:var(--font-body);
+    font-weight:700;
+    border:2px solid rgba(168,130,58,.4);
+    border-radius:var(--radius);
+    background: var(--parchment-soft);
+    color:var(--ink);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.04);
+    outline:none;
+    transition:all .25s ease;
+    text-align:center;
+  }
+  .text-input:focus{
+    border-color:var(--madder);
+    box-shadow:0 0 0 4px rgba(140,36,48,.15), inset 0 2px 4px rgba(0,0,0,.04);
+    background:var(--parchment-card);
+  }
+  .input-hint{
+    font-size:.8rem;
+    color:var(--ink-soft);
+    margin-top:6px;
+    text-align:center;
+  }
+
+  /* الأزرار */
+  .btn-primary{
+    width:100%;
+    padding:16px 24px;
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    font-weight:800;
+    color: var(--parchment-soft);
+    background:linear-gradient(135deg, var(--madder) 0%, var(--madder-dark) 100%);
+    border:2px solid var(--gold);
+    border-radius:var(--radius);
+    cursor:pointer;
+    box-shadow:0 8px 22px rgba(140,36,48,.35);
+    transition:all .25s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .btn-primary:hover:not(:disabled){
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(140,36,48,.45);
+    background: linear-gradient(135deg, var(--madder-light) 0%, var(--madder) 100%);
+  }
+  .btn-primary:active:not(:disabled){
+    transform:translateY(1px);
+    box-shadow:0 4px 14px rgba(140,36,48,.3);
+  }
+  .btn-primary:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    box-shadow:none;
+    border-color:rgba(168,130,58,.2);
+  }
+
+  /* الشاشة الثالثة: بطاقة الترحيب الجاهزة */
+  .welcome-box{
+    background:rgba(168,130,58,.1);
+    border:1px solid rgba(168,130,58,.35);
+    border-radius:var(--radius);
+    padding:20px 18px;
+    margin-bottom:24px;
+    text-align:center;
+  }
+  .welcome-features{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+    margin-top:16px;
+  }
+  .wf-item{
+    background: var(--parchment-soft);
+    border:1px solid rgba(168,130,58,.25);
+    border-radius:var(--radius-sm);
+    padding:12px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+  }
+  .wf-icon{ font-size:1.6rem; }
+  .wf-val{ font-family:var(--font-display); font-weight:900; font-size:1.1rem; color:var(--madder); }
+  .wf-lbl{ font-size:.78rem; color:var(--ink-soft); font-weight:600; }
+
+  /* تذييل الصفحة */
+  footer.onboarding-footer{
+    padding:20px;
+    text-align:center;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width: 540px){
+    .onboarding-card{ padding:28px 20px; }
+    .step-title{ font-size:1.45rem; }
+    .welcome-features{ grid-template-columns:1fr; }
+  }
+
+    /* ============ BOTTOM NAV — يطابق التصميم الأصلي المرجعي بدقة ============ */
+  .bottom-nav, .mobile-bottom-nav, .onboarding-bottom-nav{
+    position:fixed;
+    left:8px; right:8px; bottom:8px;
+    z-index:200;
+    display:none;
+    justify-content:space-around;
+    align-items:center;
+    background:linear-gradient(180deg, rgba(250,246,233,.96), rgba(244,236,212,.96));
+    backdrop-filter:blur(16px) saturate(1.4);
+    -webkit-backdrop-filter:blur(16px) saturate(1.4);
+    border:1px solid rgba(168,130,58,.4);
+    border-radius:26px;
+    box-shadow:0 -4px 6px rgba(36,27,18,.04), 0 16px 44px rgba(36,27,18,.20);
+    padding:10px 4px calc(6px + env(safe-area-inset-bottom));
+    list-style:none;
+    margin:0;
+    box-sizing:border-box;
+  }
+  @media (min-width:681px){
+    .bottom-nav, .mobile-bottom-nav, .onboarding-bottom-nav{
+      display:none !important;
+    }
+  }
+  .bottom-nav .bn-btn, .mobile-bottom-nav .bn-btn, .mobile-bottom-nav .mbn-btn, .onboarding-bottom-nav .bn-btn{
+    -webkit-tap-highlight-color:transparent;
+    appearance:none;
+    background:none;
+    border:none;
+    cursor:pointer;
+    flex:1 1 0;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    gap:4px;
+    padding:2px 1px 1px;
+    color:var(--ink-soft);
+    font-family:var(--font-display);
+    transition:transform .15s ease, color .2s ease;
+    text-decoration:none;
+  }
+  .bottom-nav .bn-btn:active, .mobile-bottom-nav .mbn-btn:active, .onboarding-bottom-nav .bn-btn:active{ transform:scale(.94); }
+  .bottom-nav .bn-icon, .mobile-bottom-nav .bn-icon, .mobile-bottom-nav .mbn-icon, .onboarding-bottom-nav .bn-icon{
+    width:22px;height:22px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;
+    transition:width .3s cubic-bezier(.2,.8,.2,1), height .3s cubic-bezier(.2,.8,.2,1),
+               transform .3s cubic-bezier(.2,.8,.2,1), background .3s ease, box-shadow .3s ease, color .3s ease,
+               margin .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .bottom-nav .bn-icon svg, .mobile-bottom-nav .mbn-icon svg, .onboarding-bottom-nav .bn-icon svg{ width:21px; height:21px; stroke:currentColor; transition:width .3s, height .3s; }
+  .bottom-nav .bn-icon .glyph-ic, .mobile-bottom-nav .mbn-icon .glyph-ic, .onboarding-bottom-nav .bn-icon .glyph-ic{ font-family:var(--font-coptic); font-size:1.15rem; line-height:1; transition:font-size .3s; }
+  .bottom-nav .bn-label, .mobile-bottom-nav .bn-label, .mobile-bottom-nav .mbn-label, .onboarding-bottom-nav .bn-label{
+    display:block;
+    font-size:.68rem;
+    font-weight:700;
+    white-space:nowrap;
+    color:inherit;
+    line-height:1.2;
+  }
+  .bottom-nav .bn-btn.active, .mobile-bottom-nav .bn-btn.active, .mobile-bottom-nav .mbn-btn.active, .onboarding-bottom-nav .bn-btn.active{ color:var(--madder-dark); }
+  .bottom-nav .bn-btn.active .bn-label, .mobile-bottom-nav .mbn-btn.active .mbn-label, .onboarding-bottom-nav .bn-btn.active .bn-label{ position:relative; margin-top:2px; }
+  .bottom-nav .bn-btn.active .bn-label::after, .mobile-bottom-nav .mbn-btn.active .mbn-label::after, .onboarding-bottom-nav .bn-btn.active .bn-label::after{
+    content:"";
+    position:absolute; bottom:-6px; left:50%; transform:translateX(-50%);
+    width:4px; height:4px; border-radius:50%;
+    background:var(--madder);
+  }
+  /* الدائرة المرفوعة تتبع أي تبويب نشط حاليًا — تنتقل بين الأزرار */
+  .bottom-nav .bn-btn.active .bn-icon, .mobile-bottom-nav .bn-btn.active .bn-icon, .mobile-bottom-nav .mbn-btn.active .mbn-icon, .onboarding-bottom-nav .bn-btn.active .bn-icon{
+    width:52px; height:52px;
+    border-radius:50%;
+    background:linear-gradient(155deg,var(--madder),var(--madder-dark));
+    color:var(--gold-pale);
+    transform:translateY(-20px);
+    box-shadow:0 8px 18px rgba(140,36,48,.4), 0 0 0 5px rgba(250,246,233,.96);
+    margin-bottom:-16px;
+  }
+  .bottom-nav .bn-btn.active .bn-icon svg, .mobile-bottom-nav .mbn-btn.active .mbn-icon svg, .onboarding-bottom-nav .bn-btn.active .bn-icon svg{ width:24px; height:24px; }
+  .bottom-nav .bn-btn.active .bn-icon .glyph-ic, .mobile-bottom-nav .mbn-btn.active .mbn-icon .glyph-ic, .onboarding-bottom-nav .bn-btn.active .bn-icon .glyph-ic{ font-size:1.4rem; }
+
+
+</style>
+</head>
+<body>
+
+<header class="onboarding-header">
+  <a href="index.html" class="brand">
+    <div class="brand-logo">Ⲁ</div>
+    <div>
+      <div class="brand-title">MG COPTIC</div>
+      <div class="brand-sub">رحلة تعلّم اللغة القبطية</div>
+    </div>
+  </a>
+  <a href="index.html#learn" class="skip-link" id="skip-link">تخطي للدروس &larr;</a>
+</header>
+
+<main class="onboarding-container">
+  <div class="onboarding-card">
+    <div class="card-glow"></div>
+
+    <!-- مؤشر تقدم الخطوات الثلاث -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+
+    <!-- ==================== الشاشة 1: الاسم ==================== -->
+    <section class="step-screen active" id="screen-1">
+      <div style="text-align:center;">
+        <div class="step-badge">
+          <span class="badge-icon">Ⲁ</span>
+        </div>
+      </div>
+      <h1 class="step-title">أهلاً بك في MG Coptic</h1>
+      <p class="step-desc">خطوتك الأولى لإتقان لغة الأجداد بطريقة تفاعلية وممتعة كأنها لعبة! ما اسمك؟</p>
+
+      <form id="form-step-1" onsubmit="return false;">
+        <div class="input-group">
+          <label class="input-label" for="user-name-input">اكتب اسمك الكريم:</label>
+          <input type="text" id="user-name-input" class="text-input" placeholder="مثال: كيرلس / مريم / فادي" autocomplete="name" autofocus maxlength="60">
+          <div class="input-hint">سنناديك به خلال رحلتك وتحدياتك اليومية</div>
+        </div>
+
+        <button type="button" class="btn-primary" id="btn-step-1" disabled>
+          <span>التالي</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+    </span>
+    <span class="bn-label">الإعدادات</span>
+  </a>
+</nav>
+
+</body>
+</html>

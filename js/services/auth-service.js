@@ -1,0 +1,572 @@
+
+    /* ============ USER PROFILE & REAL SUPABASE AUTH / LEADERBOARD LOGIC ============ */
+    let currentAuthUser = null;
+    let currentAuthSession = null;
+    let currentAuthMode = 'signin';
+
+    function openAuthModal(mode = 'signin') {
+      currentAuthMode = mode;
+      switchAuthTab(mode);
+      const m = document.getElementById('auth-modal');
+      if (m) m.style.display = 'flex';
+      const emailInp = document.getElementById('auth-email-input');
+      if (emailInp) setTimeout(() => emailInp.focus(), 150);
+    }
+
+    function closeAuthModal() {
+      const m = document.getElementById('auth-modal');
+      if (m) m.style.display = 'none';
+      const statusEl = document.getElementById('auth-status-msg');
+      if (statusEl) statusEl.textContent = '';
+    }
+
+    function switchAuthTab(mode) {
+      currentAuthMode = mode;
+      const isSignUp = mode === 'signup';
+      const tSignIn = document.getElementById('tab-auth-signin');
+      const tSignUp = document.getElementById('tab-auth-signup');
+      const nameGrp = document.getElementById('auth-name-group');
+      const ageGrp = document.getElementById('auth-age-group');
+      const titleEl = document.getElementById('auth-modal-title');
+      const subtitleEl = document.getElementById('auth-modal-subtitle');
+      const submitBtn = document.getElementById('auth-submit-btn');
+
+      if (tSignIn && tSignUp) {
+        tSignIn.style.borderBottomColor = isSignUp ? 'transparent' : 'var(--madder)';
+        tSignIn.style.color = isSignUp ? 'var(--ink-soft)' : 'var(--madder)';
+        tSignUp.style.borderBottomColor = isSignUp ? 'var(--madder)' : 'transparent';
+        tSignUp.style.color = isSignUp ? 'var(--madder)' : 'var(--ink-soft)';
+      }
+      if (nameGrp) nameGrp.style.display = isSignUp ? 'block' : 'none';
+      if (ageGrp) ageGrp.style.display = isSignUp ? 'block' : 'none';
+      if (titleEl) titleEl.textContent = isSignUp ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+      if (subtitleEl) subtitleEl.textContent = isSignUp ? 'انضم لرحلة إتقان اللغة القبطية' : 'أهلاً بك مجددًا في منصة MG Coptic';
+      if (submitBtn) submitBtn.querySelector('span').textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email-input').value.trim();
+      const password = document.getElementById('auth-password-input').value;
+      const statusEl = document.getElementById('auth-status-msg');
+      const submitBtn = document.getElementById('auth-submit-btn');
+
+      statusEl.style.color = 'var(--ink-soft)';
+      statusEl.textContent = 'جارٍ المعالجة...';
+      submitBtn.disabled = true;
+
+      try {
+        if (currentAuthMode === 'signup') {
+          const fullName = document.getElementById('auth-name-input').value.trim() || email.split('@')[0];
+          const age = parseInt(document.getElementById('auth-age-input').value, 10) || 15;
+
+          const { data: signData, error: signErr } = await sb.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+              data: {
+                full_name: fullName,
+                age: age,
+                password: password
+              }
+            }
+          });
+
+          if (signErr) {
+            const errMsg = String(signErr.message || '').toLowerCase();
+            if (errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists')) {
+              statusEl.style.color = 'var(--madder)';
+              statusEl.textContent = 'هذا البريد الإلكتروني مسجّل مسبقاً! جاري نقلك لتبويب تسجيل الدخول...';
+              setTimeout(() => {
+                switchAuthTab('signin');
+                document.getElementById('auth-email-input').value = email;
+                document.getElementById('auth-password-input').value = password;
+                document.getElementById('auth-password-input').focus();
+                statusEl.style.color = 'var(--ink-soft)';
+                statusEl.textContent = 'أدخل كلمة المرور واضغط "دخول"';
+                submitBtn.disabled = false;
+              }, 1100);
+              return;
+            }
+            throw signErr;
+          }
+
+          // إذا لم تُرجع الاستجابة جلسة مباشرة، تسجيل الدخول فوراً
+          if (!signData || !signData.session) {
+            const { error: logErr } = await sb.auth.signInWithPassword({ email, password });
+            if (logErr) throw logErr;
+          }
+
+          // حفظ كلمة المرور في بيانات الحساب لعرضها في لوحة الإدارة
+          try {
+            const curU = (signData && signData.user) || (await sb.auth.getUser()).data.user;
+            if (curU) await sb.from('users').update({ password: password }).eq('id', curU.id);
+          } catch (e) {
+            console.warn('Password profile sync notice:', e);
+          }
+
+          statusEl.style.color = '#2F7D46';
+          statusEl.textContent = 'تم إنشاء الحساب وتسجيل الدخول بنجاح!';
+          setTimeout(() => {
+            closeAuthModal();
+            hydrateHomeFromCacheSync();
+            syncHomeLearningProgress();
+            initUserSession();
+          }, 700);
+        } else {
+          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+
+          // تحديث كلمة المرور في بيانات الحساب عند تسجيل الدخول
+          try {
+            if (data && data.user) {
+              await sb.from('users').update({ password: password }).eq('id', data.user.id);
+            }
+          } catch (e) {
+            console.warn('Password login sync notice:', e);
+          }
+
+          statusEl.style.color = '#2F7D46';
+          statusEl.textContent = 'تم تسجيل الدخول بنجاح!';
+          setTimeout(() => {
+            closeAuthModal();
+            initUserSession();
+          }, 600);
+        }
+      } catch (err) {
+        statusEl.style.color = '#C53030';
+        let msg = err.message || 'حدث خطأ أثناء المحاولة';
+        const low = msg.toLowerCase();
+        if (low.includes('invalid login credentials')) {
+          msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+        } else if (low.includes('password should be at least')) {
+          msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
+        }
+        statusEl.textContent = msg;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function signOutStudent() {
+      const confirmed = await mgConfirm('تسجيل الخروج', 'هل تريد بالتأكيد تسجيل الخروج من حسابك؟', 'question');
+      if (confirmed) {
+        if (window.MGCopticGame && typeof window.MGCopticGame.signOut === 'function') {
+          await window.MGCopticGame.signOut();
+        } else {
+          await sb.auth.signOut();
+          localStorage.removeItem('mg_coptic_user');
+          localStorage.removeItem('mg_coptic_progress');
+          localStorage.removeItem('mg_coptic_student_auth_token');
+        }
+        currentAuthUser = null;
+        currentAuthSession = null;
+        initUserSession();
+        hydrateHomeFromCacheSync();
+        mgToast('تم تسجيل الخروج بنجاح', 'success');
+      }
+    }
+
+    function handleUserChipClick() {
+      if (currentAuthUser) {
+        switchTab('settings');
+      } else {
+        openAuthModal('signin');
+      }
+    }
+
+    async function initUserSession() {
+      try {
+        // تنظيف أي جلسة أدمن قديمة تسربت سابقاً بالمفتاح العام القديم
+        localStorage.removeItem('sb-kdoanxzpfiscprjjzzic-auth-token');
+
+        const { data: { session } } = await sb.auth.getSession();
+        if (session && session.user) {
+          currentAuthSession = session;
+          const { data: profile } = await sb.from('users').select('*').eq('id', session.user.id).single();
+          currentAuthUser = {
+            id: session.user.id,
+            email: session.user.email,
+            full_name: (profile && profile.full_name) ? profile.full_name : (session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'بطل قبطي'),
+            avatar_url: (profile && profile.avatar_url) ? profile.avatar_url : (localStorage.getItem('mg_coptic_user.avatar_url') || ''),
+            role: (profile && profile.role) ? profile.role : 'student'
+          };
+          localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+
+          // جلب التقدم الحقيقي من Supabase
+          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).single();
+          if (prog) {
+            localStorage.setItem('mg_coptic_progress', JSON.stringify({
+              total_points: prog.points || 0,
+              streak_days: prog.streak_days || 1,
+              hearts: prog.hearts ?? 5
+            }));
+          }
+        } else {
+          currentAuthUser = null;
+          currentAuthSession = null;
+          localStorage.removeItem('mg_coptic_user');
+        }
+      } catch (err) {
+        console.warn('initUserSession error:', err);
+        currentAuthUser = null;
+        currentAuthSession = null;
+        localStorage.removeItem('mg_coptic_user');
+      }
+
+      syncUserProfileUI();
+      renderRealLeaderboard();
+    }
+
+    function getUserProfileData() {
+      if (currentAuthUser) return currentAuthUser;
+      try {
+        const studentToken = localStorage.getItem('mg_coptic_student_auth_token');
+        if (!studentToken) {
+          localStorage.removeItem('mg_coptic_user');
+          return null;
+        }
+        const raw = localStorage.getItem('mg_coptic_user');
+        if (raw) return JSON.parse(raw);
+      } catch (e) { }
+      return null;
+    }
+
+    function getUserProgressData() {
+      try {
+        const raw = localStorage.getItem('mg_coptic_progress');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const points = parsed.points ?? parsed.total_points ?? 0;
+          const streak = parsed.streak_days ?? parsed.streak ?? 1;
+          const hearts = parsed.hearts ?? 5;
+          return { points, total_points: points, streak_days: streak, hearts };
+        }
+      } catch (e) { }
+      return { points: 0, total_points: 0, streak_days: 1, hearts: 5 };
+    }
+
+    async function saveUserProfileName() {
+      const input = document.getElementById('settings-name-input');
+      const statusEl = document.getElementById('settings-name-status');
+      if (!input || !input.value.trim()) {
+        if (statusEl) { statusEl.className = 'status-msg error'; statusEl.textContent = 'يرجى إدخال اسم صحيح'; }
+        return;
+      }
+      const cleanName = input.value.trim();
+
+      if (!currentAuthUser) {
+        openAuthModal('signin');
+        if (statusEl) { statusEl.className = 'status-msg error'; statusEl.textContent = 'يجب تسجيل الدخول لحفظ الاسم في قاعدة البيانات'; }
+        return;
+      }
+
+      try {
+        const { error } = await sb.from('users').update({ full_name: cleanName }).eq('id', currentAuthUser.id);
+        if (error) throw error;
+        currentAuthUser.full_name = cleanName;
+        localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+        syncUserProfileUI();
+        renderRealLeaderboard();
+        if (statusEl) {
+          statusEl.className = 'status-msg success';
+          statusEl.textContent = 'تم حفظ الاسم في قاعدة البيانات بنجاح!';
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+        }
+      } catch (e) {
+        if (statusEl) {
+          statusEl.className = 'status-msg error';
+          statusEl.textContent = 'تعذر الحفظ: ' + e.message;
+        }
+      }
+    }
+
+    async function removeUserProfilePhoto() {
+      if (currentAuthUser) {
+        try {
+          await sb.from('users').update({ avatar_url: null }).eq('id', currentAuthUser.id);
+          currentAuthUser.avatar_url = '';
+          localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+        } catch (e) { }
+      }
+      localStorage.removeItem('mg_coptic_user.avatar_url');
+      syncUserProfileUI();
+      renderRealLeaderboard();
+    }
+
+    // دالة لتحديث كارت التصنيف في الصفحة الرئيسية
+    function updateUserRankUI(rankNum) {
+      const rankTitleEl = document.getElementById('home-card-rank-title');
+      const rankDescEl = document.getElementById('home-card-rank-desc');
+      const trophyCircle = document.getElementById('home-trophy-circle');
+
+      let title = 'غير مصنف';
+      let desc = 'التصنيف';
+
+      if (typeof rankNum === 'number' && rankNum >= 1 && rankNum <= 10) {
+        title = `المركز #${rankNum}`;
+        desc = 'التصنيف';
+        if (trophyCircle) {
+          if (rankNum === 1) trophyCircle.style.color = 'var(--gold, #D4AF37)';
+          else if (rankNum === 2) trophyCircle.style.color = '#A0AEC0';
+          else if (rankNum === 3) trophyCircle.style.color = '#CD7F32';
+          else trophyCircle.style.color = 'var(--teal, #00A3FF)';
+        }
+      } else {
+        title = 'غير مصنف';
+        desc = 'التصنيف';
+        if (trophyCircle) trophyCircle.style.color = 'var(--ink-soft, #7C7267)';
+      }
+
+      if (rankTitleEl) rankTitleEl.textContent = title;
+      if (rankDescEl) rankDescEl.textContent = desc;
+
+      try {
+        localStorage.setItem('mg_coptic_cached_user_rank', JSON.stringify({ rank: rankNum, title, desc }));
+      } catch (e) { }
+    }
+
+    // جلب وعرض قائمة المتصدرين (الـ 10 الأوائل فقط في نقاط XP) من Supabase
+    let isFetchingRealLeaderboard = false;
+    let lastLeaderboardFetchTime = 0;
+    let leaderboardDebounceTimer = null;
+
+    async function renderRealLeaderboard(force = false) {
+      const podiumEl = document.getElementById('podium-wrap');
+      const listEl = document.getElementById('leaderboard-items-list');
+      const currentCard = document.getElementById('user-current-rank-card');
+      if (!podiumEl) return;
+
+      const now = Date.now();
+      if (!force && (now - lastLeaderboardFetchTime < 2500)) {
+        if (leaderboardDebounceTimer) clearTimeout(leaderboardDebounceTimer);
+        leaderboardDebounceTimer = setTimeout(() => renderRealLeaderboard(true), 2500);
+        return;
+      }
+      if (isFetchingRealLeaderboard) return;
+      isFetchingRealLeaderboard = true;
+      lastLeaderboardFetchTime = now;
+
+      try {
+        let { data: learners, error } = await sb.from('leaderboard_view')
+          .select('*')
+          .order('points', { ascending: false })
+          .limit(10);
+
+        if (error) {
+          const res = await sb.from('user_progress')
+            .select('user_id, points, profiles(full_name, avatar_url)')
+            .order('points', { ascending: false })
+            .limit(10);
+          if (!res.error && res.data) {
+            learners = res.data.map(d => ({
+              id: d.user_id,
+              full_name: (d.profiles && d.profiles.full_name) || 'متعلم قبطي',
+              avatar_url: (d.profiles && d.profiles.avatar_url) || '',
+              points: d.points || 0
+            }));
+          }
+        }
+
+        const top10 = (learners || []).slice(0, 10);
+
+        if (!top10 || top10.length === 0) {
+          podiumEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:35px 15px;color:var(--ink-soft);font-size:1.02rem;">لا توجد نتائج مسجلة حتى الآن في قاعدة البيانات. ابدأ بتعلّم أول درس لتتصدر القائمة!</div>';
+          if (listEl) listEl.innerHTML = '';
+          updateUserRankUI(null);
+          if (currentCard) currentCard.style.display = 'none';
+          return;
+        }
+
+        const first = top10[0];
+        const second = top10[1];
+        const third = top10[2];
+
+        const getInitial = name => (name && name.trim().length > 0) ? name.trim().charAt(0) : 'Ⲁ';
+
+        let podiumHtml = '';
+
+        // المركز الثاني (الفضة)
+        if (second) {
+          const secInitial = getInitial(second.full_name);
+          podiumHtml += '<div class="podium-col rank-2">' +
+            '<div class="podium-avatar-wrap">' +
+            '<div class="podium-avatar silver">' +
+            (second.avatar_url ? '<img src="' + second.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : '<span class="podium-initial">' + secInitial + '</span>') +
+            '</div>' +
+            '<div class="podium-badge silver"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg><span>2</span></div>' +
+            '</div>' +
+            '<div class="podium-name">' + (second.full_name || 'متعلم قبطي') + '</div>' +
+            '<div class="podium-xp">' + (second.points || 0) + ' XP</div>' +
+            '<div class="podium-step silver-step">٢</div>' +
+            '</div>';
+        }
+
+        // المركز الأول (الذهب)
+        if (first) {
+          const firInitial = getInitial(first.full_name);
+          podiumHtml += '<div class="podium-col rank-1">' +
+            '<div class="podium-crown"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--gold)" stroke-width="2"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg></div>' +
+            '<div class="podium-avatar-wrap">' +
+            '<div class="podium-avatar gold">' +
+            (first.avatar_url ? '<img src="' + first.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : '<span class="podium-initial">' + firInitial + '</span>') +
+            '</div>' +
+            '<div class="podium-badge gold"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg><span>1</span></div>' +
+            '</div>' +
+            '<div class="podium-name">' + (first.full_name || 'متعلم قبطي') + '</div>' +
+            '<div class="podium-xp">' + (first.points || 0) + ' XP</div>' +
+            '<div class="podium-step gold-step">١</div>' +
+            '</div>';
+        }
+
+        // المركز الثالث (البرونز)
+        if (third) {
+          const thiInitial = getInitial(third.full_name);
+          podiumHtml += '<div class="podium-col rank-3">' +
+            '<div class="podium-avatar-wrap">' +
+            '<div class="podium-avatar bronze">' +
+            (third.avatar_url ? '<img src="' + third.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : '<span class="podium-initial">' + thiInitial + '</span>') +
+            '</div>' +
+            '<div class="podium-badge bronze"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg><span>3</span></div>' +
+            '</div>' +
+            '<div class="podium-name">' + (third.full_name || 'متعلم قبطي') + '</div>' +
+            '<div class="podium-xp">' + (third.points || 0) + ' XP</div>' +
+            '<div class="podium-step bronze-step">٣</div>' +
+            '</div>';
+        }
+
+        podiumEl.innerHTML = podiumHtml;
+
+        // عرض باقي المتصدرين من 4 إلى 10 فقط
+        let itemsHtml = '';
+        top10.slice(3, 10).forEach((item, idx) => {
+          const r = idx + 4;
+          const initial = getInitial(item.full_name);
+          const isMe = currentAuthUser && (item.id === currentAuthUser.id || (currentAuthUser.email && item.email === currentAuthUser.email));
+          itemsHtml += '<div class="lb-item' + (isMe ? ' my-rank-item' : '') + '">' +
+            '<span class="lb-rank">' + r + '</span>' +
+            '<div class="lb-avatar">' + (item.avatar_url ? '<img src="' + item.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' : '<span style="font-size:1.05rem;font-weight:900;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#FFFFFF;">' + initial + '</span>') + '</div>' +
+            '<span class="lb-name">' + (item.full_name || 'متعلم قبطي') + (isMe ? ' (أنت)' : '') + '</span>' +
+            '<span class="lb-xp">' + (item.points || 0) + ' XP</span>' +
+            '</div>';
+        });
+        if (listEl) listEl.innerHTML = itemsHtml;
+
+        // حساب وتحديث ترتيب المستخدم الحالي
+        const myProg = getUserProgressData();
+        const user = currentAuthUser || getUserProfileData();
+        let myRank = null;
+
+        if (user) {
+          const myIndex = top10.findIndex(l => l.id === user.id || (user.email && l.email === user.email));
+          if (myIndex !== -1) {
+            myRank = myIndex + 1;
+          }
+        }
+
+        updateUserRankUI(myRank);
+
+        // تمييز بطاقة ترتيب المستخدم الحالية في قسم التصنيف
+        if (currentCard) {
+          const initial = getInitial(user ? user.full_name : 'بطل قبطي');
+          const rNum = document.getElementById('user-rank-num');
+          const rName = document.getElementById('user-rank-name');
+          const rStatus = document.getElementById('user-rank-status');
+          const rXp = document.getElementById('user-rank-xp');
+          const rAvatar = document.getElementById('user-rank-avatar');
+
+          if (myRank !== null) {
+            if (rNum) {
+              rNum.textContent = '#' + myRank;
+              rNum.classList.add('ranked');
+            }
+            if (rStatus) rStatus.textContent = 'ضمن المتصدرين (الـ 10 الأوائل) 🏆';
+          } else {
+            if (rNum) {
+              rNum.textContent = 'غير مصنف';
+              rNum.classList.remove('ranked');
+            }
+            if (rStatus) rStatus.textContent = 'اجمع المزيد من XP لتصل للمتصدرين';
+          }
+
+          if (rName) rName.textContent = 'أنت (' + ((user && user.full_name) || 'بطل قبطي') + ')';
+          if (rXp) rXp.textContent = (myProg.points || myProg.total_points || 0) + ' XP';
+
+          if (rAvatar) {
+            if (user && user.avatar_url) {
+              rAvatar.innerHTML = '<img src="' + user.avatar_url + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+            } else {
+              rAvatar.innerHTML = '<span style="font-size:1.05rem;font-weight:900;display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#FFFFFF;">' + initial + '</span>';
+            }
+          }
+          currentCard.style.display = 'flex';
+        }
+
+      } catch (err) {
+        console.warn('Leaderboard fetch error:', err);
+        podiumEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:25px;color:var(--err);">تعذر تحميل قائمة المتصدرين حاليًا <button class="btn secondary" style="margin-right:8px;padding:4px 10px;" onclick="renderRealLeaderboard(true)">إعادة المحاولة</button></div>';
+      } finally {
+        isFetchingRealLeaderboard = false;
+      }
+    }
+
+    function setLeaderboardFilter(period, btn) {
+      document.querySelectorAll('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderRealLeaderboard();
+    }
+
+    // استماع لرفع الصورة الشخصية إلى Supabase Storage
+    document.addEventListener('DOMContentLoaded', () => {
+      const avatarInput = document.getElementById('settings-avatar-input');
+      if (avatarInput) {
+        avatarInput.addEventListener('change', async function (e) {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+
+          if (!currentAuthUser) {
+            openAuthModal('signin');
+            mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
+            return;
+          }
+
+          try {
+            const fileExt = file.name.split('.').pop() || 'jpg';
+            const fileName = 'avatar_' + currentAuthUser.id + '_' + Date.now() + '.' + fileExt;
+            const filePath = 'avatars/' + fileName;
+
+            // Upload to Supabase Storage media bucket
+            const { data, error } = await sb.storage.from('media').upload(filePath, file, { upsert: true });
+            if (error) throw error;
+
+            const { data: urlData } = sb.storage.from('media').getPublicUrl(filePath);
+            const publicUrl = urlData?.publicUrl || '';
+
+            await sb.from('users').update({ avatar_url: publicUrl }).eq('id', currentAuthUser.id);
+            currentAuthUser.avatar_url = publicUrl;
+            localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+            localStorage.setItem('mg_coptic_user.avatar_url', publicUrl);
+            syncUserProfileUI();
+            renderRealLeaderboard();
+          } catch (uploadErr) {
+            console.warn('Storage upload error, using local fallback:', uploadErr);
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+              localStorage.setItem('mg_coptic_user.avatar_url', evt.target.result);
+              if (currentAuthUser) currentAuthUser.avatar_url = evt.target.result;
+              syncUserProfileUI();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      initUserSession();
+      updateDailyGoalUI();
+
+      // Check URL hash on page load
+      if (window.location.hash) {
+        const tabFromHash = window.location.hash.replace('#', '');
+        if (window.tabOrder && window.tabOrder.includes(tabFromHash)) switchTab(tabFromHash);
+      }
+    });

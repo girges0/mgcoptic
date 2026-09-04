@@ -1,0 +1,166 @@
+/**
+ * MG COPTIC — Coptic Months (الشهور القبطية)
+ * مطابقة تامة لتصميم شبكة وبطاقات الحروف في الكمبيوتر والموبايل
+ * مع بطاقة التاريخ القبطي الحالي بالأعلى
+ */
+
+/* بطاقة التاريخ القبطي الحالي في أعلى الشهور */
+.coptic-current-date-banner {
+  background: linear-gradient(135deg, #FFFDF8 0%, #FAF4E6 100%);
+  border: 1.5px solid #D4AF37;
+  border-radius: var(--radius, 14px);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.14);
+}
+
+.coptic-date-main-col {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.coptic-date-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(140, 36, 48, 0.08);
+  border: 1px solid rgba(140, 36, 48, 0.2);
+  color: var(--madder, #8C2430);
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.coptic-date-value {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.coptic-date-ar {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--madder, #8C2430);
+  font-family: var(--font-display, 'Cairo', sans-serif);
+}
+
+.coptic-date-cop {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--teal, #247B6E);
+}
+
+.coptic-date-sub-col {
+  font-size: 0.9rem;
+  color: var(--ink-soft, #7A5C58);
+}
+
+.coptic-date-sub-col .gregorian-val {
+  color: var(--ink, #311818);
+  font-weight: 700;
+}
+
+@media (max-width: 650px) {
+  .coptic-current-date-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+}
+
+/* شبكة الشهور — 6 أعمدة على الكمبيوتر واللابتوب */
+.coptic-months-letter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 14px;
+  direction: ltr;
+  margin-top: 10px;
+}
+
+@media (min-width: 992px) {
+  .coptic-months-letter-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* الشاشات المتوسطة والأجهزة اللوحية */
+@media (max-width: 991px) and (min-width: 651px) {
+  .coptic-months-letter-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+/* الشاشات الصغيرة والموبايل — عمودين بالضبط كما بالصورة الثانية */
+@media (max-width: 650px) {
+  .coptic-months-letter-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+}
+
+/* حجم خط اسم الشهر القبطي ليناسب البطاقة بدون قطع أو نقاط */
+.month-letter-card .month-glyph {
+  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+  font-family: var(--font-coptic, 'Arial', sans-serif);
+  color: var(--madder, #8C2430);
+  line-height: 1.25;
+  white-space: nowrap;
+  max-width: 98%;
+  padding: 0 2px;
+  letter-spacing: -0.2px;
+}
+
+.month-letter-card .month-name {
+  font-weight: 700;
+  font-family: var(--font-display, 'Cairo', sans-serif);
+  font-size: 0.95rem;
+  color: var(--ink, #311818);
+  margin-top: 4px;
+}
+
+/* في حالة الشهر الحالي */
+.month-letter-card.is-current-month {
+  border-color: #D4AF37;
+  position: relative;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.28);
+}
+
+.month-now-badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #8C5708;
+  background: #FEF3D6;
+  border: 1px solid #F6DF9E;
+  padding: 1px 6px;
+  border-radius: 4px;
+  direction: rtl;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.month-now-badge .badge-star-icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* الوجه الخلفي للبطاقة */
+.month-back-coptic {
+  font-family: var(--font-coptic, 'Arial', sans-serif);
+  font-size: 1.05rem;
+  color: var(--teal, #247B6E);
+  font-weight: 700;
+}
