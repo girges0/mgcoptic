@@ -603,10 +603,10 @@ const CurriculumAdminSystem = (function(){
       c.xp_mode = c.xp_mode || 'range';
       c.xp_min = parseInt(c.xp_min, 10) || 20;
       c.xp_max = parseInt(c.xp_max, 10) || 50;
-      c.has_badge = !!c.has_badge;
-      c.badge_title = c.badge_title || '';
-      c.badge_icon = c.badge_icon || 'trophy';
-      c.badge_desc = c.badge_desc || '';
+      c.has_badge = false;
+      c.badge_title = '';
+      c.badge_icon = '';
+      c.badge_desc = '';
     });
 
     // Dynamic Level XP calculation from lessons (No static fake XP)
@@ -1146,7 +1146,6 @@ const CurriculumAdminSystem = (function(){
                 <span style="display:inline-block; background:#FFF0C2; border:1px solid #D4AF37; color:#6B470D; font-size:0.75rem; font-weight:800; padding:1px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;">${SVG.gift} <span>صندوق هدايا ومكافآت (محطة في مسار المستوى)</span></span>
                 <span style="background:rgba(0,163,255,0.12); color:#0077B6; font-size:0.75rem; font-weight:800; padding:1px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">${SVG.zap} <span>${xpDisplay}</span></span>
                 ${c.hearts > 0 ? `<span style="background:rgba(255,75,75,0.12); color:#D92D20; font-size:0.75rem; font-weight:800; padding:1px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">${SVG.heart} <span>+${c.hearts}</span></span>` : ''}
-                ${c.has_badge ? `<span style="background:rgba(212,175,55,0.18); color:#8C6A1A; font-size:0.75rem; font-weight:800; padding:1px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">${getBadgeIcon(c.badge_icon, SVG.trophy)} <span>${escapeHtml(c.badge_title || 'وسام')}</span></span>` : ''}
               </div>
               <h4 style="color:#4A0D24; font-weight:900; display:flex; align-items:center; gap:6px;">${SVG.gift} <span>${escapeHtml(c.title || 'صندوق المكافأة السري')}</span></h4>
               <p style="color:#706354;">${escapeHtml(c.description || 'مكافأة تشجيعية عند الوصول لهذه المحطة')} • <span style="color:#8C6A1A; font-weight:700;">${locationText}</span></p>
@@ -1343,12 +1342,6 @@ const CurriculumAdminSystem = (function(){
               <div class="chest-rewards-chips">
                 <span class="reward-chip xp" style="display:inline-flex; align-items:center; gap:4px;">${SVG.zap} <span>${xpDisplay}</span></span>
                 <span class="reward-chip heart" style="display:inline-flex; align-items:center; gap:4px;">${SVG.heart} <span>${chest.hearts > 0 ? `+${chest.hearts} قلوب` : 'بدون قلوب'}</span></span>
-                ${chest.has_badge ? `
-                  <span class="reward-chip badge" style="display:inline-flex; align-items:center; gap:4px;">
-                    <span>${getBadgeIcon(chest.badge_icon, SVG.trophy)}</span>
-                    <span>${escapeHtml(chest.badge_title || 'شارة')}</span>
-                  </span>
-                ` : ''}
               </div>
 
               <div class="chest-admin-actions">
@@ -1458,9 +1451,6 @@ const CurriculumAdminSystem = (function(){
     const xpMax = parseInt(document.getElementById('chest-input-xp-max')?.value, 10) || 50;
     const xpFixed = parseInt(document.getElementById('chest-input-xp-fixed')?.value, 10) || 30;
     const hearts = parseInt(document.getElementById('chest-input-hearts')?.value, 10) ?? 1;
-    const hasBadge = document.getElementById('chest-input-has-badge')?.checked;
-    const badgeTitle = document.getElementById('chest-input-badge-title')?.value || 'وسام بطل الحروف';
-    const badgeIcon = document.getElementById('chest-input-badge-icon')?.value || 'trophy';
 
     const unitId = document.getElementById('chest-input-unit-id')?.value;
     const placement = document.getElementById('chest-input-placement')?.value;
@@ -1526,14 +1516,6 @@ const CurriculumAdminSystem = (function(){
             <span class="chest-preview-reward-lbl">محاولات إضافية</span>
           </div>
         ` : ''}
-
-        ${hasBadge ? `
-          <div class="chest-preview-reward-pill">
-            <span style="font-size:1.3rem; color:#D4AF37;">${getBadgeIcon(badgeIcon, SVG.trophy)}</span>
-            <span class="chest-preview-reward-val" style="color:#B54708; font-size:0.88rem;">${escapeHtml(badgeTitle)}</span>
-            <span class="chest-preview-reward-lbl">وسام تشجيعي</span>
-          </div>
-        ` : ''}
       </div>
     `;
   }
@@ -1576,18 +1558,6 @@ const CurriculumAdminSystem = (function(){
       if(xpFixedEl) xpFixedEl.value = 30;
 
       setChestHearts(1);
-
-      const badgeCb = document.getElementById('chest-input-has-badge');
-      if(badgeCb){
-        badgeCb.checked = false;
-        toggleChestBadgeFields(false);
-      }
-      const badgeTitleEl = document.getElementById('chest-input-badge-title');
-      if(badgeTitleEl) badgeTitleEl.value = 'وسام بطل الحروف';
-      const badgeIconEl = document.getElementById('chest-input-badge-icon');
-      if(badgeIconEl) badgeIconEl.value = 'trophy';
-      const badgeDescEl = document.getElementById('chest-input-badge-desc');
-      if(badgeDescEl) badgeDescEl.value = 'شارة تميز واجتهاد في المسار التعليمي';
 
       updateChestModalPreview();
       const modalEl = document.getElementById('modal-chest-editor');
@@ -1661,18 +1631,6 @@ const CurriculumAdminSystem = (function(){
 
       setChestHearts(chest.hearts !== undefined ? chest.hearts : 1);
 
-      const badgeCb = document.getElementById('chest-input-has-badge');
-      if(badgeCb){
-        badgeCb.checked = !!chest.has_badge;
-        toggleChestBadgeFields(!!chest.has_badge);
-      }
-      const badgeTitleEl = document.getElementById('chest-input-badge-title');
-      if(badgeTitleEl) badgeTitleEl.value = chest.badge_title || '';
-      const badgeIconEl = document.getElementById('chest-input-badge-icon');
-      if(badgeIconEl) badgeIconEl.value = chest.badge_icon || 'trophy';
-      const badgeDescEl = document.getElementById('chest-input-badge-desc');
-      if(badgeDescEl) badgeDescEl.value = chest.badge_desc || '';
-
       updateChestModalPreview();
       const modalEl = document.getElementById('modal-chest-editor');
       if(modalEl){
@@ -1714,10 +1672,10 @@ const CurriculumAdminSystem = (function(){
     }
 
     const heartsVal = Math.max(0, parseInt(document.getElementById('chest-input-hearts').value, 10) || 0);
-    const hasBadge = document.getElementById('chest-input-has-badge')?.checked || false;
-    const badgeTitle = document.getElementById('chest-input-badge-title').value.trim();
-    const badgeIcon = document.getElementById('chest-input-badge-icon').value.trim() || 'trophy';
-    const badgeDesc = document.getElementById('chest-input-badge-desc').value.trim();
+    const hasBadge = false;
+    const badgeTitle = '';
+    const badgeIcon = '';
+    const badgeDesc = '';
 
     if(!curriculumData.chests) curriculumData.chests = [];
 
@@ -1872,14 +1830,6 @@ const CurriculumAdminSystem = (function(){
             <div style="font-size:1.6rem; color:#FF4B4B; margin-bottom:4px;">${SVG.heart}</div>
             <div style="font-size:1.05rem; font-weight:900; color:#D92D20;">+${chest.hearts} محاولات</div>
             <div style="font-size:0.75rem; color:#706354; font-weight:700;">محاولات إضافية</div>
-          </div>
-        ` : ''}
-
-        ${chest.has_badge ? `
-          <div style="background:#FFFDF0; border:1.5px solid #FFE082; border-radius:14px; padding:14px; text-align:center;">
-            <div style="font-size:1.6rem; color:#D4AF37; margin-bottom:4px;">${getBadgeIcon(chest.badge_icon, SVG.trophy)}</div>
-            <div style="font-size:0.92rem; font-weight:900; color:#B54708;">${escapeHtml(chest.badge_title || 'وسام بطل')}</div>
-            <div style="font-size:0.75rem; color:#706354; font-weight:700;">وسام تشجيعي</div>
           </div>
         ` : ''}
       `;
@@ -2037,7 +1987,6 @@ const CurriculumAdminSystem = (function(){
               <span>${escapeHtml(c.title || 'صندوق المكافأة السري')}</span>
               <span style="font-size:0.75rem; background:rgba(0,163,255,0.12); color:#0077B6; padding:1px 6px; border-radius:5px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${SVG.zap} <span>${xpDisplay}</span></span>
               ${c.hearts > 0 ? `<span style="font-size:0.75rem; background:rgba(255,75,75,0.12); color:#D92D20; padding:1px 6px; border-radius:5px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${SVG.heart} <span>+${c.hearts}</span></span>` : ''}
-              ${c.has_badge ? `<span style="font-size:0.75rem; background:rgba(212,175,55,0.18); color:#8C6A1A; padding:1px 6px; border-radius:5px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${getBadgeIcon(c.badge_icon, SVG.trophy)} <span>${escapeHtml(c.badge_title || '')}</span></span>` : ''}
             </div>
             <div style="font-size:0.8rem; color:#706354; margin-top:2px;">
               ${escapeHtml(c.description || 'مكافأة تشجيعية عند إتمام هذا الجزء')}
@@ -2407,7 +2356,6 @@ const CurriculumAdminSystem = (function(){
             <div style="display:flex; align-items:center; gap:8px; font-size:0.8rem; color:#706354; flex-wrap:wrap;">
               <span style="background:rgba(0,163,255,0.12); color:#0077B6; padding:1px 6px; border-radius:6px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${SVG.zap} <span>${xpDisplay}</span></span>
               ${c.hearts > 0 ? `<span style="background:rgba(255,75,75,0.12); color:#D92D20; padding:1px 6px; border-radius:6px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${SVG.heart} <span>+${c.hearts}</span></span>` : ''}
-              ${c.has_badge ? `<span style="background:rgba(212,175,55,0.18); color:#8C6A1A; padding:1px 6px; border-radius:6px; font-weight:800; display:inline-flex; align-items:center; gap:4px;">${getBadgeIcon(c.badge_icon, SVG.trophy)} <span>${escapeHtml(c.badge_title || 'وسام')}</span></span>` : ''}
               <span>• ${escapeHtml(c.description || 'مكافأة تشجيعية')}</span>
             </div>
           </div>

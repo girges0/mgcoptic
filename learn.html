@@ -3164,9 +3164,6 @@
         awardXp = Math.floor(Math.random() * (max - min + 1)) + min;
       }
       awardHearts = parseInt(chestData.hearts, 10) || 0;
-      if(chestData.has_badge && chestData.badge_title){
-        badgeTitle = `${chestData.badge_icon || '🏆'} ${chestData.badge_title}`;
-      }
     }
 
     // منح النقاط والقلوب الحقيقية وحفظها في قاعدة البيانات

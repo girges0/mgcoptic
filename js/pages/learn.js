@@ -638,16 +638,6 @@
                       <div class="reward-card-lbl">محاولات إضافية</div>
                     </div>
                   ` : ''}
-
-                  ${cData.has_badge ? `
-                    <div class="chest-reward-card badge-reward" style="background:#FFFDF0; border:1.5px solid #FFE082;">
-                      <div class="reward-card-val badge-val" dir="ltr" style="color:#B54708; font-size:1.1rem; display:flex; align-items:center; justify-content:center; gap:6px;">
-                        <span>${cData.badge_icon || '🏆'}</span>
-                        <span style="font-size:0.92rem; font-weight:800;">${escapeHtml(cData.badge_title || 'وسام بطل')}</span>
-                      </div>
-                      <div class="reward-card-lbl">وسام تشجيعي</div>
-                    </div>
-                  ` : ''}
                 `;
               }
 
@@ -827,17 +817,11 @@
             }
 
             const heartsToAdd = cData.hearts !== undefined ? parseInt(cData.hearts, 10) : 1;
-            const badgeObj = cData.has_badge ? {
-              title: cData.badge_title || 'وسام بطل الحروف',
-              icon: cData.badge_icon || '🏆',
-              description: cData.badge_desc || ''
-            } : null;
 
-            if (game.claimChest) await game.claimChest(uid, chestId, rolledXp, heartsToAdd, badgeObj);
+            if (game.claimChest) await game.claimChest(uid, chestId, rolledXp, heartsToAdd);
 
             let floatMsg = `+${rolledXp} XP ⭐`;
             if (heartsToAdd > 0) floatMsg += `  +${heartsToAdd} ❤️`;
-            if (badgeObj) floatMsg += `  ${badgeObj.icon} ${badgeObj.title}`;
             showFloatingXpBadge(floatMsg);
 
             if (game.sound && typeof game.sound.playChestReward === 'function') {

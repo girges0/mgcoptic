@@ -793,51 +793,6 @@
                   </div>
                   <input type="number" id="chest-input-hearts" value="1" min="0" max="10" step="1" oninput="CurriculumAdminSystem.updateChestModalPreview()" placeholder="عدد القلوب (0 لإلغاء القلوب)">
                 </div>
-
-                <!-- Badges & Achievements Control -->
-                <div style="background:#FFF; border:1px solid #EADBBE; border-radius:10px; padding:14px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <label style="font-weight:800; color:#241D20; font-size:0.88rem; display:flex; align-items:center; gap:6px; margin:0;">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#D4AF37" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 4h16v7a8 8 0 0 1-8 8 8 8 0 0 1-8-8V4z"/><path d="M12 19v3"/><path d="M8 22h8"/></svg>
-                      <span>الشارات والأوسمة (Badges & Trophies)</span>
-                    </label>
-                    <label style="font-size:0.82rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:6px; color:#6F1737;">
-                      <input type="checkbox" id="chest-input-has-badge" onchange="CurriculumAdminSystem.toggleChestBadgeFields(this.checked)">
-                      <span>تفعيل إهداء شارة في هذا الصندوق</span>
-                    </label>
-                  </div>
-
-                  <div id="chest-badge-fields-container" style="display:none; padding-top:10px; border-top:1px dashed #E7DCC8;">
-                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px; margin-bottom:12px;">
-                      <div class="curriculum-field" style="margin-bottom:0;">
-                        <label style="font-size:0.8rem;">اسم الشارة أو الوسام *</label>
-                        <input type="text" id="chest-input-badge-title" placeholder="مثال: وسام بطل الحروف، صياد الكنوز" value="وسام بطل الحروف" oninput="CurriculumAdminSystem.updateChestModalPreview()">
-                      </div>
-                      <div class="curriculum-field" style="margin-bottom:0;">
-                        <label style="font-size:0.8rem;">رمز/نوع الشارة</label>
-                        <input type="text" id="chest-input-badge-icon" value="trophy" style="font-size:0.95rem; text-align:center;" oninput="CurriculumAdminSystem.updateChestModalPreview()">
-                      </div>
-                    </div>
-
-                    <!-- Quick icon picker chips -->
-                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
-                      <span style="font-size:0.75rem; color:#706354; font-weight:700;">شارات مقترحة:</span>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('trophy')">كأس تفوق</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('crown')">تاج المعرفة</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('star')">نجمة ذهبية</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('gem')">جوهرة الإتقان</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('shield')">درع الفضيلة</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('zap')">طاقة السرعة</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('target')">إصابة الهدف</button>
-                      <button type="button" class="badge-chip-btn" onclick="CurriculumAdminSystem.setChestBadgeIcon('book')">حارس المخطوط</button>
-                    </div>
-
-                    <div class="curriculum-field" style="margin-bottom:0;">
-                      <label style="font-size:0.8rem;">وصف الشارة</label>
-                      <input type="text" id="chest-input-badge-desc" placeholder="مثال: تُمنح للمتعلم المتميز عند اكتشاف صندوق الكنز" value="شارة تميز واجتهاد في المسار التعليمي" oninput="CurriculumAdminSystem.updateChestModalPreview()">
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Live Preview Card (معاينة حية للمشرف) -->
