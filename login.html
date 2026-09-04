@@ -382,6 +382,21 @@
         const signupLink = document.getElementById('signup-link');
         if (signupLink) signupLink.href = 'signup.html?redirect=' + encodeURIComponent(redirect);
       }
+
+      // إذا جاي من صفحة التسجيل بإيميل مسجل مسبقاً، املأ الإيميل تلقائي وأظهر رسالة
+      const prefillEmail = urlParams.get('email');
+      if (prefillEmail) {
+        const emailInp = document.getElementById('auth-email-input');
+        if (emailInp) emailInp.value = prefillEmail;
+        const passInp = document.getElementById('auth-password-input');
+        if (passInp) setTimeout(() => passInp.focus(), 200);
+        const statusEl = document.getElementById('auth-status-msg');
+        if (statusEl) {
+          statusEl.className = 'auth-status-msg';
+          statusEl.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(107,21,48,0.08);border:1px solid rgba(168,130,58,0.3);color:#6B1530;font-weight:700;font-size:0.88rem;margin-bottom:14px;';
+          statusEl.innerHTML = '<span>هذا البريد مسجل بالفعل. أدخل كلمة المرور وسجّل دخولك.</span>';
+        }
+      }
     });
   </script>
 </body>

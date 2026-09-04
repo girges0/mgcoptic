@@ -333,37 +333,59 @@
             }
           });
 
-          if (signErr) {
+          // كشف حالة الإيميل المسجل مسبقاً (سواء error صريح أو fake signup بدون identities)
+          const isAlreadyRegisteredError = signErr && (() => {
             const errMsg = String(signErr.message || '').toLowerCase();
-            if (errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists')) {
-              if (statusEl) {
-                statusEl.className = 'auth-status-msg auth-status-loading-box';
-                statusEl.innerHTML = `<span>هذا البريد مسجل مسبقاً! جاري نقلك لتسجيل الدخول...</span>`;
-              }
-              if (document.getElementById('auth-modal')) {
-                setTimeout(() => {
-                  switchAuthTab('signin');
-                  const emailInp = document.getElementById('auth-email-input');
-                  const passInp = document.getElementById('auth-password-input');
-                  if (emailInp) emailInp.value = email;
-                  if (passInp) {
-                    passInp.value = password;
-                    passInp.focus();
-                  }
-                  resetFormUI('أدخل كلمة المرور واضغط "دخول".');
-                }, 1200);
-                return;
-              } else {
-                const urlParams = new URLSearchParams(window.location.search);
-                const redirectParam = urlParams.get('redirect') ? '?redirect=' + encodeURIComponent(urlParams.get('redirect')) : '';
-                setTimeout(() => {
-                  window.location.href = 'login.html' + redirectParam;
-                }, 1200);
-                return;
-              }
+            return errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists');
+          })();
+          const isFakeSignup = !signErr && signData && signData.user &&
+            (!signData.user.identities || signData.user.identities.length === 0);
+
+          if (isAlreadyRegisteredError || isFakeSignup) {
+            if (submitBtn) {
+              submitBtn.innerHTML = `
+                <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                  <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                    <path d="M12 2a10 10 0 0 1 10 10"></path>
+                  </svg>
+                  <span>جاري التحويل...</span>
+                </span>
+              `;
             }
-            throw signErr;
+            if (statusEl) {
+              statusEl.className = 'auth-status-msg auth-status-loading-box';
+              statusEl.innerHTML = `
+                <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+                  <path d="M12 2a10 10 0 0 1 10 10"></path>
+                </svg>
+                <span>هذا البريد مسجل مسبقاً! جاري نقلك لتسجيل الدخول...</span>
+              `;
+            }
+            if (document.getElementById('auth-modal')) {
+              setTimeout(() => {
+                switchAuthTab('signin');
+                const emailInp = document.getElementById('auth-email-input');
+                const passInp = document.getElementById('auth-password-input');
+                if (emailInp) emailInp.value = email;
+                if (passInp) {
+                  passInp.value = '';
+                  passInp.focus();
+                }
+                resetFormUI('هذا البريد مسجل بالفعل. أدخل كلمة المرور واضغط "دخول".');
+              }, 1500);
+              return;
+            } else {
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirectParam = urlParams.get('redirect') ? '&redirect=' + encodeURIComponent(urlParams.get('redirect')) : '';
+              setTimeout(() => {
+                window.location.href = 'login.html?email=' + encodeURIComponent(email) + redirectParam;
+              }, 1500);
+              return;
+            }
           }
+          if (signErr) throw signErr;
 
           if (statusEl) {
             statusEl.innerHTML = `
