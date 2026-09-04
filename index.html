@@ -205,9 +205,9 @@
 
     .topbar-content,
     .topbar-inner {
-      max-width: 1080px;
+      max-width: 1360px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
       height: 100%;
       display: flex;
       align-items: center;
@@ -278,15 +278,11 @@
     nav.tabs {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       padding: 0;
       margin: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    nav.tabs::-webkit-scrollbar {
-      display: none;
+      flex-shrink: 0;
+      overflow: visible;
     }
 
     nav.tabs .tab-link-nav,
@@ -295,7 +291,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 8px 18px;
+      padding: 8px 16px;
       height: 38px;
       box-sizing: border-box;
       border-radius: 999px;
@@ -310,6 +306,7 @@
       white-space: nowrap;
       text-decoration: none;
       line-height: 1.2;
+      flex-shrink: 0;
     }
 
     nav.tabs .tab-link-nav:hover,
@@ -2293,6 +2290,51 @@
       .stat-badge {
         padding: 2px 5px;
         font-size: 0.72rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1200px) {
+      .topbar-content,
+      .topbar-inner {
+        padding: 0 14px;
+        gap: 10px;
+      }
+
+      .brand {
+        gap: 8px;
+      }
+
+      .brand-text .brand-main {
+        font-size: 0.96rem;
+      }
+
+      .brand-text small,
+      .brand-text .brand-sub {
+        display: none !important;
+      }
+
+      nav.tabs.desktop-nav-tabs,
+      nav.tabs {
+        gap: 5px;
+      }
+
+      nav.tabs .tab-link-nav,
+      nav.tabs button {
+        padding: 6px 12px;
+        height: 34px;
+        font-size: 0.85rem;
+        gap: 4px;
+      }
+
+      .topbar-left-side {
+        gap: 8px;
+      }
+
+      .topbar-stat-pill,
+      .stat-badge {
+        padding: 3px 8px;
+        font-size: 0.8rem;
+        gap: 4px;
       }
     }
 
