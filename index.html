@@ -4793,21 +4793,170 @@
       color: #4A3E31;
       transform: scale(1.08);
     }
-    .chest-icon-wrap {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 12px;
+    /* =========================================================
+       ✨ High-End Cinematic Chest Opening Animation System ✨
+       ========================================================= */
+    .chest-stage-wrap {
+      position: relative;
+      width: 200px;
+      height: 155px;
+      margin: -10px auto 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, rgba(255, 215, 0, 0) 70%);
-      border-radius: 50%;
-      animation: floatChest 3s ease-in-out infinite;
+      perspective: 800px;
     }
+
+    /* Spinning Sunburst Rays */
+    .chest-sunburst-rays {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 260px;
+      height: 260px;
+      margin-top: -130px;
+      margin-left: -130px;
+      background: repeating-conic-gradient(
+        from 0deg,
+        rgba(255, 215, 0, 0.32) 0deg 15deg,
+        rgba(255, 215, 0, 0.03) 15deg 30deg
+      );
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.5) rotate(0deg);
+      transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: blur(1px);
+      z-index: 1;
+    }
+
+    .chest-modal-overlay.is-opened .chest-sunburst-rays {
+      opacity: 1;
+      transform: scale(1.18) rotate(0deg);
+      animation: chestRaySpin 20s linear infinite;
+    }
+
+    @keyframes chestRaySpin {
+      from { transform: scale(1.18) rotate(0deg); }
+      to { transform: scale(1.18) rotate(360deg); }
+    }
+
+    /* Glowing Ambient Halo */
+    .chest-ambient-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 170px;
+      height: 170px;
+      margin-top: -85px;
+      margin-left: -85px;
+      background: radial-gradient(circle, rgba(255, 204, 0, 0.5) 0%, rgba(255, 150, 0, 0.18) 55%, rgba(255, 255, 255, 0) 75%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: chestGlowPulse 2.6s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes chestGlowPulse {
+      0% { transform: scale(0.88); opacity: 0.45; }
+      100% { transform: scale(1.22); opacity: 0.95; }
+    }
+
+    /* Twinkling Magical Stars & Dust */
+    .chest-stars-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .chest-star {
+      position: absolute;
+      color: #FFD700;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.9);
+      font-family: Arial, sans-serif;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .chest-star.star-1 { top: 6px; right: 18px; font-size: 1.4rem; animation: chestStarTwinkle 2.2s ease-in-out infinite; }
+    .chest-star.star-2 { top: 20px; left: 16px; font-size: 1.1rem; animation: chestStarTwinkle 2.8s ease-in-out infinite 0.7s; }
+    .chest-star.star-3 { bottom: 20px; right: 20px; font-size: 1.25rem; animation: chestStarTwinkle 2.5s ease-in-out infinite 1.2s; }
+    .chest-star.star-4 { bottom: 18px; left: 20px; font-size: 1.45rem; animation: chestStarTwinkle 3.1s ease-in-out infinite 0.4s; }
+
+    @keyframes chestStarTwinkle {
+      0%, 100% { transform: scale(0.4) rotate(0deg); opacity: 0.2; }
+      50% { transform: scale(1.3) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 8px #FFF); }
+    }
+
+    /* Confetti Canvas */
+    .chest-confetti-canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 320px;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* Floating Chest Container */
+    .chest-icon-wrap {
+      position: relative;
+      width: 120px;
+      height: 95px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      filter: drop-shadow(0 14px 24px rgba(74, 13, 36, 0.25));
+      animation: floatChest 3.2s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+
     @keyframes floatChest {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-7px); }
     }
+
+    /* Anticipation Wobble */
+    .chest-modal-overlay.is-wobbling .chest-icon-wrap {
+      animation: chestWobble 0.45s ease-in-out forwards;
+    }
+
+    @keyframes chestWobble {
+      0% { transform: scale(1) rotate(0deg); }
+      20% { transform: scale(1.08) rotate(-7deg); }
+      40% { transform: scale(1.1) rotate(7deg); }
+      60% { transform: scale(1.12) rotate(-5deg); }
+      80% { transform: scale(1.14) rotate(4deg); }
+      100% { transform: scale(1.06) rotate(0deg); }
+    }
+
+    /* Chest SVG Lid 3D Open */
+    .chest-svg-lid {
+      transform-origin: 14px 28px;
+      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .chest-modal-overlay.is-opened .chest-svg-lid {
+      transform: translateY(-24px) rotate(-46deg) scale(0.92);
+    }
+
+    /* Interior Glowing Beam */
+    .chest-svg-light-beam polygon {
+      transition: opacity 0.5s ease;
+    }
+    .chest-modal-overlay.is-opened .chest-svg-light-beam polygon {
+      opacity: 0.88;
+      animation: chestBeamPulse 2.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes chestBeamPulse {
+      0% { opacity: 0.65; transform: scaleY(0.92); }
+      100% { opacity: 0.95; transform: scaleY(1.08); }
+    }
+
     .chest-modal-title {
       font-family: var(--font-display);
       font-size: 1.75rem;
@@ -4827,6 +4976,8 @@
       gap: 14px;
       margin-bottom: 24px;
     }
+
+    /* Staggered Spring Pop-in for Reward Cards */
     .chest-reward-card {
       padding: 16px 12px;
       border-radius: 20px;
@@ -4835,18 +4986,32 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: transform 0.2s ease;
+      opacity: 0;
+      transform: translateY(22px) scale(0.82);
+      transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .chest-reward-card:hover { transform: translateY(-3px); }
+    .chest-modal-overlay.is-opened .chest-reward-card:nth-child(1) {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: 0.25s;
+    }
+    .chest-modal-overlay.is-opened .chest-reward-card:nth-child(2) {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: 0.42s;
+    }
+
+    .chest-reward-card:hover { transform: translateY(-3px) scale(1.03); }
+
     .chest-reward-card.xp-reward {
       background: linear-gradient(135deg, #E7F5FF 0%, #D0EBFF 100%);
       border: 1.5px solid #74C0FC;
-      box-shadow: 0 6px 16px rgba(0, 163, 255, 0.12);
+      box-shadow: 0 8px 22px rgba(0, 163, 255, 0.18);
     }
     .chest-reward-card.heart-reward {
       background: linear-gradient(135deg, #FFF0F2 0%, #FFE3E8 100%);
       border: 1.5px solid #FFA8B8;
-      box-shadow: 0 6px 16px rgba(255, 75, 75, 0.12);
+      box-shadow: 0 8px 22px rgba(255, 75, 75, 0.18);
     }
     .reward-card-val {
       font-family: var(--font-display);
@@ -4855,7 +5020,7 @@
       line-height: 1.1;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
     .reward-card-val.xp-val { color: #0077CC; }
     .reward-card-val.heart-val { color: #E03131; }
@@ -4864,7 +5029,10 @@
       font-weight: 700;
       color: #7A6953;
     }
+
+    /* 3D Gold Claim Button with Shimmer Sweep */
     .btn-3d-gold-claim {
+      position: relative;
       width: 100%;
       padding: 15px 24px;
       background: linear-gradient(180deg, #FFD43B 0%, #FAB005 100%);
@@ -4882,6 +5050,32 @@
       gap: 10px;
       box-shadow: 0 8px 20px rgba(250, 176, 5, 0.35);
       transition: all 0.15s ease;
+      overflow: hidden;
+    }
+    .btn-3d-gold-claim::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: rotate(25deg);
+      animation: buttonShimmer 3.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes buttonShimmer {
+      0% { left: -60%; }
+      35% { left: 130%; }
+      100% { left: 130%; }
+    }
+    .btn-3d-gold-claim:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(250, 176, 5, 0.45);
+    }
+    .btn-3d-gold-claim:active {
+      transform: translateY(3px);
+      border-bottom-width: 1.5px;
     }
     .btn-3d-gold-claim:hover {
       background: linear-gradient(180deg, #FFE066 0%, #FCC419 100%);
@@ -5682,61 +5876,88 @@
     <div class="chest-modal-overlay" id="chest-modal">
       <div class="chest-modal-card">
         <button type="button" class="chest-modal-close" id="modal-chest-close-btn" aria-label="إغلاق">&times;</button>
-        <div class="chest-icon-wrap" style="display:flex; justify-content:center; margin-bottom:12px;">
-          <svg viewBox="0 0 96 74" width="110" height="85" fill="none">
-            <defs>
-              <filter id="modalChestGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4A0D24" flood-opacity="0.28"/>
-              </filter>
-              <linearGradient id="modalLidGrad" x1="48" y1="6" x2="48" y2="30" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FFF9DB"/>
-                <stop offset="25%" stop-color="#F2D16B"/>
-                <stop offset="70%" stop-color="#C89726"/>
-                <stop offset="100%" stop-color="#8F6310"/>
-              </linearGradient>
-              <linearGradient id="modalBodyGrad" x1="48" y1="30" x2="48" y2="62" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#F6DA7E"/>
-                <stop offset="35%" stop-color="#D6A42E"/>
-                <stop offset="85%" stop-color="#9C6B10"/>
-                <stop offset="100%" stop-color="#664303"/>
-              </linearGradient>
-              <linearGradient id="modalTrimGrad" x1="12" y1="30" x2="84" y2="30" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FFF5C2"/>
-                <stop offset="50%" stop-color="#FFE066"/>
-                <stop offset="100%" stop-color="#C5931C"/>
-              </linearGradient>
-              <linearGradient id="modalRubyGrad" x1="48" y1="26" x2="48" y2="37" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FF5277"/>
-                <stop offset="45%" stop-color="#D80032"/>
-                <stop offset="100%" stop-color="#670014"/>
-              </linearGradient>
-            </defs>
-            <ellipse cx="48" cy="67" rx="34" ry="5.5" fill="rgba(80,50,10,0.28)"/>
-            <g filter="url(#modalChestGlow)">
-              <rect x="15" y="28" width="66" height="34" rx="6" fill="url(#modalBodyGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-              <line x1="28" y1="30" x2="28" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-              <line x1="29.5" y1="30" x2="29.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-              <line x1="41" y1="30" x2="41" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-              <line x1="42.5" y1="30" x2="42.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-              <line x1="55" y1="30" x2="55" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-              <line x1="56.5" y1="30" x2="56.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-              <line x1="68" y1="30" x2="68" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-              <line x1="69.5" y1="30" x2="69.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-              <rect x="13" y="58" width="70" height="5" rx="2.5" fill="#B37C17" stroke="#5E3F0A" stroke-width="2"/>
-              <path d="M14 29 C14 13, 26 7, 48 7 C70 7, 82 13, 82 29 Z" fill="url(#modalLidGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-              <path d="M28 11 C25 17, 25 24, 28 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-              <path d="M41 8 C40 16, 40 23, 41 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-              <path d="M55 8 C56 16, 56 23, 55 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-              <path d="M68 11 C71 17, 71 24, 68 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-              <rect x="12" y="27" width="72" height="5" rx="2" fill="url(#modalTrimGrad)" stroke="#5E3F0A" stroke-width="2"/>
-              <line x1="14" y1="28" x2="82" y2="28" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
-              <rect x="41" y="23" width="14" height="17" rx="3.5" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
-              <rect x="43" y="25" width="10" height="13" rx="2.5" fill="#3D2103"/>
-              <!-- الياقوتة الحمراء المركزية -->
-              <rect x="44" y="26.5" width="8" height="10" rx="2" fill="url(#modalRubyGrad)" stroke="#FFD1DC" stroke-width="0.8"/>
-              <circle cx="46" cy="28.5" r="1.2" fill="#FFFFFF"/>
-            </g>
-          </svg>
+        <div class="chest-stage-wrap">
+          <div class="chest-sunburst-rays"></div>
+          <div class="chest-ambient-glow"></div>
+          <canvas class="chest-confetti-canvas" id="chest-confetti-canvas"></canvas>
+          <div class="chest-stars-layer">
+            <span class="chest-star star-1">✦</span>
+            <span class="chest-star star-2">★</span>
+            <span class="chest-star star-3">✦</span>
+            <span class="chest-star star-4">★</span>
+          </div>
+          <div class="chest-icon-wrap">
+            <svg viewBox="0 0 96 74" width="125" height="96" fill="none" class="chest-main-svg">
+              <defs>
+                <filter id="modalChestGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4A0D24" flood-opacity="0.28"/>
+                </filter>
+                <linearGradient id="modalLidGrad" x1="48" y1="6" x2="48" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFF9DB"/>
+                  <stop offset="25%" stop-color="#F2D16B"/>
+                  <stop offset="70%" stop-color="#C89726"/>
+                  <stop offset="100%" stop-color="#8F6310"/>
+                </linearGradient>
+                <linearGradient id="modalBodyGrad" x1="48" y1="30" x2="48" y2="62" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#F6DA7E"/>
+                  <stop offset="35%" stop-color="#D6A42E"/>
+                  <stop offset="85%" stop-color="#9C6B10"/>
+                  <stop offset="100%" stop-color="#664303"/>
+                </linearGradient>
+                <linearGradient id="modalTrimGrad" x1="12" y1="30" x2="84" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFF5C2"/>
+                  <stop offset="50%" stop-color="#FFE066"/>
+                  <stop offset="100%" stop-color="#C5931C"/>
+                </linearGradient>
+                <linearGradient id="modalRubyGrad" x1="48" y1="26" x2="48" y2="37" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FF5277"/>
+                  <stop offset="45%" stop-color="#D80032"/>
+                  <stop offset="100%" stop-color="#670014"/>
+                </linearGradient>
+                <linearGradient id="modalBeamGrad" x1="48" y1="30" x2="48" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFD700" stop-opacity="0.95"/>
+                  <stop offset="50%" stop-color="#FFF3A8" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+
+              <ellipse class="chest-ground-shadow" cx="48" cy="67" rx="34" ry="5.5" fill="rgba(80,50,10,0.28)"/>
+
+              <!-- Chest Body Base -->
+              <g class="chest-svg-body" filter="url(#modalChestGlow)">
+                <rect x="15" y="28" width="66" height="34" rx="6" fill="url(#modalBodyGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
+                <line x1="28" y1="30" x2="28" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
+                <line x1="29.5" y1="30" x2="29.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
+                <line x1="41" y1="30" x2="41" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
+                <line x1="42.5" y1="30" x2="42.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
+                <line x1="55" y1="30" x2="55" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
+                <line x1="56.5" y1="30" x2="56.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
+                <line x1="68" y1="30" x2="68" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
+                <line x1="69.5" y1="30" x2="69.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
+                <rect x="13" y="58" width="70" height="5" rx="2.5" fill="#B37C17" stroke="#5E3F0A" stroke-width="2"/>
+                <rect x="43" y="28" width="10" height="12" rx="2" fill="#3D2103"/>
+              </g>
+
+              <!-- Interior Light Beam -->
+              <g class="chest-svg-light-beam">
+                <polygon points="22 28 8 0 88 0 74 28" fill="url(#modalBeamGrad)" opacity="0"/>
+              </g>
+
+              <!-- Chest Lid (Opening 3D) -->
+              <g class="chest-svg-lid" filter="url(#modalChestGlow)">
+                <path d="M14 29 C14 13, 26 7, 48 7 C70 7, 82 13, 82 29 Z" fill="url(#modalLidGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
+                <path d="M28 11 C25 17, 25 24, 28 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
+                <path d="M41 8 C40 16, 40 23, 41 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
+                <path d="M55 8 C56 16, 56 23, 55 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
+                <path d="M68 11 C71 17, 71 24, 68 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
+                <rect x="12" y="27" width="72" height="5" rx="2" fill="url(#modalTrimGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                <line x1="14" y1="28" x2="82" y2="28" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
+                <rect x="41" y="23" width="14" height="17" rx="3.5" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
+                <rect x="44" y="26.5" width="8" height="10" rx="2" fill="url(#modalRubyGrad)" stroke="#FFD1DC" stroke-width="0.8"/>
+                <circle cx="46" cy="28.5" r="1.2" fill="#FFFFFF"/>
+              </g>
+            </svg>
+          </div>
         </div>
         <h2 class="chest-modal-title">صندوق المكافأة السري!</h2>
         <p class="chest-modal-desc">أحسنت وصولاً إلى هذه المحطة!<br>إليك هديتك التشجيعية:</p>
@@ -9381,10 +9602,112 @@
                 const hT = (foundChest && foundChest.hearts !== undefined) ? `+${foundChest.hearts} ❤️` : '+1 ❤️';
                 heartValEl.textContent = hT;
               }
-              chestModal.style.display = 'flex';
+              openAnimatedChestModal(chestModal);
             }
           });
         });
+      }
+
+      /* =========================================================
+         ✨ Modern Cinematic Chest Confetti & Opening Engine ✨
+         ========================================================= */
+      function launchChestConfetti(canvas) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        const w = 380;
+        const h = 320;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+
+        const colors = ['#FFD700', '#FFA000', '#00D2FF', '#FF3366', '#00E676', '#FFFFFF', '#E040FB'];
+        const particles = [];
+        const count = 75;
+
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.random() * Math.PI * 1.3) + Math.PI * 0.85;
+          const speed = 4 + Math.random() * 8.5;
+          particles.push({
+            x: w / 2 + (Math.random() * 24 - 12),
+            y: h / 2 + 10,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 4 + Math.random() * 6.5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.3,
+            gravity: 0.22,
+            drag: 0.965,
+            opacity: 1,
+            decay: 0.009 + Math.random() * 0.012,
+            shape: Math.random() > 0.35 ? 'rect' : 'circle'
+          });
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, w, h);
+          let active = false;
+
+          particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.vx *= p.drag;
+            p.vy *= p.drag;
+            p.rotation += p.rotSpeed;
+            p.opacity = Math.max(0, p.opacity - p.decay);
+
+            if (p.opacity > 0 && p.y < h + 30) {
+              active = true;
+              ctx.save();
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rotation);
+
+              if (p.shape === 'rect') {
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+              } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.restore();
+            }
+          });
+
+          if (active) {
+            requestAnimationFrame(animate);
+          } else {
+            ctx.clearRect(0, 0, w, h);
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+
+      function openAnimatedChestModal(modalEl) {
+        if (!modalEl) return;
+        modalEl.classList.remove('is-opened');
+        modalEl.classList.remove('is-wobbling');
+        modalEl.style.display = 'flex';
+
+        // 1. Anticipation Wobble
+        modalEl.classList.add('is-wobbling');
+
+        // 2. Open Lid & Trigger Confetti Cannon after 380ms
+        setTimeout(() => {
+          modalEl.classList.remove('is-wobbling');
+          modalEl.classList.add('is-opened');
+
+          if (game && game.sound && typeof game.sound.playVictory === 'function') {
+            game.sound.playVictory();
+          }
+
+          const canvas = modalEl.querySelector('.chest-confetti-canvas');
+          if (canvas) launchChestConfetti(canvas);
+        }, 380);
       }
 
       async function renderSkillMap() {
@@ -9534,9 +9857,15 @@
           };
         }
 
+        function closeChestModal() {
+          if (!chestModal) return;
+          chestModal.style.display = 'none';
+          chestModal.classList.remove('is-opened', 'is-wobbling');
+        }
+
         if (modalChestCloseBtn && chestModal) {
-          modalChestCloseBtn.onclick = () => { chestModal.style.display = 'none'; };
-          chestModal.onclick = (e) => { if (e.target === chestModal) chestModal.style.display = 'none'; };
+          modalChestCloseBtn.onclick = closeChestModal;
+          chestModal.onclick = (e) => { if (e.target === chestModal) closeChestModal(); };
         }
 
         if (btnClaimChest && chestModal) {
@@ -9544,7 +9873,7 @@
             if (!currentActiveChestId) return;
             const chestId = currentActiveChestId;
             const cData = currentActiveChestData;
-            chestModal.style.display = 'none';
+            closeChestModal();
             const uid = getAuthUserId();
 
             let xpReward = 30;

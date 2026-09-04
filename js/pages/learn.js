@@ -641,10 +641,112 @@
                 `;
               }
 
-              chestModal.style.display = 'flex';
+              openAnimatedChestModal(chestModal);
             }
           });
         });
+      }
+
+      /* =========================================================
+         ✨ Modern Cinematic Chest Confetti & Opening Engine ✨
+         ========================================================= */
+      function launchChestConfetti(canvas) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        const w = 380;
+        const h = 320;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+
+        const colors = ['#FFD700', '#FFA000', '#00D2FF', '#FF3366', '#00E676', '#FFFFFF', '#E040FB'];
+        const particles = [];
+        const count = 75;
+
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.random() * Math.PI * 1.3) + Math.PI * 0.85;
+          const speed = 4 + Math.random() * 8.5;
+          particles.push({
+            x: w / 2 + (Math.random() * 24 - 12),
+            y: h / 2 + 10,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 4 + Math.random() * 6.5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.3,
+            gravity: 0.22,
+            drag: 0.965,
+            opacity: 1,
+            decay: 0.009 + Math.random() * 0.012,
+            shape: Math.random() > 0.35 ? 'rect' : 'circle'
+          });
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, w, h);
+          let active = false;
+
+          particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.vx *= p.drag;
+            p.vy *= p.drag;
+            p.rotation += p.rotSpeed;
+            p.opacity = Math.max(0, p.opacity - p.decay);
+
+            if (p.opacity > 0 && p.y < h + 30) {
+              active = true;
+              ctx.save();
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rotation);
+
+              if (p.shape === 'rect') {
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+              } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+              }
+              ctx.restore();
+            }
+          });
+
+          if (active) {
+            requestAnimationFrame(animate);
+          } else {
+            ctx.clearRect(0, 0, w, h);
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+
+      function openAnimatedChestModal(modalEl) {
+        if (!modalEl) return;
+        modalEl.classList.remove('is-opened');
+        modalEl.classList.remove('is-wobbling');
+        modalEl.style.display = 'flex';
+
+        // 1. Anticipation Wobble
+        modalEl.classList.add('is-wobbling');
+
+        // 2. Open Lid & Trigger Confetti Cannon after 380ms
+        setTimeout(() => {
+          modalEl.classList.remove('is-wobbling');
+          modalEl.classList.add('is-opened');
+
+          if (game && game.sound && typeof game.sound.playVictory === 'function') {
+            game.sound.playVictory();
+          }
+
+          const canvas = modalEl.querySelector('.chest-confetti-canvas');
+          if (canvas) launchChestConfetti(canvas);
+        }, 380);
       }
 
       async function renderSkillMap() {
@@ -794,9 +896,15 @@
           };
         }
 
+        function closeChestModal() {
+          if (!chestModal) return;
+          chestModal.style.display = 'none';
+          chestModal.classList.remove('is-opened', 'is-wobbling');
+        }
+
         if (modalChestCloseBtn && chestModal) {
-          modalChestCloseBtn.onclick = () => { chestModal.style.display = 'none'; };
-          chestModal.onclick = (e) => { if (e.target === chestModal) chestModal.style.display = 'none'; };
+          modalChestCloseBtn.onclick = closeChestModal;
+          chestModal.onclick = (e) => { if (e.target === chestModal) closeChestModal(); };
         }
 
         if (btnClaimChest && chestModal) {
@@ -804,7 +912,7 @@
             if (!currentActiveChestId) return;
             const chestId = currentActiveChestId;
             const cData = currentActiveChestData || {};
-            chestModal.style.display = 'none';
+            closeChestModal();
             const uid = getAuthUserId();
 
             let rolledXp = 30;
