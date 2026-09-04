@@ -1,8 +1,12 @@
 
-    /* ============ USER PROFILE & REAL SUPABASE AUTH / LEADERBOARD LOGIC ============ */
-    let currentAuthUser = null;
-    let currentAuthSession = null;
-    let currentAuthMode = 'signin';
+(function () {
+  'use strict';
+
+  /* ============ USER PROFILE & REAL SUPABASE AUTH / LEADERBOARD LOGIC ============ */
+  let currentAuthUser = null;
+  let currentAuthSession = null;
+  let currentAuthMode = 'signin';
+  let pendingAuthCallback = null;
 
     function openAuthModal(mode = 'signin') {
       currentAuthMode = mode;
@@ -41,24 +45,138 @@
       if (ageGrp) ageGrp.style.display = isSignUp ? 'block' : 'none';
       if (titleEl) titleEl.textContent = isSignUp ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
       if (subtitleEl) subtitleEl.textContent = isSignUp ? 'انضم لرحلة إتقان اللغة القبطية' : 'أهلاً بك مجددًا في منصة MG Coptic';
-      if (submitBtn) submitBtn.querySelector('span').textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
+      if (submitBtn) {
+        const span = submitBtn.querySelector('span');
+        if (span) span.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
+        else submitBtn.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
+      }
     }
 
-    async function handleAuthSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('auth-email-input').value.trim();
-      const password = document.getElementById('auth-password-input').value;
-      const statusEl = document.getElementById('auth-status-msg');
-      const submitBtn = document.getElementById('auth-submit-btn');
+    function handlePostAuthSuccess() {
+      const pathname = window.location.pathname;
+      const isAuthPage = pathname.endsWith('login.html') || pathname.endsWith('signup.html');
 
-      statusEl.style.color = 'var(--ink-soft)';
-      statusEl.textContent = 'جارٍ المعالجة...';
-      submitBtn.disabled = true;
+      if (isAuthPage) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
+        if (redirectUrl && !redirectUrl.includes('login.html') && !redirectUrl.includes('signup.html')) {
+          window.location.href = redirectUrl;
+        } else {
+          window.location.href = 'index.html';
+        }
+      } else {
+        closeAuthModal();
+        if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
+        if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+        if (typeof pendingAuthCallback === 'function') {
+          const cb = pendingAuthCallback;
+          pendingAuthCallback = null;
+          cb();
+        }
+      }
+    }
+
+    async function handleForgotPassword(prefilledEmail) {
+      const emailInput = document.querySelector('[name="email"], #auth-email-input');
+      const defaultVal = prefilledEmail || (emailInput ? emailInput.value.trim() : '');
+
+      if (window.Swal) {
+        const { value: email } = await Swal.fire({
+          title: 'استعادة كلمة المرور',
+          text: 'أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور:',
+          input: 'email',
+          inputValue: defaultVal,
+          inputPlaceholder: 'name@example.com',
+          showCancelButton: true,
+          confirmButtonText: 'إرسال الرابط',
+          cancelButtonText: 'إلغاء',
+          customClass: {
+            popup: 'mg-swal-popup'
+          }
+        });
+
+        if (email) {
+          try {
+            const { error } = await sb.auth.resetPasswordForEmail(email.trim(), {
+              redirectTo: window.location.origin + '/login.html'
+            });
+            if (error) throw error;
+            Swal.fire({
+              icon: 'success',
+              title: 'تم الإرسال!',
+              text: 'تم إرسال تعليمات إعادة التعيين إلى بريدك الإلكتروني بنجاح.',
+              confirmButtonText: 'حسناً'
+            });
+          } catch (err) {
+            Swal.fire({
+              icon: 'error',
+              title: 'تعذر الإرسال',
+              text: err.message || 'حدث خطأ أثناء محاولة إرسال الرابط.',
+              confirmButtonText: 'حسناً'
+            });
+          }
+        }
+      } else {
+        const email = prompt('أدخل بريدك الإلكتروني لاستعادة كلمة المرور:', defaultVal);
+        if (email && email.trim()) {
+          try {
+            const { error } = await sb.auth.resetPasswordForEmail(email.trim());
+            if (error) alert('تعذر الإرسال: ' + error.message);
+            else alert('تم إرسال رابط استعادة كلمة المرور إلى بريدك!');
+          } catch (e) {
+            alert('حدث خطأ: ' + e.message);
+          }
+        }
+      }
+    }
+
+    async function handleAuthSubmit(e, explicitMode) {
+      if (e && e.preventDefault) e.preventDefault();
+      const form = (e && e.target && e.target.tagName === 'FORM')
+        ? e.target
+        : (e && e.target && e.target.closest ? e.target.closest('form') : document.getElementById('auth-form'));
+
+      const mode = explicitMode || (form ? form.getAttribute('data-auth-mode') : null) || currentAuthMode || 'signin';
+
+      const emailEl = (form && (form.querySelector('[name="email"]') || form.querySelector('#auth-email-input'))) || document.getElementById('auth-email-input');
+      const passEl = (form && (form.querySelector('[name="password"]') || form.querySelector('#auth-password-input'))) || document.getElementById('auth-password-input');
+      const confirmPassEl = form ? (form.querySelector('[name="confirm_password"]') || form.querySelector('#auth-confirm-password-input')) : null;
+      const nameEl = (form && (form.querySelector('[name="full_name"]') || form.querySelector('[name="name"]') || form.querySelector('#auth-name-input'))) || document.getElementById('auth-name-input');
+      const ageEl = (form && (form.querySelector('[name="age"]') || form.querySelector('#auth-age-input'))) || document.getElementById('auth-age-input');
+      const statusEl = (form && (form.querySelector('.auth-status-msg') || form.querySelector('#auth-status-msg'))) || document.getElementById('auth-status-msg');
+      const submitBtn = (form && (form.querySelector('button[type="submit"]') || form.querySelector('#auth-submit-btn'))) || document.getElementById('auth-submit-btn');
+
+      const email = emailEl ? emailEl.value.trim() : '';
+      const password = passEl ? passEl.value : '';
+
+      if (statusEl) {
+        statusEl.style.color = 'var(--ink-soft, #5A4A3E)';
+        statusEl.textContent = 'جارٍ المعالجة...';
+      }
+      if (submitBtn) submitBtn.disabled = true;
 
       try {
-        if (currentAuthMode === 'signup') {
-          const fullName = document.getElementById('auth-name-input').value.trim() || email.split('@')[0];
-          const age = parseInt(document.getElementById('auth-age-input').value, 10) || 15;
+        if (mode === 'signup') {
+          if (confirmPassEl && confirmPassEl.value !== password) {
+            if (statusEl) {
+              statusEl.style.color = 'var(--err, #6B1530)';
+              statusEl.textContent = 'كلمتا المرور غير متطابقتين.';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+          }
+
+          if (password.length < 6) {
+            if (statusEl) {
+              statusEl.style.color = 'var(--err, #6B1530)';
+              statusEl.textContent = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            return;
+          }
+
+          const fullName = (nameEl && nameEl.value.trim()) || email.split('@')[0];
+          const age = (ageEl && parseInt(ageEl.value, 10)) || 15;
 
           const { data: signData, error: signErr } = await sb.auth.signUp({
             email: email,
@@ -75,18 +193,36 @@
           if (signErr) {
             const errMsg = String(signErr.message || '').toLowerCase();
             if (errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists')) {
-              statusEl.style.color = 'var(--madder)';
-              statusEl.textContent = 'هذا البريد الإلكتروني مسجّل مسبقاً! جاري نقلك لتبويب تسجيل الدخول...';
-              setTimeout(() => {
-                switchAuthTab('signin');
-                document.getElementById('auth-email-input').value = email;
-                document.getElementById('auth-password-input').value = password;
-                document.getElementById('auth-password-input').focus();
-                statusEl.style.color = 'var(--ink-soft)';
-                statusEl.textContent = 'أدخل كلمة المرور واضغط "دخول"';
-                submitBtn.disabled = false;
-              }, 1100);
-              return;
+              if (statusEl) {
+                statusEl.style.color = 'var(--madder, #6B1530)';
+                statusEl.textContent = 'هذا البريد الإلكتروني مسجّل مسبقاً! جاري التحويل لتسجيل الدخول...';
+              }
+
+              if (document.getElementById('auth-modal')) {
+                setTimeout(() => {
+                  switchAuthTab('signin');
+                  const emailInp = document.getElementById('auth-email-input');
+                  const passInp = document.getElementById('auth-password-input');
+                  if (emailInp) emailInp.value = email;
+                  if (passInp) {
+                    passInp.value = password;
+                    passInp.focus();
+                  }
+                  if (statusEl) {
+                    statusEl.style.color = 'var(--ink-soft, #5A4A3E)';
+                    statusEl.textContent = 'أدخل كلمة المرور واضغط "دخول"';
+                  }
+                  if (submitBtn) submitBtn.disabled = false;
+                }, 1100);
+                return;
+              } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectParam = urlParams.get('redirect') ? '?redirect=' + encodeURIComponent(urlParams.get('redirect')) : '';
+                setTimeout(() => {
+                  window.location.href = 'login.html' + redirectParam;
+                }, 1200);
+                return;
+              }
             }
             throw signErr;
           }
@@ -105,14 +241,15 @@
             console.warn('Password profile sync notice:', e);
           }
 
-          statusEl.style.color = '#2F7D46';
-          statusEl.textContent = 'تم إنشاء الحساب وتسجيل الدخول بنجاح!';
-          setTimeout(() => {
-            closeAuthModal();
-            hydrateHomeFromCacheSync();
-            syncHomeLearningProgress();
-            initUserSession();
-          }, 700);
+          if (statusEl) {
+            statusEl.style.color = '#2F7D46';
+            statusEl.textContent = 'تم إنشاء الحساب وتسجيل الدخول بنجاح!';
+          }
+
+          setTimeout(async () => {
+            await initUserSession();
+            handlePostAuthSuccess();
+          }, 600);
         } else {
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
@@ -126,25 +263,30 @@
             console.warn('Password login sync notice:', e);
           }
 
-          statusEl.style.color = '#2F7D46';
-          statusEl.textContent = 'تم تسجيل الدخول بنجاح!';
-          setTimeout(() => {
-            closeAuthModal();
-            initUserSession();
-          }, 600);
+          if (statusEl) {
+            statusEl.style.color = '#2F7D46';
+            statusEl.textContent = 'تم تسجيل الدخول بنجاح!';
+          }
+
+          setTimeout(async () => {
+            await initUserSession();
+            handlePostAuthSuccess();
+          }, 500);
         }
       } catch (err) {
-        statusEl.style.color = '#C53030';
-        let msg = err.message || 'حدث خطأ أثناء المحاولة';
-        const low = msg.toLowerCase();
-        if (low.includes('invalid login credentials')) {
-          msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-        } else if (low.includes('password should be at least')) {
-          msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
+        if (statusEl) {
+          statusEl.style.color = '#C53030';
+          let msg = err.message || 'حدث خطأ أثناء المحاولة';
+          const low = msg.toLowerCase();
+          if (low.includes('invalid login credentials')) {
+            msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+          } else if (low.includes('password should be at least')) {
+            msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
+          }
+          statusEl.textContent = msg;
         }
-        statusEl.textContent = msg;
       } finally {
-        submitBtn.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
       }
     }
 
@@ -516,6 +658,110 @@
       renderRealLeaderboard();
     }
 
+    /* ============ ACCESS CONTROL & GUARD LOGIC ============ */
+    async function enforceAccessControl() {
+      try {
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+
+        const currentPath = window.location.pathname;
+        const isAuthPage = currentPath.endsWith('login.html') || currentPath.endsWith('signup.html');
+        if (isAuthPage) {
+          window.__mgAuthCheckPending = false;
+          if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+            window.MGPreloader.dismiss();
+          }
+          return;
+        }
+
+        const isHomePage = (currentPath === '/' || currentPath.endsWith('index.html') || currentPath.endsWith('/'));
+
+        // Check active Supabase session
+        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
+        const isLoggedIn = !!(session && session.user);
+
+        if (isNative) {
+          // في تطبيق الأندرويد: إجباري بالكامل من البداية حتى الصفحة الرئيسية
+          if (!isLoggedIn) {
+            window.__mgRedirecting = true;
+            window.location.replace('login.html');
+            return;
+          }
+        } else {
+          // في نسخة الويب: الصفحة الرئيسية مسموحة، أي صفحة أخرى أو رابط مباشر لدرس/تمرين تتطلب تسجيل الدخول
+          const hasProtectedHash = window.location.hash && 
+                                   window.location.hash !== '#' && 
+                                   window.location.hash !== '#home';
+          const isDirectProtectedLink = !isHomePage || hasProtectedHash;
+
+          if (!isLoggedIn && isDirectProtectedLink) {
+            window.__mgRedirecting = true;
+            const redirectTarget = encodeURIComponent(window.location.pathname + window.location.search + (window.location.hash || ''));
+            window.location.replace('login.html?redirect=' + redirectTarget);
+            return;
+          }
+        }
+
+        // Access allowed -> dismiss preloader
+        window.__mgAuthCheckPending = false;
+        if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+          window.MGPreloader.dismiss();
+        }
+      } catch (e) {
+        console.warn('enforceAccessControl check error:', e);
+        window.__mgAuthCheckPending = false;
+        if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+          window.MGPreloader.dismiss();
+        }
+      }
+    }
+
+    async function requireAuthOrPrompt(callback) {
+      try {
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+
+        if (isNative) {
+          const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
+          if (!session || !session.user) {
+            window.location.replace('login.html');
+            return false;
+          }
+          if (typeof callback === 'function') callback();
+          return true;
+        }
+
+        // فحص سريع للحالة في الذاكرة أولاً
+        if (window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user)) {
+          if (typeof callback === 'function') callback();
+          return true;
+        }
+
+        // تأكيد إضافي من Supabase
+        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
+        const isLoggedIn = !!(session && session.user);
+
+        if (isLoggedIn) {
+          if (typeof callback === 'function') callback();
+          return true;
+        }
+
+        // نسخة الويب داخل index.html: عرض المودال وحفظ الـ callback للتنفيذ بعد تسجيل الدخول
+        pendingAuthCallback = callback;
+        if (typeof openAuthModal === 'function' && document.getElementById('auth-modal')) {
+          openAuthModal('signin');
+        } else {
+          window.location.replace('login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
+        }
+        return false;
+      } catch (err) {
+        console.warn('requireAuthOrPrompt error:', err);
+        return false;
+      }
+    }
+
     // استماع لرفع الصورة الشخصية إلى Supabase Storage
     document.addEventListener('DOMContentLoaded', () => {
       const avatarInput = document.getElementById('settings-avatar-input');
@@ -526,7 +772,7 @@
 
           if (!currentAuthUser) {
             openAuthModal('signin');
-            mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
+            if (typeof mgAlert === 'function') mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
             return;
           }
 
@@ -546,15 +792,15 @@
             currentAuthUser.avatar_url = publicUrl;
             localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
             localStorage.setItem('mg_coptic_user.avatar_url', publicUrl);
-            syncUserProfileUI();
-            renderRealLeaderboard();
+            if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+            if (typeof renderRealLeaderboard === 'function') renderRealLeaderboard();
           } catch (uploadErr) {
             console.warn('Storage upload error, using local fallback:', uploadErr);
             const reader = new FileReader();
             reader.onload = function (evt) {
               localStorage.setItem('mg_coptic_user.avatar_url', evt.target.result);
               if (currentAuthUser) currentAuthUser.avatar_url = evt.target.result;
-              syncUserProfileUI();
+              if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
             };
             reader.readAsDataURL(file);
           }
@@ -562,11 +808,58 @@
       }
 
       initUserSession();
-      updateDailyGoalUI();
+      if (typeof updateDailyGoalUI === 'function') updateDailyGoalUI();
 
       // Check URL hash on page load
       if (window.location.hash) {
         const tabFromHash = window.location.hash.replace('#', '');
-        if (window.tabOrder && window.tabOrder.includes(tabFromHash)) switchTab(tabFromHash);
+        if (window.tabOrder && window.tabOrder.includes(tabFromHash) && typeof switchTab === 'function') switchTab(tabFromHash);
       }
     });
+
+    // تصدير الدوال للاستخدام العام عبر الصفحات
+    window.enforceAccessControl = enforceAccessControl;
+    window.requireAuthOrPrompt = requireAuthOrPrompt;
+    window.handleAuthSubmit = handleAuthSubmit;
+    window.handleForgotPassword = handleForgotPassword;
+    window.openAuthModal = openAuthModal;
+    window.closeAuthModal = closeAuthModal;
+    window.switchAuthTab = switchAuthTab;
+    window.initUserSession = initUserSession;
+    window.signOutStudent = signOutStudent;
+    window.getUserProfileData = getUserProfileData;
+    window.getUserProgressData = getUserProgressData;
+    window.saveUserProfileName = saveUserProfileName;
+    window.removeUserProfilePhoto = removeUserProfilePhoto;
+    window.renderRealLeaderboard = renderRealLeaderboard;
+    window.setLeaderboardFilter = setLeaderboardFilter;
+
+    try {
+      Object.defineProperty(window, 'currentAuthUser', {
+        get: function () { return currentAuthUser; },
+        set: function (val) { currentAuthUser = val; },
+        configurable: true
+      });
+      Object.defineProperty(window, 'currentAuthSession', {
+        get: function () { return currentAuthSession; },
+        set: function (val) { currentAuthSession = val; },
+        configurable: true
+      });
+      Object.defineProperty(window, 'pendingAuthCallback', {
+        get: function () { return pendingAuthCallback; },
+        set: function (val) { pendingAuthCallback = val; },
+        configurable: true
+      });
+    } catch (e) {
+      window.currentAuthUser = currentAuthUser;
+      window.currentAuthSession = currentAuthSession;
+    }
+
+    // التنفيذ التلقائي للحارس فور تحميل السكريبت للصفحات المحمية
+    const pathname = window.location.pathname;
+    const isAuthPage = pathname.endsWith('login.html') || pathname.endsWith('signup.html');
+    if (!isAuthPage) {
+      window.__mgAuthCheckPending = true;
+      enforceAccessControl();
+    }
+})();

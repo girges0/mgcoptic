@@ -14,11 +14,49 @@
 
   const authStorageKey = isAdminEnv ? 'mg_coptic_admin_auth_token' : 'mg_coptic_student_auth_token';
 
+  // Capacitor Preferences Storage Adapter (Ensures persistent session inside Android APK WebView)
+  function getStorageAdapter() {
+    const isNative = typeof window.Capacitor !== 'undefined' && 
+                     typeof window.Capacitor.isNativePlatform === 'function' && 
+                     window.Capacitor.isNativePlatform();
+
+    const Preferences = window.Capacitor?.Plugins?.Preferences || window.CapacitorPreferences;
+    
+    if (isNative && Preferences && typeof Preferences.get === 'function') {
+      return {
+        getItem: async function (key) {
+          try {
+            const { value } = await Preferences.get({ key: key });
+            return value;
+          } catch (e) {
+            return window.localStorage ? window.localStorage.getItem(key) : null;
+          }
+        },
+        setItem: async function (key, value) {
+          try {
+            await Preferences.set({ key: key, value: String(value) });
+          } catch (e) {
+            if (window.localStorage) window.localStorage.setItem(key, String(value));
+          }
+        },
+        removeItem: async function (key) {
+          try {
+            await Preferences.remove({ key: key });
+          } catch (e) {
+            if (window.localStorage) window.localStorage.removeItem(key);
+          }
+        }
+      };
+    }
+    return window.localStorage;
+  }
+
   let client = null;
   if (window.supabase && typeof window.supabase.createClient === 'function') {
     client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         storageKey: authStorageKey,
+        storage: getStorageAdapter(),
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true
@@ -35,12 +73,14 @@
   window.SB_ANON_KEY = SUPABASE_ANON_KEY;
   window.MEDIA_BUCKET = MEDIA_BUCKET;
   window.sb = client;
+  window.sbClient = client;
 
   window.createSupabaseClient = function (customStorageKey) {
     if (!window.supabase) return null;
     return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         storageKey: customStorageKey || authStorageKey,
+        storage: getStorageAdapter(),
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true

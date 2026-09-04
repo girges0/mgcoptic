@@ -45,18 +45,25 @@
     }
   });
 
-  // Dismiss as soon as DOM is ready or fully loaded
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(dismiss, 100);
-  } else {
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(dismiss, 100);
-    });
-    window.addEventListener('load', dismiss);
+  function attemptDismiss() {
+    if (window.__mgAuthCheckPending) return;
+    dismiss();
   }
 
-  // Fallback auto-dismiss after 1.5s max so user is never blocked
-  setTimeout(dismiss, 1500);
+  // Dismiss as soon as DOM is ready or fully loaded (unless auth check is pending)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(attemptDismiss, 100);
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(attemptDismiss, 100);
+    });
+    window.addEventListener('load', attemptDismiss);
+  }
+
+  // Fallback auto-dismiss after 2.5s max so user is never permanently blocked
+  setTimeout(function () {
+    if (!window.__mgRedirecting) dismiss();
+  }, 2500);
 
   window.MGPreloader = {
     dismiss: dismiss,

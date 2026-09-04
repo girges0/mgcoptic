@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<link rel="stylesheet" href="css/preloader.css">
+<script>window.__mgAuthCheckPending = true;</script>
+<script src="js/preloader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config/supabase.js"></script>
+<script src="js/services/auth-service.js"></script>
 <script>
-  // مسار التعلم أصبح الآن مدمجاً بالكامل وفورياً داخل index.html بدون تحميل أو لاج
-  window.location.replace('index.html#learn' + (window.location.search || ''));
+  (async function () {
+    if (typeof enforceAccessControl === 'function') {
+      await enforceAccessControl();
+    }
+    // مسار التعلم مدمج داخل index.html للمستخدمين المسجلين
+    window.location.replace('index.html#learn' + (window.location.search || ''));
+  })();
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -1851,6 +1862,16 @@
 </style>
 </head>
 <body>
+
+  <!-- Minimal Preloader -->
+  <div id="mg-preloader" role="status" aria-label="جارٍ التحميل">
+    <div class="mg-simple-loader" id="mg-loader-box">
+      <div class="mg-spinner-wrap">
+        <div class="mg-spinner"></div>
+      </div>
+      <div class="mg-loading-text">جارٍ التحميل...</div>
+    </div>
+  </div>
 
 <!-- شريط التنبيه المنبثق -->
 <div id="duo-toast">
