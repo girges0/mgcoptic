@@ -42,34 +42,42 @@
         // 2. استعادة بيانات كارت المسار المحفوظة مسبقاً لمنع ظهور الديفولت
         const heroCacheRaw = localStorage.getItem('mg_coptic_cached_hero_card');
         if (heroCacheRaw) {
-          const heroCache = JSON.parse(heroCacheRaw);
-          if (heroCache.lessonTitle) {
-            const lTitleEl = document.getElementById('home-lesson-title');
-            if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
-          }
-          if (heroCache.unitTitle) {
-            const uTitleEl = document.getElementById('home-unit-title');
-            if (uTitleEl) uTitleEl.textContent = heroCache.unitTitle;
-          }
-          if (heroCache.btnHref) {
-            const btnEl = document.getElementById('home-continue-btn');
-            if (btnEl) btnEl.href = heroCache.btnHref;
-          }
-          if (heroCache.xpRewardText) {
-            const xpRewardEl = document.getElementById('home-hero-xp-reward');
-            if (xpRewardEl) xpRewardEl.textContent = heroCache.xpRewardText;
-          }
-          if (heroCache.progressCount) {
-            const countEl = document.getElementById('home-progress-count');
-            if (countEl) countEl.textContent = heroCache.progressCount;
-          }
-          if (heroCache.progressPct) {
-            const pctEl = document.getElementById('home-progress-pct');
-            if (pctEl) pctEl.textContent = heroCache.progressPct;
-          }
-          if (heroCache.fillWidth) {
-            const fillEl = document.getElementById('home-progress-fill');
-            if (fillEl) fillEl.style.width = heroCache.fillWidth;
+          try {
+            const heroCache = JSON.parse(heroCacheRaw);
+            if (heroCache && heroCache.version === 3 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
+              if (heroCache.lessonTitle) {
+                const lTitleEl = document.getElementById('home-lesson-title');
+                if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
+              }
+              if (heroCache.unitTitle) {
+                const uTitleEl = document.getElementById('home-unit-title');
+                if (uTitleEl) uTitleEl.textContent = heroCache.unitTitle;
+              }
+              if (heroCache.btnHref) {
+                const btnEl = document.getElementById('home-continue-btn');
+                if (btnEl) btnEl.href = heroCache.btnHref;
+              }
+              if (heroCache.xpRewardText) {
+                const xpRewardEl = document.getElementById('home-hero-xp-reward');
+                if (xpRewardEl) xpRewardEl.textContent = heroCache.xpRewardText;
+              }
+              if (heroCache.progressCount) {
+                const countEl = document.getElementById('home-progress-count');
+                if (countEl) countEl.textContent = heroCache.progressCount;
+              }
+              if (heroCache.progressPct) {
+                const pctEl = document.getElementById('home-progress-pct');
+                if (pctEl) pctEl.textContent = heroCache.progressPct;
+              }
+              if (heroCache.fillWidth) {
+                const fillEl = document.getElementById('home-progress-fill');
+                if (fillEl) fillEl.style.width = heroCache.fillWidth;
+              }
+            } else {
+              localStorage.removeItem('mg_coptic_cached_hero_card');
+            }
+          } catch(e) {
+            localStorage.removeItem('mg_coptic_cached_hero_card');
           }
         }
 
@@ -136,9 +144,28 @@
 
         if (!curriculum || !curriculum.units || curriculum.units.length === 0) return;
 
+        // ترتيب المستويات والوحدات بدقة (ترتيب المستوى أولاً ثم ترتيب الوحدة)
+        const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        const levelMap = new Map();
+        levels.forEach((lvl, idx) => {
+          levelMap.set(String(lvl.id), {
+            ...lvl,
+            order: Number(lvl.order_index) || (idx + 1)
+          });
+        });
+
+        const sortedUnits = (curriculum.units || []).slice().sort((a,b) => {
+          const lvlA = levelMap.get(String(a.level_id))?.order ?? 9999;
+          const lvlB = levelMap.get(String(b.level_id))?.order ?? 9999;
+          if (lvlA !== lvlB) return lvlA - lvlB;
+          return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
+        });
+
         // بناء مصفوفة كافة محطات مسار التعلم الحقيقية (الدرس، التطبيق، التحدي)
         let allSteps = [];
-        curriculum.units.forEach((unit, uIdx) => {
+        sortedUnits.forEach((unit, uIdx) => {
+          const lvl = levelMap.get(String(unit.level_id));
+          const levelTitle = lvl ? lvl.title : 'المستوى 1';
           const unitLessons = (unit.lessons && unit.lessons.length > 0)
             ? unit.lessons.slice().sort((a,b) => (a.order_index || 1) - (b.order_index || 1))
             : [{ id: unit.id * 100 + 1, title: unit.title, xp_reward: 20, practice_xp: 20, challenge_xp: 30 }];
@@ -152,10 +179,11 @@
             // 1. درس الشرح الأساسي
             allSteps.push({
               id: String(baseLesson.id),
-              title: baseLesson.title || `الدرس ${uIdx + 1}: ${unit.title}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: lesXp,
               kind: 'lesson'
             });
@@ -163,10 +191,11 @@
             // 2. محطة التطبيق والاستماع
             allSteps.push({
               id: `${baseLesson.id}_p`,
-              title: `تطبيق واستماع: ${unit.title.split(':')[0] || 'الوحدة ' + (uIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: pracXp,
               kind: 'practice'
             });
@@ -174,10 +203,11 @@
             // 3. محطة تحدي الإتقان
             allSteps.push({
               id: `${baseLesson.id}_c`,
-              title: `تحدي الإتقان: ${unit.title.split(':')[0] || 'الوحدة ' + (uIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: chalXp,
               kind: 'challenge'
             });
@@ -185,10 +215,11 @@
             unitLessons.forEach((les, lIdx) => {
               allSteps.push({
                 id: String(les.id),
-                title: les.title || `الدرس ${lIdx + 1}: ${unit.title}`,
+                title: les.title || unit.title,
                 unitTitle: unit.title,
                 unitDesc: unit.description || '',
                 unitIndex: uIdx + 1,
+                levelTitle: levelTitle,
                 xpReward: parseInt(les.xp_reward, 10) || 20,
                 kind: 'lesson'
               });
@@ -229,12 +260,8 @@
 
           const tagText = document.getElementById('home-curriculum-tag-text');
           if (tagText) {
-            let tierLevel = 'المستوى 1';
-            if (xp >= 1000) { tierLevel = 'المستوى 5'; }
-            else if (xp >= 600) { tierLevel = 'المستوى 4'; }
-            else if (xp >= 300) { tierLevel = 'المستوى 3'; }
-            else if (xp >= 100) { tierLevel = 'المستوى 2'; }
-            tagText.textContent = `تابع التعلّم • ${tierLevel}`;
+            const lvlTag = activeStep.levelTitle ? (activeStep.levelTitle.split(':')[0] || 'المستوى 1') : 'المستوى 1';
+            tagText.textContent = `تابع التعلّم • ${lvlTag}`;
           }
 
           const btnEl = document.getElementById('home-continue-btn');
@@ -266,6 +293,7 @@
           // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية
           try {
             localStorage.setItem('mg_coptic_cached_hero_card', JSON.stringify({
+              version: 3,
               lessonTitle: activeStep.title,
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),

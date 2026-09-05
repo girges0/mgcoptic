@@ -3043,32 +3043,18 @@
 
     .hero-action-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       position: relative;
       z-index: 2;
-      margin-top: 4px;
+      margin-top: 6px;
       direction: rtl;
       gap: 10px;
       flex-wrap: wrap;
     }
 
     .hero-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: clamp(0.74rem, 2.4vw, 0.82rem);
-      color: #F1D4DC;
-      font-weight: 600;
-      direction: rtl;
-      white-space: nowrap;
-    }
-
-    .hero-status-icon {
-      color: #F5CE66;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
+      display: none !important;
     }
 
     .hero-continue-btn {
@@ -4798,47 +4784,49 @@
        ========================================================= */
     .chest-stage-wrap {
       position: relative;
-      width: 200px;
-      height: 155px;
-      margin: -10px auto 14px;
+      width: 220px;
+      height: 165px;
+      margin: 0 auto 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       perspective: 800px;
     }
 
-    /* Spinning Sunburst Rays */
+    /* Soft Radiant Sunburst Rays */
     .chest-sunburst-rays {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 260px;
-      height: 260px;
-      margin-top: -130px;
-      margin-left: -130px;
+      width: 230px;
+      height: 230px;
+      margin-top: -115px;
+      margin-left: -115px;
       background: repeating-conic-gradient(
         from 0deg,
-        rgba(255, 215, 0, 0.32) 0deg 15deg,
-        rgba(255, 215, 0, 0.03) 15deg 30deg
+        rgba(255, 215, 0, 0.15) 0deg 12deg,
+        rgba(255, 235, 150, 0.01) 12deg 24deg
       );
       border-radius: 50%;
       pointer-events: none;
       opacity: 0;
-      transform: scale(0.5) rotate(0deg);
-      transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      filter: blur(1px);
+      transform: scale(0.6) rotate(0deg);
+      transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.35) 48%, transparent 72%);
+      mask-image: radial-gradient(circle, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.35) 48%, transparent 72%);
+      filter: blur(0.5px);
       z-index: 1;
     }
 
     .chest-modal-overlay.is-opened .chest-sunburst-rays {
       opacity: 1;
-      transform: scale(1.18) rotate(0deg);
-      animation: chestRaySpin 20s linear infinite;
+      transform: scale(1.15) rotate(0deg);
+      animation: chestRaySpin 24s linear infinite;
     }
 
     @keyframes chestRaySpin {
-      from { transform: scale(1.18) rotate(0deg); }
-      to { transform: scale(1.18) rotate(360deg); }
+      from { transform: scale(1.15) rotate(0deg); }
+      to { transform: scale(1.15) rotate(360deg); }
     }
 
     /* Glowing Ambient Halo */
@@ -4850,16 +4838,22 @@
       height: 170px;
       margin-top: -85px;
       margin-left: -85px;
-      background: radial-gradient(circle, rgba(255, 204, 0, 0.5) 0%, rgba(255, 150, 0, 0.18) 55%, rgba(255, 255, 255, 0) 75%);
+      background: radial-gradient(
+        circle,
+        rgba(255, 230, 120, 0.45) 0%,
+        rgba(255, 195, 50, 0.15) 42%,
+        transparent 72%
+      );
       border-radius: 50%;
       pointer-events: none;
-      animation: chestGlowPulse 2.6s ease-in-out infinite alternate;
+      filter: blur(10px);
+      animation: chestGlowPulse 2.8s ease-in-out infinite alternate;
       z-index: 1;
     }
 
     @keyframes chestGlowPulse {
       0% { transform: scale(0.88); opacity: 0.45; }
-      100% { transform: scale(1.22); opacity: 0.95; }
+      100% { transform: scale(1.2); opacity: 0.9; }
     }
 
     /* Twinkling Magical Stars & Dust */
@@ -4872,7 +4866,7 @@
     .chest-star {
       position: absolute;
       color: #FFD700;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.9);
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 14px rgba(255, 255, 255, 0.9);
       font-family: Arial, sans-serif;
       line-height: 1;
       pointer-events: none;
@@ -4903,15 +4897,19 @@
     /* Floating Chest Container */
     .chest-icon-wrap {
       position: relative;
-      width: 120px;
-      height: 95px;
+      width: 130px;
+      height: 110px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 3;
-      filter: drop-shadow(0 14px 24px rgba(74, 13, 36, 0.25));
+      filter: drop-shadow(0 14px 26px rgba(74, 13, 36, 0.22));
       animation: floatChest 3.2s ease-in-out infinite;
       transform-origin: center bottom;
+    }
+
+    .chest-main-svg {
+      overflow: visible !important;
     }
 
     @keyframes floatChest {
@@ -4933,28 +4931,58 @@
       100% { transform: scale(1.06) rotate(0deg); }
     }
 
-    /* Chest SVG Lid 3D Open */
-    .chest-svg-lid {
-      transform-origin: 14px 28px;
-      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Closed Lid: flips up & back into distance when opened */
+    .chest-closed-lid {
+      transform-origin: 48px 36px;
+      transform: perspective(350px) translateY(0) rotateX(0deg);
+      opacity: 1;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease 0.1s;
+    }
+    .chest-modal-overlay.is-opened .chest-closed-lid {
+      transform: perspective(350px) translateY(-32px) rotateX(85deg) scale(0.9);
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .chest-modal-overlay.is-opened .chest-svg-lid {
-      transform: translateY(-24px) rotate(-46deg) scale(0.92);
+    /* Open Lid (Pinterest 3D Style): arched ceiling & gold side brackets */
+    .chest-open-lid {
+      transform-origin: 48px 40px;
+      transform: perspective(350px) translateY(14px) rotateX(-75deg) scale(0.85);
+      opacity: 0;
+      transition: transform 0.65s cubic-bezier(0.34, 1.45, 0.64, 1) 0.1s, opacity 0.3s ease 0.1s;
+      pointer-events: none;
+    }
+    .chest-modal-overlay.is-opened .chest-open-lid {
+      transform: perspective(350px) translateY(0) rotateX(0deg) scale(1);
+      opacity: 1;
     }
 
-    /* Interior Glowing Beam */
-    .chest-svg-light-beam polygon {
-      transition: opacity 0.5s ease;
+    /* Glowing Ruby Crystals (Pinterest style: emerges from inside the chest) */
+    .chest-crystals {
+      transform-origin: 48px 44px;
+      transform: translateY(12px) scale(0.6);
+      opacity: 0;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s, opacity 0.4s ease 0.15s;
     }
-    .chest-modal-overlay.is-opened .chest-svg-light-beam polygon {
-      opacity: 0.88;
-      animation: chestBeamPulse 2.2s ease-in-out infinite alternate;
+    .chest-modal-overlay.is-opened .chest-crystals {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    /* Interior Glowing Atmospheric Light Beam */
+    .chest-svg-light-beam {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s;
+    }
+    .chest-modal-overlay.is-opened .chest-svg-light-beam {
+      opacity: 0.75;
+      animation: chestBeamPulse 2.5s ease-in-out infinite alternate;
     }
 
     @keyframes chestBeamPulse {
-      0% { opacity: 0.65; transform: scaleY(0.92); }
-      100% { opacity: 0.95; transform: scaleY(1.08); }
+      0% { opacity: 0.55; transform: scaleY(0.95); }
+      100% { opacity: 0.85; transform: scaleY(1.05); }
     }
 
     .chest-modal-title {
@@ -5487,10 +5515,12 @@
       background: var(--parchment-card);
       border: 1px solid rgba(168, 130, 58, 0.4);
       color: var(--ink);
-      padding: 12px 24px;
+      padding: 10px 18px;
       border-radius: 16px;
       font-weight: 800;
-      font-size: .95rem;
+      font-size: .92rem;
+      line-height: 1.45;
+      text-align: center;
       box-shadow: 0 12px 36px rgba(36,27,18,.18);
       z-index: 100001;
       opacity: 0;
@@ -5498,8 +5528,12 @@
       transition: all .25s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      white-space: nowrap;
+      width: max-content;
+      max-width: calc(100vw - 28px);
+      box-sizing: border-box;
+      white-space: normal;
     }
     #duo-toast.show {
       opacity: 1;
@@ -5511,6 +5545,21 @@
       align-items: center;
       justify-content: center;
       color: var(--madder);
+      flex-shrink: 0;
+    }
+    #duo-toast-text {
+      text-align: center;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+    @media (max-width: 480px) {
+      #duo-toast {
+        top: 70px;
+        padding: 8px 14px;
+        font-size: .84rem;
+        gap: 8px;
+        max-width: calc(100vw - 20px);
+      }
     }
   </style>
 </head>
@@ -5720,15 +5769,7 @@
           </div>
 
           <div class="hero-action-row">
-            <div class="hero-status-pill">
-              <span class="hero-status-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              </span>
-              <span id="home-hero-xp-reward">+20 XP عند الإتمام</span>
-            </div>
-
+            <span id="home-hero-xp-reward" style="display:none !important;"></span>
             <button type="button" id="home-continue-btn" class="hero-continue-btn" onclick="switchTab('learn')">
               <span>استمرار</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -5887,74 +5928,123 @@
             <span class="chest-star star-4">★</span>
           </div>
           <div class="chest-icon-wrap">
-            <svg viewBox="0 0 96 74" width="125" height="96" fill="none" class="chest-main-svg">
+            <svg viewBox="0 0 96 82" width="130" height="110" fill="none" class="chest-main-svg" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <filter id="modalChestGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4A0D24" flood-opacity="0.28"/>
-                </filter>
-                <linearGradient id="modalLidGrad" x1="48" y1="6" x2="48" y2="30" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#FFF9DB"/>
-                  <stop offset="25%" stop-color="#F2D16B"/>
-                  <stop offset="70%" stop-color="#C89726"/>
-                  <stop offset="100%" stop-color="#8F6310"/>
+                <linearGradient id="modalBodyWoodGrad" x1="48" y1="36" x2="48" y2="72" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#8F5E24"/>
+                  <stop offset="40%" stop-color="#6E4413"/>
+                  <stop offset="85%" stop-color="#4F300C"/>
+                  <stop offset="100%" stop-color="#341E06"/>
                 </linearGradient>
-                <linearGradient id="modalBodyGrad" x1="48" y1="30" x2="48" y2="62" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#F6DA7E"/>
-                  <stop offset="35%" stop-color="#D6A42E"/>
-                  <stop offset="85%" stop-color="#9C6B10"/>
-                  <stop offset="100%" stop-color="#664303"/>
-                </linearGradient>
-                <linearGradient id="modalTrimGrad" x1="12" y1="30" x2="84" y2="30" gradientUnits="userSpaceOnUse">
+                <linearGradient id="modalGoldBevelGrad" x1="12" y1="36" x2="84" y2="72" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stop-color="#FFF5C2"/>
-                  <stop offset="50%" stop-color="#FFE066"/>
-                  <stop offset="100%" stop-color="#C5931C"/>
+                  <stop offset="25%" stop-color="#F2D16B"/>
+                  <stop offset="65%" stop-color="#C89726"/>
+                  <stop offset="100%" stop-color="#7A510A"/>
                 </linearGradient>
-                <linearGradient id="modalRubyGrad" x1="48" y1="26" x2="48" y2="37" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#FF5277"/>
-                  <stop offset="45%" stop-color="#D80032"/>
+                <linearGradient id="modalGoldHighlightGrad" x1="48" y1="6" x2="48" y2="44" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFFDF0"/>
+                  <stop offset="35%" stop-color="#FFE066"/>
+                  <stop offset="80%" stop-color="#C5931C"/>
+                  <stop offset="100%" stop-color="#734B03"/>
+                </linearGradient>
+                <linearGradient id="modalInnerCeilingGrad" x1="48" y1="6" x2="48" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#241305"/>
+                  <stop offset="30%" stop-color="#45270C"/>
+                  <stop offset="70%" stop-color="#6B4117"/>
+                  <stop offset="100%" stop-color="#8C5722"/>
+                </linearGradient>
+                <linearGradient id="modalCrystalPink1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFF0F5"/>
+                  <stop offset="30%" stop-color="#FF6584"/>
+                  <stop offset="80%" stop-color="#D80032"/>
                   <stop offset="100%" stop-color="#670014"/>
                 </linearGradient>
-                <linearGradient id="modalBeamGrad" x1="48" y1="30" x2="48" y2="0" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#FFD700" stop-opacity="0.95"/>
-                  <stop offset="50%" stop-color="#FFF3A8" stop-opacity="0.6"/>
+                <linearGradient id="modalCrystalPink2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FFE3EC"/>
+                  <stop offset="40%" stop-color="#FF2A6D"/>
+                  <stop offset="100%" stop-color="#A00028"/>
+                </linearGradient>
+                <linearGradient id="modalChestBeamPink" x1="48" y1="42" x2="48" y2="-5" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
+                  <stop offset="30%" stop-color="#FF6584" stop-opacity="0.6"/>
+                  <stop offset="70%" stop-color="#FFB6C1" stop-opacity="0.2"/>
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
                 </linearGradient>
+                <filter id="modalChestBeamBlur" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="3"/>
+                </filter>
+                <filter id="modalCrystalGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FF2A6D" flood-opacity="0.8"/>
+                </filter>
               </defs>
 
-              <ellipse class="chest-ground-shadow" cx="48" cy="67" rx="34" ry="5.5" fill="rgba(80,50,10,0.28)"/>
+              <!-- Ground Shadow -->
+              <ellipse cx="48" cy="76" rx="36" ry="6" fill="rgba(80,50,10,0.28)"/>
 
-              <!-- Chest Body Base -->
-              <g class="chest-svg-body" filter="url(#modalChestGlow)">
-                <rect x="15" y="28" width="66" height="34" rx="6" fill="url(#modalBodyGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-                <line x1="28" y1="30" x2="28" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                <line x1="29.5" y1="30" x2="29.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                <line x1="41" y1="30" x2="41" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                <line x1="42.5" y1="30" x2="42.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                <line x1="55" y1="30" x2="55" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                <line x1="56.5" y1="30" x2="56.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                <line x1="68" y1="30" x2="68" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                <line x1="69.5" y1="30" x2="69.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                <rect x="13" y="58" width="70" height="5" rx="2.5" fill="#B37C17" stroke="#5E3F0A" stroke-width="2"/>
-                <rect x="43" y="28" width="10" height="12" rx="2" fill="#3D2103"/>
+              <!-- 1. Open Lid (Pinterest 3D Style Arched Hood) -->
+              <g class="chest-open-lid">
+                <path d="M22 8 C22 1, 74 1, 74 8 L77 12 C77 6, 19 6, 19 12 Z" fill="#3D2103" stroke="#261401" stroke-width="1.5"/>
+                <path d="M18 41 C18 16, 26 7, 48 7 C70 7, 78 16, 78 41 Z" fill="url(#modalInnerCeilingGrad)" stroke="#3D2103" stroke-width="2"/>
+                <path d="M22 39 C22 19, 29 11, 48 11 C67 11, 74 19, 74 39" stroke="#1F0E02" stroke-width="2" fill="none" opacity="0.85"/>
+                <line x1="48" y1="7" x2="48" y2="41" stroke="#1F0E02" stroke-width="1.8" opacity="0.6"/>
+                <line x1="33" y1="9" x2="33" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
+                <line x1="63" y1="9" x2="63" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
+                <ellipse cx="48" cy="28" rx="22" ry="12" fill="url(#modalCrystalPink2)" opacity="0.25"/>
+                <path d="M14 42 C14 13, 24 5, 48 5 L48 9 C27 9, 19 16, 19 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                <path d="M82 42 C82 13, 72 5, 48 5 L48 9 C69 9, 77 16, 77 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                <rect x="20" y="4.5" width="56" height="5" rx="2.5" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
+                <line x1="22" y1="6.5" x2="74" y2="6.5" stroke="#FFFDE6" stroke-width="1.2" stroke-linecap="round"/>
               </g>
 
-              <!-- Interior Light Beam -->
-              <g class="chest-svg-light-beam">
-                <polygon points="22 28 8 0 88 0 74 28" fill="url(#modalBeamGrad)" opacity="0"/>
+              <!-- 2. Interior Atmospheric Light Beam -->
+              <g class="chest-svg-light-beam" filter="url(#modalChestBeamBlur)">
+                <polygon points="26 42 6 2 90 2 70 42" fill="url(#modalChestBeamPink)"/>
               </g>
 
-              <!-- Chest Lid (Opening 3D) -->
-              <g class="chest-svg-lid" filter="url(#modalChestGlow)">
-                <path d="M14 29 C14 13, 26 7, 48 7 C70 7, 82 13, 82 29 Z" fill="url(#modalLidGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-                <path d="M28 11 C25 17, 25 24, 28 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                <path d="M41 8 C40 16, 40 23, 41 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                <path d="M55 8 C56 16, 56 23, 55 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                <path d="M68 11 C71 17, 71 24, 68 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                <rect x="12" y="27" width="72" height="5" rx="2" fill="url(#modalTrimGrad)" stroke="#5E3F0A" stroke-width="2"/>
-                <line x1="14" y1="28" x2="82" y2="28" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
-                <rect x="41" y="23" width="14" height="17" rx="3.5" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
-                <rect x="44" y="26.5" width="8" height="10" rx="2" fill="url(#modalRubyGrad)" stroke="#FFD1DC" stroke-width="0.8"/>
-                <circle cx="46" cy="28.5" r="1.2" fill="#FFFFFF"/>
+              <!-- 3. Glowing Ruby Crystals (Pinterest Style) -->
+              <g class="chest-crystals" filter="url(#modalCrystalGlow)">
+                <polygon points="24 43 27 30 32 32 30 43" fill="url(#modalCrystalPink1)"/>
+                <polygon points="29 43 33 26 38 29 36 43" fill="url(#modalCrystalPink2)"/>
+                <polygon points="37 43 43 20 49 22 47 43" fill="url(#modalCrystalPink1)"/>
+                <polygon points="46 43 51 22 56 25 54 43" fill="url(#modalCrystalPink2)"/>
+                <polygon points="55 43 59 28 65 31 63 43" fill="url(#modalCrystalPink1)"/>
+                <polygon points="63 43 67 33 72 35 70 43" fill="url(#modalCrystalPink2)"/>
+                <polygon points="40 43 44 32 48 43" fill="#FFF0F5" opacity="0.9"/>
+                <polygon points="49 43 53 34 57 43" fill="#FFF0F5" opacity="0.9"/>
+                <circle cx="44" cy="22" r="1.5" fill="#FFFFFF"/>
+                <circle cx="52" cy="24" r="1.2" fill="#FFFFFF"/>
+                <circle cx="34" cy="28" r="1" fill="#FFFFFF"/>
+              </g>
+
+              <!-- 4. Chest Body Base -->
+              <g class="chest-svg-body">
+                <rect x="16" y="38" width="64" height="34" rx="5" fill="url(#modalBodyWoodGrad)" stroke="#4A2A06" stroke-width="2.5"/>
+                <line x1="18" y1="49" x2="78" y2="49" stroke="#341A02" stroke-width="2" opacity="0.8"/>
+                <line x1="18" y1="50.5" x2="78" y2="50.5" stroke="#9C6B28" stroke-width="1" opacity="0.4"/>
+                <line x1="18" y1="61" x2="78" y2="61" stroke="#341A02" stroke-width="2" opacity="0.8"/>
+                <line x1="18" y1="62.5" x2="78" y2="62.5" stroke="#9C6B28" stroke-width="1" opacity="0.4"/>
+                <path d="M14 36 L21 37 L19 72 L12 71 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                <path d="M82 36 L75 37 L77 72 L84 71 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                <rect x="13" y="36" width="70" height="5" rx="2" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                <rect x="14" y="69" width="68" height="4.5" rx="2" fill="#8F5E12" stroke="#4A2A06" stroke-width="1.8"/>
+                <path d="M42 36 L54 36 L56 46 L48 53 L40 46 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                <circle cx="48" cy="44" r="3" fill="#3D2103"/>
+                <circle cx="48" cy="43.5" r="1.5" fill="#FFD700"/>
+              </g>
+
+              <!-- 5. Closed Lid (Flips up and back on open) -->
+              <g class="chest-closed-lid">
+                <path d="M15 38 C15 17, 26 9, 48 9 C70 9, 81 17, 81 38 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
+                <path d="M28 13 C25 21, 25 30, 28 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                <path d="M41 10 C40 20, 40 29, 41 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                <path d="M55 10 C56 20, 56 29, 55 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                <path d="M68 13 C71 21, 71 30, 68 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                <rect x="13" y="35" width="70" height="5" rx="2" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                <line x1="15" y1="36.5" x2="81" y2="36.5" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
+                <rect x="41" y="31" width="14" height="15" rx="3" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
+                <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalCrystalPink1)" stroke="#FFD1DC" stroke-width="0.8"/>
+                <circle cx="46" cy="36" r="1.2" fill="#FFFFFF"/>
               </g>
             </svg>
           </div>
@@ -7996,34 +8086,42 @@
         // 2. استعادة بيانات كارت المسار المحفوظة مسبقاً لمنع ظهور الديفولت
         const heroCacheRaw = localStorage.getItem('mg_coptic_cached_hero_card');
         if (heroCacheRaw) {
-          const heroCache = JSON.parse(heroCacheRaw);
-          if (heroCache.lessonTitle) {
-            const lTitleEl = document.getElementById('home-lesson-title');
-            if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
-          }
-          if (heroCache.unitTitle) {
-            const uTitleEl = document.getElementById('home-unit-title');
-            if (uTitleEl) uTitleEl.textContent = heroCache.unitTitle;
-          }
-          if (heroCache.btnHref) {
-            const btnEl = document.getElementById('home-continue-btn');
-            if (btnEl) btnEl.href = heroCache.btnHref;
-          }
-          if (heroCache.xpRewardText) {
-            const xpRewardEl = document.getElementById('home-hero-xp-reward');
-            if (xpRewardEl) xpRewardEl.textContent = heroCache.xpRewardText;
-          }
-          if (heroCache.progressCount) {
-            const countEl = document.getElementById('home-progress-count');
-            if (countEl) countEl.textContent = heroCache.progressCount;
-          }
-          if (heroCache.progressPct) {
-            const pctEl = document.getElementById('home-progress-pct');
-            if (pctEl) pctEl.textContent = heroCache.progressPct;
-          }
-          if (heroCache.fillWidth) {
-            const fillEl = document.getElementById('home-progress-fill');
-            if (fillEl) fillEl.style.width = heroCache.fillWidth;
+          try {
+            const heroCache = JSON.parse(heroCacheRaw);
+            if (heroCache && heroCache.version === 3 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
+              if (heroCache.lessonTitle) {
+                const lTitleEl = document.getElementById('home-lesson-title');
+                if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
+              }
+              if (heroCache.unitTitle) {
+                const uTitleEl = document.getElementById('home-unit-title');
+                if (uTitleEl) uTitleEl.textContent = heroCache.unitTitle;
+              }
+              if (heroCache.btnHref) {
+                const btnEl = document.getElementById('home-continue-btn');
+                if (btnEl) btnEl.href = heroCache.btnHref;
+              }
+              if (heroCache.xpRewardText) {
+                const xpRewardEl = document.getElementById('home-hero-xp-reward');
+                if (xpRewardEl) xpRewardEl.textContent = heroCache.xpRewardText;
+              }
+              if (heroCache.progressCount) {
+                const countEl = document.getElementById('home-progress-count');
+                if (countEl) countEl.textContent = heroCache.progressCount;
+              }
+              if (heroCache.progressPct) {
+                const pctEl = document.getElementById('home-progress-pct');
+                if (pctEl) pctEl.textContent = heroCache.progressPct;
+              }
+              if (heroCache.fillWidth) {
+                const fillEl = document.getElementById('home-progress-fill');
+                if (fillEl) fillEl.style.width = heroCache.fillWidth;
+              }
+            } else {
+              localStorage.removeItem('mg_coptic_cached_hero_card');
+            }
+          } catch(e) {
+            localStorage.removeItem('mg_coptic_cached_hero_card');
           }
         }
 
@@ -8093,9 +8191,28 @@
 
         if (!curriculum || !curriculum.units || curriculum.units.length === 0) return;
 
+        // ترتيب المستويات والوحدات بدقة (ترتيب المستوى أولاً ثم ترتيب الوحدة)
+        const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        const levelMap = new Map();
+        levels.forEach((lvl, idx) => {
+          levelMap.set(String(lvl.id), {
+            ...lvl,
+            order: Number(lvl.order_index) || (idx + 1)
+          });
+        });
+
+        const sortedUnits = (curriculum.units || []).slice().sort((a,b) => {
+          const lvlA = levelMap.get(String(a.level_id))?.order ?? 9999;
+          const lvlB = levelMap.get(String(b.level_id))?.order ?? 9999;
+          if (lvlA !== lvlB) return lvlA - lvlB;
+          return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
+        });
+
         // بناء مصفوفة كافة محطات مسار التعلم الحقيقية (الدرس، التطبيق، التحدي)
         let allSteps = [];
-        curriculum.units.forEach((unit, uIdx) => {
+        sortedUnits.forEach((unit, uIdx) => {
+          const lvl = levelMap.get(String(unit.level_id));
+          const levelTitle = lvl ? lvl.title : 'المستوى 1';
           const unitLessons = (unit.lessons && unit.lessons.length > 0)
             ? unit.lessons.slice().sort((a,b) => (a.order_index || 1) - (b.order_index || 1))
             : [{ id: unit.id * 100 + 1, title: unit.title, xp_reward: 20, practice_xp: 20, challenge_xp: 30 }];
@@ -8109,10 +8226,11 @@
             // 1. درس الشرح الأساسي
             allSteps.push({
               id: String(baseLesson.id),
-              title: baseLesson.title || `الدرس ${uIdx + 1}: ${unit.title}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: lesXp,
               kind: 'lesson'
             });
@@ -8120,10 +8238,11 @@
             // 2. محطة التطبيق والاستماع
             allSteps.push({
               id: `${baseLesson.id}_p`,
-              title: `تطبيق واستماع: ${unit.title.split(':')[0] || 'الوحدة ' + (uIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: pracXp,
               kind: 'practice'
             });
@@ -8131,10 +8250,11 @@
             // 3. محطة تحدي الإتقان
             allSteps.push({
               id: `${baseLesson.id}_c`,
-              title: `تحدي الإتقان: ${unit.title.split(':')[0] || 'الوحدة ' + (uIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelTitle: levelTitle,
               xpReward: chalXp,
               kind: 'challenge'
             });
@@ -8142,10 +8262,11 @@
             unitLessons.forEach((les, lIdx) => {
               allSteps.push({
                 id: String(les.id),
-                title: les.title || `الدرس ${lIdx + 1}: ${unit.title}`,
+                title: les.title || unit.title,
                 unitTitle: unit.title,
                 unitDesc: unit.description || '',
                 unitIndex: uIdx + 1,
+                levelTitle: levelTitle,
                 xpReward: parseInt(les.xp_reward, 10) || 20,
                 kind: 'lesson'
               });
@@ -8186,12 +8307,8 @@
 
           const tagText = document.getElementById('home-curriculum-tag-text');
           if (tagText) {
-            let tierLevel = 'المستوى 1';
-            if (xp >= 1000) { tierLevel = 'المستوى 5'; }
-            else if (xp >= 600) { tierLevel = 'المستوى 4'; }
-            else if (xp >= 300) { tierLevel = 'المستوى 3'; }
-            else if (xp >= 100) { tierLevel = 'المستوى 2'; }
-            tagText.textContent = `تابع التعلّم • ${tierLevel}`;
+            const lvlTag = activeStep.levelTitle ? (activeStep.levelTitle.split(':')[0] || 'المستوى 1') : 'المستوى 1';
+            tagText.textContent = `تابع التعلّم • ${lvlTag}`;
           }
 
           const btnEl = document.getElementById('home-continue-btn');
@@ -8223,6 +8340,7 @@
           // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية
           try {
             localStorage.setItem('mg_coptic_cached_hero_card', JSON.stringify({
+              version: 3,
               lessonTitle: activeStep.title,
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),
@@ -8968,13 +9086,15 @@
         return u ? u.id : null;
       }
 
+      let duoToastTimer = null;
       function showToast(text, iconType = 'lock') {
         const toast = document.getElementById('duo-toast');
         const textEl = document.getElementById('duo-toast-text');
         if (!toast || !textEl) return;
         textEl.textContent = text;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3200);
+        if (duoToastTimer) clearTimeout(duoToastTimer);
+        duoToastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
       }
       window.showToast = showToast;
 
@@ -9208,7 +9328,7 @@
             unitSteps.push({
               kind: 'lesson',
               id: baseId,
-              title: baseLesson.title || `درس الشرح: ${unit.title}`,
+              title: baseLesson.title || unit.title,
               requires: null
             });
 
@@ -9228,7 +9348,7 @@
             unitSteps.push({
               kind: 'practice',
               id: pracId,
-              title: `تطبيق واستماع: ${unit.title.split(':')[0] || 'الوحدة ' + (unitIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               requires: baseId
             });
 
@@ -9236,7 +9356,7 @@
             unitSteps.push({
               kind: 'challenge',
               id: chalId,
-              title: `تحدي الإتقان: ${unit.title.split(':')[0] || 'الوحدة ' + (unitIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               requires: pracId
             });
           } else {
@@ -9246,7 +9366,7 @@
               unitSteps.push({
                 kind: 'lesson',
                 id: String(les.id),
-                title: les.title || `الدرس ${lesIdx + 1}`,
+                title: les.title || unit.title,
                 requires: reqId
               });
 
@@ -9283,7 +9403,7 @@
             kind: 'trophy',
             unitId: unit.id,
             requires: lastStepId,
-            title: `وسام إتقان: ${unit.title}`
+            title: unit.title
           });
 
           const totalSteps = unitSteps.length;
@@ -9456,8 +9576,8 @@
             let iconSvg = '';
 
             let calloutText = 'ابدأ';
-            if (step.kind === 'practice') calloutText = 'تطبيق';
-            else if (step.kind === 'challenge') calloutText = 'تحدي';
+            if (step.kind === 'practice') calloutText ='ابدأ';
+            else if (step.kind === 'challenge') calloutText = 'ابدأ';
 
             if (isCurrent) {
               statusClass = 'current';
@@ -9774,16 +9894,16 @@
         lessonCopy.id = lessonId;
 
         if (isPractice) {
-          lessonCopy.title = `تطبيق واستماع: ${foundUnit.title}`;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.practice_xp, 10) || 20;
-          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
+          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
-          lessonCopy.title = `تحدي الإتقان: ${foundUnit.title}`;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.challenge_xp, 10) || 30;
           lessonCopy.challenges = realChallenges;
         } else {
-          lessonCopy.title = foundLesson.title;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.xp_reward, 10) || 20;
           lessonCopy.challenges = realChallenges;
         }
@@ -10079,7 +10199,57 @@
         if (!runnerBody) return;
         let html = '';
 
-        if (ch.type === 'select') {
+        if (ch.type === 'listen_write') {
+          html += `
+            <div class="question-heading">${ch.question || 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية'}</div>
+            <div class="coptic-letter-display">
+              <button type="button" class="audio-icon-btn listen-pulse" style="width:78px;height:78px;border-radius:50%;margin:12px auto 6px;" aria-label="استمع للصوت" title="استمع للصوت" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.correct_word || ch.coptic_display || 'حرف قبطي'}', this) : window.MGCopticGame?.sound?.speakArabic('${ch.audio_text || 'حرف قبطي'}')">
+                <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+              </button>
+            </div>
+            <div class="listen-write-container" style="max-width:440px; margin:16px auto; display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box;">
+              <div style="position:relative; width:100%;">
+                <input type="text" id="listen-write-user-input" class="coptic-input listen-write-input" data-coptic-keyboard placeholder="اكتب بالقبطية هنا..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                <button type="button" onclick="const inp=document.getElementById('listen-write-user-input'); if(inp && inp.value){ inp.value=inp.value.slice(0,-1); inp.dispatchEvent(new Event('input', {bubbles:true})); }" title="مسح آخر حرف" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); border:none; background:transparent; cursor:pointer; color:#888; padding:6px; display:flex; align-items:center; justify-content:center;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+                </button>
+              </div>
+              <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                <button type="button" class="keyboard-toggle-btn" onclick="const inp=document.getElementById('listen-write-user-input'); if(inp){ inp.focus(); if(window.CopticKeyboard) window.CopticKeyboard.open(inp); }" style="background:#FAF6EE; border:1.5px solid #D6C8B2; color:#6F1737; border-radius:20px; padding:6px 14px; font-size:0.85rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+                  <span>لوحة المفاتيح القبطية</span>
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (ch.type === 'read_select') {
+          html += `
+            <div class="question-heading">${ch.question || 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح'}</div>
+            <div class="coptic-letter-display">
+              ${ch.coptic_display ? `<span class="coptic-big-glyph" style="font-size:3.6rem; line-height:1.2; font-weight:800;">${ch.coptic_display}</span>` : ''}
+              ${(ch.audio_text || ch.audio_url) ? `
+                <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this) : window.MGCopticGame?.sound?.speakArabic('${ch.audio_text}')">
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+            <div class="options-grid">
+              ${(ch.options || []).map((opt, i) => `
+                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                  ${opt.text}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (ch.type === 'select') {
           html += `
             <div class="question-heading">${ch.question}</div>
             ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
@@ -10314,6 +10484,20 @@
 
         if (ch.type === 'trace') {
           initTraceChallenge(ch);
+        } else if (ch.type === 'listen_write') {
+          const inp = document.getElementById('listen-write-user-input');
+          if (inp) {
+            inp.addEventListener('input', () => {
+              const btnCheck = document.getElementById('btn-check-action');
+              if (btnCheck) btnCheck.disabled = !inp.value.trim();
+            });
+            setTimeout(() => {
+              try {
+                inp.focus();
+                if (window.CopticKeyboard) window.CopticKeyboard.open(inp);
+              } catch (_) {}
+            }, 350);
+          }
         } else if (ch.type === 'fill_blank') {
           const inp = document.getElementById('fill-blank-user-input');
           if (inp) {
@@ -10331,11 +10515,11 @@
         }
 
         // تشغيل الصوت فوراً لأي تمرين يحتوي على صوت دون الحاجة للضغط على الزر
-        const hasAudio = !!(ch.audio_url || ch.audio_text || ch.type === 'listen');
+        const hasAudio = !!(ch.audio_url || ch.audio_text || ch.type === 'listen' || ch.type === 'listen_write');
         if (hasAudio) {
           setTimeout(() => {
             const audioBtn = runnerBody.querySelector('.audio-icon-btn, .coptic-audio-circle-btn, .audio-play-btn');
-            const spokenText = ch.audio_text || (ch.type === 'listen' ? (ch.coptic_display || 'حرف قبطي') : (ch.coptic_display || ''));
+            const spokenText = ch.audio_text || (ch.type === 'listen' || ch.type === 'listen_write' ? (ch.correct_word || ch.coptic_display || 'حرف قبطي') : (ch.coptic_display || ''));
             if (window.playChallengeAudio) {
               window.playChallengeAudio(ch.audio_url || '', spokenText, audioBtn);
             } else if (game && game.sound && game.sound.playChallengeAudio) {
@@ -10660,9 +10844,19 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'select' || ch.type === 'listen') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
           const selectedOpt = ch.options[currentSelection];
           isCorrect = selectedOpt && selectedOpt.is_correct;
+        } else if (ch.type === 'listen_write') {
+          const inputEl = document.getElementById('listen-write-user-input');
+          const userVal = (inputEl ? inputEl.value : '').trim();
+          const correctVal = (ch.correct_word || ch.coptic_display || '').trim();
+          const clean = (s) => s.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
+          isCorrect = (clean(userVal) === clean(correctVal) || clean(userVal).toLowerCase() === clean(correctVal).toLowerCase());
+          if (inputEl) {
+            inputEl.classList.remove('correct', 'wrong');
+            inputEl.classList.add(isCorrect ? 'correct' : 'wrong');
+          }
         } else if (ch.type === 'write') {
           const built = wordTilesBuilt.join('');
           isCorrect = (built === ch.correct_word);
@@ -10731,7 +10925,7 @@
         const feedbackIcon = document.getElementById('feedback-icon');
         const feedbackText = document.getElementById('feedback-text');
 
-        if (ch.type === 'select' || ch.type === 'listen') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
           const allOptionCards = document.querySelectorAll('.option-card');
           allOptionCards.forEach((c, idx) => {
             const isThisCorrect = ch.options && ch.options[idx] && ch.options[idx].is_correct;
@@ -10791,6 +10985,8 @@
             if (feedbackText) {
               if (ch.type === 'fill_blank' && ch.correct_word) {
                 feedbackText.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${ch.correct_word}`;
+              } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
+                feedbackText.textContent = `إجابة غير صحيحة. الإجابة الصحيحة هي: ${ch.correct_word || ch.coptic_display}`;
               } else {
                 feedbackText.textContent = 'إجابة غير صحيحة، حاول مجددًا في التمرين القادم';
               }

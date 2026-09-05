@@ -1520,6 +1520,17 @@ class GamificationService {
             ? chestsData
             : (cachedCurriculum?.chests || []);
 
+          const lvlOrderMap = new Map();
+          (levelsData || []).forEach((lvl, idx) => {
+            lvlOrderMap.set(String(lvl.id), Number(lvl.order_index) || (idx + 1));
+          });
+          builtUnits.sort((a, b) => {
+            const lvlA = lvlOrderMap.get(String(a.level_id)) ?? 9999;
+            const lvlB = lvlOrderMap.get(String(b.level_id)) ?? 9999;
+            if (lvlA !== lvlB) return lvlA - lvlB;
+            return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
+          });
+
           const activeLevel = (levelsData && levelsData[0]) ? levelsData[0] : { id: 1, title: 'المستوى الأساسي' };
           const curriculum = {
             levels: (levelsData && levelsData.length > 0) ? levelsData : [activeLevel],

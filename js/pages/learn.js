@@ -31,13 +31,15 @@
         return u ? u.id : null;
       }
 
+      let duoToastTimer = null;
       function showToast(text, iconType = 'lock') {
         const toast = document.getElementById('duo-toast');
         const textEl = document.getElementById('duo-toast-text');
         if (!toast || !textEl) return;
         textEl.textContent = text;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3200);
+        if (duoToastTimer) clearTimeout(duoToastTimer);
+        duoToastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
       }
       window.showToast = showToast;
 
@@ -256,7 +258,7 @@
             unitSteps.push({
               kind: 'lesson',
               id: baseId,
-              title: baseLesson.title || `درس الشرح: ${unit.title}`,
+              title: baseLesson.title || unit.title,
               requires: null
             });
 
@@ -276,7 +278,7 @@
             unitSteps.push({
               kind: 'practice',
               id: pracId,
-              title: `تطبيق واستماع: ${unit.title.split(':')[0] || 'الوحدة ' + (unitIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               requires: baseId
             });
 
@@ -284,7 +286,7 @@
             unitSteps.push({
               kind: 'challenge',
               id: chalId,
-              title: `تحدي الإتقان: ${unit.title.split(':')[0] || 'الوحدة ' + (unitIdx + 1)}`,
+              title: baseLesson.title || unit.title,
               requires: pracId
             });
           } else {
@@ -294,7 +296,7 @@
               unitSteps.push({
                 kind: 'lesson',
                 id: String(les.id),
-                title: les.title || `الدرس ${lesIdx + 1}`,
+                title: les.title || unit.title,
                 requires: reqId
               });
 
@@ -331,7 +333,7 @@
             kind: 'trophy',
             unitId: unit.id,
             requires: lastStepId,
-            title: `وسام إتقان: ${unit.title}`
+            title: unit.title
           });
 
           const totalSteps = unitSteps.length;
@@ -813,16 +815,16 @@
         lessonCopy.id = lessonId;
 
         if (isPractice) {
-          lessonCopy.title = `تطبيق واستماع: ${foundUnit.title}`;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.practice_xp, 10) || 20;
-          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
+          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
-          lessonCopy.title = `تحدي الإتقان: ${foundUnit.title}`;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.challenge_xp, 10) || 30;
           lessonCopy.challenges = realChallenges;
         } else {
-          lessonCopy.title = foundLesson.title;
+          lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.xp_reward, 10) || 20;
           lessonCopy.challenges = realChallenges;
         }
@@ -1044,7 +1046,57 @@
         if (!runnerBody) return;
         let html = '';
 
-        if (ch.type === 'select') {
+        if (ch.type === 'listen_write') {
+          html += `
+            <div class="question-heading">${ch.question || 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية'}</div>
+            <div class="coptic-letter-display">
+              <button type="button" class="audio-icon-btn listen-pulse" style="width:78px;height:78px;border-radius:50%;margin:12px auto 6px;" aria-label="استمع للصوت" title="استمع للصوت" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.correct_word || ch.coptic_display || 'حرف قبطي'}', this)">
+                <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+              </button>
+            </div>
+            <div class="listen-write-container" style="max-width:440px; margin:16px auto; display:flex; flex-direction:column; gap:12px; width:100%; box-sizing:border-box;">
+              <div style="position:relative; width:100%;">
+                <input type="text" id="listen-write-user-input" class="coptic-input listen-write-input" data-coptic-keyboard placeholder="اكتب بالقبطية هنا..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                <button type="button" onclick="const inp=document.getElementById('listen-write-user-input'); if(inp && inp.value){ inp.value=inp.value.slice(0,-1); inp.dispatchEvent(new Event('input', {bubbles:true})); }" title="مسح آخر حرف" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); border:none; background:transparent; cursor:pointer; color:#888; padding:6px; display:flex; align-items:center; justify-content:center;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+                </button>
+              </div>
+              <div style="display:flex; justify-content:center; align-items:center; gap:8px;">
+                <button type="button" class="keyboard-toggle-btn" onclick="const inp=document.getElementById('listen-write-user-input'); if(inp){ inp.focus(); if(window.CopticKeyboard) window.CopticKeyboard.open(inp); }" style="background:#FAF6EE; border:1.5px solid #D6C8B2; color:#6F1737; border-radius:20px; padding:6px 14px; font-size:0.85rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="8" x2="6" y2="8"/><line x1="10" y1="8" x2="10" y2="8"/><line x1="14" y1="8" x2="14" y2="8"/><line x1="18" y1="8" x2="18" y2="8"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="10" y2="12"/><line x1="14" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+                  <span>لوحة المفاتيح القبطية</span>
+                </button>
+              </div>
+            </div>
+          `;
+        } else if (ch.type === 'read_select') {
+          html += `
+            <div class="question-heading">${ch.question || 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح'}</div>
+            <div class="coptic-letter-display">
+              ${ch.coptic_display ? `<span class="coptic-big-glyph" style="font-size:3.6rem; line-height:1.2; font-weight:800;">${ch.coptic_display}</span>` : ''}
+              ${(ch.audio_text || ch.audio_url) ? `
+                <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this)">
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                  </svg>
+                </button>
+              ` : ''}
+            </div>
+            <div class="options-grid">
+              ${(ch.options || []).map((opt, i) => `
+                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                  ${opt.text}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else if (ch.type === 'select') {
           html += `
             <div class="question-heading">${ch.question}</div>
             ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
@@ -1229,6 +1281,23 @@
 
         runnerBody.innerHTML = html;
 
+        // توصيل مستمع الإدخال لتمرين استمع واكتب وإظهار الكيبورد القبطي
+        if (ch.type === 'listen_write') {
+          const inp = document.getElementById('listen-write-user-input');
+          if (inp) {
+            inp.addEventListener('input', () => {
+              const btnCheck = document.getElementById('btn-check-action');
+              if (btnCheck) btnCheck.disabled = !inp.value.trim();
+            });
+            setTimeout(() => {
+              try {
+                inp.focus();
+                if (window.CopticKeyboard) window.CopticKeyboard.open(inp);
+              } catch (_) {}
+            }, 350);
+          }
+        }
+
         // توصيل مستمع الإدخال لتمرين أكمل الفراغ وإظهار الكيبورد القبطي
         if (ch.type === 'fill_blank') {
           const inp = document.getElementById('fill-blank-user-input');
@@ -1247,11 +1316,11 @@
         }
 
         // تشغيل الصوت فوراً لأي تمرين يحتوي على صوت دون الحاجة للضغط على الزر
-        const hasAudio = !!(ch.audio_url || ch.audio_text || ch.type === 'listen');
+        const hasAudio = !!(ch.audio_url || ch.audio_text || ch.type === 'listen' || ch.type === 'listen_write');
         if (hasAudio) {
           setTimeout(() => {
             const audioBtn = runnerBody.querySelector('.audio-icon-btn, .coptic-audio-circle-btn, .audio-play-btn');
-            const spokenText = ch.audio_text || (ch.type === 'listen' ? (ch.coptic_display || 'حرف قبطي') : (ch.coptic_display || ''));
+            const spokenText = ch.audio_text || (ch.type === 'listen' || ch.type === 'listen_write' ? (ch.correct_word || ch.coptic_display || 'حرف قبطي') : (ch.coptic_display || ''));
             if (window.playChallengeAudio) {
               window.playChallengeAudio(ch.audio_url || '', spokenText, audioBtn);
             } else if (game && game.sound && game.sound.playChallengeAudio) {
@@ -1375,9 +1444,19 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'select' || ch.type === 'listen') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
           const selectedOpt = ch.options[currentSelection];
           isCorrect = selectedOpt && selectedOpt.is_correct;
+        } else if (ch.type === 'listen_write') {
+          const inputEl = document.getElementById('listen-write-user-input');
+          const userVal = (inputEl ? inputEl.value : '').trim();
+          const correctVal = (ch.correct_word || ch.coptic_display || '').trim();
+          const clean = (s) => s.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
+          isCorrect = (clean(userVal) === clean(correctVal) || clean(userVal).toLowerCase() === clean(correctVal).toLowerCase());
+          if (inputEl) {
+            inputEl.classList.remove('correct', 'wrong');
+            inputEl.classList.add(isCorrect ? 'correct' : 'wrong');
+          }
         } else if (ch.type === 'write') {
           const built = wordTilesBuilt.join('');
           isCorrect = (built === ch.correct_word);
@@ -1410,7 +1489,7 @@
         const feedbackIcon = document.getElementById('feedback-icon');
         const feedbackText = document.getElementById('feedback-text');
 
-        if (ch.type === 'select' || ch.type === 'listen') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
           const allOptionCards = document.querySelectorAll('.option-card');
           allOptionCards.forEach((c, idx) => {
             const isThisCorrect = ch.options && ch.options[idx] && ch.options[idx].is_correct;
@@ -1470,6 +1549,8 @@
             if (feedbackText) {
               if (ch.type === 'fill_blank' && ch.correct_word) {
                 feedbackText.textContent = `إجابة غير صحيحة — الكلمة الصحيحة: «${ch.correct_word}»`;
+              } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
+                feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
                 feedbackText.textContent = 'إجابة غير صحيحة، حاول مجددًا في التمرين القادم';
               }

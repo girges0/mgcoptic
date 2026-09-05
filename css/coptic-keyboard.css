@@ -360,7 +360,8 @@ textarea.coptic:focus {
   justify-content: center;
 }
 
-.fill-blank-input {
+.fill-blank-input,
+.listen-write-input {
   width: 100%;
   padding: 14px 18px;
   border-radius: 16px;
@@ -377,14 +378,16 @@ textarea.coptic:focus {
   box-sizing: border-box;
 }
 
-.fill-blank-input:focus {
+.fill-blank-input:focus,
+.listen-write-input:focus {
   border-style: solid;
   border-color: #5ea8ff !important;
   background: #FFFFFF;
   box-shadow: 0 0 0 4px rgba(94, 168, 255, 0.22), 0 8px 24px rgba(94, 168, 255, 0.12) !important;
 }
 
-.fill-blank-input.correct {
+.fill-blank-input.correct,
+.listen-write-input.correct {
   border-style: solid;
   border-color: #2E6B3E !important;
   background: #EDF7F0 !important;
@@ -392,7 +395,8 @@ textarea.coptic:focus {
   box-shadow: 0 0 0 4px rgba(46, 107, 62, 0.2) !important;
 }
 
-.fill-blank-input.wrong {
+.fill-blank-input.wrong,
+.listen-write-input.wrong {
   border-style: solid;
   border-color: #B02A37 !important;
   background: #FDF0ED !important;

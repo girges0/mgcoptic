@@ -2197,3 +2197,393 @@
   background: #8A1E45;
   transform: translateY(-1px);
 }
+
+/* =========================================================
+   ✨ High-End Cinematic Chest Opening Animation System (Admin) ✨
+   ========================================================= */
+.chest-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 12, 10, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.chest-modal-card {
+  position: relative;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDF8EE 100%);
+  border: 2px solid #E5C158;
+  border-radius: 28px;
+  max-width: 440px;
+  width: 100%;
+  padding: 32px 24px 28px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 35px rgba(229, 193, 88, 0.25);
+  animation: chestModalEntrance 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+@keyframes chestModalEntrance {
+  0% { transform: scale(0.85) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.chest-modal-close {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F1ECE1;
+  border: 1px solid #E2D7C3;
+  color: #7A6953;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 30;
+}
+.chest-modal-close:hover {
+  background: #E8DECC;
+  color: #4A3E31;
+  transform: scale(1.08);
+}
+.chest-stage-wrap {
+  position: relative;
+  width: 220px;
+  height: 165px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+}
+
+/* Soft Radiant Sunburst Rays */
+.chest-sunburst-rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 230px;
+  height: 230px;
+  margin-top: -115px;
+  margin-left: -115px;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 215, 0, 0.15) 0deg 12deg,
+    rgba(255, 235, 150, 0.01) 12deg 24deg
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.6) rotate(0deg);
+  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.35) 48%, transparent 72%);
+  mask-image: radial-gradient(circle, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.35) 48%, transparent 72%);
+  filter: blur(0.5px);
+  z-index: 1;
+}
+
+.chest-modal-overlay.is-opened .chest-sunburst-rays {
+  opacity: 1;
+  transform: scale(1.15) rotate(0deg);
+  animation: chestRaySpin 24s linear infinite;
+}
+
+@keyframes chestRaySpin {
+  from { transform: scale(1.15) rotate(0deg); }
+  to { transform: scale(1.15) rotate(360deg); }
+}
+
+/* Glowing Ambient Halo */
+.chest-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 170px;
+  height: 170px;
+  margin-top: -85px;
+  margin-left: -85px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 230, 120, 0.45) 0%,
+    rgba(255, 195, 50, 0.15) 42%,
+    transparent 72%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(10px);
+  animation: chestGlowPulse 2.8s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes chestGlowPulse {
+  0% { transform: scale(0.88); opacity: 0.45; }
+  100% { transform: scale(1.2); opacity: 0.9; }
+}
+
+/* Twinkling Magical Stars & Dust */
+.chest-stars-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.chest-star {
+  position: absolute;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 14px rgba(255, 255, 255, 0.9);
+  font-family: Arial, sans-serif;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+.chest-star.star-1 { top: 6px; right: 18px; font-size: 1.4rem; animation: chestStarTwinkle 2.2s ease-in-out infinite; }
+.chest-star.star-2 { top: 20px; left: 16px; font-size: 1.1rem; animation: chestStarTwinkle 2.8s ease-in-out infinite 0.7s; }
+.chest-star.star-3 { bottom: 20px; right: 20px; font-size: 1.25rem; animation: chestStarTwinkle 2.5s ease-in-out infinite 1.2s; }
+.chest-star.star-4 { bottom: 18px; left: 20px; font-size: 1.45rem; animation: chestStarTwinkle 3.1s ease-in-out infinite 0.4s; }
+
+@keyframes chestStarTwinkle {
+  0%, 100% { transform: scale(0.4) rotate(0deg); opacity: 0.2; }
+  50% { transform: scale(1.3) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 8px #FFF); }
+}
+
+/* Confetti Canvas */
+.chest-confetti-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Floating Chest Container */
+.chest-icon-wrap {
+  position: relative;
+  width: 130px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  filter: drop-shadow(0 14px 26px rgba(74, 13, 36, 0.22));
+  animation: floatChest 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.chest-main-svg {
+  overflow: visible !important;
+}
+
+@keyframes floatChest {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* Anticipation Wobble */
+.chest-modal-overlay.is-wobbling .chest-icon-wrap {
+  animation: chestWobble 0.45s ease-in-out forwards;
+}
+
+@keyframes chestWobble {
+  0% { transform: scale(1) rotate(0deg); }
+  20% { transform: scale(1.08) rotate(-7deg); }
+  40% { transform: scale(1.1) rotate(7deg); }
+  60% { transform: scale(1.12) rotate(-5deg); }
+  80% { transform: scale(1.14) rotate(4deg); }
+  100% { transform: scale(1.06) rotate(0deg); }
+}
+
+/* Closed Lid: flips up & back into distance when opened */
+.chest-closed-lid {
+  transform-origin: 48px 36px;
+  transform: perspective(350px) translateY(0) rotateX(0deg);
+  opacity: 1;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease 0.1s;
+}
+.chest-modal-overlay.is-opened .chest-closed-lid {
+  transform: perspective(350px) translateY(-32px) rotateX(85deg) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Open Lid (Pinterest 3D Style): arched ceiling & gold side brackets */
+.chest-open-lid {
+  transform-origin: 48px 40px;
+  transform: perspective(350px) translateY(14px) rotateX(-75deg) scale(0.85);
+  opacity: 0;
+  transition: transform 0.65s cubic-bezier(0.34, 1.45, 0.64, 1) 0.1s, opacity 0.3s ease 0.1s;
+  pointer-events: none;
+}
+.chest-modal-overlay.is-opened .chest-open-lid {
+  transform: perspective(350px) translateY(0) rotateX(0deg) scale(1);
+  opacity: 1;
+}
+
+/* Glowing Ruby Crystals (Pinterest style: emerges from inside the chest) */
+.chest-crystals {
+  transform-origin: 48px 44px;
+  transform: translateY(12px) scale(0.6);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s, opacity 0.4s ease 0.15s;
+}
+.chest-modal-overlay.is-opened .chest-crystals {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Interior Glowing Atmospheric Light Beam */
+.chest-svg-light-beam {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.2s;
+}
+.chest-modal-overlay.is-opened .chest-svg-light-beam {
+  opacity: 0.75;
+  animation: chestBeamPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes chestBeamPulse {
+  0% { opacity: 0.55; transform: scaleY(0.95); }
+  100% { opacity: 0.85; transform: scaleY(1.05); }
+}
+
+.chest-modal-title {
+  font-family: inherit;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: #8C2237;
+  margin: 0 0 8px;
+}
+.chest-modal-desc {
+  color: #6C5A4E;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0 0 20px;
+}
+.chest-rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+/* Staggered Spring Pop-in for Reward Cards */
+.chest-reward-card {
+  padding: 16px 12px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(22px) scale(0.82);
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chest-modal-overlay.is-opened .chest-reward-card:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.25s;
+}
+.chest-modal-overlay.is-opened .chest-reward-card:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.42s;
+}
+.chest-modal-overlay.is-opened .chest-reward-card:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.55s;
+}
+
+.chest-reward-card:hover { transform: translateY(-3px) scale(1.03); }
+
+.chest-reward-card.xp-reward {
+  background: linear-gradient(135deg, #E7F5FF 0%, #D0EBFF 100%);
+  border: 1.5px solid #74C0FC;
+  box-shadow: 0 8px 22px rgba(0, 163, 255, 0.18);
+}
+.chest-reward-card.heart-reward {
+  background: linear-gradient(135deg, #FFF0F2 0%, #FFE3E8 100%);
+  border: 1.5px solid #FFA8B8;
+  box-shadow: 0 8px 22px rgba(255, 75, 75, 0.18);
+}
+.chest-reward-card.badge-reward {
+  background: linear-gradient(135deg, #FFF9DB 0%, #FFF3BF 100%);
+  border: 1.5px solid #F59F00;
+  box-shadow: 0 8px 22px rgba(245, 159, 0, 0.18);
+}
+.reward-card-val {
+  font-family: inherit;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.reward-card-val.xp-val { color: #0077CC; }
+.reward-card-val.heart-val { color: #E03131; }
+.reward-card-val.badge-val { color: #D97706; }
+.reward-card-lbl {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #7A6953;
+}
+
+/* 3D Gold Claim Button with Shimmer Sweep */
+.btn-3d-gold-claim {
+  position: relative;
+  width: 100%;
+  padding: 14px 22px;
+  background: linear-gradient(180deg, #FFD43B 0%, #FAB005 100%);
+  border: none;
+  border-bottom: 4.5px solid #D98200;
+  border-radius: 18px;
+  color: #4A2E00;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(250, 176, 5, 0.35);
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+.btn-3d-gold-claim:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(250, 176, 5, 0.45);
+}
+.btn-3d-gold-claim:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+.btn-3d-gold-claim::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: rotate(25deg);
+  animation: buttonShimmer 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes buttonShimmer {
+  0% { left: -60%; }
+  35% { left: 130%; }
+  100% { left: 130%; }
+}

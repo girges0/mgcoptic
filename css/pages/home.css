@@ -837,32 +837,18 @@
 
     .hero-action-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       position: relative;
       z-index: 2;
-      margin-top: 4px;
+      margin-top: 6px;
       direction: rtl;
       gap: 10px;
       flex-wrap: wrap;
     }
 
     .hero-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: clamp(0.74rem, 2.4vw, 0.82rem);
-      color: #F1D4DC;
-      font-weight: 600;
-      direction: rtl;
-      white-space: nowrap;
-    }
-
-    .hero-status-icon {
-      color: #F5CE66;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
+      display: none !important;
     }
 
     .hero-continue-btn {

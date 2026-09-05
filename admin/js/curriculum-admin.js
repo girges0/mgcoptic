@@ -3928,7 +3928,71 @@ const CurriculumAdminSystem = (function(){
       });
     }
 
-    if(type === 'select' || type === 'listen'){
+    if(type === 'listen_write'){
+      const correctWord = (existingData && (existingData.correct_word || existingData.coptic_display)) || '';
+      const meaning = (existingData && (existingData.meaning || existingData.audio_text)) || '';
+      const qInput = document.getElementById('challenge-input-question');
+      if(qInput && !qInput.value.trim()){
+        qInput.value = 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية';
+      }
+      container.innerHTML = `
+        <div style="background:#FAF6EE; border:1.5px solid #D6C8B2; border-radius:12px; padding:14px 16px; margin-bottom:12px;">
+          <div style="font-weight:800; color:#6F1737; margin-bottom:6px; font-size:0.95rem; display:flex; align-items:center; gap:6px;">
+            <span>إعدادات تمرين "استمع واكتب" (Listen & Type):</span>
+          </div>
+          <p style="font-size:0.83rem; color:#666; margin:0 0 12px 0;">يستمع الطالب للتسجيل الصوتي المرفق أو النطق التلقائي، ثم يكتب الحرف أو الكلمة القبطية المطلوبة عبر الكيبورد.</p>
+          
+          <div class="curriculum-field">
+            <label style="font-weight:700;">الحرف أو الكلمة القبطية الصحيحة (الإجابة المطلوبة) *</label>
+            <input type="text" id="listen-write-correct-word" class="coptic-input" value="${escapeHtml(correctWord)}" placeholder="مثال: Ⲁ أو ⲁⲗⲫⲁ" style="font-size:1.25rem; font-weight:800; font-family:'girges', 'Coptic Girges', 'Noto Sans Coptic', Cairo, sans-serif; direction:ltr; text-align:right;">
+          </div>
+          <div class="curriculum-field" style="margin-top:10px;">
+            <label style="font-weight:700;">اسم الحرف / معنى الكلمة بالعربية (اختياري كتلميح):</label>
+            <input type="text" id="listen-write-meaning" value="${escapeHtml(meaning)}" placeholder="مثال: حرف ألفا">
+          </div>
+        </div>
+      `;
+      const lwInput = document.getElementById('listen-write-correct-word');
+      if (lwInput) {
+        attachCopticKeyHandler(lwInput, (val) => {
+          const cDisp = document.getElementById('challenge-input-coptic');
+          if (cDisp && (!cDisp.value.trim() || cDisp.value === val.slice(0, -1))) {
+            cDisp.value = val;
+          }
+        });
+      }
+    } else if(type === 'read_select'){
+      const qInput = document.getElementById('challenge-input-question');
+      if(qInput && !qInput.value.trim()){
+        qInput.value = 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح';
+      }
+      const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
+        { text: '', is_correct: true },
+        { text: '', is_correct: false },
+        { text: '', is_correct: false }
+      ];
+      container.innerHTML = `
+        <div style="background:#FAF6EE; border:1.5px solid #D6C8B2; border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+          <div style="font-weight:800; color:#6F1737; margin-bottom:4px; font-size:0.92rem;">
+            <span>إعدادات تمرين "اقرأ واختر" (Read & Select):</span>
+          </div>
+          <p style="font-size:0.82rem; color:#666; margin:0;">اكتب الحرف أو الكلمة القبطية في حقل <strong>(النص القبطي المعروض أعلاه)</strong>، ثم أضف خيارات النطق بالعربية وحدد الخيار الصحيح.</p>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <label style="font-weight:700; font-size:0.86rem; color:#241D20;">خيارات النطق (حدّد الإجابة الصحيحة):</label>
+          <button type="button" class="curriculum-btn curriculum-btn-secondary" style="padding:3px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.addOptionRow()">+ إضافة اختيار</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="options-rows-container">
+          ${options.map((opt, i) => `
+            <div class="curriculum-dynamic-opt-row" style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="correct_opt_radio" value="${i}" ${opt.is_correct ? 'checked' : ''} style="width:20px; height:20px; cursor:pointer;" title="تحديد كإجابة صحيحة">
+              <input type="text" class="challenge-opt-input" value="${escapeHtml(opt.text)}" placeholder="نص الاختيار #${i+1} (مثال: ألفا)" style="flex:1;">
+              <button type="button" class="curriculum-btn curriculum-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.removeOptionRow(this)" title="حذف هذا الاختيار">✕</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if(type === 'select' || type === 'listen'){
       const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
         { text: '', is_correct: true },
         { text: '', is_correct: false },
@@ -4128,7 +4192,40 @@ const CurriculumAdminSystem = (function(){
       order_index: existingOrder
     };
 
-    if(type === 'select' || type === 'listen'){
+    if(type === 'listen_write'){
+      const cWord = document.getElementById('listen-write-correct-word')?.value.trim() || challengeObj.coptic_display || '';
+      if(!cWord){
+        toast('يرجى كتابة الحرف أو الكلمة القبطية المطلوبة للإجابة الصحيحة', true);
+        return;
+      }
+      const meaning = document.getElementById('listen-write-meaning')?.value.trim() || '';
+      challengeObj.correct_word = cWord;
+      challengeObj.coptic_display = cWord;
+      challengeObj.meaning = meaning;
+      if(!challengeObj.audio_text && meaning){
+        challengeObj.audio_text = meaning;
+      }
+    } else if(type === 'read_select'){
+      if(!challengeObj.coptic_display){
+        toast('يرجى كتابة الحرف أو الكلمة القبطية في حقل (النص القبطي المعروض)', true);
+        return;
+      }
+      const allRows = document.querySelectorAll('#options-rows-container .curriculum-dynamic-opt-row');
+      challengeObj.options = [];
+      allRows.forEach((row, idx) => {
+        const inp = row.querySelector('.challenge-opt-input');
+        const radio = row.querySelector('input[name="correct_opt_radio"]');
+        if(inp && inp.value.trim()){
+          challengeObj.options.push({
+            text: inp.value.trim(),
+            is_correct: (radio && radio.checked)
+          });
+        }
+      });
+      if(challengeObj.options.length === 0){
+        toast('يرجى كتابة اختيار واحد على الأقل لنطق الكلمة', true); return;
+      }
+    } else if(type === 'select' || type === 'listen'){
       const allRows = document.querySelectorAll('#options-rows-container .curriculum-dynamic-opt-row');
       challengeObj.options = [];
       allRows.forEach((row, idx) => {
@@ -4235,7 +4332,7 @@ const CurriculumAdminSystem = (function(){
           }
         }
 
-        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank')){
+        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select')){
           await sb.from('challenge_options').delete().eq('challenge_id', targetChallengeId);
           if(challengeObj.options && challengeObj.options.length > 0){
             const optPayloads = challengeObj.options.map(o => ({
@@ -4876,12 +4973,36 @@ const CurriculumAdminSystem = (function(){
 
     let challengeContent = '';
 
-    if(challenge.type === 'select' || challenge.type === 'listen'){
+    if(challenge.type === 'listen_write'){
+      const enteredVal = previewState.listenWriteValue || '';
       challengeContent = `
-        <div class="question-heading">${escapeHtml(challenge.question)}</div>
+        <div class="question-heading">${escapeHtml(challenge.question || 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية')}</div>
+        <div class="coptic-letter-display">
+          <button type="button" class="coptic-audio-circle-btn listen-pulse" style="width:72px;height:72px;border-radius:50%;margin:10px auto;" title="استمع للصوت" aria-label="استمع للصوت" onclick="CurriculumAdminSystem.playAudioSnippet('${escapeJs(challenge.audio_url || '')}', '${escapeJs(challenge.audio_text || challenge.correct_word || challenge.coptic_display || 'حرف قبطي')}', this)">
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+          </button>
+        </div>
+        <div style="max-width:420px; margin:16px auto; display:flex; flex-direction:column; gap:12px;">
+          <div style="position:relative; width:100%;">
+            <input type="text" id="listen-write-preview-input" class="coptic-input listen-write-input ${previewState.isAnswered ? (previewState.isCorrect ? 'correct' : 'wrong') : ''}" value="${escapeHtml(enteredVal)}" ${previewState.isAnswered ? 'readonly' : ''} oninput="CurriculumAdminSystem.onPreviewListenWriteInput(this.value)" placeholder="اكتب بالقبطية هنا..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            ${!previewState.isAnswered ? `
+              <button type="button" onclick="const inp=document.getElementById('listen-write-preview-input'); if(inp && inp.value){ inp.value=inp.value.slice(0,-1); CurriculumAdminSystem.onPreviewListenWriteInput(inp.value); }" title="مسح آخر حرف" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:transparent; cursor:pointer; color:#888; padding:6px;">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen'){
+      challengeContent = `
+        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : 'اختر الإجابة الصحيحة'))}</div>
         ${challenge.coptic_display ? `
           <div class="coptic-letter-display">
-            <span class="coptic-big-glyph">${escapeHtml(challenge.coptic_display)}</span>
+            <span class="coptic-big-glyph" style="font-size:3.5rem; line-height:1.2; font-weight:800;">${escapeHtml(challenge.coptic_display)}</span>
             ${(challenge.audio_text || challenge.audio_url) ? `
               <button type="button" class="coptic-audio-circle-btn" title="استمع للنطق" aria-label="استمع للنطق" onclick="CurriculumAdminSystem.playAudioSnippet('${escapeJs(challenge.audio_url || '')}', '${escapeJs(challenge.audio_text || challenge.coptic_display || '')}', this)">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -5080,8 +5201,10 @@ const CurriculumAdminSystem = (function(){
     const isMatchingComplete = isMatchingType && matchedCount >= totalPairs;
 
     let canCheck = false;
-    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'true_false'){
+    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false'){
       canCheck = previewState.selectedAnswerIndex !== null;
+    } else if(challenge.type === 'listen_write'){
+      canCheck = Boolean((previewState.listenWriteValue || '').trim());
     } else if(challenge.type === 'fill_blank'){
       canCheck = Boolean((previewState.fillBlankValue || '').trim()) || previewState.selectedAnswerIndex !== null;
     } else if(challenge.type === 'write'){
@@ -5113,7 +5236,11 @@ const CurriculumAdminSystem = (function(){
             <span>إجابة صحيحة! أحسنت</span>
           ` : `
             <span style="font-size:1.4rem;">${SVG.close}</span>
-            <span>${challenge.type === 'fill_blank' && challenge.correct_word ? `إجابة غير صحيحة — الكلمة الصحيحة: «${escapeHtml(challenge.correct_word)}»` : 'إجابة غير صحيحة، حاول مجدداً'}</span>
+            <span>${
+              challenge.type === 'fill_blank' && challenge.correct_word ? `إجابة غير صحيحة — الكلمة الصحيحة: «${escapeHtml(challenge.correct_word)}»` :
+              challenge.type === 'listen_write' && (challenge.correct_word || challenge.coptic_display) ? `إجابة غير صحيحة — الإجابة الصحيحة هي: «${escapeHtml(challenge.correct_word || challenge.coptic_display)}»` :
+              'إجابة غير صحيحة، حاول مجدداً'
+            }</span>
           `) : ''}
         </div>
 
@@ -5312,15 +5439,29 @@ const CurriculumAdminSystem = (function(){
     }
   }
 
+  function onPreviewListenWriteInput(val){
+    if(previewState.isAnswered) return;
+    previewState.listenWriteValue = val;
+    const checkBtn = document.querySelector('#preview-student-container .btn-check-answer');
+    if(checkBtn && !previewState.isAnswered){
+      checkBtn.disabled = !Boolean((val || '').trim());
+    }
+  }
+
   function checkPreviewAnswer(){
     if(previewState.isAnswered) return;
     const challenge = previewState.challenges[previewState.currentIndex];
     let isCorrect = false;
 
-    if(challenge.type === 'select' || challenge.type === 'listen'){
+    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select'){
       if(previewState.selectedAnswerIndex === null) return;
       const selectedOpt = challenge.options[previewState.selectedAnswerIndex];
       isCorrect = selectedOpt ? !!selectedOpt.is_correct : false;
+    } else if(challenge.type === 'listen_write'){
+      const entered = (previewState.listenWriteValue || '').trim();
+      const expected = (challenge.correct_word || challenge.coptic_display || '').trim();
+      const clean = (s) => s.replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
+      isCorrect = (clean(entered) === clean(expected) || clean(entered).toLowerCase() === clean(expected).toLowerCase());
     } else if(challenge.type === 'fill_blank'){
       const entered = (previewState.fillBlankValue || '').trim().toLowerCase();
       const expected = (challenge.correct_word || '').trim().toLowerCase();
@@ -5418,6 +5559,7 @@ const CurriculumAdminSystem = (function(){
     closeInteractivePreview,
     setPreviewDeviceMode,
     selectPreviewAnswer,
+    onPreviewListenWriteInput,
     onPreviewFillBlankInput,
     selectPreviewFillBlankChip,
     pickWordTile,
