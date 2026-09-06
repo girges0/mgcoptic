@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Network-First for fast live updates, with offline cache fallback
 
-const CACHE_NAME = 'mgcoptic-v1.0.4';
+const CACHE_NAME = 'mgcoptic-v1.0.5';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -19,7 +19,8 @@ const PRECACHE_ASSETS = [
   '/girges.woff',
   '/css/preloader.css',
   '/js/preloader.js',
-  '/js/pwa-register.js'
+  '/js/pwa-register.js',
+  '/js/back-button-handler.js'
 ];
 
 // Install: Pre-cache essential shell assets and activate immediately
