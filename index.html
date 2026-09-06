@@ -5133,35 +5133,41 @@
       z-index: 99999;
       display: none;
       flex-direction: column;
-      overflow-y: auto;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      box-sizing: border-box;
     }
     .runner-topbar {
+      flex-shrink: 0;
       max-width: 780px;
       margin: 0 auto;
       width: 100%;
-      padding: 18px 24px;
+      padding: 14px 20px 8px;
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 14px;
+      box-sizing: border-box;
     }
     .runner-close-btn {
       background: transparent;
       border: none;
       cursor: pointer;
       color: var(--ink-soft);
-      padding: 8px;
-      font-size: 1.8rem;
+      padding: 6px;
+      font-size: 1.65rem;
       font-weight: 700;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: color .2s;
+      line-height: 1;
     }
     .runner-close-btn:hover { color: var(--madder); }
     .runner-progress-track {
       flex: 1;
-      height: 16px;
+      height: 14px;
       background: rgba(168, 130, 58, 0.18);
       border-radius: 10px;
       overflow: hidden;
@@ -5177,46 +5183,54 @@
     .runner-hearts {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       font-family: var(--font-display);
       font-weight: 900;
       color: #FF4B4B;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
+      flex-shrink: 0;
     }
     .runner-body {
-      flex: 1;
+      flex: 1 1 auto;
+      min-height: 0;
       max-width: 680px;
       margin: 0 auto;
       width: 100%;
-      padding: 20px 24px 140px;
+      padding: 8px 18px 12px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      justify-content: safe center;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      box-sizing: border-box;
     }
     .question-heading {
       font-family: var(--font-display);
-      font-size: 1.55rem;
+      font-size: 1.45rem;
       font-weight: 900;
       color: var(--ink);
-      margin: 0 0 20px;
+      margin: 0 0 14px;
       text-align: right;
+      line-height: 1.35;
     }
     .coptic-letter-display {
       background: var(--parchment-card);
       border: 2px solid rgba(168, 130, 58, 0.35);
       border-radius: var(--radius-lg, 24px);
-      padding: 28px 20px;
+      padding: 20px 18px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(36, 27, 18, 0.08);
-      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(36, 27, 18, 0.07);
+      margin-bottom: 18px;
+      transition: all 0.2s ease;
     }
     .coptic-big-glyph {
       font-family: var(--font-coptic);
-      font-size: 4.6rem;
+      font-size: 4.2rem;
       color: var(--madder);
-      line-height: 1.1;
+      line-height: 1.08;
       display: block;
-      filter: drop-shadow(0 4px 10px rgba(107, 21, 48, 0.25));
+      filter: drop-shadow(0 3px 8px rgba(107, 21, 48, 0.22));
     }
     .audio-icon-btn, .audio-play-btn, .coptic-audio-circle-btn {
       width: 52px;
@@ -5275,18 +5289,19 @@
     .options-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 12px;
+      margin-bottom: 6px;
     }
     @media(max-width: 540px){
-      .options-grid { grid-template-columns: 1fr; }
+      .options-grid { grid-template-columns: 1fr; gap: 8px; }
     }
     .option-card {
       background: var(--parchment-card);
       border: 2px solid rgba(168, 130, 58, 0.3);
-      border-radius: var(--radius-md, 18px);
-      padding: 18px 20px;
+      border-radius: var(--radius-md, 16px);
+      padding: 14px 18px;
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--ink);
       cursor: pointer;
@@ -5294,11 +5309,16 @@
       transition: all .15s ease;
       box-shadow: 0 4px 0 rgba(168, 130, 58, 0.2);
       user-select: none;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
     .option-card:hover {
       border-color: var(--madder);
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 rgba(168, 130, 58, 0.3);
+      box-shadow: 0 5px 0 rgba(168, 130, 58, 0.3);
     }
     .option-card.selected {
       background: rgba(168, 130, 58, 0.15);
@@ -5319,38 +5339,202 @@
       box-shadow: 0 4px 0 var(--madder);
     }
 
-    /* تمرين ترتيب الحروف */
-    .write-area { display: flex; flex-direction: column; gap: 24px; align-items: center; }
-    .tiles-dropzone {
+    /* لوحة التتبع التفاعلية (Tracing Exercise) */
+    .trace-interactive-card {
       width: 100%;
-      min-height: 72px;
-      background: var(--parchment-soft);
-      border: 2px dashed rgba(168, 130, 58, 0.45);
-      border-radius: 18px;
+      max-width: 360px;
+      margin: 0 auto;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 12px 18px;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    .trace-interactive-card .question-heading {
+      width: 100%;
+      text-align: right;
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+    }
+    .trace-audio-wrap {
+      display: flex;
       align-items: center;
       justify-content: center;
+      gap: 8px;
+      margin: 2px 0 2px;
+    }
+    .trace-info-container {
+      text-align: center;
+      margin-bottom: 4px;
+      width: 100%;
+    }
+    .trace-target-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold, #C5A059);
+      min-height: 22px;
+    }
+    .trace-stroke-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 4px auto 8px;
+      background: var(--parchment-2, #F4ECE1);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line, rgba(168, 130, 58, 0.25));
+      max-width: 300px;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      box-sizing: border-box;
+    }
+    .trace-stroke-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+    .trace-stroke-slider {
+      flex: 1;
+      max-width: 120px;
+      accent-color: var(--madder, #6F1737);
+      cursor: pointer;
+    }
+    .trace-stroke-val {
+      min-width: 30px;
+      font-weight: 700;
+      color: var(--madder, #6F1737);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+    .trace-stroke-preview {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #2e6b3e;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      transition: width 0.1s ease, height 0.1s ease;
+    }
+    .trace-canvas-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      height: 230px;
+      margin: 0 auto;
+      background: var(--parchment-card, #FFFFFF);
+      border-radius: 18px;
+      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      touch-action: none;
+      box-sizing: border-box;
+    }
+    #trace-exercise-canvas {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      display: block;
+      cursor: crosshair;
+    }
+    .trace-accuracy-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(4px);
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      border: 1px solid var(--line, rgba(168, 130, 58, 0.25));
+      display: none;
+      z-index: 2;
+    }
+    .trace-actions-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+      width: 100%;
+      max-width: 320px;
+      box-sizing: border-box;
+    }
+    .trace-action-btn {
+      flex: 1;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      font-family: var(--font-display);
+      transition: all 0.15s ease;
+      box-sizing: border-box;
+    }
+    .btn-trace-clear {
+      background: var(--parchment-2, #F4ECE1);
+      color: var(--ink);
+      border: 1px solid var(--line, rgba(168, 130, 58, 0.3));
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+    .btn-trace-clear:hover {
+      border-color: var(--madder);
+      transform: translateY(-1px);
+    }
+    .btn-trace-evaluate {
+      background: linear-gradient(135deg, var(--gold, #B8860B), #8F6310);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
+    }
+    .btn-trace-evaluate:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(184, 134, 11, 0.35);
+    }
+
+    /* تمرين ترتيب الحروف */
+    .write-area { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+    .tiles-dropzone {
+      width: 100%;
+      min-height: 58px;
+      background: var(--parchment-soft);
+      border: 2px dashed rgba(168, 130, 58, 0.45);
+      border-radius: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 14px;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
     .tiles-pool {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
     }
     .word-tile {
       background: var(--parchment-card);
       border: 2px solid rgba(168, 130, 58, 0.35);
-      border-radius: 14px;
-      padding: 12px 20px;
+      border-radius: 12px;
+      padding: 9px 16px;
       font-family: var(--font-display);
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       font-weight: 900;
       color: var(--ink);
       cursor: pointer;
-      box-shadow: 0 4px 0 rgba(168, 130, 58, 0.25);
+      box-shadow: 0 3px 0 rgba(168, 130, 58, 0.25);
       transition: all .15s;
       user-select: none;
     }
@@ -5363,29 +5547,29 @@
     .match-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 12px;
     }
     .match-col {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .match-btn {
       background: var(--parchment-card);
       border: 2px solid rgba(168, 130, 58, 0.35);
-      border-radius: 16px;
-      padding: 16px 14px;
+      border-radius: 14px;
+      padding: 12px 10px;
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--ink);
       cursor: pointer;
       text-align: center;
-      box-shadow: 0 4px 0 rgba(168, 130, 58, 0.2);
+      box-shadow: 0 3px 0 rgba(168, 130, 58, 0.2);
       transition: all .15s;
       user-select: none;
     }
-    .match-btn.coptic-font { font-family: var(--font-coptic); font-size: 1.35rem; }
+    .match-btn.coptic-font { font-family: var(--font-coptic); font-size: 1.25rem; }
     .match-btn:hover { border-color: var(--madder); transform: translateY(-2px); }
     .match-btn.selected {
       border-color: var(--madder);
@@ -5400,44 +5584,44 @@
     }
 
     .runner-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      flex-shrink: 0;
+      width: 100%;
       background: var(--parchment-soft);
       border-top: 2px solid rgba(168, 130, 58, 0.35);
-      padding: 18px 24px;
+      padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      box-shadow: 0 -8px 24px rgba(36, 27, 18, 0.08);
+      gap: 14px;
+      box-shadow: 0 -4px 16px rgba(36, 27, 18, 0.08);
       z-index: 10;
+      box-sizing: border-box;
     }
     .feedback-msg {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       visibility: hidden;
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 1rem;
     }
     .feedback-msg.correct { color: #2E6B3E; }
     .feedback-msg.wrong { color: var(--madder); }
     .btn-check-answer {
-      min-width: 160px;
-      padding: 15px 32px;
+      min-width: 140px;
+      padding: 12px 28px;
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 900;
       color: #FFFFFF;
       background: var(--madder);
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
-      box-shadow: 0 5px 0 var(--madder-dark);
+      box-shadow: 0 4px 0 var(--madder-dark);
       transition: all .15s;
+      flex-shrink: 0;
     }
     .btn-check-answer:disabled {
       background: #D4C9B5;
@@ -5447,11 +5631,174 @@
     }
     .btn-continue-ok {
       background: #2E6B3E !important;
-      box-shadow: 0 5px 0 #1A4225 !important;
+      box-shadow: 0 4px 0 #1A4225 !important;
     }
     .btn-continue-err {
       background: var(--madder) !important;
-      box-shadow: 0 5px 0 var(--madder-dark) !important;
+      box-shadow: 0 4px 0 var(--madder-dark) !important;
+    }
+
+    /* Media queries for Mobile and short screen heights to optimize spacing */
+    @media (max-width: 600px), (max-height: 850px) {
+      .runner-topbar {
+        padding: 10px 16px 6px;
+        gap: 12px;
+      }
+      .runner-close-btn {
+        font-size: 1.45rem;
+        padding: 4px;
+      }
+      .runner-progress-track {
+        height: 12px;
+        border-radius: 8px;
+      }
+      .runner-hearts {
+        font-size: 1.1rem;
+        gap: 4px;
+      }
+      .runner-hearts svg {
+        width: 18px;
+        height: 18px;
+      }
+      .runner-body {
+        padding: 6px 16px 10px;
+      }
+      .question-heading {
+        font-size: 1.2rem;
+        margin: 0 0 8px;
+      }
+      .coptic-letter-display {
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border-radius: 16px;
+      }
+      .coptic-big-glyph {
+        font-size: 3.2rem;
+        line-height: 1.05;
+      }
+      .audio-icon-btn, .audio-play-btn, .coptic-audio-circle-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        margin-top: 6px;
+      }
+      .audio-icon-btn svg, .audio-play-btn svg, .coptic-audio-circle-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+      .options-grid {
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .option-card {
+        padding: 10px 14px;
+        font-size: 1.02rem;
+        border-radius: 12px;
+        min-height: 44px;
+        box-shadow: 0 3px 0 rgba(168, 130, 58, 0.2);
+      }
+      .trace-interactive-card {
+        max-width: 330px;
+      }
+      .trace-interactive-card .question-heading {
+        font-size: 1.15rem;
+        margin: 0 0 4px;
+      }
+      .trace-canvas-wrapper {
+        height: 215px;
+        max-width: 300px;
+        border-radius: 16px;
+      }
+      .trace-stroke-control {
+        margin: 2px auto 6px;
+        padding: 3px 10px;
+        max-width: 275px;
+      }
+      .trace-actions-row {
+        margin-top: 6px;
+        gap: 8px;
+        max-width: 300px;
+      }
+      .trace-action-btn {
+        padding: 7px 10px;
+        font-size: 0.82rem;
+        min-height: 36px;
+      }
+      .runner-footer {
+        padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+        gap: 10px;
+      }
+      .btn-check-answer {
+        min-width: 120px;
+        padding: 10px 22px;
+        font-size: 1.02rem;
+        border-radius: 12px;
+      }
+      .feedback-msg {
+        gap: 8px;
+        font-size: 0.92rem;
+      }
+      .feedback-msg svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .runner-topbar {
+        padding: 6px 14px 4px;
+      }
+      .runner-body {
+        padding: 4px 12px 6px;
+      }
+      .question-heading {
+        font-size: 1.1rem;
+        margin: 0 0 6px;
+      }
+      .coptic-letter-display {
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        border-radius: 14px;
+      }
+      .coptic-big-glyph {
+        font-size: 2.7rem;
+      }
+      .audio-icon-btn, .audio-play-btn, .coptic-audio-circle-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        margin-top: 4px;
+      }
+      .audio-icon-btn svg, .audio-play-btn svg, .coptic-audio-circle-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .options-grid {
+        gap: 6px;
+      }
+      .option-card {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+        min-height: 38px;
+        box-shadow: 0 2px 0 rgba(168, 130, 58, 0.2);
+      }
+      .trace-canvas-wrapper {
+        height: 190px;
+        max-width: 270px;
+      }
+      .trace-target-title {
+        font-size: 1.05rem;
+      }
+      .runner-footer {
+        padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+      }
+      .btn-check-answer {
+        min-width: 105px;
+        padding: 9px 18px;
+        font-size: 0.96rem;
+        border-radius: 12px;
+      }
     }
 
     /* نافذة النصر */
@@ -10371,12 +10718,12 @@
         } else if (ch.type === 'trace') {
           const questionText = ch.question || 'تتبّع كتابة الحرف / الكلمة بدقة على السبورة';
           html += `
-            <div class="trace-interactive-card" style="width:100%;max-width:390px;margin:0 auto;display:flex;flex-direction:column;align-items:center;">
-              <div class="question-heading" style="width:100%;text-align:right;">${questionText}</div>
+            <div class="trace-interactive-card">
+              <div class="question-heading">${questionText}</div>
               ${(ch.audio_text || ch.audio_url) ? `
-                <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 2px;">
+                <div class="trace-audio-wrap">
                   <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this) : window.MGCopticGame?.sound?.speakArabic('${ch.audio_text}')">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
@@ -10384,14 +10731,14 @@
                   </button>
                 </div>
               ` : ''}
-              <div id="trace-info-container" style="text-align:center;margin-bottom:6px;width:100%;">
-                <div id="trace-target-title" style="font-size:1.25rem;font-weight:700;color:var(--gold);min-height:26px;">جاري تجهيز لوحة التتبع...</div>
+              <div id="trace-info-container" class="trace-info-container">
+                <div id="trace-target-title" class="trace-target-title">جاري تجهيز لوحة التتبع...</div>
               </div>
 
               <!-- مؤشر التحكم في سمك الكتابة -->
-              <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:center;gap:12px;margin:6px auto 12px;background:var(--parchment-2);padding:6px 16px;border-radius:24px;border:1px solid var(--line);max-width:320px;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-                <span style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:700;color:var(--ink-soft);">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <div class="trace-stroke-control">
+                <span class="trace-stroke-label">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                     <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
                     <path d="M2 2l7.586 7.586"></path>
@@ -10399,20 +10746,20 @@
                   </svg>
                   سُمْك القلم:
                 </span>
-                <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;" title="تحكم في سمك خط الكتابة">
-                <span id="trace-stroke-val" style="min-width:34px;font-weight:700;color:var(--madder, #6F1737);font-size:.82rem;text-align:center;">12px</span>
-                <span id="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e6b3e;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
+                <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" title="تحكم في سمك خط الكتابة">
+                <span id="trace-stroke-val" class="trace-stroke-val">12px</span>
+                <span id="trace-stroke-preview" class="trace-stroke-preview"></span>
               </div>
 
-              <div class="trace-canvas-wrapper" style="position:relative;width:100%;max-width:340px;height:310px;margin:0 auto;background:var(--parchment-card);border-radius:20px;border:2px solid var(--duo-border);box-shadow:0 6px 20px rgba(0,0,0,0.06);overflow:hidden;touch-action:none;">
-                <canvas id="trace-exercise-canvas" style="width:100%;height:100%;touch-action:none;display:block;cursor:crosshair;"></canvas>
-                <div id="trace-accuracy-badge" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.94);backdrop-filter:blur(4px);padding:4px 12px;border-radius:12px;font-size:.82rem;font-weight:700;color:var(--ink-soft);border:1px solid var(--line);display:none;">الدقة: <span id="trace-score-val">0</span>%</div>
+              <div class="trace-canvas-wrapper">
+                <canvas id="trace-exercise-canvas"></canvas>
+                <div id="trace-accuracy-badge" class="trace-accuracy-badge">الدقة: <span id="trace-score-val">0</span>%</div>
               </div>
-              <div style="display:flex;justify-content:center;gap:12px;margin-top:14px;width:100%;max-width:340px;">
-                <button type="button" id="btn-trace-clear" class="word-tile" style="flex:1;padding:10px 20px;font-size:.9rem;font-weight:700;background:var(--parchment-2);color:var(--ink);border:1px solid var(--line);border-radius:14px;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.04);">
+              <div class="trace-actions-row">
+                <button type="button" id="btn-trace-clear" class="trace-action-btn btn-trace-clear">
                   <span>🔄 مسح وإعادة</span>
                 </button>
-                <button type="button" id="btn-trace-evaluate" class="word-tile" style="flex:1;padding:10px 24px;font-size:.9rem;font-weight:700;background:linear-gradient(135deg, var(--gold, #B8860B), #8F6310);color:#fff;border:none;border-radius:14px;cursor:pointer;box-shadow:0 4px 12px rgba(184,134,11,0.25);">
+                <button type="button" id="btn-trace-evaluate" class="trace-action-btn btn-trace-evaluate">
                   <span>✨ فحص النتيجة</span>
                 </button>
               </div>
