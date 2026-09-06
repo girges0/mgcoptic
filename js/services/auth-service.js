@@ -8,6 +8,13 @@
   let currentAuthMode = 'signin';
   let pendingAuthCallback = null;
 
+    function normalizePath(pathname) {
+      const raw = pathname || '';
+      const normalized = raw.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+      console.log(`[MG Path Diagnostic] raw: "${raw}" → normalized: "${normalized}"`);
+      return normalized;
+    }
+
     function openAuthModal(mode = 'signin') {
       currentAuthMode = mode;
       switchAuthTab(mode);
@@ -53,16 +60,16 @@
     }
 
     function handlePostAuthSuccess() {
-      const pathname = window.location.pathname;
-      const isAuthPage = pathname.endsWith('login.html') || pathname.endsWith('signup.html');
+      const currentPath = normalizePath(window.location.pathname);
+      const isAuthPage = (currentPath === '/login' || currentPath === '/signup');
 
       if (isAuthPage) {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect');
-        if (redirectUrl && !redirectUrl.includes('login.html') && !redirectUrl.includes('signup.html')) {
+        if (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup')) {
           window.location.href = redirectUrl;
         } else {
-          window.location.href = 'index.html';
+          window.location.href = '/';
         }
       } else {
         closeAuthModal();
@@ -73,6 +80,10 @@
           pendingAuthCallback = null;
           cb();
         }
+      }
+
+      if (typeof requestNotificationPermission === 'function') {
+        requestNotificationPermission();
       }
     }
 
@@ -98,7 +109,7 @@
         if (email) {
           try {
             const { error } = await sb.auth.resetPasswordForEmail(email.trim(), {
-              redirectTo: window.location.origin + '/login.html'
+              redirectTo: window.location.origin + '/login'
             });
             if (error) throw error;
             Swal.fire({
@@ -377,10 +388,9 @@
               }, 1500);
               return;
             } else {
-              const urlParams = new URLSearchParams(window.location.search);
-              const redirectParam = urlParams.get('redirect') ? '&redirect=' + encodeURIComponent(urlParams.get('redirect')) : '';
               setTimeout(() => {
-                window.location.href = 'login.html?email=' + encodeURIComponent(email) + redirectParam;
+                const redirectParam = redirectTarget ? '&redirect=' + encodeURIComponent(redirectTarget) : '';
+                window.location.href = '/login?email=' + encodeURIComponent(email) + redirectParam;
               }, 1500);
               return;
             }
@@ -862,8 +872,10 @@
                          typeof window.Capacitor.isNativePlatform === 'function' && 
                          window.Capacitor.isNativePlatform();
 
-        const currentPath = window.location.pathname;
-        const isAuthPage = currentPath.endsWith('login.html') || currentPath.endsWith('signup.html');
+        const currentPath = normalizePath(window.location.pathname);
+        const isHomePage = (currentPath === '' || currentPath === '/' || currentPath === '/index');
+        const isAuthPage = (currentPath === '/login' || currentPath === '/signup');
+
         if (isAuthPage) {
           window.__mgAuthCheckPending = false;
           if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
@@ -871,8 +883,6 @@
           }
           return;
         }
-
-        const isHomePage = (currentPath === '/' || currentPath.endsWith('index.html') || currentPath.endsWith('/'));
 
         // Check active Supabase session
         const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
@@ -882,7 +892,7 @@
           // في تطبيق الأندرويد: إجباري بالكامل من البداية حتى الصفحة الرئيسية
           if (!isLoggedIn) {
             window.__mgRedirecting = true;
-            window.location.replace('login.html');
+            window.location.replace('/login');
             return;
           }
         } else {
@@ -895,7 +905,7 @@
           if (!isLoggedIn && isDirectProtectedLink) {
             window.__mgRedirecting = true;
             const redirectTarget = encodeURIComponent(window.location.pathname + window.location.search + (window.location.hash || ''));
-            window.location.replace('login.html?redirect=' + redirectTarget);
+            window.location.replace('/login?redirect=' + redirectTarget);
             return;
           }
         }
@@ -923,7 +933,7 @@
         if (isNative) {
           const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
           if (!session || !session.user) {
-            window.location.replace('login.html');
+            window.location.replace('/login');
             return false;
           }
           if (typeof callback === 'function') callback();
@@ -950,12 +960,72 @@
         if (typeof openAuthModal === 'function' && document.getElementById('auth-modal')) {
           openAuthModal('signin');
         } else {
-          window.location.replace('login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
+          window.location.replace('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
         }
         return false;
       } catch (err) {
         console.warn('requireAuthOrPrompt error:', err);
         return false;
+      }
+    }
+
+    /* ============ PUSH NOTIFICATIONS PERMISSION & TOKEN UPSERT ============ */
+    async function requestNotificationPermission() {
+      try {
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+
+        if (!isNative) return; // حصرياً لتطبيق الأندرويد
+
+        const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
+        if (!PushNotifications) return;
+
+        const permStatus = await PushNotifications.checkPermissions();
+
+        let granted = (permStatus && permStatus.receive === 'granted');
+        if (permStatus && (permStatus.receive === 'prompt' || permStatus.receive === 'prompt-with-rationale')) {
+          const result = await PushNotifications.requestPermissions();
+          granted = (result && result.receive === 'granted');
+        }
+
+        if (granted) {
+          PushNotifications.removeAllListeners();
+          PushNotifications.addListener('registration', async (tokenData) => {
+            const token = tokenData && tokenData.value;
+            if (!token) return;
+            console.log('[Push] Registration successful, token received:', token);
+
+            try {
+              const { data: { user } } = (window.sb && window.sb.auth) ? await sb.auth.getUser() : { data: { user: null } };
+              if (user && user.id) {
+                // Upsert device token in public.device_tokens
+                const { error } = await sb.from('device_tokens').upsert({
+                  user_id: user.id,
+                  token: token,
+                  platform: 'android',
+                  updated_at: new Date().toISOString()
+                }, { onConflict: 'token' });
+
+                if (error) {
+                  console.warn('[Push] Device token upsert warning:', error.message);
+                } else {
+                  console.log('[Push] Device token upserted successfully for user:', user.id);
+                }
+              }
+            } catch (saveErr) {
+              console.warn('[Push] Token save error:', saveErr);
+            }
+          });
+
+          PushNotifications.addListener('registrationError', (err) => {
+            console.warn('[Push] Registration error:', err);
+          });
+
+          await PushNotifications.register();
+        }
+      } catch (err) {
+        console.warn('[Push] requestNotificationPermission error:', err);
       }
     }
 
@@ -1052,9 +1122,12 @@
       window.currentAuthSession = currentAuthSession;
     }
 
+    window.normalizePath = normalizePath;
+    window.requestNotificationPermission = requestNotificationPermission;
+
     // التنفيذ التلقائي للحارس فور تحميل السكريبت للصفحات المحمية
-    const pathname = window.location.pathname;
-    const isAuthPage = pathname.endsWith('login.html') || pathname.endsWith('signup.html');
+    const currentPath = normalizePath(window.location.pathname);
+    const isAuthPage = (currentPath === '/login' || currentPath === '/signup');
     if (!isAuthPage) {
       window.__mgAuthCheckPending = true;
       enforceAccessControl();

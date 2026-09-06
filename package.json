@@ -1,0 +1,33 @@
+{
+  "name": "copticcc",
+  "version": "1.0.0",
+  "description": "> **المنصة المتكاملة والحديثة لتعلّم وإتقان اللغة القبطية الكنسية (اللهجة البحيرية) بأسلوب تفاعلي وتلعيب تعليمي شيق (Gamification).**",
+  "main": "extract_orig_blocks.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/girges0/mgcoptic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/girges0/mgcoptic/issues"
+  },
+  "homepage": "https://github.com/girges0/mgcoptic#readme",
+  "devDependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1"
+  },
+  "dependencies": {
+    "@capacitor/push-notifications": "^8.1.2"
+  }
+}

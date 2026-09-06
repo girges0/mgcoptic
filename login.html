@@ -341,9 +341,9 @@
 
     <div class="auth-footer-links">
       ليس لديك حساب بعد؟
-      <a id="signup-link" href="signup.html">سجل دلوقتي</a>
+      <a id="signup-link" href="/signup">سجل دلوقتي</a>
 
-      <a href="index.html" class="web-only-back">← العودة للصفحة الرئيسية</a>
+      <a href="/" class="web-only-back">← العودة للصفحة الرئيسية</a>
     </div>
   </div>
 
@@ -361,10 +361,10 @@
           if (session && session.user) {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect');
-            if (redirectUrl && !redirectUrl.includes('login.html') && !redirectUrl.includes('signup.html')) {
+            if (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup')) {
               window.location.href = redirectUrl;
             } else {
-              window.location.href = 'index.html';
+              window.location.href = '/';
             }
             return;
           }
@@ -386,7 +386,7 @@
       const redirect = urlParams.get('redirect');
       if (redirect) {
         const signupLink = document.getElementById('signup-link');
-        if (signupLink) signupLink.href = 'signup.html?redirect=' + encodeURIComponent(redirect);
+        if (signupLink) signupLink.href = '/signup?redirect=' + encodeURIComponent(redirect);
       }
 
       // إذا جاي من صفحة التسجيل بإيميل مسجل مسبقاً، املأ الإيميل تلقائي وأظهر رسالة

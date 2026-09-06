@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MG Coptic</string>
+    <string name="title_activity_main">MG Coptic</string>
+    <string name="package_name">com.mgcoptic.app</string>
+    <string name="custom_url_scheme">com.mgcoptic.app</string>
+</resources>

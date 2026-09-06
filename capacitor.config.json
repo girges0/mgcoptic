@@ -1,0 +1,10 @@
+{
+  "appId": "com.mgcoptic.app",
+  "appName": "MG Coptic",
+  "webDir": "www",
+  "server": {
+    "url": "https://mgcoptic.vercel.app",
+    "cleartext": false,
+    "androidScheme": "https"
+  }
+}

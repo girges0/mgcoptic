@@ -355,9 +355,9 @@
 
     <div class="auth-footer-links">
       عندك حساب بالفعل؟
-      <a id="login-link" href="login.html">سجل دخول</a>
+      <a id="login-link" href="/login">سجل دخول</a>
 
-      <a href="index.html" class="web-only-back">← العودة للصفحة الرئيسية</a>
+      <a href="/" class="web-only-back">← العودة للصفحة الرئيسية</a>
     </div>
   </div>
 
@@ -375,10 +375,10 @@
           if (session && session.user) {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect');
-            if (redirectUrl && !redirectUrl.includes('login.html') && !redirectUrl.includes('signup.html')) {
+            if (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup')) {
               window.location.href = redirectUrl;
             } else {
-              window.location.href = 'index.html';
+              window.location.href = '/';
             }
             return;
           }
@@ -400,7 +400,7 @@
       const redirect = urlParams.get('redirect');
       if (redirect) {
         const loginLink = document.getElementById('login-link');
-        if (loginLink) loginLink.href = 'login.html?redirect=' + encodeURIComponent(redirect);
+        if (loginLink) loginLink.href = '/login?redirect=' + encodeURIComponent(redirect);
       }
     });
   </script>
