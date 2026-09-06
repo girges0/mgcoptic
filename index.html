@@ -7387,26 +7387,6 @@
           return;
         }
       }
-
-      // 4. Shop modal deep link
-      if (cleanHash === 'shop') {
-        if (typeof switchTab === 'function') switchTab('home');
-        if (typeof window.showGamificationShop === 'function') {
-          window.showGamificationShop();
-        } else if (typeof window.openShopModal === 'function') {
-          window.openShopModal();
-        }
-        return;
-      }
-
-      // 5. Achievements deep link
-      if (cleanHash === 'achievements') {
-        if (typeof switchTab === 'function') switchTab('home');
-        if (typeof window.showAchievementsModal === 'function') {
-          window.showAchievementsModal();
-        }
-        return;
-      }
     }
     window.handleDeepLink = handleDeepLink;
 
