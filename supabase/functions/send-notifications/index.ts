@@ -187,6 +187,11 @@ serve(async (req: Request) => {
       const deadTokens: string[] = [];
 
       for (const token of tokens) {
+        const targetDeepLink = String(event.deep_link || "index.html");
+        const fullWebLink = targetDeepLink.startsWith("http")
+          ? targetDeepLink
+          : `https://mgcoptic.vercel.app/${targetDeepLink.replace(/^\/+/, "")}`;
+
         const messagePayload = {
           message: {
             token: token,
@@ -198,20 +203,37 @@ serve(async (req: Request) => {
             data: {
               title: String(event.title || ""),
               body: String(event.body || ""),
-              deep_link: String(event.deep_link || "/"),
+              deep_link: targetDeepLink,
               event_type: String(event.event_type || ""),
               image: "https://mgcoptic.vercel.app/icon-192.png",
-              icon: "ic_launcher"
+              icon: "ic_stat_notification"
             },
             android: {
               priority: "high",
               notification: {
                 sound: "default",
-                icon: "ic_launcher",
+                icon: "ic_stat_notification",
                 color: "#6B1530",
+                image: "https://mgcoptic.vercel.app/icon-192.png",
                 notification_priority: "PRIORITY_HIGH",
                 visibility: "PUBLIC",
-                click_action: "FCM_PLUGIN_ACTIVITY"
+                default_sound: true,
+                default_vibrate_timings: true
+              }
+            },
+            webpush: {
+              headers: {
+                Urgency: "high"
+              },
+              notification: {
+                title: event.title,
+                body: event.body,
+                icon: "https://mgcoptic.vercel.app/icon-192.png",
+                badge: "https://mgcoptic.vercel.app/icon-192.png",
+                image: "https://mgcoptic.vercel.app/icon-192.png"
+              },
+              fcm_options: {
+                link: fullWebLink
               }
             }
           }

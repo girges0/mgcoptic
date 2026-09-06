@@ -1038,27 +1038,23 @@
             const data = actionData?.notification?.data || {};
             const deepLink = data.deep_link || data.link;
 
-            if (deepLink && typeof deepLink === 'string') {
+            if (deepLink && typeof deepLink === 'string' && deepLink.trim() !== '') {
               let cleanLink = deepLink.trim();
               if (cleanLink.startsWith('#')) {
                 cleanLink = 'index.html' + cleanLink;
               }
-              if (window.location.protocol === 'file:' && cleanLink.startsWith('/')) {
+              if (cleanLink.startsWith('/')) {
                 cleanLink = cleanLink.replace(/^\/+/, '');
               }
 
-              const { data: { session } } = (window.sb && window.sb.auth) 
-                ? await sb.auth.getSession() 
-                : { data: { session: null } };
-
-              if (session) {
-                if (typeof window.handleDeepLink === 'function') {
-                  window.handleDeepLink(cleanLink);
-                } else {
-                  window.location.href = cleanLink;
-                }
+              if (typeof window.handleDeepLink === 'function') {
+                window.handleDeepLink(cleanLink);
               } else {
-                window.location.href = '/login?redirect=' + encodeURIComponent(cleanLink);
+                window.location.href = cleanLink;
+              }
+            } else {
+              if (typeof window.switchTab === 'function') {
+                window.switchTab('home');
               }
             }
           } catch (navErr) {

@@ -148,15 +148,18 @@ self.addEventListener('push', (event) => {
 
   const title = data.title || data.notification?.title || 'MG COPTIC';
   const body = data.body || data.notification?.body || '';
-  const deepLink = data.deep_link || data.data?.deep_link || data.link || '/';
+  const rawDeepLink = data.deep_link || data.data?.deep_link || data.link || '/';
+  const baseUrl = self.location.origin;
+  const fullUrl = new URL(rawDeepLink, baseUrl).href;
+  const iconUrl = new URL('/icon-192.png', baseUrl).href;
 
   const options = {
     body: body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    image: data.image || data.notification?.image || '/icon-192.png',
+    icon: iconUrl,
+    badge: iconUrl,
+    image: data.image || data.notification?.image || iconUrl,
     vibrate: [100, 50, 100],
-    data: { deep_link: deepLink }
+    data: { deep_link: fullUrl }
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -165,17 +168,18 @@ self.addEventListener('push', (event) => {
 // 4. Notification Click: Deep link directly into the application
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const deepLink = event.notification.data?.deep_link || '/';
+  const rawLink = event.notification.data?.deep_link || '/';
+  const targetUrl = new URL(rawLink, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if ('focus' in client) {
-          client.navigate(deepLink);
+          client.navigate(targetUrl);
           return client.focus();
         }
       }
-      if (clients.openWindow) return clients.openWindow(deepLink);
+      if (clients.openWindow) return clients.openWindow(targetUrl);
     })
   );
 });
