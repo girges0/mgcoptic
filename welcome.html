@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>MG COPTIC</title>
+  <meta name="description" content="منصة MG COPTIC لتعلم اللغة القبطية">
+  <meta name="theme-color" content="#F7EEDD">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-cream: #F8EFE0;
+      --madder: #6B1530;
+      --madder-dark: #4A0E21;
+      --gold: #B8892E;
+      --gold-border: #DBC8A4;
+      --ink: #261912;
+      --ink-subtle: #4A3A30;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--ink);
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom)) 24px;
+    }
+
+    /* الحاوية الرئيسية المتجاوبة بحجم شاشة الهاتف */
+    .container {
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* الجزء الأوسط: الشعار والنصوص */
+    .hero-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    .logo-img {
+      width: 160px;
+      max-width: 60vw;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .brand-title {
+      font-size: 2.1rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #241A15;
+      margin-bottom: 8px;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .brand-subtitle {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink-subtle);
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    /* قسم الأزرار في الأسفل بستايل دويلينجو */
+    .buttons-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 18px 24px;
+      border-radius: 9999px; /* شكل كبسولة بيضاوي ناعم */
+      font-family: 'Cairo', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      border: none;
+      transition: all 0.12s ease;
+      outline: none;
+    }
+
+    /* الزر الأساسي: عنابي ملكي */
+    .btn-primary {
+      background-color: var(--madder);
+      color: #FFFFFF;
+      box-shadow: 0 4px 0 var(--madder-dark);
+    }
+
+    .btn-primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--madder-dark);
+    }
+
+    /* الزر الثانوي: بيج فاتح بإطار ذهبي ناعم */
+    .btn-secondary {
+      background-color: #FAF4E9;
+      color: var(--madder);
+      border: 2px solid var(--gold-border);
+      box-shadow: 0 4px 0 #CEBA93;
+    }
+
+    .btn-secondary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #CEBA93;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- الشعار في المنتصف -->
+    <div class="hero-section">
+      <img src="logo.png" alt="MG COPTIC" class="logo-img">
+      <h1 class="brand-title">MGCOPTIC</h1>
+      <p class="brand-subtitle">ابدأ رحلتك في تعلّم اللغة القبطية</p>
+    </div>
+
+    <!-- الأزرار بستايل دويلينجو -->
+    <div class="buttons-section">
+      <a href="signup.html" class="btn btn-primary">ابدأ الآن</a>
+      <a href="login.html" class="btn btn-secondary">لدي حساب بالفعل</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
