@@ -1,0 +1,82 @@
+@font-face {
+  font-family: 'girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('/girges.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coptic Girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('/girges.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      * {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(1200px 600px at 12% -12%, rgba(168, 130, 58, .14), transparent 60%),
+        radial-gradient(1000px 520px at 100% 0%, rgba(140, 36, 48, .08), transparent 55%),
+        var(--parchment);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.85;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 26px 16px 70px;
+      overflow-x: hidden;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .coptic {
+      font-family: var(--font-coptic);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    ::selection {
+      background: var(--gold-light);
+      color: var(--ink);
+    }
+
+

@@ -1,0 +1,59 @@
+/**
+ * MG COPTIC - Design System Variables & Theme Tokens
+ * Based on DESIGN.md palette and visual guidelines.
+ */
+
+:root {
+  /* Parchment Backgrounds */
+  --parchment: #F3E9D2;
+  --parchment-soft: #FAF3E4;
+  --parchment-card: #FAF3E4;
+  --parchment-2: #E8DCBE;
+  --parchment-warm: #FFF8F6;
+  --cream-light: #FBF6EA;
+  --border-light: #E7DCC8;
+
+  /* Royal Madder (Primary) */
+  --madder: #6B1530;
+  --madder-light: #8C2438;
+  --madder-dark: #4A0E21;
+  --madder-deep: #500310;
+
+  /* Coptic Gold (Accent / Secondary) */
+  --gold: #B8892E;
+  --gold-light: #D4B96A;
+  --gold-pale: #FAF3E4;
+  --gold-accent: #D4AF37;
+  --gold-deep: #C59B27;
+
+  /* Ink & Typography Colors */
+  --ink: #2E2018;
+  --ink-soft: #5A4A3E;
+  --ink-muted: #7A695A;
+
+  /* Status & Accents */
+  --teal: #1A4A4A;
+  --teal-deep: #2C6860;
+  --ok: #2E6B3E;
+  --err: #6B1530;
+  --silver: #B0BEC5;
+  --silver-dark: #78909C;
+  --bronze: #CD7F32;
+  --bronze-dark: #8D5524;
+
+  /* Elevations & Shadows */
+  --shadow-sm: 0 1px 3px rgba(36, 27, 18, .10);
+  --shadow-md: 0 6px 20px rgba(36, 27, 18, .12);
+  --shadow-lg: 0 16px 44px rgba(36, 27, 18, .20);
+
+  /* Border Radii */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+
+  /* Typography Families */
+  --font-display: 'Cairo', 'Tajawal', sans-serif;
+  --font-body: 'Tajawal', 'Cairo', sans-serif;
+  --font-coptic: 'girges', 'Coptic Girges', 'Noto Sans Coptic', 'Cairo', serif;
+}

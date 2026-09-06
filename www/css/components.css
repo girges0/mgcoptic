@@ -1,0 +1,507 @@
+    /* ============ الشريط العلوي الثابت (مطابق تماماً لمقاسات learn.html) ============ */
+    .map-topbar,
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(238, 230, 209, .92);
+      box-shadow: 0 2px 10px rgba(36, 27, 18, .08);
+      backdrop-filter: blur(14px) saturate(1.3);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      border-bottom: 1px solid rgba(168, 130, 58, .35);
+      height: 64px;
+      box-sizing: border-box;
+    }
+
+    .topbar-content,
+    .topbar-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--parchment-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-family: var(--font-display);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .brand-text .brand-main {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--ink);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .brand-text small,
+    .brand-text .brand-sub {
+      display: block;
+      font-weight: 500;
+      font-size: .75rem;
+      color: var(--ink-soft);
+      line-height: 1.2;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    /* ============ TOPBAR TABS ON DESKTOP ============ */
+    nav.tabs.desktop-nav-tabs,
+    nav.tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      margin: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav.tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    nav.tabs .tab-link-nav,
+    nav.tabs button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 18px;
+      height: 38px;
+      box-sizing: border-box;
+      border-radius: 999px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--ink-soft);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: .2s ease;
+      white-space: nowrap;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    nav.tabs .tab-link-nav:hover,
+    nav.tabs button:hover {
+      background: rgba(168, 130, 58, .14);
+      color: var(--ink);
+    }
+
+    nav.tabs .tab-link-nav.active,
+    nav.tabs button.active {
+      background: var(--madder);
+      color: var(--parchment-card);
+      box-shadow: var(--shadow-sm);
+    }
+
+    nav.tabs .tab-link-nav:focus-visible,
+    nav.tabs button:focus-visible,
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    .topbar-left-side {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .user-profile-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      padding: 2px;
+      border-radius: 50%;
+      background: var(--parchment-card);
+      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+      box-shadow: 0 2px 6px rgba(36, 27, 18, 0.08);
+      box-sizing: border-box;
+      flex-shrink: 0;
+      overflow: hidden;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .user-profile-btn:hover {
+      border-color: var(--madder);
+      background: var(--parchment-soft);
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.2);
+    }
+
+    .user-profile-btn:active {
+      transform: scale(0.95);
+    }
+
+    .user-profile-btn:focus-visible {
+      outline: 2px solid var(--madder);
+      outline-offset: 2px;
+    }
+
+    .user-profile-btn .user-chip-avatar,
+    .user-profile-btn #topbar-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--madder) 0%, var(--madder-dark) 100%);
+      color: var(--parchment-card);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-coptic);
+      font-weight: 700;
+      font-size: 1.15rem;
+      line-height: 1;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .user-profile-btn .user-chip-avatar img,
+    .user-profile-btn #topbar-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+
+    /* ============ BOTTOM NAV — يطابق التصميم الأصلي المرجعي بدقة ============ */
+    .bottom-nav,
+    .mobile-bottom-nav,
+    .onboarding-bottom-nav {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 200;
+      display: none;
+      justify-content: space-around;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(250, 246, 233, .96), rgba(244, 236, 212, .96));
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      border: 1px solid rgba(168, 130, 58, .4);
+      border-radius: 26px;
+      box-shadow: 0 -4px 6px rgba(36, 27, 18, .04), 0 16px 44px rgba(36, 27, 18, .20);
+      padding: 10px 6px calc(6px + env(safe-area-inset-bottom));
+      list-style: none;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    @media (max-width:1024px) {
+
+      .bottom-nav,
+      .mobile-bottom-nav {
+        display: flex !important;
+      }
+    }
+
+    @media (min-width:1025px) {
+
+      .bottom-nav,
+      .mobile-bottom-nav,
+      .onboarding-bottom-nav {
+        display: none !important;
+      }
+    }
+
+    .bottom-nav .bn-btn,
+    .mobile-bottom-nav .bn-btn,
+    .mobile-bottom-nav .mbn-btn,
+    .onboarding-bottom-nav .bn-btn {
+      -webkit-tap-highlight-color: transparent;
+      appearance: none;
+      -webkit-appearance: none;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 2px 1px 1px;
+      color: var(--ink-soft);
+      font-family: var(--font-display);
+      transition: transform .15s ease, color .2s ease;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+
+    .bottom-nav .bn-btn:active,
+    .mobile-bottom-nav .mbn-btn:active,
+    .onboarding-bottom-nav .bn-btn:active {
+      transform: scale(.94);
+    }
+
+    .bottom-nav .bn-icon,
+    .mobile-bottom-nav .bn-icon,
+    .mobile-bottom-nav .mbn-icon,
+    .onboarding-bottom-nav .bn-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: width .3s cubic-bezier(.2, .8, .2, 1), height .3s cubic-bezier(.2, .8, .2, 1),
+        transform .3s cubic-bezier(.2, .8, .2, 1), background .3s ease, box-shadow .3s ease, color .3s ease,
+        margin .3s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .bottom-nav .bn-icon svg,
+    .mobile-bottom-nav .mbn-icon svg,
+    .onboarding-bottom-nav .bn-icon svg {
+      width: 21px;
+      height: 21px;
+      stroke: currentColor;
+      transition: width .3s, height .3s;
+    }
+
+    .bottom-nav .bn-icon .glyph-ic,
+    .mobile-bottom-nav .mbn-icon .glyph-ic,
+    .onboarding-bottom-nav .bn-icon .glyph-ic {
+      font-family: var(--font-coptic);
+      font-size: 1.15rem;
+      line-height: 1;
+      transition: font-size .3s;
+    }
+
+    .bottom-nav .bn-label,
+    .mobile-bottom-nav .bn-label,
+    .mobile-bottom-nav .mbn-label,
+    .onboarding-bottom-nav .bn-label {
+      display: block;
+      font-size: .68rem;
+      font-weight: 700;
+      white-space: nowrap;
+      color: inherit;
+      line-height: 1.2;
+    }
+
+    .bottom-nav .bn-btn.active,
+    .mobile-bottom-nav .bn-btn.active,
+    .mobile-bottom-nav .mbn-btn.active,
+    .onboarding-bottom-nav .bn-btn.active {
+      color: var(--madder-dark);
+    }
+
+    .bottom-nav .bn-btn.active .bn-label,
+    .mobile-bottom-nav .mbn-btn.active .mbn-label,
+    .onboarding-bottom-nav .bn-btn.active .mbn-label {
+      position: relative;
+      margin-top: 2px;
+    }
+
+    .bottom-nav .bn-btn.active .bn-label::after,
+    .mobile-bottom-nav .mbn-btn.active .mbn-label::after,
+    .onboarding-bottom-nav .bn-btn.active .mbn-label::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--madder);
+    }
+
+    /* الدائرة المرفوعة تتبع أي تبويب نشط حاليًا — تنتقل بين الأزرار */
+    .bottom-nav .bn-btn.active .bn-icon,
+    .mobile-bottom-nav .bn-btn.active .bn-icon,
+    .mobile-bottom-nav .mbn-btn.active .mbn-icon,
+    .onboarding-bottom-nav .bn-btn.active .mbn-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(155deg, var(--madder), var(--madder-dark));
+      color: var(--gold-pale);
+      transform: translateY(-20px);
+      box-shadow: 0 8px 18px rgba(140, 36, 48, .4), 0 0 0 5px rgba(250, 246, 233, .96);
+      margin-bottom: -16px;
+    }
+
+    .bottom-nav .bn-btn.active .bn-icon svg,
+    .mobile-bottom-nav .mbn-btn.active .mbn-icon svg,
+    .onboarding-bottom-nav .bn-btn.active .mbn-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .bottom-nav .bn-btn.active .bn-icon .glyph-ic,
+    .mobile-bottom-nav .mbn-btn.active .mbn-icon .glyph-ic,
+    .onboarding-bottom-nav .bn-btn.active .mbn-icon .glyph-ic {
+      font-size: 1.4rem;
+    }
+
+
+    /* ============ TOPBAR STAT PILLS (Exact Duolingo Style) ============ */
+    .topbar-stats,
+    .game-stats {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      direction: ltr;
+    }
+
+    .topbar-stat-pill,
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .95rem;
+      font-weight: 800;
+      font-family: var(--font-display);
+      line-height: 1;
+      white-space: nowrap;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(36,27,18,0.06);
+      background: var(--parchment-card);
+      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
+    }
+
+    .topbar-stat-pill:hover,
+    .stat-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(36,27,18,0.12);
+    }
+
+    .topbar-stat-pill:active,
+    .stat-badge:active {
+      transform: translateY(1px);
+    }
+
+    /* 1. XP / Points Star Badge: Cyan Blue */
+    .topbar-stat-pill.topbar-xp,
+    .stat-badge.stat-points {
+      background: linear-gradient(135deg, rgba(0, 163, 255, 0.08) 0%, var(--parchment-card) 100%);
+      border-color: rgba(0, 163, 255, 0.45);
+      color: #00A3FF;
+    }
+    .topbar-stat-pill.topbar-xp:hover,
+    .stat-badge.stat-points:hover {
+      border-color: rgba(0, 163, 255, 0.8);
+      background: linear-gradient(135deg, rgba(0, 163, 255, 0.14) 0%, var(--parchment-card) 100%);
+    }
+
+    /* 2. Streak / Flame Badge: Vibrant Orange */
+    .topbar-stat-pill.topbar-streak,
+    .stat-badge.stat-streak {
+      background: linear-gradient(135deg, rgba(255, 150, 0, 0.08) 0%, var(--parchment-card) 100%);
+      border-color: rgba(255, 150, 0, 0.45);
+      color: #FF9600;
+    }
+    .topbar-stat-pill.topbar-streak:hover,
+    .stat-badge.stat-streak:hover {
+      border-color: rgba(255, 150, 0, 0.8);
+      background: linear-gradient(135deg, rgba(255, 150, 0, 0.14) 0%, var(--parchment-card) 100%);
+    }
+
+    /* 3. Hearts / Lives Badge: Vibrant Red */
+    .topbar-stat-pill.topbar-hearts,
+    .stat-badge.stat-hearts {
+      background: linear-gradient(135deg, rgba(255, 75, 75, 0.08) 0%, var(--parchment-card) 100%);
+      border-color: rgba(255, 75, 75, 0.45);
+      color: #FF4B4B;
+    }
+    .topbar-stat-pill.topbar-hearts:hover,
+    .stat-badge.stat-hearts:hover {
+      border-color: rgba(255, 75, 75, 0.8);
+      background: linear-gradient(135deg, rgba(255, 75, 75, 0.14) 0%, var(--parchment-card) 100%);
+    }
+
+    .topbar-stat-pill .topbar-stat-icon,
+    .stat-badge .stat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .topbar-stat-pill .topbar-stat-val,
+    .stat-badge .stat-val {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    @media (max-width: 600px) {
+      .topbar-stats,
+      .game-stats {
+        gap: 6px;
+      }
+      .topbar-stat-pill,
+      .stat-badge {
+        padding: 4px 8px;
+        font-size: 0.82rem;
+        gap: 4px;
+      }
+      .topbar-stat-pill .topbar-stat-icon svg,
+      .stat-badge .stat-icon svg {
+        width: 15px;
+        height: 15px;

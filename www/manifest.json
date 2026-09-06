@@ -1,0 +1,47 @@
+{
+  "name": "MG COPTIC – تعلم اللغة القبطية",
+  "short_name": "MG COPTIC",
+  "description": "منصة تفاعلية لتعلم اللغة القبطية الكنسية: حروف، كلمات، قواعد، واختبارات تفاعلية.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0f19",
+  "theme_color": "#6B1530",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["education", "books", "reference"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "الدروس والقواعد",
+      "short_name": "الدروس",
+      "url": "/learn.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "الرئيسية",
+      "short_name": "الرئيسية",
+      "url": "/index.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
