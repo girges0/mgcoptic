@@ -935,6 +935,10 @@
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
+          <button class="btn secondary" type="button" onclick="clearAllNotificationsHistory()" style="display:flex;align-items:center;gap:6px;color:#D92D20;border-color:#FECDCA;background:#FFF5F5;" title="مسح سجل الإشعارات بالكامل">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span>مسح السجل</span>
+          </button>
           <button class="btn secondary" type="button" onclick="loadNotificationsAdmin()" style="display:flex;align-items:center;gap:6px;" title="تحديث السجل">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             <span>تحديث السجل</span>
@@ -1122,17 +1126,18 @@
       <table id="table-notifications" style="width:100%;">
         <thead>
           <tr>
-            <th style="width:110px;">النوع</th>
+            <th style="width:105px;">النوع</th>
             <th style="width:150px;">المستهدف</th>
             <th>العنوان والرسالة</th>
             <th style="width:130px;">الرابط</th>
-            <th style="width:100px;">الحالة</th>
-            <th style="width:140px;">التاريخ</th>
+            <th style="width:95px;">الحالة</th>
+            <th style="width:130px;">التاريخ</th>
+            <th style="width:65px; text-align:center;">إجراء</th>
           </tr>
         </thead>
         <tbody id="tbody-notifications">
           <tr>
-            <td colspan="6" style="text-align:center; padding:24px; color:#8C857E;">
+            <td colspan="7" style="text-align:center; padding:24px; color:#8C857E;">
               جارٍ تحميل سجل الإشعارات...
             </td>
           </tr>
@@ -1306,7 +1311,7 @@
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           <span>إجراءات وتحكم المشرف بحساب الطالب</span>
         </h4>
-          <button type="button" class="btn" onclick="openSendNotificationForCurrentStudent()" style="background:#6B1530; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" title="إرسال إشعار فوري لهاتف هذا الطالب">
+          <button type="button" class="btn" id="btn-modal-send-notif" onclick="openSendNotificationForCurrentStudent()" style="background:#6B1530; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" title="إرسال إشعار فوري لهاتف هذا الطالب">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span>إرسال إشعار للطالب</span>
           </button>

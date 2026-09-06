@@ -142,9 +142,24 @@ function applyRoleBasedUI() {
     if (usersNavBtn) {
       usersNavBtn.remove();
     }
+    const notifsNavBtn = document.querySelector('aside .navlink[data-tab="notifications"]');
+    if (notifsNavBtn) {
+      notifsNavBtn.remove();
+    }
     const usersPanel = document.getElementById('panel-users');
     if (usersPanel && usersPanel.classList.contains('active')) {
       usersPanel.classList.remove('active');
+    }
+    const notifsPanel = document.getElementById('panel-notifications');
+    if (notifsPanel && notifsPanel.classList.contains('active')) {
+      notifsPanel.classList.remove('active');
+    }
+    const modalSendNotifBtn = document.getElementById('btn-modal-send-notif');
+    if (modalSendNotifBtn) {
+      modalSendNotifBtn.style.display = 'none';
+    }
+    const activePanel = document.querySelector('section.panel.active');
+    if (!activePanel) {
       const defaultBtn = document.querySelector('aside .navlink[data-tab="articles"]') || document.querySelector('aside .navlink');
       if (defaultBtn) defaultBtn.click();
     }
@@ -267,7 +282,7 @@ if(logoutBtn){
 
 function switchAdminTab(tab, updateUrl = true) {
   if (!tab) return;
-  if (tab === 'users' && window.currentAdminRole !== 'super_admin') {
+  if ((tab === 'users' || tab === 'notifications') && window.currentAdminRole !== 'super_admin') {
     tab = 'articles';
   }
   const btn = document.querySelector(`aside .navlink[data-tab="${tab}"]`);
@@ -289,7 +304,7 @@ function switchAdminTab(tab, updateUrl = true) {
   }
 
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
-  if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function') loadNotificationsAdmin();
+  if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') loadNotificationsAdmin();
 }
 window.switchAdminTab = switchAdminTab;
 
@@ -297,7 +312,11 @@ function restoreAdminTabFromHash() {
   const hash = (window.location.hash || '').replace('#', '').trim();
   const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'curriculum', 'notifications'];
   if (hash && validTabs.includes(hash)) {
-    switchAdminTab(hash, false);
+    if ((hash === 'users' || hash === 'notifications') && window.currentAdminRole !== 'super_admin') {
+      switchAdminTab('articles', true);
+    } else {
+      switchAdminTab(hash, false);
+    }
   } else {
     const activeBtn = document.querySelector('aside .navlink.active');
     const defaultTab = activeBtn ? activeBtn.dataset.tab : 'articles';
@@ -311,14 +330,14 @@ window.restoreAdminTabFromHash = restoreAdminTabFromHash;
 document.querySelectorAll('aside .navlink').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
-    if (tab === 'users' && window.currentAdminRole !== 'super_admin') {
+    if ((tab === 'users' || tab === 'notifications') && window.currentAdminRole !== 'super_admin') {
       if (typeof Swal !== 'undefined') {
         Swal.fire({
           icon: 'error',
           title: 'غير مصرح',
           text: 'غير مصرح لك بالوصول لهذا القسم (مخصص لـ Super Admin فقط)',
           confirmButtonText: 'حسناً',
-          confirmButtonColor: '#6F1737'
+          confirmButtonColor: '#6B1530'
         });
       } else if (typeof toast === 'function') {
         toast('غير مصرح لك بالوصول لهذا القسم (مخصص لـ Super Admin فقط)', true);
@@ -341,6 +360,7 @@ async function loadAll(){
   if(typeof loadCurriculumFromSupabase === 'function') tasks.push(loadCurriculumFromSupabase());
   else if(typeof window.loadCurriculumFromSupabase === 'function') tasks.push(window.loadCurriculumFromSupabase());
   if(typeof loadUsers === 'function' && window.currentAdminRole === 'super_admin') tasks.push(loadUsers());
+  if(typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') tasks.push(loadNotificationsAdmin());
   await Promise.all(tasks);
   refreshStats();
 }
@@ -3703,7 +3723,7 @@ async function populateNotifLessonsDropdown() {
   const select = document.getElementById('notif-select-lesson');
   if (!select) return;
 
-  select.innerHTML = '<option value="">⏳ جارٍ جلب وتحديث قائمة الدروس الحية من السيرفر...</option>';
+  select.innerHTML = '<option value="">جارٍ جلب وتحديث قائمة الدروس الحية من السيرفر...</option>';
 
   try {
     // 1. جلب الوحدات والدروس مباشرة من Supabase (المصدر المعتمد)
@@ -3760,10 +3780,25 @@ async function populateNotifLessonsDropdown() {
 window.populateNotifLessonsDropdown = populateNotifLessonsDropdown;
 
 function openSendNotificationForCurrentStudent() {
+  if (window.currentAdminRole !== 'super_admin') {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'غير مصرح',
+        text: 'إرسال الإشعارات متاح فقط لحسابات Super Admin',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('إرسال الإشعارات متاح فقط لحسابات Super Admin');
+    }
+    return;
+  }
+
   if (!activeSelectedStudent) return;
   const student = activeSelectedStudent;
   closeStudentModal();
-  switchTab('notifications');
+  switchAdminTab('notifications');
 
   const audienceSelect = document.getElementById('notif-input-audience');
   if (audienceSelect) {
@@ -3796,13 +3831,15 @@ function openSendNotificationForCurrentStudent() {
 window.openSendNotificationForCurrentStudent = openSendNotificationForCurrentStudent;
 
 async function loadNotificationsAdmin() {
+  if (window.currentAdminRole !== 'super_admin') return;
+
   const tbody = document.getElementById('tbody-notifications');
   const badge = document.getElementById('notif-total-badge');
   if (!tbody) return;
 
   tbody.innerHTML = `
     <tr>
-      <td colspan="6" style="text-align:center; padding:28px; color:#8C857E;">
+      <td colspan="7" style="text-align:center; padding:28px; color:#8C857E;">
         <span style="display:inline-block;width:18px;height:18px;border:2px solid #8C2430;border-top-color:transparent;border-radius:50%;animation:authSpin 0.8s linear infinite;margin-left:8px;vertical-align:middle;"></span>
         جارٍ تحميل سجل الإشعارات...
       </td>
@@ -3822,7 +3859,7 @@ async function loadNotificationsAdmin() {
       .from('notification_events')
       .select('*, target_user:users(id, full_name, email)', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(25);
+      .limit(30);
 
     if (!joinedRes.error && joinedRes.data) {
       events = joinedRes.data;
@@ -3833,7 +3870,7 @@ async function loadNotificationsAdmin() {
         .from('notification_events')
         .select('*', { count: 'exact' })
         .order('created_at', { ascending: false })
-        .limit(25);
+        .limit(30);
 
       if (directRes.error) throw directRes.error;
       events = directRes.data;
@@ -3847,7 +3884,7 @@ async function loadNotificationsAdmin() {
     if (!events || events.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center; padding:36px; color:#746B6F;">
+          <td colspan="7" style="text-align:center; padding:36px; color:#746B6F;">
             لا توجد إشعارات مسجلة حتى الآن. يمكنك إرسال أول إشعار باستخدام النموذج أعلاه.
           </td>
         </tr>
@@ -3901,6 +3938,11 @@ async function loadNotificationsAdmin() {
           <td>${ev.deep_link ? `<code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem; word-break:break-all;">${escapeHtml(ev.deep_link)}</code>` : '<span style="color:#A8A29E; font-size:0.8rem;">-</span>'}</td>
           <td>${statusBadge}</td>
           <td style="font-size:0.8rem; color:#746B6F; white-space:nowrap;">${dateStr}</td>
+          <td style="text-align:center;">
+            <button type="button" class="btn danger" onclick="deleteNotificationEvent('${escapeHtml(ev.id)}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#FEE4E2; border:1px solid #FECDCA; color:#D92D20; cursor:pointer;" title="حذف هذا الإشعار من السجل">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </td>
         </tr>
       `;
     }).join('');
@@ -3908,7 +3950,7 @@ async function loadNotificationsAdmin() {
     console.error('[Admin Notif] Load error:', err);
     tbody.innerHTML = `
       <tr>
-        <td colspan="6" style="text-align:center; padding:24px; color:#D92D20;">
+        <td colspan="7" style="text-align:center; padding:24px; color:#D92D20;">
           تعذر تحميل سجل الإشعارات: ${escapeHtml(err.message || String(err))}
         </td>
       </tr>
@@ -3917,7 +3959,160 @@ async function loadNotificationsAdmin() {
 }
 window.loadNotificationsAdmin = loadNotificationsAdmin;
 
+async function deleteNotificationEvent(eventId) {
+  if (!eventId) return;
+
+  if (window.currentAdminRole !== 'super_admin') {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'غير مصرح',
+        text: 'حذف الإشعارات متاح فقط لحسابات Super Admin',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('حذف الإشعارات متاح فقط لحسابات Super Admin');
+    }
+    return;
+  }
+
+  let confirmed = false;
+  if (typeof Swal !== 'undefined') {
+    const res = await Swal.fire({
+      title: 'تأكيد الحذف',
+      text: 'هل أنت متأكد من حذف هذا الإشعار من السجل نهائياً؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، حذف الإشعار',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: '#D92D20',
+      cancelButtonColor: '#746B6F'
+    });
+    confirmed = res.isConfirmed;
+  } else {
+    confirmed = confirm('هل أنت متأكد من حذف هذا الإشعار من السجل نهائياً؟');
+  }
+
+  if (!confirmed) return;
+
+  try {
+    const { error } = await sb.from('notification_events').delete().eq('id', eventId);
+    if (error) throw error;
+
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'success',
+        title: 'تم الحذف',
+        text: 'تم حذف الإشعار من السجل بنجاح.',
+        timer: 1600,
+        showConfirmButton: false
+      });
+    } else if (typeof toast === 'function') {
+      toast('تم حذف الإشعار بنجاح');
+    }
+
+    loadNotificationsAdmin();
+  } catch (err) {
+    console.error('[Admin Notif] Delete error:', err);
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'تعذر الحذف',
+        text: 'حدث خطأ أثناء محاولة الحذف: ' + (err.message || String(err)),
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('خطأ في الحذف: ' + (err.message || String(err)));
+    }
+  }
+}
+window.deleteNotificationEvent = deleteNotificationEvent;
+
+async function clearAllNotificationsHistory() {
+  if (window.currentAdminRole !== 'super_admin') {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'غير مصرح',
+        text: 'مسح السجل متاح فقط لحسابات Super Admin',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('مسح السجل متاح فقط لحسابات Super Admin');
+    }
+    return;
+  }
+
+  let confirmed = false;
+  if (typeof Swal !== 'undefined') {
+    const res = await Swal.fire({
+      title: 'مسح سجل الإشعارات كاملاً',
+      text: 'تحذير: سيتم مسح جميع الإشعارات المسجلة في السجل نهائياً، هل تريد المتابعة؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، مسح كل السجل',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: '#D92D20',
+      cancelButtonColor: '#746B6F'
+    });
+    confirmed = res.isConfirmed;
+  } else {
+    confirmed = confirm('تحذير: سيتم مسح سجل الإشعارات كاملاً نهائياً، هل تريد المتابعة؟');
+  }
+
+  if (!confirmed) return;
+
+  try {
+    const { error } = await sb.from('notification_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (error) throw error;
+
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'success',
+        title: 'تم المسح',
+        text: 'تم مسح سجل الإشعارات بالكامل بنجاح.',
+        timer: 1800,
+        showConfirmButton: false
+      });
+    } else if (typeof toast === 'function') {
+      toast('تم مسح السجل بنجاح');
+    }
+
+    loadNotificationsAdmin();
+  } catch (err) {
+    console.error('[Admin Notif] Clear all error:', err);
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'تعذر مسح السجل',
+        text: 'حدث خطأ أثناء مسح السجل: ' + (err.message || String(err)),
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('خطأ: ' + (err.message || String(err)));
+    }
+  }
+}
+window.clearAllNotificationsHistory = clearAllNotificationsHistory;
+
 async function sendAdminNotification() {
+  if (window.currentAdminRole !== 'super_admin') {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'غير مصرح',
+        text: 'إرسال الإشعارات متاح فقط لحسابات Super Admin',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('إرسال الإشعارات متاح فقط لحسابات Super Admin');
+    }
+    return;
+  }
+
   const titleInput = document.getElementById('notif-input-title');
   const bodyInput = document.getElementById('notif-input-body');
   const audienceSelect = document.getElementById('notif-input-audience');
@@ -3980,11 +4175,11 @@ async function sendAdminNotification() {
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'success',
-        title: 'تم بنجاح! 🚀',
+        title: 'تم الإرسال بنجاح',
         text: 'تمت جدولة الإشعار ووضعه في طابور الإرسال الفوري لهواتف الطلاب.',
         confirmButtonColor: '#6B1530'
       });
-    } else {
+    } else if (typeof toast === 'function') {
       toast('تم إرسال الإشعار بنجاح');
     }
 
@@ -4004,7 +4199,7 @@ async function sendAdminNotification() {
         confirmButtonColor: '#6B1530'
       });
     } else {
-      toast('خطأ: ' + err.message, true);
+      alert('خطأ: ' + err.message);
     }
   } finally {
     if (submitBtn) {
