@@ -1216,7 +1216,7 @@
 
     // التنفيذ التلقائي للحارس فور تحميل السكريبت للصفحات المحمية
     const currentPath = normalizePath(window.location.pathname);
-    const isAuthPage = (currentPath === '/login' || currentPath === '/signup');
+    const isAuthPage = (currentPath === '/login' || currentPath === '/signup' || currentPath === '/welcome');
     if (!isAuthPage) {
       window.__mgAuthCheckPending = true;
       enforceAccessControl();

@@ -1,26 +1,29 @@
 /**
- * MG COPTIC - Minimal Simple Preloader & Error Fallback
- * Clean, lightweight, ultra-fast
+ * MG COPTIC - Premium Parchment Preloader & Network Handler
+ * Eliminates blank/black screen completely with solid theme background.
  */
 
 #mg-preloader {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #F8EFE0;
   z-index: 99999999;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Cairo', 'Tajawal', sans-serif;
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
   direction: rtl;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 #mg-preloader.loaded {
@@ -29,112 +32,171 @@
   pointer-events: none;
 }
 
-.mg-simple-loader {
+.mg-preloader-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  max-width: 340px;
+  width: 100%;
 }
 
+/* الشعار داخل شاشة التحميل */
+.mg-loader-logo-wrap {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mg-loader-logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: mgLogoPulse 2.2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 12px rgba(107, 21, 48, 0.15));
+}
+
+@keyframes mgLogoPulse {
+  0% { transform: scale(0.96); opacity: 0.9; }
+  100% { transform: scale(1.04); opacity: 1; }
+}
+
+/* حلقة التحميل الدائرية */
 .mg-spinner-wrap {
   position: relative;
-  width: 52px;
-  height: 52px;
-  margin-bottom: 14px;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .mg-spinner {
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 3.5px solid rgba(107, 21, 48, 0.12);
   border-top-color: #6B1530;
-  border-right-color: #D4AF37;
+  border-right-color: #B8892E;
   border-radius: 50%;
-  animation: mgSpin 0.85s linear infinite;
+  animation: mgSpin 0.75s linear infinite;
+  box-sizing: border-box;
 }
 
 @keyframes mgSpin {
   to { transform: rotate(360deg); }
 }
 
+/* نصوص التحميل */
 .mg-loading-text {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #261912;
+  margin-bottom: 6px;
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: -0.2px;
+}
+
+.mg-loading-subtext {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #6E5B4F;
+  font-family: 'Tajawal', sans-serif;
+  transition: all 0.3s ease;
+  min-height: 22px;
+}
+
+/* رسالة تنبيه عند ضعف الإنترنت */
+.mg-slow-notice {
+  margin-top: 10px;
+  font-size: 0.84rem;
   font-weight: 700;
-  color: #6B1530;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85), 0 0 10px rgba(251, 248, 241, 0.9);
-  animation: mgFadeText 1.5s ease-in-out infinite alternate;
+  color: #8C2438;
+  background: rgba(107, 21, 48, 0.08);
+  border: 1px solid rgba(184, 137, 46, 0.25);
+  padding: 6px 14px;
+  border-radius: 20px;
+  animation: mgFadeIn 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-@keyframes mgFadeText {
-  0% { opacity: 0.65; }
-  100% { opacity: 1; }
+@keyframes mgFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Error Fallback (when loading fails or times out) */
+/* صندوق الخطأ عند انقطاع الاتصال أو بطء الشبكة الشديد */
 .mg-loader-error {
   display: none;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px 24px;
-  max-width: 320px;
-  background: rgba(251, 248, 241, 0.95);
-  border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(107, 21, 48, 0.15);
+  padding: 24px 20px;
+  width: 100%;
+  background: #FAF4E9;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(38, 25, 18, 0.08);
+  border: 1.5px solid #E8DCBE;
+  box-sizing: border-box;
 }
 
 .mg-loader-error.active {
   display: flex;
+  animation: mgFadeIn 0.3s ease;
 }
 
-.mg-simple-loader.hidden {
-  display: none;
+.mg-loader-error .error-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(107, 21, 48, 0.08);
+  color: #6B1530;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
 }
 
-.mg-error-msg {
-  font-size: 0.92rem;
-  font-weight: 600;
+.mg-loader-error h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #261912;
+  margin: 0 0 6px;
+}
+
+.mg-loader-error p {
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #5A4A3E;
-  margin-bottom: 14px;
+  margin: 0 0 16px;
   line-height: 1.5;
 }
 
-.mg-btn-simple-retry {
+.mg-btn-retry {
   background: #6B1530;
-  color: #FFF;
+  color: #FFFFFF;
   border: none;
-  padding: 8px 22px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 800;
   cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(107, 21, 48, 0.2);
+  font-family: 'Cairo', sans-serif;
+  box-shadow: 0 3px 0 #4A0E21;
+  transition: all 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.mg-btn-simple-retry:hover {
-  background: #4A0E21;
-  transform: translateY(-1px);
-}
-
-.mg-btn-simple-skip {
-  background: transparent;
-  color: #7A695A;
-  border: none;
-  margin-top: 8px;
-  font-size: 0.82rem;
-  cursor: pointer;
-  font-family: inherit;
-  text-decoration: underline;
-}
-
-.mg-btn-simple-skip:hover {
-  color: #6B1530;
+.mg-btn-retry:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #4A0E21;
 }

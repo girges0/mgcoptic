@@ -20,8 +20,13 @@
     } catch(e) {}
   </script>
 
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/preloader.css">
+
   <style>
-    :root {
       --bg-cream: #F8EFE0;
       --madder: #6B1530;
       --madder-dark: #4A0E21;
@@ -157,6 +162,35 @@
 </head>
 <body>
 
+  <!-- MG COPTIC Preloader -->
+  <div id="mg-preloader" role="status" aria-label="جارٍ التحميل" style="background:#F8EFE0;">
+    <div class="mg-preloader-content" id="mg-loader-main-box">
+      <div class="mg-loader-logo-wrap">
+        <img src="logo.png" alt="MG COPTIC">
+      </div>
+      <div class="mg-spinner-wrap">
+        <div class="mg-spinner"></div>
+      </div>
+      <div class="mg-loading-text">MG COPTIC</div>
+      <div class="mg-loading-subtext" id="mg-loader-subtext">جارٍ التحميل...</div>
+      <div class="mg-slow-notice" id="mg-slow-notice" style="display:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>الاتصال ضعيف، جاري المتابعة...</span>
+      </div>
+    </div>
+    <div class="mg-loader-error" id="mg-loader-error-box">
+      <div class="error-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+      </div>
+      <h3>الاتصال بالإنترنت ضعيف</h3>
+      <p>يستغرق التحميل وقتاً أطول من المعتاد بسبب جودة الاتصال.</p>
+      <button type="button" class="mg-btn-retry" onclick="window.MGPreloader && window.MGPreloader.retry()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+        <span>إعادة المحاولة</span>
+      </button>
+    </div>
+  </div>
+
   <div class="container">
     
     <!-- الشعار في المنتصف -->
@@ -174,5 +208,6 @@
 
   </div>
 
+  <script src="js/preloader.js"></script>
 </body>
 </html>

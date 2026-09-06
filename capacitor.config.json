@@ -2,6 +2,7 @@
   "appId": "com.mgcoptic.app",
   "appName": "MG Coptic",
   "webDir": "www",
+  "backgroundColor": "#F8EFE0",
   "server": {
     "url": "https://mgcoptic.vercel.app",
     "cleartext": false,
