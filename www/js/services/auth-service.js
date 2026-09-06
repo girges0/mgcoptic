@@ -917,21 +917,46 @@
           return;
         }
 
-        // Check active Supabase session
-        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
-        const isLoggedIn = !!(session && session.user);
+        // Fast local session check
+        let hasCachedSession = false;
+        try {
+          const raw = localStorage.getItem('mg_coptic_student_auth_token');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && (parsed.access_token || parsed.user)) {
+              hasCachedSession = true;
+            }
+          }
+        } catch(e) {}
 
         const isMobileScreen = (typeof window !== 'undefined' && (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)));
 
+        // Fast-path 1: Unauthenticated mobile / app visitor -> immediately redirect to welcome
+        if ((isNative || (isMobileScreen && isHomePage)) && !hasCachedSession) {
+          window.__mgRedirecting = true;
+          window.location.replace('/welcome');
+          return;
+        }
+
+        // Fast-path 2: Returning logged-in user -> dismiss preloader immediately without waiting for network
+        if (hasCachedSession && isHomePage) {
+          window.__mgAuthCheckPending = false;
+          if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+            window.MGPreloader.dismiss();
+          }
+        }
+
+        // Check active Supabase session (refreshes in background or validates)
+        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
+        const isLoggedIn = !!(session && session.user);
+
         if (isNative || (isMobileScreen && isHomePage)) {
-          // في تطبيق الأندرويد والموبايل: توجيه المستخدم غير المسجل إلى شاشة الترحيب
           if (!isLoggedIn) {
             window.__mgRedirecting = true;
             window.location.replace('/welcome');
             return;
           }
         } else {
-          // في نسخة الويب: الصفحة الرئيسية مسموحة، أي صفحة أخرى أو رابط مباشر لدرس/تمرين تتطلب تسجيل الدخول
           const hasProtectedHash = window.location.hash && 
                                    window.location.hash !== '#' && 
                                    window.location.hash !== '#home';
