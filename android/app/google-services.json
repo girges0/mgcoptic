@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573276635369",
+    "project_id": "mg-coptic",
+    "storage_bucket": "mg-coptic.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573276635369:android:52966dc69aac5daadf3078",
+        "android_client_info": {
+          "package_name": "com.mgcoptic.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBodpsYQ3xksn3FJ88t-WRpsCGfiB3Klzw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -277,12 +277,13 @@ function switchAdminTab(tab, updateUrl = true) {
   }
 
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
+  if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function') loadNotificationsAdmin();
 }
 window.switchAdminTab = switchAdminTab;
 
 function restoreAdminTabFromHash() {
   const hash = (window.location.hash || '').replace('#', '').trim();
-  const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'curriculum'];
+  const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'curriculum', 'notifications'];
   if (hash && validTabs.includes(hash)) {
     switchAdminTab(hash, false);
   } else {
@@ -3550,6 +3551,256 @@ function deleteUserFromModal() {
 window.deleteUserFromModal = deleteUserFromModal;
 
 
+
+
+/* ============ NOTIFICATIONS MANAGEMENT & BROADCAST ============ */
+
+let cachedStudentsForNotif = null;
+
+function toggleNotifTargetInput() {
+  const audience = document.getElementById('notif-input-audience')?.value;
+  const wrapper = document.getElementById('notif-target-user-wrapper');
+  if (wrapper) {
+    wrapper.style.display = (audience === 'single') ? 'block' : 'none';
+  }
+}
+window.toggleNotifTargetInput = toggleNotifTargetInput;
+
+async function populateNotifStudentsDropdown() {
+  const select = document.getElementById('notif-input-user');
+  if (!select) return;
+
+  if (cachedStudentsForNotif && cachedStudentsForNotif.length > 0) {
+    renderNotifStudentsOptions(cachedStudentsForNotif);
+    return;
+  }
+
+  try {
+    const { data: students, error } = await sb
+      .from('users')
+      .select('id, full_name, email')
+      .order('full_name', { ascending: true });
+
+    if (error) throw error;
+    cachedStudentsForNotif = students || [];
+    renderNotifStudentsOptions(cachedStudentsForNotif);
+  } catch (err) {
+    console.warn('[Admin Notif] Error loading students:', err);
+    select.innerHTML = '<option value="">تعذر جلب قائمة الطلاب</option>';
+  }
+}
+
+function renderNotifStudentsOptions(students) {
+  const select = document.getElementById('notif-input-user');
+  if (!select) return;
+
+  if (!students || students.length === 0) {
+    select.innerHTML = '<option value="">لا يوجد طلاب مسجلين</option>';
+    return;
+  }
+
+  select.innerHTML = students.map(s => `
+    <option value="${s.id}">${escapeHtml(s.full_name || 'بدون اسم')} (${escapeHtml(s.email || 'بدون إيميل')})</option>
+  `).join('');
+}
+
+async function loadNotificationsAdmin() {
+  const tbody = document.getElementById('tbody-notifications');
+  const badge = document.getElementById('notif-total-badge');
+  if (!tbody) return;
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="6" style="text-align:center; padding:24px; color:#8C857E;">
+        جارٍ تحميل سجل الإشعارات...
+      </td>
+    </tr>
+  `;
+
+  // تأكد من تهيئة قائمة الطلاب في النموذج
+  populateNotifStudentsDropdown();
+
+  try {
+    const { data: events, error, count } = await sb
+      .from('notification_events')
+      .select('*, target_user:users(id, full_name, email)', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) throw error;
+
+    if (badge) {
+      badge.textContent = `المجموع الكلي: ${count || (events ? events.length : 0)} إشعار`;
+    }
+
+    if (!events || events.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding:32px; color:#746B6F;">
+            لا توجد إشعارات مسجلة حتى الآن. يمكنك إرسال أول إشعار باستخدام النموذج أعلاه.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    const typeLabels = {
+      'welcome': 'ترحيب 🎉',
+      'rank_change': 'تغيّر ترتيب 🏆',
+      'daily_reminder': 'تذكير يومي 🔥',
+      'new_content': 'محتوى جديد 📖',
+      'achievement': 'إنجاز 🎖️',
+      'admin_broadcast': 'إداري عام 📢',
+      'hearts_refilled': 'تعبئة قلوب ❤️'
+    };
+
+    tbody.innerHTML = events.map(ev => {
+      let targetDisplay = '📢 جميع الطلاب (عام)';
+      if (ev.target_user_id) {
+        const u = ev.target_user;
+        const name = u?.full_name || 'طالب';
+        const email = u?.email ? ` (${u.email})` : '';
+        targetDisplay = `👤 ${escapeHtml(name)}${escapeHtml(email)}`;
+      }
+
+      let statusBadge = '';
+      if (ev.status === 'sent') {
+        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#D1FADF;color:#027A48;font-weight:800;font-size:0.75rem;">تم الإرسال</span>';
+      } else if (ev.status === 'failed') {
+        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#FEE4E2;color:#D92D20;font-weight:800;font-size:0.75rem;">تعذر الإرسال</span>';
+      } else {
+        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#FEF0C7;color:#B54708;font-weight:800;font-size:0.75rem;">قيد الانتظار</span>';
+      }
+
+      const dateStr = ev.created_at ? new Date(ev.created_at).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+      const typeLabel = typeLabels[ev.event_type] || ev.event_type;
+
+      return `
+        <tr>
+          <td><span style="font-weight:800; font-size:0.84rem; color:#6B1530;">${escapeHtml(typeLabel)}</span></td>
+          <td style="font-size:0.86rem; font-weight:700;">${targetDisplay}</td>
+          <td>
+            <div style="font-weight:800; font-size:0.92rem; color:#2E2018;">${escapeHtml(ev.title || '')}</div>
+            <div style="font-size:0.84rem; color:#746B6F; margin-top:3px; line-height:1.4;">${escapeHtml(ev.body || '')}</div>
+          </td>
+          <td><code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem;">${escapeHtml(ev.deep_link || '-')}</code></td>
+          <td>${statusBadge}</td>
+          <td style="font-size:0.8rem; color:#746B6F; white-space:nowrap;">${dateStr}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('[Admin Notif] Load error:', err);
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center; padding:24px; color:#D92D20;">
+          تعذر تحميل سجل الإشعارات: ${escapeHtml(err.message)}
+        </td>
+      </tr>
+    `;
+  }
+}
+window.loadNotificationsAdmin = loadNotificationsAdmin;
+
+async function sendAdminNotification() {
+  const titleInput = document.getElementById('notif-input-title');
+  const bodyInput = document.getElementById('notif-input-body');
+  const audienceSelect = document.getElementById('notif-input-audience');
+  const userInput = document.getElementById('notif-input-user');
+  const linkInput = document.getElementById('notif-input-link');
+  const submitBtn = document.getElementById('btn-submit-notif');
+
+  const title = (titleInput?.value || '').trim();
+  const body = (bodyInput?.value || '').trim();
+  const audience = audienceSelect?.value || 'broadcast';
+  const targetUserId = (audience === 'single') ? (userInput?.value || null) : null;
+  const deepLink = (linkInput?.value || '').trim() || null;
+
+  if (!title || !body) {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({ icon: 'warning', title: 'بيانات ناقصة', text: 'يرجى إدخال عنوان الإشعار ونصه.' });
+    } else {
+      alert('يرجى إدخال عنوان الإشعار ونصه.');
+    }
+    return;
+  }
+
+  if (audience === 'single' && !targetUserId) {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({ icon: 'warning', title: 'اختر الطالب', text: 'يرجى اختيار الطالب المستهدف من القائمة.' });
+    } else {
+      alert('يرجى اختيار الطالب المستهدف.');
+    }
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>جارٍ إرسال الإشعار...</span>';
+  }
+
+  try {
+    const { error } = await sb.from('notification_events').insert({
+      event_type: 'admin_broadcast',
+      target_user_id: targetUserId,
+      title: title,
+      body: body,
+      deep_link: deepLink,
+      status: 'pending'
+    });
+
+    if (error) throw error;
+
+    // محاولة استدعاء الـ Edge Function فوراً في الخلفية للإرسال الفوري
+    fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': window.SUPABASE_ANON_KEY || window.SB_ANON_KEY,
+        'Authorization': `Bearer ${window.SUPABASE_ANON_KEY || window.SB_ANON_KEY}`
+      }
+    }).catch(e => console.log('[Notif Dispatch Call]', e));
+
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'success',
+        title: 'تم بنجاح! 🚀',
+        text: 'تمت جدولة الإشعار ووضعه في طابور الإرسال الفوري لخدمة Firebase FCM.',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      toast('تمت جدولة الإشعار بنجاح');
+    }
+
+    // تفريغ الحقول وتحديث الجدول
+    if (titleInput) titleInput.value = '';
+    if (bodyInput) bodyInput.value = '';
+    if (linkInput) linkInput.value = '';
+
+    loadNotificationsAdmin();
+  } catch (err) {
+    console.error('[Admin Notif] Send error:', err);
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'تعذر الإرسال',
+        text: 'حدث خطأ أثناء حفظ الإشعار: ' + err.message,
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      toast('خطأ: ' + err.message, true);
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>إرسال الإشعار الآن</span>
+      `;
+    }
+  }
+}
+window.sendAdminNotification = sendAdminNotification;
 
 checkSession();
 

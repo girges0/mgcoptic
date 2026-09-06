@@ -81,10 +81,6 @@
           cb();
         }
       }
-
-      if (typeof requestNotificationPermission === 'function') {
-        requestNotificationPermission();
-      }
     }
 
     async function handleForgotPassword(prefilledEmail) {
@@ -422,11 +418,29 @@
           }
 
           // حفظ كلمة المرور والاسم والعمر في بيانات الحساب لعرضها في لوحة الإدارة
+          let createdUser = null;
           try {
-            const curU = (signData && signData.user) || (await sb.auth.getUser()).data.user;
-            if (curU) await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', curU.id);
+            createdUser = (signData && signData.user) || (await sb.auth.getUser()).data?.user;
+            if (createdUser) await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', createdUser.id);
           } catch (e) {
             console.warn('Password profile sync notice:', e);
+          }
+
+          // طلب إذن الإشعارات عند التسجيل الجديد حصرياً داخل Capacitor Native
+          try {
+            const isNative = typeof window.Capacitor !== 'undefined' && 
+                             typeof window.Capacitor.isNativePlatform === 'function' && 
+                             window.Capacitor.isNativePlatform();
+
+            if (isNative && typeof requestNotificationPermission === 'function') {
+              requestNotificationPermission({
+                isNewUser: true,
+                userId: createdUser?.id,
+                name: firstName || fullName
+              });
+            }
+          } catch (pushErr) {
+            console.warn('[Push] Signup permission request warning:', pushErr);
           }
 
           if (submitBtn) {
@@ -978,7 +992,36 @@
     }
 
     /* ============ PUSH NOTIFICATIONS PERMISSION & TOKEN UPSERT ============ */
-    async function requestNotificationPermission() {
+    async function setupPushDeepLinkListener(PushNotifications) {
+      try {
+        PushNotifications.addListener('pushNotificationActionPerformed', async (actionData) => {
+          console.log('[Push] Action performed:', actionData);
+          try {
+            const data = actionData?.notification?.data || {};
+            const deepLink = data.deep_link || data.link;
+
+            if (deepLink && typeof deepLink === 'string') {
+              const cleanLink = deepLink.trim();
+              const { data: { session } } = (window.sb && window.sb.auth) 
+                ? await sb.auth.getSession() 
+                : { data: { session: null } };
+
+              if (session) {
+                window.location.href = cleanLink;
+              } else {
+                window.location.href = '/login?redirect=' + encodeURIComponent(cleanLink);
+              }
+            }
+          } catch (navErr) {
+            console.warn('[Push] Navigation on notification action error:', navErr);
+          }
+        });
+      } catch (e) {
+        console.warn('[Push] Failed to register action listener:', e);
+      }
+    }
+
+    async function requestNotificationPermission(options = {}) {
       try {
         const isNative = typeof window.Capacitor !== 'undefined' && 
                          typeof window.Capacitor.isNativePlatform === 'function' && 
@@ -999,17 +1042,21 @@
 
         if (granted) {
           PushNotifications.removeAllListeners();
+          setupPushDeepLinkListener(PushNotifications);
+
           PushNotifications.addListener('registration', async (tokenData) => {
             const token = tokenData && tokenData.value;
             if (!token) return;
             console.log('[Push] Registration successful, token received:', token);
 
             try {
-              const { data: { user } } = (window.sb && window.sb.auth) ? await sb.auth.getUser() : { data: { user: null } };
-              if (user && user.id) {
+              const targetUserId = options?.userId || 
+                ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
+
+              if (targetUserId) {
                 // Upsert device token in public.device_tokens
                 const { error } = await sb.from('device_tokens').upsert({
-                  user_id: user.id,
+                  user_id: targetUserId,
                   token: token,
                   platform: 'android',
                   updated_at: new Date().toISOString()
@@ -1018,7 +1065,25 @@
                 if (error) {
                   console.warn('[Push] Device token upsert warning:', error.message);
                 } else {
-                  console.log('[Push] Device token upserted successfully for user:', user.id);
+                  console.log('[Push] Device token upserted successfully for user:', targetUserId);
+                }
+
+                // إذا كان تسجيلاً جديداً، أضف إشعاراً ترحيبياً فورياً في notification_events
+                if (options?.isNewUser) {
+                  try {
+                    const studentName = options?.name || 'صديقنا';
+                    await sb.from('notification_events').insert({
+                      event_type: 'welcome',
+                      target_user_id: targetUserId,
+                      title: 'أهلاً بك في منصة MG Coptic! 🎉',
+                      body: `مرحباً بك يا ${studentName}! يسعدنا انضمامك لرحلة إتقان اللغة القبطية. ابدأ درسك الأول الآن!`,
+                      deep_link: '/learn',
+                      status: 'pending'
+                    });
+                    console.log('[Push] Welcome notification event enqueued successfully');
+                  } catch (welcErr) {
+                    console.warn('[Push] Welcome event insert error:', welcErr);
+                  }
                 }
               }
             } catch (saveErr) {
@@ -1036,6 +1101,20 @@
         console.warn('[Push] requestNotificationPermission error:', err);
       }
     }
+
+    // تهيئة مستمع الضغط على الإشعارات للمستخدمين عند تشغيل التطبيق
+    (function initNativePushListeners() {
+      try {
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+        if (isNative && window.Capacitor?.Plugins?.PushNotifications) {
+          setupPushDeepLinkListener(window.Capacitor.Plugins.PushNotifications);
+        }
+      } catch (e) {
+        // Silent catch during early bootstrap
+      }
+    })();
 
     // استماع لرفع الصورة الشخصية إلى Supabase Storage
     document.addEventListener('DOMContentLoaded', () => {

@@ -8,3 +8,9 @@ Thumbs.db
 # Dependencies
 node_modules/
 .idea/
+
+# Secrets and credentials
+*adminsdk*.json
+*service_account*.json
+*service-account*.json
+.env*
