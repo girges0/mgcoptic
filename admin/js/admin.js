@@ -3007,8 +3007,8 @@ async function promptSetStudentPasswordModal() {
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-1.5 1.5L14 9l-3-3 2.5-2.5L21 2zm-9 9a5 5 0 1 0-7.07 7.07A5 5 0 0 0 12 11z"/></svg>
         <span>كلمة المرور الجديدة:</span>
       </div>
-      <input id="swal-new-password" type="text" class="swal2-input" placeholder="أدخل كلمة المرور الجديدة (6 خانات أو أكثر)" style="direction:ltr; font-family:monospace; font-size:1.15rem; font-weight:bold; margin:0 0 8px 0; width:100%; box-sizing:border-box;">
-      <div style="text-align:right; font-size:0.75rem; color:#746B6F;">الحد الأدنى 6 أحرف أو أرقام</div>
+      <input id="swal-new-password" type="text" class="swal2-input" placeholder="أدخل كلمة المرور الجديدة (8 خانات أو أكثر)" style="direction:ltr; font-family:monospace; font-size:1.15rem; font-weight:bold; margin:0 0 8px 0; width:100%; box-sizing:border-box;">
+      <div style="text-align:right; font-size:0.75rem; color:#746B6F;">الحد الأدنى 8 أحرف أو أرقام</div>
     `,
     showCancelButton: true,
     confirmButtonText: 'حفظ وتحديث كلمة المرور',
@@ -3017,8 +3017,8 @@ async function promptSetStudentPasswordModal() {
     cancelButtonColor: '#746B6F',
     preConfirm: () => {
       const pw = document.getElementById('swal-new-password').value.trim();
-      if (!pw || pw.length < 6) {
-        Swal.showValidationMessage('يجب أن تتكون كلمة المرور من 6 خانات على الأقل');
+      if (!pw || pw.length < 8) {
+        Swal.showValidationMessage('يجب أن تتكون كلمة المرور من 8 خانات على الأقل');
         return false;
       }
       return pw;

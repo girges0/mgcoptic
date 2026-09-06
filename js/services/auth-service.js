@@ -271,8 +271,8 @@
           return;
         }
 
-        if (password.length < 6) {
-          resetFormUI('كلمة المرور يجب أن تكون ٦ أحرف على الأقل.');
+        if (password.length < 8) {
+          resetFormUI('كلمة المرور يجب أن تكون ٨ أحرف على الأقل.');
           if (passEl) passEl.focus();
           return;
         }
@@ -499,7 +499,7 @@
         if (low.includes('invalid login credentials')) {
           msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
         } else if (low.includes('password should be at least')) {
-          msg = 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل.';
+          msg = 'كلمة المرور يجب أن تكون ٨ أحرف على الأقل.';
         }
         resetFormUI(msg);
       }
