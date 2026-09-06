@@ -375,11 +375,13 @@
           const { data: { session } } = await sb.auth.getSession();
           if (session && session.user) {
             const urlParams = new URLSearchParams(window.location.search);
-            const redirectUrl = urlParams.get('redirect');
-            if (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup')) {
-              window.location.href = redirectUrl;
-            } else {
-              window.location.href = '/';
+            const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
+              ? redirectUrl
+              : ((window.location.protocol === 'file:') ? 'index.html' : '/');
+            try {
+              window.location.replace(target);
+            } catch (_) {
+              window.location.href = target;
             }
             return;
           }

@@ -61,20 +61,33 @@
 
     function handlePostAuthSuccess() {
       const currentPath = normalizePath(window.location.pathname);
-      const isAuthPage = (currentPath === '/login' || currentPath === '/signup');
+      const isAuthPage = (
+        currentPath === '/login' ||
+        currentPath === '/signup' ||
+        window.location.pathname.toLowerCase().includes('login') ||
+        window.location.pathname.toLowerCase().includes('signup') ||
+        !!document.querySelector('.auth-card') ||
+        (!!document.getElementById('auth-form') && !document.getElementById('home-tab'))
+      );
 
       if (isAuthPage) {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect');
-        if (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup')) {
-          window.location.href = redirectUrl;
-        } else {
-          window.location.href = '/';
+        const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
+          ? redirectUrl
+          : ((window.location.protocol === 'file:') ? 'index.html' : '/');
+
+        try {
+          window.location.replace(target);
+        } catch (_) {
+          window.location.href = target;
         }
+        return;
       } else {
         closeAuthModal();
         if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+        if (typeof initUserSession === 'function') initUserSession();
         if (typeof pendingAuthCallback === 'function') {
           const cb = pendingAuthCallback;
           pendingAuthCallback = null;
@@ -443,69 +456,55 @@
             console.warn('[Push] Signup permission request warning:', pushErr);
           }
 
-          if (submitBtn) {
-            submitBtn.innerHTML = `
-              <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>تم إنشاء الحساب بنجاح!</span>
-              </span>
-            `;
-          }
-          if (statusEl) {
-            statusEl.className = 'auth-status-msg auth-status-success-box';
-            statusEl.innerHTML = `
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2F7D46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>أهلاً بك يا ${firstName || fullName}! جاري نقلك إلى المنصة...</span>
-            `;
+          // حفظ بيانات الجلسة والمستخدم فوراً لتسريع النقل اللحظي
+          const targetUser = (signData && signData.user) || (await sb.auth.getUser()).data?.user;
+          if (targetUser) {
+            const basicUser = {
+              id: targetUser.id,
+              email: email,
+              full_name: fullName,
+              avatar_url: '',
+              role: 'student'
+            };
+            localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
+            if (signData?.session?.access_token) {
+              localStorage.setItem('mg_coptic_student_auth_token', signData.session.access_token);
+            }
           }
 
-          setTimeout(async () => {
-            await initUserSession();
-            handlePostAuthSuccess();
-          }, 650);
+          // مزامنة البيانات وتحديث كلمة المرور بالخلفية دون حجب أو تأخير النقل اللحظي
+          if (targetUser) {
+            sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).catch(() => {});
+          }
+
+          // نقل لحظي فوري دون أي شاشة أو تأخير زمني
+          handlePostAuthSuccess();
 
         } else {
           // Sign In
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
 
-          // تحديث كلمة المرور في بيانات الحساب عند تسجيل الدخول
-          try {
-            if (data && data.user) {
-              await sb.from('users').update({ password: password }).eq('id', data.user.id);
+          // حفظ بيانات الجلسة والمستخدم فوراً في الذاكرة المحلية لتسريع النقل اللحظي
+          if (data && data.user) {
+            const basicUser = {
+              id: data.user.id,
+              email: data.user.email,
+              full_name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'بطل قبطي',
+              avatar_url: data.user.user_metadata?.avatar_url || (localStorage.getItem('mg_coptic_user.avatar_url') || ''),
+              role: 'student'
+            };
+            localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
+            if (data.session?.access_token) {
+              localStorage.setItem('mg_coptic_student_auth_token', data.session.access_token);
             }
-          } catch (e) {
-            console.warn('Password login sync notice:', e);
+
+            // تحديث كلمة المرور في قاعدة البيانات في الخلفية دون تأخير عملية النقل
+            sb.from('users').update({ password: password }).eq('id', data.user.id).catch(() => {});
           }
 
-          if (submitBtn) {
-            submitBtn.innerHTML = `
-              <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>تم تسجيل الدخول بنجاح!</span>
-              </span>
-            `;
-          }
-          if (statusEl) {
-            statusEl.className = 'auth-status-msg auth-status-success-box';
-            statusEl.innerHTML = `
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2F7D46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>تم تسجيل الدخول بنجاح! جاري التوجيه...</span>
-            `;
-          }
-
-          setTimeout(async () => {
-            await initUserSession();
-            handlePostAuthSuccess();
-          }, 550);
+          // نقل لحظي فوري دون أي شاشة أو تأخير زمني
+          handlePostAuthSuccess();
         }
       } catch (err) {
         let msg = err.message || 'حدث خطأ أثناء المحاولة';
@@ -585,8 +584,12 @@
         localStorage.removeItem('mg_coptic_user');
       }
 
-      syncUserProfileUI();
-      renderRealLeaderboard();
+      if (typeof syncUserProfileUI === 'function') {
+        try { syncUserProfileUI(); } catch (e) { console.warn(e); }
+      }
+      if (typeof renderRealLeaderboard === 'function') {
+        try { renderRealLeaderboard(); } catch (e) { console.warn(e); }
+      }
     }
 
     function getUserProfileData() {
@@ -637,8 +640,12 @@
         if (error) throw error;
         currentAuthUser.full_name = cleanName;
         localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
-        syncUserProfileUI();
-        renderRealLeaderboard();
+        if (typeof syncUserProfileUI === 'function') {
+          try { syncUserProfileUI(); } catch (e) { console.warn(e); }
+        }
+        if (typeof renderRealLeaderboard === 'function') {
+          try { renderRealLeaderboard(); } catch (e) { console.warn(e); }
+        }
         if (statusEl) {
           statusEl.className = 'status-msg success';
           statusEl.textContent = 'تم حفظ الاسم في قاعدة البيانات بنجاح!';
@@ -661,8 +668,12 @@
         } catch (e) { }
       }
       localStorage.removeItem('mg_coptic_user.avatar_url');
-      syncUserProfileUI();
-      renderRealLeaderboard();
+      if (typeof syncUserProfileUI === 'function') {
+        try { syncUserProfileUI(); } catch (e) { console.warn(e); }
+      }
+      if (typeof renderRealLeaderboard === 'function') {
+        try { renderRealLeaderboard(); } catch (e) { console.warn(e); }
+      }
     }
 
     // دالة لتحديث كارت التصنيف في الصفحة الرئيسية
