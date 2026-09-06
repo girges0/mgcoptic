@@ -2280,42 +2280,179 @@ function debouncedLoadUsers(isSilent = true, delay = 800) {
   }, delay);
 }
 
-// الاشتراك اللحظي الفوري لتحديث قائمة الطلاب تلقائياً عند حدوث أي نشاط في الموقع
+let studentsPresenceSub = null;
+window.currentOnlineUserIds = new Set();
+
+// الاشتراك اللحظي الفوري لتحديث قائمة الطلاب ورصد التواجد اللحظي (Realtime Presence) بدقة 100%
 function setupStudentsRealtime() {
-  if (studentsRealtimeSub) return;
-  try {
-    studentsRealtimeSub = sb.channel('realtime_admin_students_stream')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
-        showRealtimePulse();
-        debouncedLoadUsers(true, 800);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress' }, () => {
-        showRealtimePulse();
-        debouncedLoadUsers(true, 800);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, () => {
-        showRealtimePulse();
-        debouncedLoadUsers(true, 800);
-      })
-      .subscribe((status) => {
-        const badge = document.getElementById('realtime-status-badge');
-        const text = document.getElementById('realtime-status-text');
-        if (badge && text) {
-          if (status === 'SUBSCRIBED') {
-            badge.style.background = '#EAF5ED';
-            badge.style.color = '#1E6B37';
-            badge.style.borderColor = '#A3D9B1';
-            text.textContent = 'متصل فورياً بالموقع (Realtime Live)';
-          } else {
-            badge.style.background = '#FFFBEB';
-            badge.style.color = '#B45309';
-            badge.style.borderColor = '#FCD34D';
-            text.textContent = 'جارٍ المزامنة...';
+  // 1) الاشتراك في تحديثات قاعدة البيانات التلقائية
+  if (!studentsRealtimeSub) {
+    try {
+      studentsRealtimeSub = sb.channel('realtime_admin_students_stream')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+          showRealtimePulse();
+          debouncedLoadUsers(true, 800);
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress' }, () => {
+          showRealtimePulse();
+          debouncedLoadUsers(true, 800);
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, () => {
+          showRealtimePulse();
+          debouncedLoadUsers(true, 800);
+        })
+        .subscribe((status) => {
+          const badge = document.getElementById('realtime-status-badge');
+          const text = document.getElementById('realtime-status-text');
+          if (badge && text) {
+            if (status === 'SUBSCRIBED') {
+              badge.style.background = '#EAF5ED';
+              badge.style.color = '#1E6B37';
+              badge.style.borderColor = '#A3D9B1';
+              text.textContent = 'متصل فورياً بالموقع (Realtime Live)';
+            } else {
+              badge.style.background = '#FFFBEB';
+              badge.style.color = '#B45309';
+              badge.style.borderColor = '#FCD34D';
+              text.textContent = 'جارٍ المزامنة...';
+            }
           }
+        });
+    } catch (e) {
+      console.warn('Realtime subscription error:', e);
+    }
+  }
+
+  // 2) الاشتراك في قناة التواجد والحضور اللحظي الحقيقي (Realtime Presence)
+  if (!studentsPresenceSub) {
+    try {
+      studentsPresenceSub = sb.channel('coptic_online_presence');
+      studentsPresenceSub
+        .on('presence', { event: 'sync' }, () => {
+          handlePresenceStateChange();
+        })
+        .on('presence', { event: 'join' }, () => {
+          handlePresenceStateChange();
+        })
+        .on('presence', { event: 'leave' }, () => {
+          handlePresenceStateChange();
+        })
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            handlePresenceStateChange();
+          }
+        });
+    } catch (e) {
+      console.warn('Realtime presence subscription error:', e);
+    }
+  }
+}
+
+// معالجة تغييرات التواجد اللحظي وتحديث الواجهة مباشرة بدون وميض
+function handlePresenceStateChange() {
+  if (!studentsPresenceSub) return;
+  try {
+    const state = studentsPresenceSub.presenceState();
+    const onlineIds = new Set();
+    for (const key in state) {
+      if (Array.isArray(state[key])) {
+        state[key].forEach(p => {
+          if (p.user_id) onlineIds.add(String(p.user_id));
+        });
+      }
+    }
+    window.currentOnlineUserIds = onlineIds;
+
+    // تحديث عداد النشطين الآن
+    updateOnlineStatsDisplay();
+
+    // تحديث صفوف الجدول المعروضة فورياً دون إعادة تحميل
+    updateTableOnlineIndicators();
+
+    // تحديث نافذة التفاصيل إذا كانت مفتوحة
+    if (activeSelectedStudent) {
+      const isOnline = window.currentOnlineUserIds.has(String(activeSelectedStudent.id));
+      const headerStatusEl = document.getElementById('m-student-header-status');
+      if (headerStatusEl) {
+        headerStatusEl.innerHTML = isOnline ? `
+          <span class="live-status-pill is-online" style="font-size:0.75rem; padding:2px 8px; font-weight:800; border-color:#6EE7B7;">
+            <span class="live-dot-pulse" style="width:7px; height:7px;"></span>
+            <span>نشط الآن</span>
+          </span>
+        ` : '';
+      }
+
+      const lastActiveEl = document.getElementById('m-student-last-active');
+      if (lastActiveEl) {
+        if (isOnline) {
+          lastActiveEl.innerHTML = `
+            <span class="live-status-pill is-online" style="font-size:0.95rem; padding:6px 14px; font-weight:900;">
+              <span class="live-dot-pulse"></span>
+              <span>متصل ونشط الآن بالموقع (Online Live)</span>
+            </span>
+          `;
+        } else {
+          const todayStr = new Date().toISOString().split('T')[0];
+          const isActiveToday = (activeSelectedStudent.last_active_date === todayStr);
+          lastActiveEl.innerHTML = activeSelectedStudent.last_active_date ?
+            (isActiveToday ? `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` :
+            `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${activeSelectedStudent.last_active_date}</span>`) :
+            `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
         }
-      });
+      }
+    }
   } catch (e) {
-    console.warn('Realtime subscription error:', e);
+    console.warn('handlePresenceStateChange error:', e);
+  }
+}
+
+// تحديث مؤشرات التواجد في خلايا الجدول مباشرة
+function updateTableOnlineIndicators() {
+  const rows = document.querySelectorAll('#table-users tbody tr[data-id]');
+  const todayStr = new Date().toISOString().split('T')[0];
+  rows.forEach(row => {
+    const userId = row.getAttribute('data-id');
+    const cell = row.querySelector('.col-last-active');
+    if (!cell) return;
+    const isOnline = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(userId));
+    const userObj = (allLoadedStudents || []).find(s => String(s.id) === String(userId));
+    const lastActiveDate = userObj ? userObj.last_active_date : null;
+    const isActiveToday = (lastActiveDate === todayStr);
+
+    if (isOnline) {
+      cell.innerHTML = `
+        <span class="live-status-pill is-online" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
+          <span class="live-dot-pulse"></span>
+          <span>نشط الآن</span>
+        </span>
+      `;
+    } else if (lastActiveDate) {
+      if (isActiveToday) {
+        cell.innerHTML = `
+          <span class="live-status-pill is-today" title="كان نشطاً في وقت سابق من اليوم">
+            <span class="today-dot"></span>
+            <span>اليوم</span>
+          </span>
+        `;
+      } else {
+        cell.innerHTML = `
+          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${lastActiveDate}">
+            ${lastActiveDate}
+          </span>
+        `;
+      }
+    } else {
+      cell.innerHTML = `<span class="live-status-empty">لم ينشط بعد</span>`;
+    }
+  });
+}
+
+// تحديث عداد النشطين الآن في البطاقة العلوية
+function updateOnlineStatsDisplay() {
+  const onlineCount = window.currentOnlineUserIds ? window.currentOnlineUserIds.size : 0;
+  const onlineEl = document.getElementById('stat-online-now');
+  if (onlineEl) {
+    onlineEl.textContent = onlineCount;
   }
 }
 
@@ -2475,17 +2612,20 @@ window.loadUsers = loadUsers;
 function updateStudentsSummaryStats(list) {
   const totalEl = document.getElementById('stat-total-students');
   const activeTodayEl = document.getElementById('stat-active-today');
+  const onlineNowEl = document.getElementById('stat-online-now');
   const totalXpEl = document.getElementById('stat-total-xp');
   const lessonsEl = document.getElementById('stat-completed-lessons');
 
   const todayStr = new Date().toISOString().split('T')[0];
   const totalStudents = list.length;
   const activeToday = list.filter(s => s.last_active_date === todayStr).length;
+  const onlineNow = window.currentOnlineUserIds ? window.currentOnlineUserIds.size : 0;
   const totalXp = list.reduce((sum, s) => sum + (s.points || 0), 0);
   const totalLessons = list.reduce((sum, s) => sum + (s.completed_lessons || 0), 0);
 
   if (totalEl) totalEl.textContent = totalStudents;
   if (activeTodayEl) activeTodayEl.textContent = activeToday;
+  if (onlineNowEl) onlineNowEl.textContent = onlineNow;
   if (totalXpEl) totalXpEl.textContent = totalXp.toLocaleString() + ' XP';
   if (lessonsEl) lessonsEl.textContent = totalLessons;
 }
@@ -2500,7 +2640,12 @@ function filterStudentsTable() {
   const sortMode = sortSelect ? sortSelect.value : 'points_desc';
 
   let filtered = allLoadedStudents.filter(s => {
-    const matchRole = (roleFilter === 'all') || (s.role === roleFilter);
+    let matchRole = true;
+    if (roleFilter === 'online_now') {
+      matchRole = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(s.id));
+    } else if (roleFilter !== 'all') {
+      matchRole = (s.role === roleFilter);
+    }
     const matchQuery = !query ||
       (s.full_name && s.full_name.toLowerCase().includes(query)) ||
       (s.email && s.email.toLowerCase().includes(query)) ||
@@ -2510,8 +2655,17 @@ function filterStudentsTable() {
 
   // فرز القائمة
   filtered.sort((a, b) => {
+    if (sortMode === 'online_first') {
+      const aOn = (window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(a.id))) ? 1 : 0;
+      const bOn = (window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(b.id))) ? 1 : 0;
+      if (bOn !== aOn) return bOn - aOn;
+      return b.points - a.points;
+    }
     if (sortMode === 'points_desc') return b.points - a.points;
     if (sortMode === 'active_recent') {
+      const aOn = (window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(a.id))) ? 1 : 0;
+      const bOn = (window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(b.id))) ? 1 : 0;
+      if (bOn !== aOn) return bOn - aOn;
       const da = a.last_active_date ? new Date(a.last_active_date).getTime() : 0;
       const db = b.last_active_date ? new Date(b.last_active_date).getTime() : 0;
       return db - da;
@@ -2542,10 +2696,37 @@ function renderStudentsTable(list) {
   const todayStr = new Date().toISOString().split('T')[0];
 
   tbody.innerHTML = list.map((u, i) => {
+    const isOnlineNow = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(u.id));
     const isActiveToday = (u.last_active_date === todayStr);
     const initial = (u.full_name && u.full_name.length > 0) ? u.full_name.charAt(0).toUpperCase() : 'ط';
     const joinedFormatted = u.created_at ? new Date(u.created_at).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
-    const lastActiveFormatted = u.last_active_date ? (isActiveToday ? `<span style="color:#15803D; font-weight:800;">${ICONS_SVG.activeDot}اليوم</span>` : u.last_active_date) : '<span style="color:#A19B95;">لم ينشط بعد</span>';
+
+    let lastActiveFormatted = '';
+    if (isOnlineNow) {
+      lastActiveFormatted = `
+        <span class="live-status-pill is-online" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
+          <span class="live-dot-pulse"></span>
+          <span>نشط الآن</span>
+        </span>
+      `;
+    } else if (u.last_active_date) {
+      if (isActiveToday) {
+        lastActiveFormatted = `
+          <span class="live-status-pill is-today" title="كان نشطاً في وقت سابق من اليوم">
+            <span class="today-dot"></span>
+            <span>اليوم</span>
+          </span>
+        `;
+      } else {
+        lastActiveFormatted = `
+          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${u.last_active_date}">
+            ${u.last_active_date}
+          </span>
+        `;
+      }
+    } else {
+      lastActiveFormatted = `<span class="live-status-empty">لم ينشط بعد</span>`;
+    }
 
     return `
       <tr data-id="${u.id}" style="cursor:pointer; transition:background .15s ease;" onclick="handleStudentRowClick(event, '${u.id}')">
@@ -2588,7 +2769,7 @@ function renderStudentsTable(list) {
             ${ICONS_SVG.heart} ${u.hearts}
           </span>
         </td>
-        <td style="font-size:0.86rem; white-space:nowrap;">
+        <td class="col-last-active" style="text-align:center; font-size:0.88rem; white-space:nowrap;">
           ${lastActiveFormatted}
         </td>
         <td style="font-size:0.82rem; color:#746B6F; white-space:nowrap;">
@@ -2660,10 +2841,39 @@ function viewStudentDetails(userId) {
   const lessonsCountEl = document.getElementById('m-student-lessons-count');
   if (lessonsCountEl) lessonsCountEl.textContent = student.completed_lessons + ' درس';
 
+  const isOnline = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(student.id));
+  const headerStatusEl = document.getElementById('m-student-header-status');
+  if (headerStatusEl) {
+    headerStatusEl.innerHTML = isOnline ? `
+      <span class="live-status-pill is-online" style="font-size:0.75rem; padding:2px 8px; font-weight:800; border-color:#6EE7B7;">
+        <span class="live-dot-pulse" style="width:7px; height:7px;"></span>
+        <span>نشط الآن</span>
+      </span>
+    ` : '';
+  }
+
+  const createdShortEl = document.getElementById('m-student-created-short');
+  if (createdShortEl) {
+    createdShortEl.textContent = student.created_at ? new Date(student.created_at).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+  }
+
   const todayStr = new Date().toISOString().split('T')[0];
   const lastActiveEl = document.getElementById('m-student-last-active');
   if (lastActiveEl) {
-    lastActiveEl.innerHTML = student.last_active_date ? (student.last_active_date === todayStr ? `<span style="color:#15803D; font-weight:800;">${ICONS_SVG.activeDot}نشط اليوم</span>` : student.last_active_date) : 'لم ينشط بعد';
+    if (isOnline) {
+      lastActiveEl.innerHTML = `
+        <span class="live-status-pill is-online" style="font-size:0.95rem; padding:6px 14px; font-weight:900;">
+          <span class="live-dot-pulse"></span>
+          <span>متصل ونشط الآن بالموقع (Online Live)</span>
+        </span>
+      `;
+    } else {
+      const isActiveToday = (student.last_active_date === todayStr);
+      lastActiveEl.innerHTML = student.last_active_date ? 
+        (isActiveToday ? `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` : 
+        `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${student.last_active_date}</span>`) : 
+        `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
+    }
   }
 
   const idEl = document.getElementById('m-student-id');
@@ -3150,6 +3360,162 @@ function resetPointsFromModal() {
   resetUserPoints(s.id);
 }
 window.resetPointsFromModal = resetPointsFromModal;
+
+// 3.5. تصفير الحساب بالكامل وإعادته كحساب جديد لم يتعد أي مستوى
+async function resetFullAccount(userId, userName) {
+  const c = await mgConfirm(
+    'تصفير الحساب بالكامل كجديد',
+    `هل أنت متأكد من رغبتك في تصفير حساب «${userName || 'الطالب'}» بالكامل؟\n\nسيتم:\n• حذف كافة سجلات الدروس المنجزة والمستويات السابقة نهائياً.\n• تصفير رصيد الـ XP إلى 0 نقطة.\n• إعادة القلوب إلى 5 قلوب كاملة.\n• إعادة أيام الحماسة (الستريك) إلى 1 يوم.\n• تفريغ الصناديق والجوائز المطالب بها.\n\nسيعود الطالب كأنه مسجل الآن لأول مرة في بداية المستوى 1!`,
+    'warning',
+    { confirmText: 'نعم، تصفير الحساب كجديد', cancelText: 'إلغاء' }
+  );
+  if (!c) return;
+
+  // إظهار شاشة التحميل الفوري
+  Swal.fire({
+    title: 'جارٍ تصفير الحساب بالكامل...',
+    html: `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:10px 0;">
+        <div class="spinner" style="width:36px; height:36px; border-width:3px;"></div>
+        <p style="margin:0; font-weight:800; color:#2E2018; font-size:1rem;">يتم حذف سجل الدروس وتصفير المستويات والنقاط بالسحابة...</p>
+      </div>
+    `,
+    allowOutsideClick: false,
+    showConfirmButton: false
+  });
+
+  try {
+    // 1) حذف جميع سجلات تقدم الدروس لهذا الطالب نهائياً من قاعدة البيانات
+    const delRes = await sb.from('user_lesson_progress').delete().eq('user_id', userId);
+    if (delRes.error) {
+      console.warn('user_lesson_progress delete error:', delRes.error);
+    }
+
+    // 2) تصفير بيانات التقدم في user_progress
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { error: progErr } = await sb.from('user_progress').upsert({
+      user_id: userId,
+      points: 0,
+      hearts: 5,
+      streak_days: 1,
+      claimed_chests: [],
+      last_active_date: todayStr
+    });
+
+    if (progErr) throw progErr;
+
+    // 3) بث التحديث ومسح الكاش المحلي إن وجد
+    try {
+      const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mg_coptic_gamification_sync') : null;
+      if (channel) {
+        channel.postMessage({
+          type: 'full_account_reset',
+          payload: { user_id: userId, points: 0, hearts: 5, streak_days: 1, completed_lessons: 0 }
+        });
+        channel.close();
+      }
+
+      const keysToClear = [
+        `mg_coptic_progress_${userId}`,
+        `mg_coptic_lesson_progress_${userId}`,
+        `mg_coptic_claimed_chests_${userId}`,
+        `mg_coptic_last_synced_date_${userId}`
+      ];
+      keysToClear.forEach(k => localStorage.removeItem(k));
+
+      const localUserRaw = localStorage.getItem('mg_coptic_user');
+      if (localUserRaw) {
+        const u = JSON.parse(localUserRaw);
+        if (u && u.id === userId) {
+          localStorage.setItem('mg_coptic_progress', JSON.stringify({
+            points: 0,
+            total_points: 0,
+            hearts: 5,
+            streak_days: 1,
+            claimed_chests: [],
+            last_active_date: todayStr
+          }));
+          localStorage.removeItem('mg_coptic_lesson_progress');
+          localStorage.removeItem('mg_coptic_claimed_chests');
+        }
+      }
+      localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
+    } catch(e) {}
+
+    // 4) تحديث الذاكرة الحية allLoadedStudents
+    const student = allLoadedStudents.find(s => s.id === userId);
+    if (student) {
+      student.points = 0;
+      student.hearts = 5;
+      student.streak_days = 1;
+      student.claimed_chests = [];
+      student.completed_lessons = 0;
+      student.lessons_detail = [];
+      student.actualLevel = 'المستوى 1';
+      student.tierLevel = 'المستوى 1';
+      student.last_active_date = todayStr;
+    }
+
+    // 5) تحديث نافذة التفاصيل إذا كانت مفتوحة
+    if (activeSelectedStudent && activeSelectedStudent.id === userId) {
+      activeSelectedStudent.points = 0;
+      activeSelectedStudent.hearts = 5;
+      activeSelectedStudent.streak_days = 1;
+      activeSelectedStudent.claimed_chests = [];
+      activeSelectedStudent.completed_lessons = 0;
+      activeSelectedStudent.lessons_detail = [];
+      activeSelectedStudent.actualLevel = 'المستوى 1';
+      activeSelectedStudent.tierLevel = 'المستوى 1';
+
+      const xpEl = document.getElementById('m-student-xp');
+      if (xpEl) xpEl.textContent = '0 XP';
+
+      const heartsEl = document.getElementById('m-student-hearts');
+      if (heartsEl) heartsEl.innerHTML = `${ICONS_SVG.heart} <span>5</span>`;
+
+      const streakEl = document.getElementById('m-student-streak');
+      if (streakEl) streakEl.innerHTML = `${ICONS_SVG.flame} <span>1 يوم</span>`;
+
+      const lessonsCountEl = document.getElementById('m-student-lessons-count');
+      if (lessonsCountEl) lessonsCountEl.textContent = '0 درس';
+
+      const levelEl = document.getElementById('m-student-level');
+      if (levelEl) levelEl.textContent = 'المستوى 1';
+
+      const lessonsListEl = document.getElementById('m-student-lessons-list');
+      if (lessonsListEl) {
+        lessonsListEl.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; gap:6px; color:#746B6F; font-size:0.88rem; padding:12px 0;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>لم يتم إكمال أي دروس حتى الآن</span></div>';
+      }
+    }
+
+    // 6) تحديث الإحصائيات والجدول
+    updateStudentsSummaryStats(allLoadedStudents);
+    filterStudentsTable();
+
+    Swal.close();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'تم تصفير الحساب بنجاح!',
+      html: `<p style="font-weight:700; color:#2E2018;">تمت إعادة حساب <b>«${esc(userName || 'الطالب')}»</b> كحساب جديد تماماً من بداية المستوى 1 مع 0 XP و5 قلوب، وحذف كافة الدروس السابقة.</p>`,
+      confirmButtonText: 'حسناً',
+      confirmButtonColor: '#6B1530'
+    });
+
+  } catch (err) {
+    Swal.close();
+    console.error('resetFullAccount error:', err);
+    toast('تعذر تصفير الحساب: ' + (err.message || err), true);
+  }
+}
+window.resetFullAccount = resetFullAccount;
+
+function resetFullAccountFromModal() {
+  if (!activeSelectedStudent) return;
+  const s = activeSelectedStudent;
+  resetFullAccount(s.id, s.full_name);
+}
+window.resetFullAccountFromModal = resetFullAccountFromModal;
 
 // 4. حذف الحساب نهائياً
 async function deleteUser(userId, userName) {

@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>MG COPTIC — لوحة تحكم المنصة</title>
   <meta name="description" content="لوحة التحكم الرئيسية لإدارة منصة MG COPTIC وتحديث المحتوى ومتابعة الطلاب والمناهج.">
+  <meta name="theme-color" content="#6B1530">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MG COPTIC Admin">
+  <link rel="apple-touch-icon" href="../icon-192.png">
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
 
@@ -218,8 +225,17 @@
           <div class="lbl" style="font-size:0.85rem; color:#746B6F; font-weight:700; margin-top:4px;">إجمالي الطلاب المسجلين</div>
         </div>
         <div class="stat-card" style="padding:14px 16px; background:#FFFDF8; border:1.5px solid #E7DCC8; border-radius:14px;">
-          <div class="num" id="stat-active-today" style="font-size:1.8rem; font-weight:900; color:#22C55E;">0</div>
-          <div class="lbl" style="font-size:0.85rem; color:#746B6F; font-weight:700; margin-top:4px;">نشطون اليوم بالمنصة</div>
+          <div style="display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:4px;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="live-dot-pulse"></span>
+              <span class="num" id="stat-online-now" style="font-size:1.8rem; font-weight:900; color:#15803D;">0</span>
+              <span style="font-size:0.86rem; font-weight:800; color:#15803D;">نشط الآن</span>
+            </div>
+            <div style="font-size:0.82rem; color:#746B6F; font-weight:700;">
+              (<span id="stat-active-today" style="font-weight:800; color:#2E2018;">0</span> اليوم)
+            </div>
+          </div>
+          <div class="lbl" style="font-size:0.85rem; color:#746B6F; font-weight:700; margin-top:6px;">نشطون بالمنصة (Realtime Live)</div>
         </div>
         <div class="stat-card" style="padding:14px 16px; background:#FFFDF8; border:1.5px solid #E7DCC8; border-radius:14px;">
           <div class="num" id="stat-total-xp" style="font-size:1.8rem; font-weight:900; color:#8C2430;">0 XP</div>
@@ -240,11 +256,13 @@
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <select id="select-filter-role" onchange="filterStudentsTable()" style="padding:9px 12px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer;">
             <option value="all">جميع الحسابات (الكل)</option>
+            <option value="online_now">🟢 نشطون الآن فقط (Live)</option>
             <option value="student">طلاب فقط</option>
             <option value="admin">مدراء فقط</option>
           </select>
           <select id="select-sort-students" onchange="filterStudentsTable()" style="padding:9px 12px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer;">
             <option value="points_desc">الأعلى نقاطاً (XP)</option>
+            <option value="online_first">🟢 النشطون الآن أولاً</option>
             <option value="active_recent">الأحدث نشاطاً</option>
             <option value="lessons_desc">الأكثر إتماماً للدروس</option>
             <option value="created_desc">الأحدث تسجيلاً</option>
@@ -265,7 +283,7 @@
               <th>الدروس المنجزة</th>
               <th>الحماسة <svg viewBox="0 0 24 24" width="13" height="13" fill="#EA580C" stroke="#EA580C" stroke-width="1" style="vertical-align:middle;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></th>
               <th>القلوب <svg viewBox="0 0 24 24" width="13" height="13" fill="#E11D48" stroke="#E11D48" stroke-width="1" style="vertical-align:middle;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></th>
-              <th>آخر نشاط</th>
+              <th style="text-align:center; min-width:130px;">آخر نشاط</th>
               <th>تاريخ التسجيل</th>
               <th style="min-width:210px; text-align:center;">الإجراءات والتحكم</th>
             </tr>
@@ -909,9 +927,12 @@
   <div class="curriculum-modal-card" style="max-width:760px; width:95%; max-height:90vh; display:flex; flex-direction:column; background:#FFFDF9; border-radius:18px; border:2px solid #D4AF37; box-shadow:0 25px 65px rgba(0,0,0,0.45); overflow:hidden;">
     <div class="curriculum-modal-header" style="background:#6B1530; color:#FFF; padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
-        <div id="m-student-avatar" style="width:48px; height:48px; border-radius:50%; background:#D4AF37; color:#2E2018; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.3rem; border:2.5px solid #FFF; overflow:hidden; flex-shrink:0;"></div>
+        <div id="m-student-avatar" style="width:50px; height:50px; border-radius:50%; background:#D4AF37; color:#2E2018; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.3rem; border:2.5px solid #FFF; overflow:hidden; flex-shrink:0;"></div>
         <div>
-          <h3 id="m-student-name" style="margin:0; font-size:1.25rem; font-weight:900; color:#FFF;">اسم الطالب</h3>
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <h3 id="m-student-name" style="margin:0; font-size:1.25rem; font-weight:900; color:#FFF;">اسم الطالب</h3>
+            <div id="m-student-header-status"></div>
+          </div>
           <span id="m-student-email" style="font-size:0.85rem; color:#F5D8A0; font-family:monospace;">email@domain.com</span>
         </div>
       </div>
@@ -920,9 +941,24 @@
       </button>
     </div>
 
-    <div class="curriculum-modal-body" style="padding:22px 24px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:18px;">
-      <!-- بطاقات المعلومات الحيوية -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px;">
+    <div class="curriculum-modal-body" style="padding:22px 24px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:16px;">
+      <!-- شريط حالة التواجد والنشاط اللحظي (بارز وواضح 100%) -->
+      <div style="background:linear-gradient(135deg, #FFFDF8 0%, #FAF5EB 100%); border:1.5px solid #E7DCC8; border-radius:14px; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.92rem; font-weight:800; color:#4A3B32;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6B1530" stroke-width="2.2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>حالة التواجد وآخر نشاط:</span>
+          </div>
+          <div id="m-student-last-active" style="display:inline-flex; align-items:center;">-</div>
+        </div>
+        <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; color:#746B6F; font-weight:700;">
+          <span>تاريخ التسجيل:</span>
+          <span id="m-student-created-short" style="font-weight:900; color:#2E2018;">-</span>
+        </div>
+      </div>
+
+      <!-- بطاقات الإنجاز والمقاييس الأربعة (شبكة متناسقة متساوية) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px;">
         <div style="background:#FAF6EE; border:1px solid #E7DCC8; border-radius:12px; padding:12px; text-align:center;">
           <div style="font-size:0.75rem; color:#746B6F; font-weight:700; display:flex; align-items:center; justify-content:center; gap:4px;">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8C2430" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -956,13 +992,6 @@
             <span>الدروس المكتملة</span>
           </div>
           <div id="m-student-lessons-count" style="font-size:1.4rem; font-weight:900; color:#15803D; margin-top:4px;">0</div>
-        </div>
-        <div style="background:#FAF6EE; border:1px solid #E7DCC8; border-radius:12px; padding:12px; text-align:center;">
-          <div style="font-size:0.75rem; color:#746B6F; font-weight:700; display:flex; align-items:center; justify-content:center; gap:4px;">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#746B6F" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>آخر نشاط بالمنصة</span>
-          </div>
-          <div id="m-student-last-active" style="font-size:0.95rem; font-weight:800; color:#2E2018; margin-top:8px;">-</div>
         </div>
       </div>
 
@@ -1061,6 +1090,10 @@
             <svg viewBox="0 0 24 24" width="15" height="15" fill="#FFF" stroke="#FFF" stroke-width="1"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             <span>شحن القلوب (+5)</span>
           </button>
+          <button type="button" class="btn" onclick="resetFullAccountFromModal()" style="background:#C2410C; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" title="تصفير الحساب بالكامل وحذف كافة الدروس والتقدم ليعود كحساب جديد لم يتعد أي مستوى">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>تصفير الحساب بالكامل (كجديد)</span>
+          </button>
           <button type="button" class="btn" onclick="resetPointsFromModal()" style="background:#9B1C1C; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             <span>تصفير الـ XP</span>
@@ -1149,5 +1182,6 @@
   <!-- Admin Logic Modules -->
   <script src="js/admin.js"></script>
   <script src="js/curriculum-admin.js"></script>
+  <script src="../js/pwa-register.js" defer></script>
 </body>
 </html>

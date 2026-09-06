@@ -160,9 +160,15 @@
     }
 
     getCopticDate(date = new Date()) {
-      const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      const d = date.getDate();
+      const effectiveDate = new Date(date.getTime());
+      // في الطقس والتقويم الكنسي القبطي، يبدأ اليوم الجديد كنسياً من صلاة العشية (الساعة 6:00 مساءً)
+      if (date.getHours() >= 18) {
+        effectiveDate.setDate(effectiveDate.getDate() + 1);
+      }
+
+      const y = effectiveDate.getFullYear();
+      const m = effectiveDate.getMonth() + 1;
+      const d = effectiveDate.getDate();
       const jdn = this.gregorianToJDN(y, m, d);
 
       const c = jdn - 1825030;
@@ -187,7 +193,9 @@
         isCopticLeapYear,
         nasieDays,
         monthObj,
-        gregorianDate: date
+        gregorianDate: date,
+        effectiveDate,
+        isEve: date.getHours() >= 18
       };
     }
   }
@@ -200,13 +208,15 @@
     const container = document.getElementById('vocab');
     if (!container) return;
 
-    const todayCoptic = service.getCopticDate(new Date());
+    const now = new Date();
+    const todayCoptic = service.getCopticDate(now);
     const currentMonthNum = todayCoptic.cMonth;
 
     const weekdaysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-    const todayWeekday = weekdaysAr[new Date().getDay()];
+    const copticWeekday = weekdaysAr[todayCoptic.effectiveDate.getDay()];
+    const todayWeekday = weekdaysAr[now.getDay()];
     const gMonthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-    const todayGString = `${todayWeekday}، ${new Date().getDate()} ${gMonthsAr[new Date().getMonth()]} ${new Date().getFullYear()}م`;
+    const todayGString = `${todayWeekday}، ${now.getDate()} ${gMonthsAr[now.getMonth()]} ${now.getFullYear()}م`;
 
     container.innerHTML = `
       <!-- زر العودة للرئيسية -->
@@ -230,7 +240,7 @@
             <span>التاريخ القبطي اليوم:</span>
           </div>
           <div class="coptic-date-value">
-            <span class="coptic-date-ar">${service.toArabicDigits(todayCoptic.cDay)} ${todayCoptic.monthObj.name_ar} ${service.toArabicDigits(todayCoptic.cYear)} ش</span>
+            <span class="coptic-date-ar">${copticWeekday}، ${service.toArabicDigits(todayCoptic.cDay)} ${todayCoptic.monthObj.name_ar} ${service.toArabicDigits(todayCoptic.cYear)} ش</span>
             <span class="coptic-date-cop coptic-font">${todayCoptic.monthObj.name_coptic}</span>
           </div>
         </div>
@@ -334,5 +344,13 @@
   }
 
   window.renderCopticCalendar = renderCopticCalendarSection;
+
+  // تحديث تلقائي كل دقيقة لضمان تغيير التاريخ القبطي فوراً عند حلول الساعة 6:00 مساءً
+  setInterval(() => {
+    const container = document.getElementById('vocab');
+    if (container && !container.hidden && container.classList.contains('active')) {
+      renderCopticCalendarSection();
+    }
+  }, 60000);
 
 })();

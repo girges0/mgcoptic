@@ -1629,6 +1629,7 @@ class GamificationService {
       curProg.points = (curProg.points || 0) + effectiveXpReward;
       curProg.total_points = (curProg.total_points || 0) + effectiveXpReward;
       this.saveProgressLocal(curProg, uid);
+      this.recordTodayEarnedXP(uid, effectiveXpReward);
     }
 
     // مزامنة سحابية غير معطلة في الخلفية وبشكل متوازٍ لمنع أي تعليق
@@ -1672,6 +1673,34 @@ class GamificationService {
     }
 
     return map;
+  }
+
+  recordTodayEarnedXP(userId, amount) {
+    const addVal = parseInt(amount, 10);
+    if (isNaN(addVal) || addVal <= 0) return;
+    try {
+      const uid = userId || this.getCurrentUser()?.id || 'guest';
+      const todayStr = new Date().toISOString().split('T')[0];
+      const dateKey = `mg_coptic_daily_xp_date_${uid}`;
+      const valKey = `mg_coptic_daily_xp_val_${uid}`;
+      const savedDate = localStorage.getItem(dateKey) || localStorage.getItem('mg_coptic_daily_xp_date');
+      let current = 0;
+      if (savedDate === todayStr) {
+        current = parseInt(localStorage.getItem(valKey) || localStorage.getItem('mg_coptic_daily_xp_val') || '0', 10);
+        if (isNaN(current) || current < 0) current = 0;
+      }
+      const updated = current + addVal;
+      localStorage.setItem(dateKey, todayStr);
+      localStorage.setItem(valKey, String(updated));
+      localStorage.setItem('mg_coptic_daily_xp_date', todayStr);
+      localStorage.setItem('mg_coptic_daily_xp_val', String(updated));
+
+      if (typeof window !== 'undefined' && typeof window.updateDailyGoalUI === 'function') {
+        try { window.updateDailyGoalUI(); } catch (e) {}
+      }
+    } catch (e) {
+      console.warn('recordTodayEarnedXP error:', e);
+    }
   }
 }
 

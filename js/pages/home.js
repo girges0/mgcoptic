@@ -440,35 +440,30 @@
       const dateKey = `mg_coptic_daily_xp_date_${uid}`;
       const valKey = `mg_coptic_daily_xp_val_${uid}`;
 
-      const goalXP = parseInt(localStorage.getItem(goalKey) || localStorage.getItem('mg_coptic_daily_goal') || '30', 10);
+      const rawGoal = localStorage.getItem(goalKey) || localStorage.getItem('mg_coptic_daily_goal');
+      const parsedGoal = parseInt(rawGoal, 10);
+      const goalXP = (!isNaN(parsedGoal) && parsedGoal > 0) ? parsedGoal : 30;
+
       const todayStr = new Date().toISOString().split('T')[0];
-      const savedDate = localStorage.getItem(dateKey) || localStorage.getItem('mg_coptic_daily_xp_date');
+      let savedDate = localStorage.getItem(dateKey);
+      let rawVal = localStorage.getItem(valKey);
+
+      if (!savedDate) {
+        savedDate = localStorage.getItem('mg_coptic_daily_xp_date');
+        rawVal = localStorage.getItem('mg_coptic_daily_xp_val');
+      }
+
       let earnedToday = 0;
-
-      // تنظيف تلقائي للبيانات التالفة القديمة
-      const cleanFixedFlag = localStorage.getItem('mg_coptic_daily_xp_fixed_v2');
-      if (!cleanFixedFlag) {
-        localStorage.setItem('mg_coptic_daily_xp_fixed_v2', 'true');
-        localStorage.setItem(dateKey, todayStr);
-        localStorage.setItem(valKey, '0');
-        localStorage.setItem('mg_coptic_daily_xp_date', todayStr);
-        localStorage.setItem('mg_coptic_daily_xp_val', '0');
-        return { goalXP, earnedToday: 0 };
-      }
-
-      if (savedDate !== todayStr) {
-        // بداية يوم جديد: النقاط تبدأ من 0 دائماً ولا تفبرك من الرصيد الكلي
-        earnedToday = 0;
-        localStorage.setItem(dateKey, todayStr);
-        localStorage.setItem(valKey, '0');
-        localStorage.setItem('mg_coptic_daily_xp_date', todayStr);
-        localStorage.setItem('mg_coptic_daily_xp_val', '0');
+      if (savedDate === todayStr && rawVal !== null) {
+        earnedToday = parseInt(rawVal, 10);
+        if (isNaN(earnedToday) || earnedToday < 0) earnedToday = 0;
       } else {
-        earnedToday = parseInt(localStorage.getItem(valKey) || localStorage.getItem('mg_coptic_daily_xp_val') || '0', 10);
-      }
-
-      if (isNaN(earnedToday) || earnedToday < 0) {
+        // بداية يوم جديد: النقاط تبدأ من 0 دائماً بدقة
         earnedToday = 0;
+        localStorage.setItem(dateKey, todayStr);
+        localStorage.setItem(valKey, '0');
+        localStorage.setItem('mg_coptic_daily_xp_date', todayStr);
+        localStorage.setItem('mg_coptic_daily_xp_val', '0');
       }
 
       return { goalXP, earnedToday };
@@ -477,7 +472,8 @@
     function updateDailyGoalUI() {
       const { goalXP, earnedToday } = getDailyGoalProgressData();
       const isCompleted = earnedToday >= goalXP;
-      const pct = Math.min(100, Math.round((earnedToday / goalXP) * 100));
+      const pct = goalXP > 0 ? Math.min(100, Math.max(0, Math.round((earnedToday / goalXP) * 100))) : 0;
+      const remaining = Math.max(0, goalXP - earnedToday);
 
       const goalTitleEl = document.getElementById('home-goal-title');
       if (goalTitleEl) {
@@ -506,8 +502,7 @@
           goalBadgeEl.style.background = '#E6F4EA';
           goalBadgeEl.style.color = '#137333';
         } else {
-          const remaining = Math.max(0, goalXP - earnedToday);
-          goalBadgeEl.textContent = `+${remaining > 0 ? remaining : goalXP} XP`;
+          goalBadgeEl.textContent = `متبقي ${remaining} XP`;
           goalBadgeEl.style.background = '';
           goalBadgeEl.style.color = '';
         }
@@ -516,10 +511,11 @@
     window.updateDailyGoalUI = updateDailyGoalUI;
     try { updateDailyGoalUI(); } catch (e) { }
 
-    window.addTodayEarnedXP = function (amount) {
-      if (!amount || amount <= 0) return;
+    window.addTodayEarnedXP = function (amount, targetUid) {
+      const addVal = parseInt(amount, 10);
+      if (isNaN(addVal) || addVal <= 0) return;
       const user = (typeof currentAuthUser !== 'undefined' && currentAuthUser) || (typeof getUserProfileData === 'function' ? getUserProfileData() : null);
-      const uid = user && user.id ? user.id : 'guest';
+      const uid = targetUid || (user && user.id ? user.id : 'guest');
       const dateKey = `mg_coptic_daily_xp_date_${uid}`;
       const valKey = `mg_coptic_daily_xp_val_${uid}`;
 
@@ -528,8 +524,9 @@
       let current = 0;
       if (savedDate === todayStr) {
         current = parseInt(localStorage.getItem(valKey) || localStorage.getItem('mg_coptic_daily_xp_val') || '0', 10);
+        if (isNaN(current) || current < 0) current = 0;
       }
-      const updated = Math.max(0, current + amount);
+      const updated = current + addVal;
       localStorage.setItem(dateKey, todayStr);
       localStorage.setItem(valKey, String(updated));
       localStorage.setItem('mg_coptic_daily_xp_date', todayStr);
@@ -547,7 +544,9 @@
     }
 
     window.openDailyGoalModal = async function () {
-      const currentGoal = parseInt(localStorage.getItem('mg_coptic_daily_goal') || '30', 10);
+      const user = (typeof currentAuthUser !== 'undefined' && currentAuthUser) || (typeof getUserProfileData === 'function' ? getUserProfileData() : null);
+      const uid = user && user.id ? user.id : 'guest';
+      const currentGoal = parseInt(localStorage.getItem(`mg_coptic_daily_goal_${uid}`) || localStorage.getItem('mg_coptic_daily_goal') || '30', 10);
       const standardGoals = [
         { val: 15, title: 'خفيف', desc: '١٥ نقطة XP' },
         { val: 30, title: 'عادي (موصى به)', desc: '٣٠ نقطة XP' },

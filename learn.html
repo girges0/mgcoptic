@@ -21,6 +21,12 @@
 <title>MG COPTIC — خريطة المستويات ومسار التعلم</title>
 <meta name="description" content="خريطة دروس وتمارين تفاعلية متدرجة لتعلّم اللغة القبطية على منصة MG Coptic.">
 <meta name="theme-color" content="#6B1530">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MG COPTIC">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" href="assets/images/favicon.png">
 <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +37,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="swal-theme.js"></script>
 <script src="gamification-service.js"></script>
+<script src="js/presence-tracker.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
 <script src="js/writing-tracer.js?v=2.8"></script>
 <link rel="stylesheet" href="css/coptic-keyboard.css">
@@ -4672,5 +4679,6 @@
 
 })();
 </script>
+<script src="js/pwa-register.js" defer></script>
 </body>
 </html>

@@ -1033,7 +1033,7 @@
       font-size: 0.80rem;
       font-weight: 800;
       flex-shrink: 0;
-      direction: ltr;
+      direction: rtl;
       white-space: nowrap;
     }
 
