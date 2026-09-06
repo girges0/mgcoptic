@@ -11,6 +11,18 @@ const DASH_ICONS = {
   link: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-left:3px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`
 };
 
+/* ============ دالة تنظيف وتأمين النصوص HTML ESCAPE ============ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+window.escapeHtml = escapeHtml;
+
 /* ============ دالة معالجة روابط الصوت (Google Drive / Dropbox / OneDrive / Supabase / Direct) ============ */
 function resolveAudioCandidates(input){
   if(!input) return [];
@@ -3562,47 +3574,207 @@ function toggleNotifTargetInput() {
   const wrapper = document.getElementById('notif-target-user-wrapper');
   if (wrapper) {
     wrapper.style.display = (audience === 'single') ? 'block' : 'none';
+    if (audience === 'single') {
+      populateNotifStudentsDropdown();
+      setTimeout(() => {
+        const searchInput = document.getElementById('notif-user-search');
+        if (searchInput) searchInput.focus();
+      }, 100);
+    }
   }
 }
 window.toggleNotifTargetInput = toggleNotifTargetInput;
 
-async function populateNotifStudentsDropdown() {
+async function populateNotifStudentsDropdown(forceRefresh = false) {
   const select = document.getElementById('notif-input-user');
+  const countHint = document.getElementById('notif-user-count-hint');
   if (!select) return;
 
-  if (cachedStudentsForNotif && cachedStudentsForNotif.length > 0) {
+  if (!forceRefresh && cachedStudentsForNotif && cachedStudentsForNotif.length > 0) {
     renderNotifStudentsOptions(cachedStudentsForNotif);
     return;
   }
+
+  select.innerHTML = '<option value="">⏳ جارٍ تحميل قائمة الطلاب...</option>';
 
   try {
     const { data: students, error } = await sb
       .from('users')
-      .select('id, full_name, email')
+      .select('id, full_name, email, role')
       .order('full_name', { ascending: true });
 
     if (error) throw error;
-    cachedStudentsForNotif = students || [];
+    cachedStudentsForNotif = (students || []).filter(s => s && s.id);
     renderNotifStudentsOptions(cachedStudentsForNotif);
   } catch (err) {
     console.warn('[Admin Notif] Error loading students:', err);
     select.innerHTML = '<option value="">تعذر جلب قائمة الطلاب</option>';
+    if (countHint) countHint.textContent = 'حدث خطأ أثناء تحميل الطلاب: ' + err.message;
   }
 }
+window.populateNotifStudentsDropdown = populateNotifStudentsDropdown;
 
-function renderNotifStudentsOptions(students) {
+function refreshNotifStudentsList() {
+  cachedStudentsForNotif = null;
+  populateNotifStudentsDropdown(true);
+}
+window.refreshNotifStudentsList = refreshNotifStudentsList;
+
+function renderNotifStudentsOptions(students, filteredCount = null) {
   const select = document.getElementById('notif-input-user');
+  const countHint = document.getElementById('notif-user-count-hint');
   if (!select) return;
 
   if (!students || students.length === 0) {
-    select.innerHTML = '<option value="">لا يوجد طلاب مسجلين</option>';
+    select.innerHTML = '<option value="">لا يوجد طلاب يطابقون البحث</option>';
+    if (countHint) countHint.textContent = 'لا توجد نتائج مطابقة.';
     return;
   }
 
-  select.innerHTML = students.map(s => `
-    <option value="${s.id}">${escapeHtml(s.full_name || 'بدون اسم')} (${escapeHtml(s.email || 'بدون إيميل')})</option>
-  `).join('');
+  let html = '<option value="">-- اضغط لاختيار الطالب المستهدف (' + students.length + ' طالب) --</option>';
+  html += students.map(s => {
+    const name = s.full_name ? s.full_name.trim() : 'بدون اسم';
+    const email = s.email ? s.email.trim() : 'بدون بريد';
+    return `<option value="${s.id}">👤 ${escapeHtml(name)} — ✉️ ${escapeHtml(email)}</option>`;
+  }).join('');
+
+  select.innerHTML = html;
+
+  if (countHint) {
+    const total = cachedStudentsForNotif ? cachedStudentsForNotif.length : students.length;
+    countHint.textContent = (filteredCount !== null && filteredCount !== total)
+      ? `تم العثور على ${students.length} من أصل ${total} طالب مسجل`
+      : `إجمالي الطلاب المتاحين: ${total} طالب`;
+  }
 }
+
+function filterNotifStudents(query) {
+  if (!cachedStudentsForNotif) return;
+  const q = (query || '').trim().toLowerCase();
+  if (!q) {
+    renderNotifStudentsOptions(cachedStudentsForNotif);
+    return;
+  }
+
+  const filtered = cachedStudentsForNotif.filter(s => {
+    const name = (s.full_name || '').toLowerCase();
+    const email = (s.email || '').toLowerCase();
+    return name.includes(q) || email.includes(q);
+  });
+
+  renderNotifStudentsOptions(filtered, filtered.length);
+}
+window.filterNotifStudents = filterNotifStudents;
+
+/* ============ متصفح الروابط والدروس التفاعلية (DEEP LINK BROWSER) ============ */
+
+function setNotifLink(url, label) {
+  const input = document.getElementById('notif-input-link');
+  const badge = document.getElementById('notif-link-preview-badge');
+  const text = document.getElementById('notif-link-preview-text');
+  if (input) input.value = url;
+  if (badge && text) {
+    badge.style.display = 'flex';
+    text.textContent = `${label} (${url})`;
+  }
+  toast(`تم تحديد الرابط: ${label}`);
+}
+window.setNotifLink = setNotifLink;
+
+function clearNotifLink() {
+  const input = document.getElementById('notif-input-link');
+  const badge = document.getElementById('notif-link-preview-badge');
+  const select = document.getElementById('notif-select-lesson');
+  if (input) input.value = '';
+  if (badge) badge.style.display = 'none';
+  if (select) select.value = '';
+}
+window.clearNotifLink = clearNotifLink;
+
+function onNotifLessonSelected(select) {
+  if (!select || !select.value) return;
+  const opt = select.options[select.selectedIndex];
+  const label = opt?.getAttribute('data-label') || opt?.text || 'درس في المنهج';
+  setNotifLink(select.value, label);
+}
+window.onNotifLessonSelected = onNotifLessonSelected;
+
+function populateNotifLessonsDropdown() {
+  const select = document.getElementById('notif-select-lesson');
+  if (!select) return;
+
+  let curr = null;
+  if (typeof curriculumData !== 'undefined' && curriculumData && Array.isArray(curriculumData.units) && curriculumData.units.length > 0) {
+    curr = curriculumData;
+  } else {
+    try {
+      const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1') || localStorage.getItem('coptic_curriculum_data');
+      if (raw) curr = JSON.parse(raw);
+    } catch (e) { }
+  }
+
+  if ((!curr || !curr.units || curr.units.length === 0) && typeof defaultCurriculum !== 'undefined') {
+    curr = defaultCurriculum;
+  }
+
+  const units = (curr && Array.isArray(curr.units)) ? curr.units : [];
+
+  if (units.length === 0) {
+    select.innerHTML = '<option value="">لا توجد دروس متوفرة بالمنهج حالياً</option>';
+    return;
+  }
+
+  let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة --</option>';
+  units.forEach((u, uIdx) => {
+    const unitTitle = u.title || `الوحدة ${uIdx + 1}`;
+    html += `<optgroup label="📂 ${escapeHtml(unitTitle)}">`;
+    (u.lessons || []).forEach((l, lIdx) => {
+      const lessonTitle = l.title || `الدرس ${lIdx + 1}`;
+      const lessonId = l.id || `${u.id || (uIdx + 1)}_${lIdx + 1}`;
+      html += `<option value="learn.html?lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">📖 ${escapeHtml(lessonTitle)}</option>`;
+    });
+    html += `</optgroup>`;
+  });
+
+  select.innerHTML = html;
+}
+window.populateNotifLessonsDropdown = populateNotifLessonsDropdown;
+
+function openSendNotificationForCurrentStudent() {
+  if (!activeSelectedStudent) return;
+  const student = activeSelectedStudent;
+  closeStudentModal();
+  switchTab('notifications');
+
+  const audienceSelect = document.getElementById('notif-input-audience');
+  if (audienceSelect) {
+    audienceSelect.value = 'single';
+    toggleNotifTargetInput();
+  }
+
+  populateNotifStudentsDropdown().then(() => {
+    const userSelect = document.getElementById('notif-input-user');
+    if (userSelect) {
+      let opt = Array.from(userSelect.options).find(o => String(o.value) === String(student.id));
+      if (!opt) {
+        opt = document.createElement('option');
+        opt.value = student.id;
+        opt.textContent = `👤 ${student.full_name || 'طالب'} — ✉️ ${student.email || ''}`;
+        userSelect.appendChild(opt);
+      }
+      userSelect.value = student.id;
+    }
+  });
+
+  setTimeout(() => {
+    const titleInput = document.getElementById('notif-input-title');
+    if (titleInput) {
+      titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      titleInput.focus();
+    }
+  }, 250);
+}
+window.openSendNotificationForCurrentStudent = openSendNotificationForCurrentStudent;
 
 async function loadNotificationsAdmin() {
   const tbody = document.getElementById('tbody-notifications');
@@ -3611,23 +3783,43 @@ async function loadNotificationsAdmin() {
 
   tbody.innerHTML = `
     <tr>
-      <td colspan="6" style="text-align:center; padding:24px; color:#8C857E;">
+      <td colspan="6" style="text-align:center; padding:28px; color:#8C857E;">
+        <span style="display:inline-block;width:18px;height:18px;border:2px solid #8C2430;border-top-color:transparent;border-radius:50%;animation:authSpin 0.8s linear infinite;margin-left:8px;vertical-align:middle;"></span>
         جارٍ تحميل سجل الإشعارات...
       </td>
     </tr>
   `;
 
-  // تأكد من تهيئة قائمة الطلاب في النموذج
+  // تهيئة الطلاب والدروس التفاعلية
   populateNotifStudentsDropdown();
+  populateNotifLessonsDropdown();
 
   try {
-    const { data: events, error, count } = await sb
+    let events = null;
+    let count = 0;
+
+    // محاولة استعلام الربط مع users
+    const joinedRes = await sb
       .from('notification_events')
       .select('*, target_user:users(id, full_name, email)', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(20);
+      .limit(25);
 
-    if (error) throw error;
+    if (!joinedRes.error && joinedRes.data) {
+      events = joinedRes.data;
+      count = joinedRes.count;
+    } else {
+      console.warn('[Admin Notif] Joined select notice, fallback to direct select:', joinedRes.error);
+      const directRes = await sb
+        .from('notification_events')
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .limit(25);
+
+      if (directRes.error) throw directRes.error;
+      events = directRes.data;
+      count = directRes.count;
+    }
 
     if (badge) {
       badge.textContent = `المجموع الكلي: ${count || (events ? events.length : 0)} إشعار`;
@@ -3636,7 +3828,7 @@ async function loadNotificationsAdmin() {
     if (!events || events.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center; padding:32px; color:#746B6F;">
+          <td colspan="6" style="text-align:center; padding:36px; color:#746B6F;">
             لا توجد إشعارات مسجلة حتى الآن. يمكنك إرسال أول إشعار باستخدام النموذج أعلاه.
           </td>
         </tr>
@@ -3657,10 +3849,14 @@ async function loadNotificationsAdmin() {
     tbody.innerHTML = events.map(ev => {
       let targetDisplay = '📢 جميع الطلاب (عام)';
       if (ev.target_user_id) {
-        const u = ev.target_user;
-        const name = u?.full_name || 'طالب';
-        const email = u?.email ? ` (${u.email})` : '';
-        targetDisplay = `👤 ${escapeHtml(name)}${escapeHtml(email)}`;
+        let u = ev.target_user;
+        if (Array.isArray(u)) u = u[0];
+        if (!u && cachedStudentsForNotif) {
+          u = cachedStudentsForNotif.find(s => String(s.id) === String(ev.target_user_id));
+        }
+        const name = u?.full_name ? u.full_name.trim() : 'طالب محدد';
+        const email = u?.email ? ` (${u.email.trim()})` : '';
+        targetDisplay = `<span title="ID: ${escapeHtml(ev.target_user_id)}">👤 ${escapeHtml(name)}${escapeHtml(email)}</span>`;
       }
 
       let statusBadge = '';
@@ -3683,7 +3879,7 @@ async function loadNotificationsAdmin() {
             <div style="font-weight:800; font-size:0.92rem; color:#2E2018;">${escapeHtml(ev.title || '')}</div>
             <div style="font-size:0.84rem; color:#746B6F; margin-top:3px; line-height:1.4;">${escapeHtml(ev.body || '')}</div>
           </td>
-          <td><code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem;">${escapeHtml(ev.deep_link || '-')}</code></td>
+          <td>${ev.deep_link ? `<code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem; word-break:break-all;">${escapeHtml(ev.deep_link)}</code>` : '<span style="color:#A8A29E; font-size:0.8rem;">-</span>'}</td>
           <td>${statusBadge}</td>
           <td style="font-size:0.8rem; color:#746B6F; white-space:nowrap;">${dateStr}</td>
         </tr>
@@ -3694,7 +3890,7 @@ async function loadNotificationsAdmin() {
     tbody.innerHTML = `
       <tr>
         <td colspan="6" style="text-align:center; padding:24px; color:#D92D20;">
-          تعذر تحميل سجل الإشعارات: ${escapeHtml(err.message)}
+          تعذر تحميل سجل الإشعارات: ${escapeHtml(err.message || String(err))}
         </td>
       </tr>
     `;
@@ -3751,13 +3947,14 @@ async function sendAdminNotification() {
 
     if (error) throw error;
 
-    // محاولة استدعاء الـ Edge Function فوراً في الخلفية للإرسال الفوري
+    // استدعاء الـ Edge Function فوراً في الخلفية للإرسال الفوري لخدمة FCM
+    const anonKey = window.SUPABASE_ANON_KEY || window.SB_ANON_KEY || SUPABASE_ANON_KEY;
     fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': window.SUPABASE_ANON_KEY || window.SB_ANON_KEY,
-        'Authorization': `Bearer ${window.SUPABASE_ANON_KEY || window.SB_ANON_KEY}`
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
       }
     }).catch(e => console.log('[Notif Dispatch Call]', e));
 
@@ -3765,17 +3962,17 @@ async function sendAdminNotification() {
       Swal.fire({
         icon: 'success',
         title: 'تم بنجاح! 🚀',
-        text: 'تمت جدولة الإشعار ووضعه في طابور الإرسال الفوري لخدمة Firebase FCM.',
+        text: 'تمت جدولة الإشعار ووضعه في طابور الإرسال الفوري لهواتف الطلاب.',
         confirmButtonColor: '#6B1530'
       });
     } else {
-      toast('تمت جدولة الإشعار بنجاح');
+      toast('تم إرسال الإشعار بنجاح');
     }
 
     // تفريغ الحقول وتحديث الجدول
     if (titleInput) titleInput.value = '';
     if (bodyInput) bodyInput.value = '';
-    if (linkInput) linkInput.value = '';
+    clearNotifLink();
 
     loadNotificationsAdmin();
   } catch (err) {

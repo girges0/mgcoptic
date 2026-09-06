@@ -1014,7 +1014,14 @@
             const deepLink = data.deep_link || data.link;
 
             if (deepLink && typeof deepLink === 'string') {
-              const cleanLink = deepLink.trim();
+              let cleanLink = deepLink.trim();
+              if (cleanLink.startsWith('#')) {
+                cleanLink = 'index.html' + cleanLink;
+              }
+              if (window.location.protocol === 'file:' && cleanLink.startsWith('/')) {
+                cleanLink = cleanLink.replace(/^\/+/, '');
+              }
+
               const { data: { session } } = (window.sb && window.sb.auth) 
                 ? await sb.auth.getSession() 
                 : { data: { session: null } };
