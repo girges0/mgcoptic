@@ -96,52 +96,65 @@
         position: fixed;
         inset: 0;
         z-index: 9999999;
-        background: rgba(15, 23, 42, 0.94);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background: rgba(38, 25, 18, 0.65);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         display: none;
         align-items: center;
         justify-content: center;
         padding: 24px;
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        color: #F8FAFC;
-        animation: mgFadeIn 0.3s ease;
+        font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+        color: #261912;
+        animation: mgFadeIn 0.25s ease;
       `;
 
       overlay.innerHTML = `
         <style>
-          @keyframes mgFadeIn { from { opacity: 0; } to { opacity: 1; } }
-          @keyframes mgPulseWarn { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.08); opacity: 1; } }
+          @keyframes mgFadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
           .mg-offline-card {
-            background: linear-gradient(145deg, #1E293B, #0F172A);
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 158, 11, 0.15);
+            background: #FAF4E9;
+            border: 1.5px solid #E8DCBE;
+            box-shadow: 0 20px 40px rgba(38, 25, 18, 0.16);
             border-radius: 24px;
-            padding: 36px 28px;
-            max-width: 420px;
+            padding: 32px 24px;
+            max-width: 380px;
             width: 100%;
             text-align: center;
             position: relative;
+            box-sizing: border-box;
           }
           .mg-offline-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 18px;
             border-radius: 50%;
-            background: rgba(245, 158, 11, 0.12);
-            border: 2px solid rgba(245, 158, 11, 0.3);
+            background: rgba(107, 21, 48, 0.08);
+            border: 1.5px solid rgba(184, 137, 46, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #F59E0B;
-            animation: mgPulseWarn 2.5s infinite ease-in-out;
+            color: #6B1530;
+          }
+          .mg-offline-card h2 {
+            margin: 0 0 10px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #261912;
+            font-family: 'Cairo', sans-serif;
+          }
+          .mg-offline-card p {
+            margin: 0 0 24px;
+            font-size: 0.95rem;
+            color: #5A4A3E;
+            line-height: 1.6;
+            font-family: 'Tajawal', sans-serif;
           }
           .mg-offline-btn {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: #0F172A;
+            background: #6B1530;
+            color: #FFFFFF;
             border: none;
-            padding: 14px 28px;
-            font-size: 1rem;
+            padding: 14px 24px;
+            font-size: 1.05rem;
             font-weight: 800;
             border-radius: 14px;
             cursor: pointer;
@@ -150,16 +163,18 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #4A0E21;
+            transition: all 0.15s ease;
+            font-family: 'Cairo', sans-serif;
           }
           .mg-offline-btn:active {
-            transform: scale(0.97);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #4A0E21;
           }
         </style>
         <div class="mg-offline-card">
           <div class="mg-offline-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="1" y1="1" x2="23" y2="23"></line>
               <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
               <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
@@ -169,10 +184,10 @@
               <line x1="12" y1="20" x2="12.01" y2="20"></line>
             </svg>
           </div>
-          <h2 style="margin: 0 0 10px; font-size: 1.35rem; font-weight: 800; color: #FFFFFF;">
+          <h2>
             انقطع الاتصال بالإنترنت
           </h2>
-          <p style="margin: 0 0 26px; font-size: 0.98rem; color: #CBD5E1; line-height: 1.6;">
+          <p>
             يتطلب هذا التطبيق اتصالاً بالإنترنت للعمل بشكل سليم وتحميل المحتوى والدروس.
           </p>
           <button id="mg-offline-retry-btn" class="mg-offline-btn">
