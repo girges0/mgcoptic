@@ -192,18 +192,25 @@ serve(async (req: Request) => {
             token: token,
             notification: {
               title: event.title,
-              body: event.body
+              body: event.body,
+              image: "https://mgcoptic.vercel.app/icon-192.png"
             },
             data: {
               title: String(event.title || ""),
               body: String(event.body || ""),
               deep_link: String(event.deep_link || "/"),
-              event_type: String(event.event_type || "")
+              event_type: String(event.event_type || ""),
+              image: "https://mgcoptic.vercel.app/icon-192.png",
+              icon: "ic_launcher"
             },
             android: {
               priority: "high",
               notification: {
                 sound: "default",
+                icon: "ic_launcher",
+                color: "#6B1530",
+                notification_priority: "PRIORITY_HIGH",
+                visibility: "PUBLIC",
                 click_action: "FCM_PLUGIN_ACTIVITY"
               }
             }

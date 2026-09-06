@@ -7336,6 +7336,80 @@
     let customVocab = [];
     let vocabAll = [];
 
+    
+    /* ============ COMPREHENSIVE DEEP LINK ROUTER ============ */
+    function handleDeepLink(link) {
+      if (!link || typeof link !== 'string') return;
+      console.log('[DeepLink] Processing target link:', link);
+
+      let target = link.trim();
+      let hash = '';
+      if (target.includes('#')) {
+        hash = target.split('#')[1] || '';
+      } else if (target.startsWith('#')) {
+        hash = target.replace('#', '');
+      }
+
+      // 1. Check if link targets a specific lesson: #lesson=ID or ?lesson=ID
+      const lessonMatch = target.match(/[#&?]lesson=([^&#?]+)/);
+      if (lessonMatch && lessonMatch[1]) {
+        const lessonId = decodeURIComponent(lessonMatch[1]);
+        console.log('[DeepLink] Opening lesson directly:', lessonId);
+        if (typeof switchTab === 'function') switchTab('learn');
+
+        const tryOpen = (attempts = 0) => {
+          if (typeof window.openLessonDetails === 'function' && typeof activeCurriculum !== 'undefined' && activeCurriculum) {
+            window.openLessonDetails(lessonId);
+          } else if (attempts < 25) {
+            setTimeout(() => tryOpen(attempts + 1), 200);
+          }
+        };
+        setTimeout(() => tryOpen(), 250);
+        return;
+      }
+
+      // 2. Tab aliases map
+      const aliasMap = {
+        'letters': 'alphabet',
+        'quizzes': 'quiz',
+        'profile': 'settings',
+        'dictionary': 'vocab',
+        'words': 'vocab'
+      };
+
+      const cleanHash = hash.split('?')[0].trim();
+      const mappedTab = aliasMap[cleanHash] || cleanHash;
+
+      // 3. Switch tab if valid
+      if (window.tabOrder && window.tabOrder.includes(mappedTab)) {
+        if (typeof switchTab === 'function') {
+          switchTab(mappedTab);
+          return;
+        }
+      }
+
+      // 4. Shop modal deep link
+      if (cleanHash === 'shop') {
+        if (typeof switchTab === 'function') switchTab('home');
+        if (typeof window.showGamificationShop === 'function') {
+          window.showGamificationShop();
+        } else if (typeof window.openShopModal === 'function') {
+          window.openShopModal();
+        }
+        return;
+      }
+
+      // 5. Achievements deep link
+      if (cleanHash === 'achievements') {
+        if (typeof switchTab === 'function') switchTab('home');
+        if (typeof window.showAchievementsModal === 'function') {
+          window.showAchievementsModal();
+        }
+        return;
+      }
+    }
+    window.handleDeepLink = handleDeepLink;
+
     /* ============ HERO STATS ============ */
     function toArabicDigits(n) {
       return String(n).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
@@ -7409,11 +7483,8 @@
     window.switchTab = switchTab;
 
     window.addEventListener('hashchange', () => {
-      const hash = (window.location.hash || '').replace('#', '').trim() || 'home';
-      if (window.tabOrder && window.tabOrder.includes(hash)) {
-        switchTab(hash, false);
-      }
-    });
+        handleDeepLink(window.location.href);
+      });
 
     function startCompetition(mode) {
       if (mode === 'speed') {
@@ -9191,8 +9262,8 @@
 
       // Check URL hash on page load
       const initialTab = (window.location.hash || '').replace('#', '').trim();
-      if (initialTab && window.tabOrder && window.tabOrder.includes(initialTab)) {
-        switchTab(initialTab, false);
+      if (initialTab) {
+        setTimeout(() => handleDeepLink(window.location.href), 200);
       }
     });
 

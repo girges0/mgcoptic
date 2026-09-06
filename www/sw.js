@@ -134,3 +134,48 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// 3. Web Push Notifications: Display with MG Coptic Logo and Badge
+self.addEventListener('push', (event) => {
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch (e) {
+      data = { body: event.data.text() };
+    }
+  }
+
+  const title = data.title || data.notification?.title || 'MG COPTIC';
+  const body = data.body || data.notification?.body || '';
+  const deepLink = data.deep_link || data.data?.deep_link || data.link || '/';
+
+  const options = {
+    body: body,
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    image: data.image || data.notification?.image || '/icon-192.png',
+    vibrate: [100, 50, 100],
+    data: { deep_link: deepLink }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// 4. Notification Click: Deep link directly into the application
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const deepLink = event.notification.data?.deep_link || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          client.navigate(deepLink);
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(deepLink);
+    })
+  );
+});

@@ -1052,7 +1052,11 @@
                 : { data: { session: null } };
 
               if (session) {
-                window.location.href = cleanLink;
+                if (typeof window.handleDeepLink === 'function') {
+                  window.handleDeepLink(cleanLink);
+                } else {
+                  window.location.href = cleanLink;
+                }
               } else {
                 window.location.href = '/login?redirect=' + encodeURIComponent(cleanLink);
               }

@@ -3699,44 +3699,63 @@ function onNotifLessonSelected(select) {
 }
 window.onNotifLessonSelected = onNotifLessonSelected;
 
-function populateNotifLessonsDropdown() {
+async function populateNotifLessonsDropdown() {
   const select = document.getElementById('notif-select-lesson');
   if (!select) return;
 
-  let curr = null;
-  if (typeof curriculumData !== 'undefined' && curriculumData && Array.isArray(curriculumData.units) && curriculumData.units.length > 0) {
-    curr = curriculumData;
-  } else {
-    try {
-      const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1') || localStorage.getItem('coptic_curriculum_data');
-      if (raw) curr = JSON.parse(raw);
-    } catch (e) { }
+  select.innerHTML = '<option value="">⏳ جارٍ جلب وتحديث قائمة الدروس الحية من السيرفر...</option>';
+
+  try {
+    // 1. جلب الوحدات والدروس مباشرة من Supabase (المصدر المعتمد)
+    if (window.sb) {
+      const { data: unitsData, error: uErr } = await sb.from('units').select('id, title, order_index').order('order_index');
+      const { data: lessonsData, error: lErr } = await sb.from('lessons').select('id, unit_id, title, order_index').order('order_index');
+
+      if (!uErr && unitsData && unitsData.length > 0) {
+        let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة في هاتف الطالب --</option>';
+        unitsData.forEach((u, uIdx) => {
+          const uLessons = (lessonsData || []).filter(l => String(l.unit_id) === String(u.id));
+          const unitTitle = u.title || `الوحدة ${uIdx + 1}`;
+          html += `<optgroup label="${escapeHtml(unitTitle)}">`;
+          uLessons.forEach((l, lIdx) => {
+            const lessonTitle = l.title || `الدرس ${lIdx + 1}`;
+            const lessonId = l.id;
+            html += `<option value="index.html#lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">${escapeHtml(unitTitle)}: ${escapeHtml(lessonTitle)}</option>`;
+          });
+          html += `</optgroup>`;
+        });
+        select.innerHTML = html;
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn('[Notif Lessons] Supabase live fetch error:', e);
   }
 
-  if ((!curr || !curr.units || curr.units.length === 0) && typeof defaultCurriculum !== 'undefined') {
-    curr = defaultCurriculum;
-  }
+  // 2. المحاولة من الذاكرة المحلية كاحتياط
+  let curr = null;
+  try {
+    const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');
+    if (raw) curr = JSON.parse(raw);
+  } catch (e) {}
 
   const units = (curr && Array.isArray(curr.units)) ? curr.units : [];
-
-  if (units.length === 0) {
-    select.innerHTML = '<option value="">لا توجد دروس متوفرة بالمنهج حالياً</option>';
-    return;
-  }
-
-  let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة في هاتف الطالب --</option>';
-  units.forEach((u, uIdx) => {
-    const unitTitle = u.title || `الوحدة ${uIdx + 1}`;
-    html += `<optgroup label="${escapeHtml(unitTitle)}">`;
-    (u.lessons || []).forEach((l, lIdx) => {
-      const lessonTitle = l.title || `الدرس ${lIdx + 1}`;
-      const lessonId = l.id || `${u.id || (uIdx + 1)}_${lIdx + 1}`;
-      html += `<option value="learn.html?lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">${escapeHtml(lessonTitle)}</option>`;
+  if (units.length > 0) {
+    let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة في هاتف الطالب --</option>';
+    units.forEach((u, uIdx) => {
+      const unitTitle = u.title || `الوحدة ${uIdx + 1}`;
+      html += `<optgroup label="${escapeHtml(unitTitle)}">`;
+      (u.lessons || []).forEach((l, lIdx) => {
+        const lessonTitle = l.title || `الدرس ${lIdx + 1}`;
+        const lessonId = l.id || `${u.id || (uIdx + 1)}_${lIdx + 1}`;
+        html += `<option value="index.html#lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">${escapeHtml(unitTitle)}: ${escapeHtml(lessonTitle)}</option>`;
+      });
+      html += `</optgroup>`;
     });
-    html += `</optgroup>`;
-  });
-
-  select.innerHTML = html;
+    select.innerHTML = html;
+  } else {
+    select.innerHTML = '<option value="">تعذر تحميل الدروس، اضغط زر التحديث لإعادة المحاولة</option>';
+  }
 }
 window.populateNotifLessonsDropdown = populateNotifLessonsDropdown;
 
