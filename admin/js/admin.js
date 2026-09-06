@@ -3635,7 +3635,7 @@ function renderNotifStudentsOptions(students, filteredCount = null) {
   html += students.map(s => {
     const name = s.full_name ? s.full_name.trim() : 'بدون اسم';
     const email = s.email ? s.email.trim() : 'بدون بريد';
-    return `<option value="${s.id}">👤 ${escapeHtml(name)} — ✉️ ${escapeHtml(email)}</option>`;
+    return `<option value="${s.id}">${escapeHtml(name)} — ${escapeHtml(email)}</option>`;
   }).join('');
 
   select.innerHTML = html;
@@ -3724,14 +3724,14 @@ function populateNotifLessonsDropdown() {
     return;
   }
 
-  let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة --</option>';
+  let html = '<option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة في هاتف الطالب --</option>';
   units.forEach((u, uIdx) => {
     const unitTitle = u.title || `الوحدة ${uIdx + 1}`;
-    html += `<optgroup label="📂 ${escapeHtml(unitTitle)}">`;
+    html += `<optgroup label="${escapeHtml(unitTitle)}">`;
     (u.lessons || []).forEach((l, lIdx) => {
       const lessonTitle = l.title || `الدرس ${lIdx + 1}`;
       const lessonId = l.id || `${u.id || (uIdx + 1)}_${lIdx + 1}`;
-      html += `<option value="learn.html?lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">📖 ${escapeHtml(lessonTitle)}</option>`;
+      html += `<option value="learn.html?lesson=${encodeURIComponent(lessonId)}" data-label="${escapeHtml(unitTitle)} - ${escapeHtml(lessonTitle)}">${escapeHtml(lessonTitle)}</option>`;
     });
     html += `</optgroup>`;
   });
@@ -3759,7 +3759,7 @@ function openSendNotificationForCurrentStudent() {
       if (!opt) {
         opt = document.createElement('option');
         opt.value = student.id;
-        opt.textContent = `👤 ${student.full_name || 'طالب'} — ✉️ ${student.email || ''}`;
+        opt.textContent = `${student.full_name || 'طالب'} — ${student.email || ''}`;
         userSelect.appendChild(opt);
       }
       userSelect.value = student.id;
@@ -3837,17 +3837,17 @@ async function loadNotificationsAdmin() {
     }
 
     const typeLabels = {
-      'welcome': 'ترحيب 🎉',
-      'rank_change': 'تغيّر ترتيب 🏆',
-      'daily_reminder': 'تذكير يومي 🔥',
-      'new_content': 'محتوى جديد 📖',
-      'achievement': 'إنجاز 🎖️',
-      'admin_broadcast': 'إداري عام 📢',
-      'hearts_refilled': 'تعبئة قلوب ❤️'
+      'welcome': 'ترحيب',
+      'rank_change': 'تغيّر ترتيب',
+      'daily_reminder': 'تذكير يومي',
+      'new_content': 'محتوى جديد',
+      'achievement': 'إنجاز',
+      'admin_broadcast': 'إداري عام',
+      'hearts_refilled': 'شحن قلوب'
     };
 
     tbody.innerHTML = events.map(ev => {
-      let targetDisplay = '📢 جميع الطلاب (عام)';
+      let targetDisplay = 'جميع الطلاب (عام)';
       if (ev.target_user_id) {
         let u = ev.target_user;
         if (Array.isArray(u)) u = u[0];
@@ -3856,7 +3856,7 @@ async function loadNotificationsAdmin() {
         }
         const name = u?.full_name ? u.full_name.trim() : 'طالب محدد';
         const email = u?.email ? ` (${u.email.trim()})` : '';
-        targetDisplay = `<span title="ID: ${escapeHtml(ev.target_user_id)}">👤 ${escapeHtml(name)}${escapeHtml(email)}</span>`;
+        targetDisplay = `<span title="ID: ${escapeHtml(ev.target_user_id)}">${escapeHtml(name)}${escapeHtml(email)}</span>`;
       }
 
       let statusBadge = '';

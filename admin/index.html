@@ -956,14 +956,14 @@
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:14px;">
             <div>
               <label for="notif-input-title" style="display:block; font-weight:800; font-size:0.88rem; color:#2E2018; margin-bottom:6px;">عنوان الإشعار *</label>
-              <input type="text" id="notif-input-title" placeholder="مثال: درس جديد متاح الآن! 📖" required style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none;">
+              <input type="text" id="notif-input-title" placeholder="مثال: درس جديد متاح الآن للمذاكرة" required style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none;">
             </div>
 
             <div>
               <label for="notif-input-audience" style="display:block; font-weight:800; font-size:0.88rem; color:#2E2018; margin-bottom:6px;">الجمهور المستهدف *</label>
               <select id="notif-input-audience" onchange="toggleNotifTargetInput()" style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; font-weight:700; cursor:pointer;">
-                <option value="broadcast">📢 جميع الطلاب (إرسال عام Broadcast)</option>
-                <option value="single">👤 طالب محدد فقط</option>
+                <option value="broadcast">جميع الطلاب (إرسال عام لجميع الأجهزة)</option>
+                <option value="single">طالب محدد فقط (إرسال فردي)</option>
               </select>
             </div>
           </div>
@@ -971,15 +971,17 @@
           <!-- اختيار طالب محدد مع بحث فوري وتحديث تلقائي -->
           <div id="notif-target-user-wrapper" style="display:none; margin-bottom:16px; background:#FAF6EE; padding:14px 18px; border-radius:12px; border:1.5px dashed #D6C8B2;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-              <label for="notif-user-search" style="font-weight:800; font-size:0.9rem; color:#6B1530; display:flex; align-items:center; gap:6px;">
-                <span>👤 اختر الطالب المستهدف للإشعار *</span>
+              <label for="notif-user-search" style="font-weight:800; font-size:0.9rem; color:#6B1530; display:inline-flex; align-items:center; gap:6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>اختر الطالب المستهدف للإشعار *</span>
               </label>
-              <button type="button" class="btn secondary" onclick="refreshNotifStudentsList()" style="padding:3px 10px; font-size:0.78rem;" title="تحديث وإعادة جلب قائمة الطلاب">
-                🔄 تحديث قائمة الطلاب
+              <button type="button" class="btn secondary" onclick="refreshNotifStudentsList()" style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; font-size:0.78rem;" title="تحديث وإعادة جلب قائمة الطلاب">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                <span>تحديث قائمة الطلاب</span>
               </button>
             </div>
-            <div style="margin-bottom:8px;">
-              <input type="text" id="notif-user-search" placeholder="🔍 اكتب اسم الطالب أو بريده للبحث والفلترة الفورية..." oninput="filterNotifStudents(this.value)" style="width:100%; padding:9px 12px; border-radius:8px; border:1.5px solid #D6C8B2; font-family:inherit; font-size:0.88rem; outline:none; background:#FFF;">
+            <div style="position:relative; margin-bottom:8px;">
+              <input type="text" id="notif-user-search" placeholder="اكتب اسم الطالب أو بريده الإلكتروني للبحث والفلترة الفورية..." oninput="filterNotifStudents(this.value)" style="width:100%; padding:9px 12px; border-radius:8px; border:1.5px solid #D6C8B2; font-family:inherit; font-size:0.88rem; outline:none; background:#FFF;">
             </div>
             <select id="notif-input-user" style="width:100%; padding:10px 14px; border-radius:8px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none; font-weight:700; color:#2E2018;">
               <option value="">-- اضغط لاختيار الطالب --</option>
@@ -996,15 +998,17 @@
           <div style="margin-bottom:20px; background:#FAF6EE; border:1.5px solid #E2D4BF; border-radius:14px; padding:16px 18px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
               <div>
-                <label for="notif-input-link" style="display:block; font-weight:800; font-size:0.92rem; color:#6B1530;">
-                  🔗 الرابط الداخلي المباشر عند النقر (Deep Link - اختياري)
+                <label for="notif-input-link" style="display:inline-flex; align-items:center; gap:6px; font-weight:800; font-size:0.92rem; color:#6B1530;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <span>الرابط الداخلي المباشر عند النقر (Deep Link - اختياري)</span>
                 </label>
-                <div style="font-size:0.8rem; color:#746B6F;">
+                <div style="font-size:0.8rem; color:#746B6F; margin-top:2px;">
                   اختر من صفحات ودروس الموقع المحدثة أدناه أو اكتب مساراً، ليفتح التطبيق عليه مباشرة
                 </div>
               </div>
-              <button type="button" class="btn secondary" onclick="clearNotifLink()" style="padding:4px 10px; font-size:0.78rem;" title="مسح الرابط المختار">
-                ✕ مسح الرابط
+              <button type="button" class="btn secondary" onclick="clearNotifLink()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; font-size:0.78rem;" title="مسح الرابط المختار">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>مسح الرابط</span>
               </button>
             </div>
 
@@ -1015,7 +1019,8 @@
 
             <!-- بطاقة تأكيد ومعاينة الرابط المختار -->
             <div id="notif-link-preview-badge" style="display:none; align-items:center; gap:8px; margin-bottom:12px; padding:8px 14px; border-radius:8px; background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-size:0.85rem; font-weight:800;">
-              <span>✅ الوجهة المحددة:</span>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>الوجهة المحددة:</span>
               <span id="notif-link-preview-text"></span>
             </div>
 
@@ -1023,55 +1028,70 @@
 
               <!-- 1. الصفحات الرئيسية -->
               <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px;">
-                  🌟 صفحات المنصة الرئيسية:
+                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:inline-flex; align-items:center; gap:6px;">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>صفحات المنصة الرئيسية:</span>
                 </div>
                 <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#home', 'الصفحة الرئيسية')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🏠 الرئيسية
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#home', 'الصفحة الرئيسية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>الرئيسية</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#leaderboard', 'لوحة المتصدرين والأبطال')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🏆 المتصدرين
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#leaderboard', 'لوحة المتصدرين والأبطال')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7"/><path d="M14 14.66V17c0 .55.45 1 1 1h2"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                    <span>المتصدرين</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#shop', 'متجر المكافآت والقلوب')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🛍️ متجر المكافآت
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#shop', 'متجر المكافآت والقلوب')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span>متجر المكافآت</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#achievements', 'لوحة الإنجازات والأوسمة')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🎖️ الإنجازات
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#achievements', 'لوحة الإنجازات والأوسمة')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                    <span>الإنجازات</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#settings', 'الملف الشخصي والإعدادات')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    👤 الملف الشخصي
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#settings', 'الملف الشخصي والإعدادات')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>الملف الشخصي</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('learn.html', 'خريطة مسار التعلم كاملة')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px; border-color:#6B1530; color:#6B1530; font-weight:800;">
-                    🗺️ خريطة التعلم
+                  <button type="button" class="btn secondary" onclick="setNotifLink('learn.html', 'خريطة مسار التعلم كاملة')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px; border-color:#6B1530; color:#6B1530; font-weight:800;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                    <span>خريطة التعلم</span>
                   </button>
                 </div>
               </div>
 
               <!-- 2. الأقسام التعليمية -->
               <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px;">
-                  📚 الأقسام التعليمية التفاعلية:
+                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:inline-flex; align-items:center; gap:6px;">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  <span>الأقسام التعليمية التفاعلية:</span>
                 </div>
                 <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#letters', 'قسم الحروف القبطية')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🔤 الحروف القبطية
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#letters', 'قسم الحروف القبطية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                    <span>الحروف القبطية</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#grammar', 'قسم قواعد اللغة القبطية')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    📜 قواعد اللغة
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#grammar', 'قسم قواعد اللغة القبطية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>قواعد اللغة</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#quizzes', 'بنك التحديات والاختبارات')" style="padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    🧠 الاختبارات والتحديات
+                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#quizzes', 'بنك التحديات والاختبارات')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    <span>الاختبارات والتحديات</span>
                   </button>
                 </div>
               </div>
 
               <!-- 3. الدروس والمستويات التعليمية المحدثة دائماً -->
               <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                  <span>🎯 دروس المنهج (متحدثة ومستخرجة تلقائياً من المنهج):</span>
-                  <button type="button" class="btn secondary" onclick="populateNotifLessonsDropdown()" style="padding:2px 8px; font-size:0.75rem;">
-                    🔄 تحديث قائمة الدروس
+                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    <span>دروس المنهج (متحدثة ومستخرجة تلقائياً من المنهج):</span>
+                  </span>
+                  <button type="button" class="btn secondary" onclick="populateNotifLessonsDropdown()" style="display:inline-flex; align-items:center; gap:5px; padding:3px 9px; font-size:0.75rem;">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <span>تحديث قائمة الدروس</span>
                   </button>
                 </div>
                 <div>
