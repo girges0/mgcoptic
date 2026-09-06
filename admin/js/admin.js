@@ -2742,6 +2742,11 @@ function renderStudentsTable(list) {
             </div>
           </div>
         </td>
+        <td style="text-align:center;">
+          <span style="display:inline-block; font-weight:800; font-size:0.86rem; color:#92400E; background:#FEF3C7; border:1px solid #FDE68A; padding:3px 9px; border-radius:8px;">
+            ${u.age ? (u.age + ' سنة') : '<span style="color:#A8A29E; font-weight:normal; font-size:0.8rem;">-</span>'}
+          </span>
+        </td>
         <td>
           <span style="font-family:monospace; font-size:0.86rem; color:#3A2E2B; background:#F8F4EB; padding:3px 7px; border-radius:6px; border:1px solid #EADBCE;">${esc(u.email)}</span>
         </td>
@@ -2892,6 +2897,9 @@ function viewStudentDetails(userId) {
 
   const levelEl = document.getElementById('m-student-level');
   if (levelEl) levelEl.textContent = student.actualLevel || student.tierLevel || 'المستوى 1';
+
+  const modalAgeEl = document.getElementById('m-student-age');
+  if (modalAgeEl) modalAgeEl.textContent = student.age ? (student.age + ' سنة') : 'غير محدد';
 
   // ملء وعرض كلمة مرور الحساب
   isStudentPasswordVisible = false;

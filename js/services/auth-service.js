@@ -276,6 +276,14 @@
           if (passEl) passEl.focus();
           return;
         }
+
+        const ageVal = ageEl ? ageEl.value.trim() : '';
+        const parsedAge = parseInt(ageVal, 10);
+        if (!ageVal || isNaN(parsedAge) || parsedAge < 4 || parsedAge > 120) {
+          resetFormUI('يرجى إدخال العمر (إجباري، من ٤ إلى ١٠٠ سنة).');
+          if (ageEl) ageEl.focus();
+          return;
+        }
       }
 
       if (!email) {
@@ -413,10 +421,10 @@
             if (logErr) throw logErr;
           }
 
-          // حفظ كلمة المرور والاسم في بيانات الحساب لعرضها في لوحة الإدارة
+          // حفظ كلمة المرور والاسم والعمر في بيانات الحساب لعرضها في لوحة الإدارة
           try {
             const curU = (signData && signData.user) || (await sb.auth.getUser()).data.user;
-            if (curU) await sb.from('users').update({ full_name: fullName, password: password }).eq('id', curU.id);
+            if (curU) await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', curU.id);
           } catch (e) {
             console.warn('Password profile sync notice:', e);
           }
