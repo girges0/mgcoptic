@@ -11,11 +11,24 @@
   <script>
     try {
       const savedToken = localStorage.getItem('mg_coptic_student_auth_token');
+      const savedUser = localStorage.getItem('mg_coptic_user');
+      let hasSession = false;
       if (savedToken) {
-        const parsed = JSON.parse(savedToken);
-        if (parsed && (parsed.access_token || parsed.user)) {
-          window.location.replace('index.html');
+        try {
+          const parsed = JSON.parse(savedToken);
+          if (parsed && (parsed.access_token || parsed.user || parsed.token)) hasSession = true;
+        } catch (_) {
+          if (typeof savedToken === 'string' && savedToken.trim().length > 20) hasSession = true;
         }
+      }
+      if (!hasSession && savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          if (parsedUser && parsedUser.id) hasSession = true;
+        } catch (_) {}
+      }
+      if (hasSession) {
+        window.location.replace('index.html');
       }
     } catch(e) {}
   </script>

@@ -468,8 +468,14 @@
               role: 'student'
             };
             localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
-            if (signData?.session?.access_token) {
-              localStorage.setItem('mg_coptic_student_auth_token', signData.session.access_token);
+            if (signData?.session) {
+              try {
+                localStorage.setItem('mg_coptic_student_auth_token', JSON.stringify(signData.session));
+              } catch (_) {
+                if (signData.session.access_token) {
+                  localStorage.setItem('mg_coptic_student_auth_token', signData.session.access_token);
+                }
+              }
             }
           }
 
@@ -498,8 +504,14 @@
               role: 'student'
             };
             localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
-            if (data.session?.access_token) {
-              localStorage.setItem('mg_coptic_student_auth_token', data.session.access_token);
+            if (data.session) {
+              try {
+                localStorage.setItem('mg_coptic_student_auth_token', JSON.stringify(data.session));
+              } catch (_) {
+                if (data.session.access_token) {
+                  localStorage.setItem('mg_coptic_student_auth_token', data.session.access_token);
+                }
+              }
             }
 
             // تحديث كلمة المرور في قاعدة البيانات في الخلفية دون تأخير عملية النقل
@@ -555,10 +567,10 @@
         // تنظيف أي جلسة أدمن قديمة تسربت سابقاً بالمفتاح العام القديم
         localStorage.removeItem('sb-kdoanxzpfiscprjjzzic-auth-token');
 
-        const { data: { session } } = await sb.auth.getSession();
+        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
         if (session && session.user) {
           currentAuthSession = session;
-          const { data: profile } = await sb.from('users').select('*').eq('id', session.user.id).single();
+          const { data: profile } = await sb.from('users').select('*').eq('id', session.user.id).maybeSingle();
           currentAuthUser = {
             id: session.user.id,
             email: session.user.email,
@@ -569,7 +581,7 @@
           localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
 
           // جلب التقدم الحقيقي من Supabase
-          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).single();
+          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
           if (prog) {
             localStorage.setItem('mg_coptic_progress', JSON.stringify({
               total_points: prog.points || 0,
@@ -578,15 +590,22 @@
             }));
           }
         } else {
-          currentAuthUser = null;
-          currentAuthSession = null;
-          localStorage.removeItem('mg_coptic_user');
+          const rawCachedUser = localStorage.getItem('mg_coptic_user');
+          const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
+          if (rawCachedUser && rawToken) {
+            try { currentAuthUser = JSON.parse(rawCachedUser); } catch (_) {}
+          } else {
+            currentAuthUser = null;
+            currentAuthSession = null;
+            localStorage.removeItem('mg_coptic_user');
+          }
         }
       } catch (err) {
         console.warn('initUserSession error:', err);
-        currentAuthUser = null;
-        currentAuthSession = null;
-        localStorage.removeItem('mg_coptic_user');
+        const rawCachedUser = localStorage.getItem('mg_coptic_user');
+        if (rawCachedUser) {
+          try { currentAuthUser = JSON.parse(rawCachedUser); } catch (_) {}
+        }
       }
 
       if (typeof syncUserProfileUI === 'function') {
@@ -932,8 +951,20 @@
         try {
           const raw = localStorage.getItem('mg_coptic_student_auth_token');
           if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && (parsed.access_token || parsed.user)) {
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed && (parsed.access_token || parsed.user || parsed.token)) {
+                hasCachedSession = true;
+              }
+            } catch (_) {
+              if (typeof raw === 'string' && raw.trim().length > 20) {
+                hasCachedSession = true;
+              }
+            }
+          }
+          if (!hasCachedSession) {
+            const rawUser = localStorage.getItem('mg_coptic_user');
+            if (rawUser && rawUser.includes('"id"')) {
               hasCachedSession = true;
             }
           }
@@ -957,8 +988,14 @@
         }
 
         // Check active Supabase session (refreshes in background or validates)
-        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
-        const isLoggedIn = !!(session && session.user);
+        let session = null;
+        try {
+          if (window.sb && window.sb.auth) {
+            const res = await sb.auth.getSession();
+            session = res?.data?.session;
+          }
+        } catch (_) {}
+        const isLoggedIn = !!(session && session.user) || hasCachedSession;
 
         if (!isGuest && (isNative || (isMobileScreen && isHomePage))) {
           if (!isLoggedIn) {
