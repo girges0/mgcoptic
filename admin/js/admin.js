@@ -2621,7 +2621,11 @@ async function loadUsers(isSilent = false) {
         lessons_detail: userLps,
         actualLevel: actualLevelFull,
         tierLevel: actualLevel,
-        isActiveToday: (p.last_active_date === todayStr)
+        isActiveToday: (p.last_active_date === todayStr),
+        is_banned: !!u.is_banned,
+        ban_reason: u.ban_reason || null,
+        banned_until: u.banned_until || null,
+        banned_at: u.banned_at || null
       };
     });
 
@@ -2770,7 +2774,10 @@ function renderStudentsTable(list) {
               ${u.avatar_url ? `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;">` : initial}
             </div>
             <div>
-              <div style="font-weight:900; color:#2E2018; font-size:0.96rem;">${esc(u.full_name)}</div>
+              <div style="font-weight:900; color:#2E2018; font-size:0.96rem; display:flex; align-items:center; gap:6px;">
+                <span>${esc(u.full_name)}</span>
+                ${isStudentCurrentlyBanned(u) ? '<span class="badge" style="background:#FFE4E6; color:#9F1239; border:1px solid #FDA4AF; font-size:0.7rem; font-weight:900; padding:1px 6px;">⛔ محظور</span>' : ''}
+              </div>
               <div style="font-size:0.75rem; color:#8C857E; font-family:monospace;">${u.id.substring(0, 8)}...</div>
             </div>
           </div>
@@ -2823,6 +2830,9 @@ function renderStudentsTable(list) {
             </button>
             <button type="button" class="action-btn-sm" style="background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C; padding:6px 10px;" onclick="refillUserHearts('${u.id}')" title="شحن القلوب إلى 5">
               ${ICONS_SVG.heart}
+            </button>
+            <button type="button" class="action-btn-sm" style="${isStudentCurrentlyBanned(u) ? 'background:#ECFDF5; border:1.5px solid #A7F3D0; color:#047857;' : 'background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C;'} font-weight:800; padding:6px 10px;" onclick="quickToggleBanStudent('${u.id}')" title="${isStudentCurrentlyBanned(u) ? 'فك حظر الطالب' : 'حظر حساب الطالب'}">
+              ${isStudentCurrentlyBanned(u) ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'}
             </button>
             <button type="button" class="action-btn-sm" style="background:#FEE2E2; border:1.5px solid #FCA5A5; color:#991B1B; padding:6px 10px;" onclick="deleteUser('${u.id}', '${esc(u.full_name)}')" title="حذف الحساب نهائياً">
               ${ICONS_SVG.trash}
@@ -2957,6 +2967,47 @@ function viewStudentDetails(userId) {
         </div>
       `;
     }
+  }
+
+  // ملء وتحديث حالة الحظر في نافذة التفاصيل
+  const isBanned = isStudentCurrentlyBanned(student);
+  const banBanner = document.getElementById('m-student-ban-banner');
+  const banReasonEl = document.getElementById('m-student-ban-reason-text');
+  const banExpiryEl = document.getElementById('m-student-ban-expiry-text');
+  const banDateEl = document.getElementById('m-student-ban-date-text');
+  const banTypeBadge = document.getElementById('m-student-ban-type-badge');
+  const banActionBtn = document.getElementById('btn-modal-ban-user');
+  const banActionText = document.getElementById('btn-modal-ban-text');
+
+  if (isBanned) {
+    if (banBanner) banBanner.style.display = 'block';
+    if (banReasonEl) banReasonEl.textContent = student.ban_reason || 'مخالفة شروط وسياسات الاستخدام';
+    if (banTypeBadge) banTypeBadge.textContent = student.banned_until ? 'حظر مؤقت' : 'حظر دائم';
+    if (banExpiryEl) {
+      if (student.banned_until) {
+        const d = new Date(student.banned_until);
+        const remDays = Math.ceil((d.getTime() - Date.now()) / 86400000);
+        banExpiryEl.textContent = `${d.toLocaleString('ar-EG')} (متبقي ${remDays > 0 ? remDays : 0} يوم)`;
+      } else {
+        banExpiryEl.textContent = 'حظر دائم (Permanent)';
+      }
+    }
+    if (banDateEl) {
+      banDateEl.textContent = student.banned_at ? new Date(student.banned_at).toLocaleString('ar-EG') : '-';
+    }
+
+    if (banActionBtn) {
+      banActionBtn.style.background = '#047857';
+      banActionBtn.title = 'فك الحظر عن هذا الطالب وإعادة تفعيل حسابه';
+    }
+    if (banActionText) banActionText.textContent = 'فك الحظر عن الحساب';
+  } else {
+    if (banBanner) banBanner.style.display = 'none';
+    if (banActionBtn) {
+      banActionBtn.style.background = '#BE123C';
+      banActionBtn.title = 'حظر حساب الطالب وتحديد المدة والسبب';
+    }
+    if (banActionText) banActionText.textContent = 'حظر الحساب';
   }
 
   modal.style.display = 'flex';
@@ -3582,6 +3633,236 @@ function deleteUserFromModal() {
   deleteUser(s.id, s.full_name);
 }
 window.deleteUserFromModal = deleteUserFromModal;
+
+/* ============ BAN & UNBAN MANAGEMENT (حظر وفك حظر الطلاب) ============ */
+
+function isStudentCurrentlyBanned(s) {
+  if (!s || !s.is_banned) return false;
+  if (!s.banned_until) return true; // حظر دائم
+  return new Date(s.banned_until).getTime() > Date.now();
+}
+window.isStudentCurrentlyBanned = isStudentCurrentlyBanned;
+
+function setBanPresetReason(text) {
+  const input = document.getElementById('ban-reason-input');
+  if (input) {
+    input.value = text;
+    input.focus();
+  }
+}
+window.setBanPresetReason = setBanPresetReason;
+
+function handleBanDurationChange(val) {
+  const wrap = document.getElementById('ban-custom-date-wrap');
+  if (wrap) {
+    wrap.style.display = (val === 'custom') ? 'block' : 'none';
+  }
+}
+window.handleBanDurationChange = handleBanDurationChange;
+
+function handleStudentBanActionModal() {
+  if (!activeSelectedStudent) return;
+  const isBanned = isStudentCurrentlyBanned(activeSelectedStudent);
+  if (isBanned) {
+    promptUnbanStudentModal();
+  } else {
+    promptBanStudentModal();
+  }
+}
+window.handleStudentBanActionModal = handleStudentBanActionModal;
+
+async function promptBanStudentModal() {
+  if (!activeSelectedStudent) return;
+  const s = activeSelectedStudent;
+
+  const { value: formValues } = await Swal.fire({
+    title: 'حظر حساب الطالب',
+    html: `
+      <div style="text-align:right; font-family:'Cairo',sans-serif; color:#2E2018; direction:rtl;">
+        <div style="background:#FFF1F2; border:1.5px solid #FDA4AF; border-radius:10px; padding:12px 14px; margin-bottom:16px; font-size:0.88rem; color:#9F1239; line-height:1.5;">
+          أنت على وشك حظر حساب الطالب: <strong style="color:#881337; font-size:0.95rem;">${esc(s.full_name)}</strong><br>
+          <span style="font-size:0.8rem; color:#BE123C;">البريد: ${esc(s.email)}</span>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-weight:800; font-size:0.86rem; color:#6B1530; margin-bottom:6px;">
+            ⏱️ مدة الحظر:
+          </label>
+          <select id="ban-duration-select" class="swal2-select" style="width:100%; margin:0; font-family:'Cairo',sans-serif; font-size:0.92rem; font-weight:700; padding:9px 12px; border:1.5px solid #D1D5DB; border-radius:8px;" onchange="handleBanDurationChange(this.value)">
+            <option value="1d">يوم واحد (24 ساعة)</option>
+            <option value="3d">3 أيام</option>
+            <option value="7d" selected>أسبوع كامل (7 أيام)</option>
+            <option value="14d">أسبوعين (14 يوماً)</option>
+            <option value="30d">شهر كامل (30 يوماً)</option>
+            <option value="90d">3 أشهر (90 يوماً)</option>
+            <option value="permanent">حظر دائم (Permanent Ban)</option>
+            <option value="custom">تحديد تاريخ مخصص...</option>
+          </select>
+          <div id="ban-custom-date-wrap" style="display:none; margin-top:8px;">
+            <input type="datetime-local" id="ban-custom-date-input" class="swal2-input" style="width:100%; margin:0; font-size:0.9rem; padding:8px;">
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="display:block; font-weight:800; font-size:0.86rem; color:#6B1530; margin-bottom:6px;">
+            📝 سبب الحظر (يظهر للطالب بوضوح عند الدخول):
+          </label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+            <button type="button" class="action-btn-sm" style="background:#FAF6EE; border:1px solid #E7DCC8; color:#6B1530; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="setBanPresetReason('مخالفة شروط وقواعد الاستخدام والسياسة العامة للمنصة.')">قواعد الاستخدام</button>
+            <button type="button" class="action-btn-sm" style="background:#FAF6EE; border:1px solid #E7DCC8; color:#6B1530; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="setBanPresetReason('استخدام وسائل غير مشروعة ومحاولة التلاعب بالنقاط والمستويات.')">تلاعب بالنقاط</button>
+            <button type="button" class="action-btn-sm" style="background:#FAF6EE; border:1px solid #E7DCC8; color:#6B1530; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="setBanPresetReason('سلوك غير لائق أو إرسال محتوى غير مناسب.')">سلوك غير لائق</button>
+            <button type="button" class="action-btn-sm" style="background:#FAF6EE; border:1px solid #E7DCC8; color:#6B1530; font-size:0.75rem; font-weight:800; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="setBanPresetReason('نشاط مريب أو حساب مشبوه يحتاج لمراجعة أمنية.')">حساب مشبوه</button>
+          </div>
+          <textarea id="ban-reason-input" class="swal2-textarea" placeholder="اكتب سبب الحظر هنا بالتفصيل ليظهر للطالب..." style="width:100%; margin:0; height:85px; font-family:'Cairo',sans-serif; font-size:0.88rem; line-height:1.4; border-radius:8px; border:1.5px solid #D1D5DB; padding:8px 10px; box-sizing:border-box;"></textarea>
+          <div style="font-size:0.75rem; color:#746B6F; margin-top:4px;">* سيتم منع الطالب من فتح حسابه وسيظهر له هذا السبب بالتفصيل حتى انقضاء مدة الحظر.</div>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'تأكيد وفرض الحظر',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#BE123C',
+    cancelButtonColor: '#6B7280',
+    focusConfirm: false,
+    preConfirm: () => {
+      const dur = document.getElementById('ban-duration-select')?.value;
+      const customDate = document.getElementById('ban-custom-date-input')?.value;
+      const reason = document.getElementById('ban-reason-input')?.value?.trim();
+
+      if (!reason) {
+        Swal.showValidationMessage('يرجى كتابة سبب الحظر ليظهر للطالب');
+        return false;
+      }
+
+      let bannedUntil = null;
+      const now = Date.now();
+      if (dur === '1d') bannedUntil = new Date(now + 1 * 86400000).toISOString();
+      else if (dur === '3d') bannedUntil = new Date(now + 3 * 86400000).toISOString();
+      else if (dur === '7d') bannedUntil = new Date(now + 7 * 86400000).toISOString();
+      else if (dur === '14d') bannedUntil = new Date(now + 14 * 86400000).toISOString();
+      else if (dur === '30d') bannedUntil = new Date(now + 30 * 86400000).toISOString();
+      else if (dur === '90d') bannedUntil = new Date(now + 90 * 86400000).toISOString();
+      else if (dur === 'custom') {
+        if (!customDate) {
+          Swal.showValidationMessage('يرجى تحديد تاريخ انتهاء الحظر المخصص');
+          return false;
+        }
+        bannedUntil = new Date(customDate).toISOString();
+      } else if (dur === 'permanent') {
+        bannedUntil = null; // دائم
+      }
+
+      return { reason, bannedUntil };
+    }
+  });
+
+  if (!formValues) return;
+
+  const { reason, bannedUntil } = formValues;
+
+  Swal.fire({
+    title: 'جارٍ فرض الحظر...',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    const bannedAt = new Date().toISOString();
+    const { error } = await sb.from('users').update({
+      is_banned: true,
+      ban_reason: reason,
+      banned_until: bannedUntil,
+      banned_at: bannedAt
+    }).eq('id', s.id);
+
+    if (error) throw error;
+
+    // تحديث الكائن في الذاكرة
+    s.is_banned = true;
+    s.ban_reason = reason;
+    s.banned_until = bannedUntil;
+    s.banned_at = bannedAt;
+
+    const idx = allLoadedStudents.findIndex(x => x.id === s.id);
+    if (idx !== -1) {
+      allLoadedStudents[idx].is_banned = true;
+      allLoadedStudents[idx].ban_reason = reason;
+      allLoadedStudents[idx].banned_until = bannedUntil;
+      allLoadedStudents[idx].banned_at = bannedAt;
+    }
+
+    renderStudentsTable();
+    viewStudentDetails(s.id);
+
+    toast('تم حظر الحساب بنجاح وتم تسجيل السبب والمدة');
+  } catch (err) {
+    console.error('Ban student error:', err);
+    toast('تعذر حظر الحساب: ' + err.message, true);
+  }
+}
+window.promptBanStudentModal = promptBanStudentModal;
+
+async function promptUnbanStudentModal() {
+  if (!activeSelectedStudent) return;
+  const s = activeSelectedStudent;
+
+  const confirmed = await mgConfirm(
+    'فك حظر الحساب',
+    `هل أنت متأكد من فك الحظر عن حساب الطالب "${esc(s.full_name)}" واستعادة صلاحية دخوله للمنصة فوراً؟`,
+    'question'
+  );
+  if (!confirmed) return;
+
+  Swal.fire({
+    title: 'جارٍ فك الحظر...',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    const { error } = await sb.from('users').update({
+      is_banned: false,
+      ban_reason: null,
+      banned_until: null,
+      banned_at: null
+    }).eq('id', s.id);
+
+    if (error) throw error;
+
+    // تحديث الكائن في الذاكرة
+    s.is_banned = false;
+    s.ban_reason = null;
+    s.banned_until = null;
+    s.banned_at = null;
+
+    const idx = allLoadedStudents.findIndex(x => x.id === s.id);
+    if (idx !== -1) {
+      allLoadedStudents[idx].is_banned = false;
+      allLoadedStudents[idx].ban_reason = null;
+      allLoadedStudents[idx].banned_until = null;
+      allLoadedStudents[idx].banned_at = null;
+    }
+
+    renderStudentsTable();
+    viewStudentDetails(s.id);
+
+    toast('تم فك الحظر عن الحساب واستعادة الوصول بنجاح');
+  } catch (err) {
+    console.error('Unban student error:', err);
+    toast('تعذر فك الحظر: ' + err.message, true);
+  }
+}
+window.promptUnbanStudentModal = promptUnbanStudentModal;
+
+function quickToggleBanStudent(userId) {
+  const student = allLoadedStudents.find(s => s.id === userId);
+  if (!student) return;
+  viewStudentDetails(userId);
+  setTimeout(() => {
+    handleStudentBanActionModal();
+  }, 150);
+}
+window.quickToggleBanStudent = quickToggleBanStudent;
 
 
 

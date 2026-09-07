@@ -8548,6 +8548,25 @@
             profile = data;
           } catch (_) {}
 
+          // فحص حالة حظر الحساب للطالب
+          if (profile && profile.is_banned) {
+            const now = new Date();
+            if (profile.banned_until && new Date(profile.banned_until) <= now) {
+              try {
+                await sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', session.user.id);
+                profile.is_banned = false;
+              } catch (_) {}
+            } else {
+              if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+                window.MGPreloader.dismiss();
+              }
+              if (typeof showBannedAccountScreen === 'function') {
+                showBannedAccountScreen(profile);
+              }
+              return;
+            }
+          }
+
           currentAuthUser = {
             id: session.user.id,
             email: session.user.email,

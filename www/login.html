@@ -367,6 +367,27 @@
         if (window.sb && window.sb.auth && !urlParams.has('force')) {
           const { data: { session } } = await sb.auth.getSession();
           if (session && session.user) {
+            // فحص حالة الحظر للطالب
+            try {
+              const { data: banProf } = await sb.from('users').select('id, full_name, email, is_banned, ban_reason, banned_until, banned_at').eq('id', session.user.id).maybeSingle();
+              if (banProf && banProf.is_banned) {
+                const now = new Date();
+                if (banProf.banned_until && new Date(banProf.banned_until) <= now) {
+                  await sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', session.user.id);
+                } else {
+                  await sb.auth.signOut();
+                  localStorage.removeItem('mg_coptic_student_auth_token');
+                  localStorage.removeItem('mg_coptic_user');
+                  if (typeof showBannedAccountScreen === 'function') {
+                    showBannedAccountScreen(banProf);
+                  }
+                  return;
+                }
+              }
+            } catch (banCheckErr) {
+              console.warn('Login ban check error:', banCheckErr);
+            }
+
             const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
               ? redirectUrl
               : 'index.html';

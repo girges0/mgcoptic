@@ -1169,6 +1169,30 @@
     </div>
 
     <div class="curriculum-modal-body" style="padding:22px 24px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:16px;">
+      <!-- شريط تنبيه الحظر (يظهر فقط إذا كان الحساب محظوراً) -->
+      <div id="m-student-ban-banner" style="display:none; background:#FFF1F2; border:2px solid #F43F5E; border-radius:14px; padding:14px 18px; box-shadow:0 4px 14px rgba(225,29,72,0.12);">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="width:38px; height:38px; border-radius:10px; background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
+              <span style="font-weight:900; color:#9F1239; font-size:1.02rem; display:flex; align-items:center; gap:6px;">
+                <span>⛔ هذا الحساب محظور حالياً من دخول المنصة</span>
+              </span>
+              <span id="m-student-ban-type-badge" style="background:#BE123C; color:#FFF; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:6px;">حظر مؤقت</span>
+            </div>
+            <div style="font-size:0.88rem; color:#4C0519; margin-bottom:6px; line-height:1.5;">
+              <strong>سبب الحظر: </strong><span id="m-student-ban-reason-text" style="color:#881337; font-weight:700;">-</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:0.8rem; color:#9F1239;">
+              <div><strong>تاريخ الانتهاء: </strong><span id="m-student-ban-expiry-text" style="font-weight:800;">-</span></div>
+              <div><strong>تاريخ الحظر: </strong><span id="m-student-ban-date-text">-</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- شريط حالة التواجد والنشاط اللحظي (بارز وواضح 100%) -->
       <div style="background:linear-gradient(135deg, #FFFDF8 0%, #FAF5EB 100%); border:1.5px solid #E7DCC8; border-radius:14px; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
         <div style="display:flex; align-items:center; gap:10px;">
@@ -1334,6 +1358,10 @@
           <button type="button" class="btn" onclick="resetPointsFromModal()" style="background:#9B1C1C; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             <span>تصفير الـ XP</span>
+          </button>
+          <button type="button" class="btn" id="btn-modal-ban-user" onclick="handleStudentBanActionModal()" style="background:#BE123C; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" title="حظر أو فك حظر حساب الطالب">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            <span id="btn-modal-ban-text">حظر الحساب</span>
           </button>
           <button type="button" class="btn" onclick="deleteUserFromModal()" style="background:#1A202C; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>

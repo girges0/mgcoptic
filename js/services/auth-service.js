@@ -503,6 +503,30 @@
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
 
+          // فحص حالة الحظر للطالب قبل السماح له بالدخول
+          if (data && data.user) {
+            try {
+              const { data: banProfile } = await sb.from('users').select('id, full_name, email, is_banned, ban_reason, banned_until, banned_at').eq('id', data.user.id).maybeSingle();
+              if (banProfile && banProfile.is_banned) {
+                const now = new Date();
+                if (banProfile.banned_until && new Date(banProfile.banned_until) <= now) {
+                  // انتهت مدة الحظر تلقائياً
+                  await sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', data.user.id);
+                } else {
+                  // الحظر ما زال نشطاً
+                  await sb.auth.signOut();
+                  localStorage.removeItem('mg_coptic_student_auth_token');
+                  localStorage.removeItem('mg_coptic_user');
+                  resetFormUI();
+                  showBannedAccountScreen(banProfile);
+                  return;
+                }
+              }
+            } catch (banErr) {
+              console.warn('Sign-in ban check error:', banErr);
+            }
+          }
+
           // حفظ بيانات الجلسة والمستخدم فوراً في الذاكرة المحلية لتسريع النقل اللحظي
           if (data && data.user) {
             const basicUser = {
@@ -618,6 +642,24 @@
         if (activeSession && activeSession.user) {
           currentAuthSession = activeSession;
           const { data: profile } = await sb.from('users').select('*').eq('id', activeSession.user.id).maybeSingle();
+
+          // فحص حالة الحظر للطالب في الجلسة النشطة
+          if (profile && profile.is_banned) {
+            const now = new Date();
+            if (profile.banned_until && new Date(profile.banned_until) <= now) {
+              try {
+                await sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', activeSession.user.id);
+                profile.is_banned = false;
+              } catch (_) {}
+            } else {
+              if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+                window.MGPreloader.dismiss();
+              }
+              showBannedAccountScreen(profile);
+              return;
+            }
+          }
+
           currentAuthUser = {
             id: activeSession.user.id,
             email: activeSession.user.email,
@@ -1097,6 +1139,27 @@
             }
           }
         } catch (_) {}
+
+        // فحص حالة حظر الحساب إذا وُجدت جلسة
+        if (session && session.user && window.sb) {
+          try {
+            const { data: banProf } = await sb.from('users').select('id, full_name, email, is_banned, ban_reason, banned_until, banned_at').eq('id', session.user.id).maybeSingle();
+            if (banProf && banProf.is_banned) {
+              const now = new Date();
+              if (banProf.banned_until && new Date(banProf.banned_until) <= now) {
+                sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', session.user.id).then(() => {}, () => {});
+              } else {
+                window.__mgAuthCheckPending = false;
+                if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+                  window.MGPreloader.dismiss();
+                }
+                showBannedAccountScreen(banProf);
+                return;
+              }
+            }
+          } catch (_) {}
+        }
+
         const isLoggedIn = !!(session && session.user) || hasCachedSession || !!currentAuthUser;
 
         if (isNative && !isGuest && isHomePage && !isLoggedIn) {
@@ -1614,7 +1677,353 @@
       }
     });
 
+    /* ============ BANNED ACCOUNT SCREEN & COUNTDOWN ============ */
+    let bannedCountdownInterval = null;
+
+    function showBannedAccountScreen(profile) {
+      if (!profile) return;
+
+      // إغلاق أي نافذة مصادقة مفتوحة
+      try { closeAuthModal(); } catch (_) {}
+
+      // إخفاء مؤشر التحميل الأولي إن وجد
+      try {
+        if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+          window.MGPreloader.dismiss();
+        }
+      } catch (_) {}
+
+      // إيقاف أي أصوات أو مؤثرات
+      try {
+        if (window.MGCopticAudio && typeof window.MGCopticAudio.stopAll === 'function') {
+          window.MGCopticAudio.stopAll();
+        }
+      } catch (_) {}
+
+      const existing = document.getElementById('mg-banned-account-overlay');
+      if (existing) existing.remove();
+      if (bannedCountdownInterval) {
+        clearInterval(bannedCountdownInterval);
+        bannedCountdownInterval = null;
+      }
+
+      const isPermanent = !profile.banned_until;
+      const banReason = profile.ban_reason || 'مخالفة معايير وشروط استخدام المنصة';
+      const fullName = profile.full_name || 'طالب المنصة';
+      const email = profile.email || '';
+
+      let bannedAtStr = '';
+      if (profile.banned_at) {
+        try {
+          const d = new Date(profile.banned_at);
+          bannedAtStr = d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch (_) {}
+      }
+
+      let bannedUntilStr = '';
+      let bannedUntilDate = null;
+      if (!isPermanent && profile.banned_until) {
+        try {
+          bannedUntilDate = new Date(profile.banned_until);
+          bannedUntilStr = bannedUntilDate.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch (_) {}
+      }
+
+      const overlay = document.createElement('div');
+      overlay.id = 'mg-banned-account-overlay';
+      overlay.setAttribute('dir', 'rtl');
+      overlay.style.cssText = `
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        background: radial-gradient(circle at 50% 25%, rgba(65, 15, 28, 0.96), rgba(14, 8, 12, 0.98));
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        font-family: 'Cairo', 'Tajawal', system-ui, sans-serif;
+        color: #FFFDF9;
+        overflow-y: auto;
+        box-sizing: border-box;
+      `;
+
+      overlay.innerHTML = `
+        <div style="
+          background: linear-gradient(165deg, rgba(38, 16, 24, 0.96) 0%, rgba(20, 10, 15, 0.99) 100%);
+          border: 1.5px solid ${isPermanent ? 'rgba(220, 53, 69, 0.55)' : 'rgba(245, 158, 11, 0.55)'};
+          box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75), 0 0 45px ${isPermanent ? 'rgba(220, 53, 69, 0.25)' : 'rgba(245, 158, 11, 0.2)'};
+          border-radius: 24px;
+          max-width: 520px;
+          width: 100%;
+          padding: 32px 24px;
+          text-align: center;
+          position: relative;
+          animation: mgBanPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        ">
+          <style>
+            @keyframes mgBanPopIn {
+              from { opacity: 0; transform: scale(0.92) translateY(15px); }
+              to { opacity: 1; transform: scale(1) translateY(0); }
+            }
+            @keyframes mgPulseGlow {
+              0%, 100% { transform: scale(1); opacity: 0.9; }
+              50% { transform: scale(1.08); opacity: 1; }
+            }
+          </style>
+
+          <!-- Icon Badge -->
+          <div style="
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: ${isPermanent ? 'linear-gradient(135deg, #7F1D1D, #DC2626)' : 'linear-gradient(135deg, #78350F, #D97706)'};
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px ${isPermanent ? 'rgba(220, 38, 38, 0.45)' : 'rgba(217, 119, 6, 0.45)'};
+            animation: mgPulseGlow 3s ease-in-out infinite;
+          ">
+            ${isPermanent 
+              ? `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>`
+              : `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
+            }
+          </div>
+
+          <!-- Status Tag -->
+          <div style="
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: ${isPermanent ? 'rgba(220, 38, 38, 0.18)' : 'rgba(217, 119, 6, 0.18)'};
+            color: ${isPermanent ? '#FCA5A5' : '#FCD34D'};
+            border: 1px solid ${isPermanent ? 'rgba(220, 38, 38, 0.35)' : 'rgba(217, 119, 6, 0.35)'};
+          ">
+            <span>${isPermanent ? '⛔ حظر حساب نهائي' : '⏳ تعليق حساب مؤقت'}</span>
+          </div>
+
+          <!-- Header -->
+          <h2 style="font-size: 1.45rem; font-weight: 800; color: #FFF; margin: 0 0 8px 0;">
+            ${isPermanent ? 'تم حظر حسابك نهائياً' : 'تم تعليق حسابك مؤقتاً'}
+          </h2>
+          <p style="font-size: 0.9rem; color: #D1C7BD; line-height: 1.55; margin: 0 0 18px 0;">
+            نأسف لإبلاغك بأنه تم إيقاف صلاحية دخولك إلى المنصة بقرار من إدارة منصة MG Coptic.
+          </p>
+
+          <!-- User Card -->
+          <div style="
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+          ">
+            <div style="display: flex; align-items: center; gap: 8px; text-align: right;">
+              <div style="width: 34px; height: 34px; border-radius: 50%; background: #6B1530; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #FFF;">
+                ${fullName.charAt(0) || 'ق'}
+              </div>
+              <div>
+                <div style="font-weight: 700; color: #FFF;">${fullName}</div>
+                <div style="font-size: 0.78rem; color: #A89F91;">${email}</div>
+              </div>
+            </div>
+            ${bannedAtStr ? `<div style="font-size: 0.75rem; color: #A89F91; text-align: left;">تاريخ القرار:<br><span style="color: #E2D9CE;">${bannedAtStr.split(' ')[0]}</span></div>` : ''}
+          </div>
+
+          <!-- Reason Box -->
+          <div style="
+            background: rgba(107, 21, 48, 0.25);
+            border: 1px solid rgba(220, 53, 69, 0.35);
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: right;
+            margin-bottom: 20px;
+          ">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 800; color: #F87171; margin-bottom: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>سبب الإيقاف الصادر من الإدارة:</span>
+            </div>
+            <div style="font-size: 0.95rem; font-weight: 600; color: #FFF; line-height: 1.5; padding-right: 4px;">
+              "${banReason}"
+            </div>
+          </div>
+
+          <!-- Expiry & Countdown -->
+          ${!isPermanent && bannedUntilDate ? `
+            <div id="mg-ban-countdown-container" style="
+              background: rgba(245, 158, 11, 0.08);
+              border: 1px solid rgba(245, 158, 11, 0.25);
+              border-radius: 14px;
+              padding: 14px;
+              margin-bottom: 22px;
+            ">
+              <div style="font-size: 0.82rem; color: #FCD34D; font-weight: 700; margin-bottom: 10px;">
+                الوقت المتبقي لانتهاء فترة التعليق وفك الحظر تلقائياً:
+              </div>
+              <div id="mg-ban-countdown-timer" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                direction: ltr;
+              ">
+              </div>
+              <div style="font-size: 0.78rem; color: #BFAEA1; margin-top: 10px;">
+                تاريخ انتهاء التعليق: <span style="color: #FFF; font-weight: 700;">${bannedUntilStr}</span>
+              </div>
+            </div>
+          ` : `
+            <div style="
+              background: rgba(220, 53, 69, 0.08);
+              border: 1px solid rgba(220, 53, 69, 0.2);
+              border-radius: 12px;
+              padding: 12px;
+              margin-bottom: 22px;
+              font-size: 0.83rem;
+              color: #FCA5A5;
+            ">
+              هذا الحظر دائم ولا ينتهي تلقائياً. يرجى التواصل مع الإدارة للمراجعة.
+            </div>
+          `}
+
+          <!-- Buttons -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-banned-support" type="button" style="
+              width: 100%;
+              padding: 12px 18px;
+              border-radius: 12px;
+              border: 1px solid rgba(212, 175, 55, 0.5);
+              background: linear-gradient(135deg, #B8892E 0%, #94691B 100%);
+              color: #FFF;
+              font-weight: 800;
+              font-size: 0.95rem;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              transition: all 0.2s;
+              box-shadow: 0 4px 14px rgba(184, 137, 46, 0.3);
+            ">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              <span>التواصل مع الإدارة / الدعم الفني</span>
+            </button>
+
+            <button id="btn-banned-signout" type="button" style="
+              width: 100%;
+              padding: 11px 18px;
+              border-radius: 12px;
+              border: 1px solid rgba(255, 255, 255, 0.15);
+              background: rgba(255, 255, 255, 0.06);
+              color: #E2D9CE;
+              font-weight: 700;
+              font-size: 0.9rem;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              transition: all 0.2s;
+            ">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>تسجيل الخروج والتبديل لحساب آخر</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // Countdown logic
+      if (!isPermanent && bannedUntilDate) {
+        function updateCountdown() {
+          const timerEl = document.getElementById('mg-ban-countdown-timer');
+          if (!timerEl) return;
+          const now = new Date().getTime();
+          const diff = bannedUntilDate.getTime() - now;
+
+          if (diff <= 0) {
+            if (bannedCountdownInterval) {
+              clearInterval(bannedCountdownInterval);
+              bannedCountdownInterval = null;
+            }
+            if (window.sb) {
+              sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', profile.id).then(() => {}, () => {});
+            }
+            const container = document.getElementById('mg-ban-countdown-container');
+            if (container) {
+              container.innerHTML = `
+                <div style="color: #34D399; font-weight: 800; font-size: 1rem; margin-bottom: 8px;">
+                  🎉 انتهت فترة التعليق! تم فك الحظر عن حسابك الآن.
+                </div>
+                <button onclick="window.location.reload()" style="padding: 8px 18px; border-radius: 8px; background: #10B981; color: #FFF; border: none; font-weight: 700; cursor: pointer;">
+                  تحديث الصفحة والدخول
+                </button>
+              `;
+            }
+            return;
+          }
+
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+          const block = (num, label) => `
+            <div style="background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px; padding: 6px 10px; min-width: 48px; text-align: center;">
+              <div style="font-size: 1.25rem; font-weight: 800; color: #FFF; line-height: 1;">${String(num).padStart(2, '0')}</div>
+              <div style="font-size: 0.68rem; color: #D4AF37; margin-top: 4px;">${label}</div>
+            </div>
+          `;
+
+          timerEl.innerHTML = `
+            ${days > 0 ? block(days, 'يوم') : ''}
+            ${block(hours, 'ساعة')}
+            ${block(minutes, 'دقيقة')}
+            ${block(seconds, 'ثانية')}
+          `;
+        }
+
+        updateCountdown();
+        bannedCountdownInterval = setInterval(updateCountdown, 1000);
+      }
+
+      const btnSignOut = document.getElementById('btn-banned-signout');
+      if (btnSignOut) {
+        btnSignOut.onclick = async function () {
+          try {
+            if (window.sb && window.sb.auth) await sb.auth.signOut();
+          } catch (_) {}
+          localStorage.removeItem('mg_coptic_student_auth_token');
+          localStorage.removeItem('mg_coptic_user');
+          localStorage.removeItem('mg_coptic_progress');
+          window.location.href = 'login.html';
+        };
+      }
+
+      const btnSupport = document.getElementById('btn-banned-support');
+      if (btnSupport) {
+        btnSupport.onclick = function () {
+          const subject = encodeURIComponent('استفسار بخصوص تعليق حسابي في منصة MG Coptic');
+          const body = encodeURIComponent(`مرحباً إدارة منصة MG Coptic،\n\nأستفسر عن سبب تعليق حسابي:\nالاسم: ${fullName}\nالبريد: ${email}\nالسبب الموضح: ${banReason}\n\nشكراً لكم.`);
+          window.open(`mailto:support@mgcoptic.com?subject=${subject}&body=${body}`, '_blank');
+        };
+      }
+    }
+
     // تصدير الدوال للاستخدام العام عبر الصفحات
+    window.showBannedAccountScreen = showBannedAccountScreen;
     window.enforceAccessControl = enforceAccessControl;
     window.requireAuthOrPrompt = requireAuthOrPrompt;
     window.handleAuthSubmit = handleAuthSubmit;
