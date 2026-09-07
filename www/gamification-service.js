@@ -680,23 +680,21 @@ class SoundEffects {
   }
 
   playVictory(){
-    this._playSoundFile('victory', () => {
-      this._runAudio((ctx, now) => {
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-        const times = [0, 0.12, 0.24, 0.38];
-        const durs  = [0.15, 0.15, 0.18, 0.6];
-        notes.forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + times[i]);
-          gain.gain.setValueAtTime(0.2, now + times[i]);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + durs[i]);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + times[i]);
-          osc.stop(now + times[i] + durs[i]);
-        });
+    this._runAudio((ctx, now) => {
+      const notes = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.50];
+      const times = [0, 0.1, 0.2, 0.32, 0.46, 0.65];
+      const durs  = [0.09, 0.09, 0.09, 0.12, 0.16, 0.55];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + times[i]);
+        gain.gain.setValueAtTime(0.18, now + times[i]);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + durs[i]);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + times[i]);
+        osc.stop(now + times[i] + durs[i]);
       });
     });
   }
