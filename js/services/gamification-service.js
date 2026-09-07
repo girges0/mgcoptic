@@ -642,7 +642,18 @@ class SoundEffects {
     }
   }
 
+  _lastSoundTimes = new Map();
+
+  _shouldDebounce(soundName, cooldownMs = 250) {
+    const now = Date.now();
+    const last = this._lastSoundTimes.get(soundName) || 0;
+    if (now - last < cooldownMs) return true;
+    this._lastSoundTimes.set(soundName, now);
+    return false;
+  }
+
   playCorrect(){
+    if (this._shouldDebounce('correct', 250)) return;
     try {
       this._init();
       if(!this.ctx) return;
@@ -664,6 +675,7 @@ class SoundEffects {
   }
 
   playWrong(){
+    if (this._shouldDebounce('wrong', 250)) return;
     try {
       this._init();
       if(!this.ctx) return;
@@ -683,19 +695,20 @@ class SoundEffects {
   }
 
   playVictory(){
+    if (this._shouldDebounce('victory', 500)) return;
     try {
       this._init();
       if(!this.ctx) return;
       const now = this.ctx.currentTime;
-      const notes = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.50];
-      const times = [0, 0.1, 0.2, 0.32, 0.46, 0.65];
-      const durs  = [0.09, 0.09, 0.09, 0.12, 0.16, 0.55];
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      const times = [0, 0.12, 0.24, 0.38];
+      const durs  = [0.15, 0.15, 0.18, 0.60];
       notes.forEach((freq, i) => {
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + times[i]);
-        gain.gain.setValueAtTime(0.18, now + times[i]);
+        gain.gain.setValueAtTime(0.2, now + times[i]);
         gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + durs[i]);
         osc.connect(gain);
         gain.connect(this.ctx.destination);
@@ -706,6 +719,7 @@ class SoundEffects {
   }
 
   playChestReward(){
+    if (this._shouldDebounce('chest', 400)) return;
     try {
       this._init();
       if(!this.ctx) return;

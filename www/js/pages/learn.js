@@ -969,9 +969,12 @@
 
         if (btnCheckAction) {
           btnCheckAction.onclick = async () => {
+            if (btnCheckAction.disabled) return;
             if (runnerState === 'answering') {
+              btnCheckAction.disabled = true;
               await evaluateAnswer();
             } else if (runnerState === 'checked') {
+              btnCheckAction.disabled = true;
               currentChallengeIndex++;
               loadChallenge(currentChallengeIndex);
             }
@@ -1524,7 +1527,7 @@
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           }
 
-          if (game.sound) game.sound.playCorrect();
+          if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
 
           if (feedbackBox) {
             feedbackBox.className = 'feedback-msg correct';

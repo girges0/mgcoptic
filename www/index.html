@@ -8300,6 +8300,10 @@
       return 'audio/' + url;
     }
 
+    let _activePlayingAudio = null;
+    let _lastPlayAudioTime = 0;
+    let _lastPlayAudioSrc = '';
+
     function playAudio(filename, btn) {
       if (!filename) {
         if (btn) {
@@ -8310,7 +8314,24 @@
         return null;
       }
       const src = resolveAudioUrl(filename);
+      const now = Date.now();
+      if (src === _lastPlayAudioSrc && now - _lastPlayAudioTime < 250) {
+        return _activePlayingAudio;
+      }
+      _lastPlayAudioTime = now;
+      _lastPlayAudioSrc = src;
+
+      // إيقاف أي مقطع صوتي سابق لمنع التكرار والتداخل
+      if (_activePlayingAudio) {
+        try {
+          _activePlayingAudio.pause();
+          _activePlayingAudio.currentTime = 0;
+        } catch (_) {}
+        _activePlayingAudio = null;
+      }
+
       const audio = new Audio(src);
+      _activePlayingAudio = audio;
       if (btn) {
         btn.classList.add('is-playing');
         const card = btn.closest('.word-card, .letter-card');
@@ -8318,10 +8339,12 @@
         audio.addEventListener('ended', () => {
           btn.classList.remove('is-playing');
           if (card) card.classList.remove('playing');
+          if (_activePlayingAudio === audio) _activePlayingAudio = null;
         });
         audio.addEventListener('pause', () => {
           btn.classList.remove('is-playing');
           if (card) card.classList.remove('playing');
+          if (_activePlayingAudio === audio) _activePlayingAudio = null;
         });
       }
       audio.play().catch(err => {
@@ -8332,6 +8355,7 @@
           if (card) card.classList.remove('playing');
           btn.title = 'تعذّر تشغيل الملف — تأكد من صحة الرابط أو جعل ملف Google Drive عامًا';
         }
+        if (_activePlayingAudio === audio) _activePlayingAudio = null;
       });
       return audio;
     }
@@ -10502,9 +10526,12 @@
 
         if (btnCheckAction) {
           btnCheckAction.onclick = async () => {
+            if (btnCheckAction.disabled) return;
             if (runnerState === 'answering') {
+              btnCheckAction.disabled = true;
               await evaluateAnswer();
             } else if (runnerState === 'checked') {
+              btnCheckAction.disabled = true;
               currentChallengeIndex++;
               loadChallenge(currentChallengeIndex);
             }
@@ -11427,7 +11454,7 @@
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           }
 
-          if (game.sound) game.sound.playCorrect();
+          if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
 
           if (feedbackBox) {
             feedbackBox.className = 'feedback-msg correct';
