@@ -6125,6 +6125,66 @@
         </div>
       </div>
 
+      <!-- استرجاع فوري متزامن (0ms Instant Hydration) للاسم والصورة والإحصائيات قبل رسم الشاشة -->
+      <script id="__mgInstantHomeHydrate">
+        (function () {
+          try {
+            var rawU = localStorage.getItem('mg_coptic_user');
+            var rawP = localStorage.getItem('mg_coptic_progress');
+            if (rawU) {
+              var u = JSON.parse(rawU);
+              if (u && (u.full_name || u.id)) {
+                var fName = (u.full_name && u.full_name.trim()) ? u.full_name.trim().split(' ')[0] : 'بطل قبطي';
+                var init = fName ? fName.charAt(0) : 'Ⲁ';
+                var avUrl = u.avatar_url || localStorage.getItem('mg_coptic_user.avatar_url') || '';
+
+                var tbBadge = document.getElementById('topbar-user-badge');
+                var tbLogin = document.getElementById('topbar-login-btn');
+                var tbAvatar = document.getElementById('topbar-avatar');
+                if (tbBadge) tbBadge.style.display = 'inline-flex';
+                if (tbLogin) tbLogin.style.display = 'none';
+                if (tbAvatar) {
+                  if (avUrl) {
+                    tbAvatar.innerHTML = '<img src="' + avUrl + '" alt="' + (u.full_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                  } else {
+                    tbAvatar.innerHTML = '<span style="font-size:1.1rem;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;color:#FFFFFF;width:100%;height:100%;">' + init + '</span>';
+                  }
+                }
+
+                var gName = document.getElementById('home-greeting-name');
+                var mono = document.getElementById('home-monogram');
+                if (gName) gName.textContent = 'أهلاً، ' + fName;
+                if (mono) {
+                  if (avUrl) {
+                    mono.innerHTML = '<img src="' + avUrl + '" alt="' + (u.full_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+                  } else {
+                    mono.innerHTML = '<span style="font-size:1.35rem;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;color:#FFFFFF;width:100%;height:100%;">' + init + '</span>';
+                  }
+                }
+              }
+            }
+
+            if (rawP) {
+              var p = JSON.parse(rawP);
+              var xp = p.points ?? p.total_points ?? 0;
+              var st = p.streak_days ?? 1;
+              var ht = p.hearts ?? 5;
+              var cXp = document.getElementById('home-card-xp');
+              var cSt = document.getElementById('home-card-streak');
+              if (cXp) cXp.textContent = xp;
+              if (cSt) cSt.textContent = st;
+
+              var tXp = document.getElementById('topbar-xp-val') || document.getElementById('points-val');
+              var tSt = document.getElementById('topbar-streak-val') || document.getElementById('streak-val');
+              var tHt = document.getElementById('topbar-hearts-val') || document.getElementById('hearts-val');
+              if (tXp) tXp.textContent = xp;
+              if (tSt) tSt.textContent = st;
+              if (tHt) tHt.textContent = ht;
+            }
+          } catch (_) {}
+        })();
+      </script>
+
       <!-- 3. Three Stat Cards Row (معلومات إحصائية حقيقية) -->
       <div class="stat-cards-grid">
         <!-- Card 1: Streak (Rightmost in RTL) -->
@@ -8941,10 +9001,11 @@
 
       if (isLoggedIn) {
         const initial = (user.full_name && user.full_name.trim().length > 0) ? user.full_name.trim().charAt(0) : 'Ⲁ';
+        const avatarUrl = user.avatar_url || localStorage.getItem('mg_coptic_user.avatar_url') || '';
         if (tbName) { tbName.style.display = 'none'; tbName.textContent = user.full_name || 'بطل قبطي'; }
         if (tbAvatar) {
-          if (user.avatar_url) {
-            tbAvatar.innerHTML = '<img src="' + user.avatar_url + '" alt="' + (user.full_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+          if (avatarUrl) {
+            tbAvatar.innerHTML = '<img src="' + avatarUrl + '" alt="' + (user.full_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
           } else {
             tbAvatar.innerHTML = '<span style="font-size:1.1rem;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;color:#FFFFFF;width:100%;height:100%;">' + initial + '</span>';
           }
@@ -8980,11 +9041,12 @@
       if (user && user.full_name) {
         const firstName = user.full_name.trim().split(' ')[0] || user.full_name.trim();
         const initial = (user.full_name.trim().length > 0) ? user.full_name.trim().charAt(0) : 'Ⲁ';
+        const avatarUrl = user.avatar_url || localStorage.getItem('mg_coptic_user.avatar_url') || '';
         if (greetName) greetName.textContent = 'أهلاً، ' + firstName;
 
         if (monogram) {
-          if (user.avatar_url) {
-            monogram.innerHTML = '<img src="' + user.avatar_url + '" alt="' + user.full_name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+          if (avatarUrl) {
+            monogram.innerHTML = '<img src="' + avatarUrl + '" alt="' + user.full_name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
           } else {
             monogram.innerHTML = '<span style="font-size:1.35rem;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;color:#FFFFFF;width:100%;height:100%;">' + initial + '</span>';
           }
@@ -9362,6 +9424,10 @@
           }
         });
       }
+
+      // استدعاء فوري لبيانات المستخدم والواجهة من الكاش قبل انتظار استعلامات السيرفر
+      if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
+      if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
 
       initUserSession();
       updateDailyGoalUI();
