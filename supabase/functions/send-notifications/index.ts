@@ -244,8 +244,7 @@ serve(async (req: Request) => {
         ? targetDeepLink
         : `https://mgcoptic.vercel.app/${targetDeepLink.replace(/^\/+/, "")}`;
 
-      // روابط اللوجو والأيقونة الرسمية لمنصة MG Coptic
-      const officialLogoUrl = "https://mgcoptic.vercel.app/logo.png";
+      // رابط الأيقونة الرسمية لمنصة MG Coptic
       const officialIconUrl = "https://mgcoptic.vercel.app/icon-192.png";
 
       for (const device of deviceRows) {
@@ -261,15 +260,13 @@ serve(async (req: Request) => {
               token: token,
               notification: {
                 title: event.title,
-                body: event.body,
-                image: officialLogoUrl
+                body: event.body
               },
               data: {
                 title: String(event.title || ""),
                 body: String(event.body || ""),
                 deep_link: targetDeepLink,
                 event_type: String(event.event_type || ""),
-                image: officialLogoUrl,
                 icon: "ic_stat_notification"
               },
               android: {
@@ -279,7 +276,6 @@ serve(async (req: Request) => {
                   channel_id: "mg_coptic_notifications",
                   icon: "ic_stat_notification",
                   color: "#E2D5AE",
-                  image: officialLogoUrl,
                   notification_priority: "PRIORITY_HIGH",
                   visibility: "PUBLIC",
                   default_sound: true,
@@ -294,8 +290,7 @@ serve(async (req: Request) => {
                   title: event.title,
                   body: event.body,
                   icon: officialIconUrl,
-                  badge: officialIconUrl,
-                  image: officialLogoUrl
+                  badge: officialIconUrl
                 },
                 fcm_options: {
                   link: fullWebLink

@@ -1065,7 +1065,38 @@ class GamificationService {
     if(this.channel){
       this.channel.onmessage = (e) => {
         const data = e.data || {};
-        if(data.type === 'progress_remote' || data.type === 'progress_admin_update'){
+        if(data.type === 'full_account_reset'){
+          const curUser = this.getCurrentUser();
+          const curUid = curUser?.id;
+          const targetUid = data.payload?.user_id;
+          if(!targetUid || (curUid && curUid === targetUid)){
+            const uidToClear = targetUid || curUid;
+            if(uidToClear){
+              localStorage.removeItem(`mg_coptic_progress_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_lesson_progress_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_claimed_chests_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_last_synced_date_${uidToClear}`);
+            }
+            localStorage.removeItem('mg_coptic_lesson_progress');
+            localStorage.removeItem('mg_coptic_claimed_chests');
+            const resetProg = {
+              user_id: uidToClear,
+              points: 0,
+              total_points: 0,
+              hearts: 5,
+              streak_days: 1,
+              claimed_chests: [],
+              last_active_date: new Date().toISOString().split('T')[0]
+            };
+            this.saveProgressLocal(resetProg, uidToClear, false);
+            if(typeof window !== 'undefined'){
+              if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(resetProg);
+              if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+              if(typeof window.renderSkillMap === 'function') window.renderSkillMap();
+              if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+            }
+          }
+        } else if(data.type === 'progress_remote' || data.type === 'progress_admin_update'){
           const curUser = this.getCurrentUser();
           const curUid = curUser?.id;
           if(curUid && data.payload?.user_id === curUid){
@@ -1139,14 +1170,35 @@ class GamificationService {
             if(curUid && updatedUid && curUid === updatedUid){
               if(rtProgressDebounce) clearTimeout(rtProgressDebounce);
               rtProgressDebounce = setTimeout(() => {
-                this.getProgress(curUid, false).then(fresh => {
+                const isReset = payload?.new?.points === 0;
+                this.getProgress(curUid, isReset).then(fresh => {
                   if(typeof window !== 'undefined'){
                     if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(fresh);
                     if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
                     if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
                   }
                 });
-              }, 1000);
+                if(isReset){
+                  this.getLessonProgress(curUid, true).then(() => {
+                    if(typeof window !== 'undefined' && typeof window.renderSkillMap === 'function'){
+                      window.renderSkillMap();
+                    }
+                  });
+                }
+              }, 600);
+            }
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, (payload) => {
+            const curUser = this.getCurrentUser();
+            const curUid = curUser?.id;
+            const updatedUid = payload?.new?.user_id || payload?.old?.user_id;
+            if(curUid && updatedUid && curUid === updatedUid){
+              this.getLessonProgress(curUid, true).then(() => {
+                if(typeof window !== 'undefined'){
+                  if(typeof window.renderSkillMap === 'function') window.renderSkillMap();
+                  if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+                }
+              });
             }
           })
           .subscribe();
@@ -1190,18 +1242,37 @@ class GamificationService {
     return null;
   }
 
-  // التحقق الحقيقي من جلسة Supabase Auth وجلب بيانات البروفايل
+  // التحقق الحقيقي من جلسة Supabase Auth وجلب بيانات البروفايل دون مسح الكاش قسرياً
   async getCurrentUserAsync(){
     if(!sbClient) return this.getCurrentUser();
     try {
+      let activeSession = null;
       const { data: { session }, error: sErr } = await sbClient.auth.getSession();
-      if(sErr || !session || !session.user){
-        // إذا لم توجد جلسة نشطة، تفريغ كاش المستخدم
-        localStorage.removeItem(MG_CONFIG.STORAGE_KEYS.USER);
-        return null;
+      if (session && session.user) {
+        activeSession = session;
+      } else {
+        // محاولة تجديد الجلسة تلقائياً في حال انتهاء صلاحية التوكن
+        const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
+        if (rawToken) {
+          try {
+            const parsed = JSON.parse(rawToken);
+            if (parsed && parsed.refresh_token) {
+              const { data: refData } = await sbClient.auth.refreshSession({ refresh_token: parsed.refresh_token });
+              if (refData && refData.session) {
+                activeSession = refData.session;
+                try { localStorage.setItem('mg_coptic_student_auth_token', JSON.stringify(refData.session)); } catch (_) {}
+              }
+            }
+          } catch (_) {}
+        }
       }
-      const authUser = session.user;
-      const { data: profile, error: pErr } = await sbClient.from('users').select('*').eq('id', authUser.id).single();
+
+      if(!activeSession || !activeSession.user){
+        // لا نحذف الكاش المحلي لمنع تسجيل خروج المستخدم تلقائياً عند انقطاع الاتصال أو تحديث الصفحة
+        return this.getCurrentUser();
+      }
+      const authUser = activeSession.user;
+      const { data: profile } = await sbClient.from('users').select('*').eq('id', authUser.id).maybeSingle();
       const userObj = {
         id: authUser.id,
         email: authUser.email,
@@ -1697,42 +1768,26 @@ class GamificationService {
     if(sbClient && uid){
       try {
         const { data, error } = await sbClient.from('user_lesson_progress').select('*').eq('user_id', uid);
-        if(!error && data && data.length > 0){
-          map = { ...map };
-          data.forEach(row => {
-            const lid = String(row.lesson_id);
-            const curLocal = map[lid];
-            const isLocalDone = curLocal && curLocal.status === 'completed';
-            map[lid] = {
-              status: isLocalDone ? 'completed' : row.status,
-              score: Math.max(curLocal?.score || 0, row.score || 0)
-            };
-            // إذا كان الدرس مكتملاً، فإن محطاته التدريبية والتحديات (_p و _c) تعتبر مكتملة تلقائياً لفتح المستوى التالي
-            if(row.status === 'completed' || isLocalDone){
-              if(!map[`${lid}_p`] || map[`${lid}_p`].status !== 'completed'){
-                map[`${lid}_p`] = { status: 'completed', score: row.score || 100 };
+        if(!error){
+          // السيرفر هو مصدر الحقيقة للحساب المسجل
+          const serverMap = {};
+          if(Array.isArray(data) && data.length > 0){
+            data.forEach(row => {
+              const lid = String(row.lesson_id);
+              serverMap[lid] = {
+                status: row.status,
+                score: row.score || 0
+              };
+              if(row.status === 'completed'){
+                serverMap[`${lid}_p`] = { status: 'completed', score: row.score || 100 };
+                serverMap[`${lid}_c`] = { status: 'completed', score: row.score || 100 };
               }
-              if(!map[`${lid}_c`] || map[`${lid}_c`].status !== 'completed'){
-                map[`${lid}_c`] = { status: 'completed', score: row.score || 100 };
-              }
-            }
-          });
-
-          // مزامنة أي دروس مكتملة محلياً فقط إلى السيرفر إن وجدت
-          Object.keys(map).forEach(lid => {
-            if(!/_(p|c)$/.test(lid) && map[lid].status === 'completed'){
-              const onServer = data.some(r => String(r.lesson_id) === String(lid) && r.status === 'completed');
-              if(!onServer){
-                sbClient.from('user_lesson_progress').upsert({
-                  user_id: uid,
-                  lesson_id: parseInt(lid, 10),
-                  status: 'completed',
-                  score: map[lid].score || 100,
-                  updated_at: new Date().toISOString()
-                }).then(()=>{}, ()=>{});
-              }
-            }
-          });
+            });
+            map = serverMap;
+          } else {
+            // لا توجد أي دروس مكتملة في السحابة لهذا الحساب (تم تصفير الحساب أو حساب جديد)
+            map = { '1': { status: 'in_progress', score: 0 } };
+          }
 
           if(uid) localStorage.setItem(userLpKey, JSON.stringify(map));
           localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));

@@ -2,8 +2,12 @@
 (function () {
   'use strict';
 
-  /* ============ USER PROFILE & REAL SUPABASE AUTH / LEADERBOARD LOGIC ============ */
-  let currentAuthUser = null;
+  let currentAuthUser = (function () {
+    try {
+      const raw = localStorage.getItem('mg_coptic_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) { return null; }
+  })();
   let currentAuthSession = null;
   let currentAuthMode = 'signin';
   let pendingAuthCallback = null;
@@ -584,24 +588,50 @@
         // تنظيف أي جلسة أدمن قديمة تسربت سابقاً بالمفتاح العام القديم
         localStorage.removeItem('sb-kdoanxzpfiscprjjzzic-auth-token');
 
-        const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
-        if (session && session.user) {
-          currentAuthSession = session;
-          const { data: profile } = await sb.from('users').select('*').eq('id', session.user.id).maybeSingle();
+        let activeSession = null;
+        if (window.sb && window.sb.auth) {
+          try {
+            const { data: getSess } = await sb.auth.getSession();
+            if (getSess?.session?.user) {
+              activeSession = getSess.session;
+            } else {
+              // محاولة تجديد الجلسة تلقائياً في حال انتهاء صلاحية التوكن (1 ساعة)
+              const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
+              if (rawToken) {
+                try {
+                  const parsed = JSON.parse(rawToken);
+                  if (parsed && parsed.refresh_token) {
+                    const { data: refData } = await sb.auth.refreshSession({ refresh_token: parsed.refresh_token });
+                    if (refData && refData.session) {
+                      activeSession = refData.session;
+                      try { localStorage.setItem('mg_coptic_student_auth_token', JSON.stringify(refData.session)); } catch (_) {}
+                    }
+                  }
+                } catch (_) {}
+              }
+            }
+          } catch (sessErr) {
+            console.warn('sb.auth.getSession error:', sessErr);
+          }
+        }
+
+        if (activeSession && activeSession.user) {
+          currentAuthSession = activeSession;
+          const { data: profile } = await sb.from('users').select('*').eq('id', activeSession.user.id).maybeSingle();
           currentAuthUser = {
-            id: session.user.id,
-            email: session.user.email,
-            full_name: (profile && profile.full_name) ? profile.full_name : (session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'بطل قبطي'),
+            id: activeSession.user.id,
+            email: activeSession.user.email,
+            full_name: (profile && profile.full_name) ? profile.full_name : (activeSession.user.user_metadata?.full_name || activeSession.user.email?.split('@')[0] || 'بطل قبطي'),
             avatar_url: (profile && profile.avatar_url) ? profile.avatar_url : (localStorage.getItem('mg_coptic_user.avatar_url') || ''),
             role: (profile && profile.role) ? profile.role : 'student'
           };
           localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
 
           // جلب التقدم الحقيقي من Supabase
-          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
+          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', activeSession.user.id).maybeSingle();
           if (prog) {
             const freshProg = {
-              user_id: session.user.id,
+              user_id: activeSession.user.id,
               points: prog.points ?? 0,
               total_points: prog.points ?? 0,
               streak_days: prog.streak_days || 1,
@@ -609,17 +639,18 @@
               claimed_chests: prog.claimed_chests || []
             };
             localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
-            localStorage.setItem(`mg_coptic_progress_${session.user.id}`, JSON.stringify(freshProg));
+            localStorage.setItem(`mg_coptic_progress_${activeSession.user.id}`, JSON.stringify(freshProg));
             if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
-              window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
+              window.MGCopticGame.saveProgressLocal(freshProg, activeSession.user.id);
             }
           }
 
-          // ترحيل تقدم الزائر السابق لحساب المستخدم الجديد إن وجد ومزامنة الدروس سحابياً
+          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد، أو مسح الكاش إن كان الحساب مصفراً
           try {
+            const guestMigrated = localStorage.getItem('mg_coptic_guest_migrated');
             const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
-            if (guestLP) {
-              const userKey = `mg_coptic_lesson_progress_${session.user.id}`;
+            if (guestLP && !guestMigrated && prog && (prog.points || 0) > 0) {
+              const userKey = `mg_coptic_lesson_progress_${activeSession.user.id}`;
               const userExisting = localStorage.getItem(userKey);
               let merged = userExisting ? JSON.parse(userExisting) : {};
               const parsedGuest = JSON.parse(guestLP);
@@ -629,11 +660,17 @@
                 }
               });
               localStorage.setItem(userKey, JSON.stringify(merged));
+              localStorage.setItem('mg_coptic_guest_migrated', 'true');
+              localStorage.removeItem('mg_coptic_lesson_progress');
+            } else if (prog && (prog.points === 0 || !prog.points)) {
+              // إذا كان الحساب مصفراً (0 XP)، نمسح أي كاش قديم للدروس فورياً
+              localStorage.removeItem('mg_coptic_lesson_progress');
+              localStorage.removeItem(`mg_coptic_lesson_progress_${activeSession.user.id}`);
             }
           } catch (_) {}
 
           if (window.MGCopticGame && typeof window.MGCopticGame.getLessonProgress === 'function') {
-            window.MGCopticGame.getLessonProgress(session.user.id, true).then(() => {
+            window.MGCopticGame.getLessonProgress(activeSession.user.id, true).then(() => {
               if (typeof renderSkillMap === 'function') renderSkillMap();
               if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
             }).catch(() => {});
@@ -642,20 +679,17 @@
           // مزامنة توكن الجهاز في الخلفية دون تعطيل واجهة المستخدم
           try {
             if (typeof claimGuestDeviceToken === 'function') {
-              claimGuestDeviceToken(session.user.id);
+              claimGuestDeviceToken(activeSession.user.id);
             }
             if (typeof syncDeviceToken === 'function') {
-              syncDeviceToken(session.user.id);
+              syncDeviceToken(activeSession.user.id);
             }
           } catch (_) {}
         } else {
+          // استعادة المستخدم من الكاش المحلي دون تسجيل خروجه
           const rawCachedUser = localStorage.getItem('mg_coptic_user');
-          const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
-          if (rawCachedUser && rawToken) {
+          if (rawCachedUser) {
             try { currentAuthUser = JSON.parse(rawCachedUser); } catch (_) {}
-          } else {
-            currentAuthUser = null;
-            currentAuthSession = null;
           }
         }
       } catch (err) {
@@ -1025,49 +1059,50 @@
 
         const isMobileScreen = (typeof window !== 'undefined' && (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)));
 
-        // Fast-path 1: Unauthenticated mobile / app visitor -> immediately redirect to welcome
-        if (!isGuest && (isNative || (isMobileScreen && isHomePage)) && !hasCachedSession) {
+        // Fast-path 1: تطبيق الموبايل الأصلي فقط (Capacitor Native) للزائر غير المسجل
+        if (isNative && !isGuest && isHomePage && !hasCachedSession && !currentAuthUser) {
           window.__mgRedirecting = true;
           window.location.replace('welcome.html');
           return;
         }
 
-        // Fast-path 2: Returning logged-in user -> dismiss preloader immediately without waiting for network
-        if (hasCachedSession && isHomePage) {
+        // Fast-path 2: مستخدم مسجل مسبقاً -> إلغاء شاشة التحميل فوراً 0ms
+        if ((hasCachedSession || currentAuthUser) && isHomePage) {
           window.__mgAuthCheckPending = false;
           if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
             window.MGPreloader.dismiss();
           }
         }
 
-        // Check active Supabase session (refreshes in background or validates)
+        // فحص جلسة Supabase مع التجديد التلقائي للتوكن بالخلفية
         let session = null;
         try {
           if (window.sb && window.sb.auth) {
             const res = await sb.auth.getSession();
             session = res?.data?.session;
+            if (!session) {
+              const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
+              if (rawToken) {
+                try {
+                  const parsed = JSON.parse(rawToken);
+                  if (parsed && parsed.refresh_token) {
+                    const { data: refData } = await sb.auth.refreshSession({ refresh_token: parsed.refresh_token });
+                    session = refData?.session;
+                    if (session) {
+                      try { localStorage.setItem('mg_coptic_student_auth_token', JSON.stringify(session)); } catch (_) {}
+                    }
+                  }
+                } catch (_) {}
+              }
+            }
           }
         } catch (_) {}
-        const isLoggedIn = !!(session && session.user) || hasCachedSession;
+        const isLoggedIn = !!(session && session.user) || hasCachedSession || !!currentAuthUser;
 
-        if (!isGuest && (isNative || (isMobileScreen && isHomePage))) {
-          if (!isLoggedIn) {
-            window.__mgRedirecting = true;
-            window.location.replace('welcome.html');
-            return;
-          }
-        } else {
-          const hasProtectedHash = window.location.hash && 
-                                   window.location.hash !== '#' && 
-                                   window.location.hash !== '#home';
-          const isDirectProtectedLink = !isHomePage || hasProtectedHash;
-
-          if (!isLoggedIn && isDirectProtectedLink && !isGuest) {
-            window.__mgRedirecting = true;
-            const redirectTarget = encodeURIComponent(window.location.pathname + window.location.search + (window.location.hash || ''));
-            window.location.replace('login.html?redirect=' + redirectTarget);
-            return;
-          }
+        if (isNative && !isGuest && isHomePage && !isLoggedIn) {
+          window.__mgRedirecting = true;
+          window.location.replace('welcome.html');
+          return;
         }
 
         // Access allowed -> dismiss preloader
@@ -1480,9 +1515,8 @@
                   navigator.serviceWorker.ready.then(reg => {
                     reg.showNotification('أهلاً بك في منصة MG Coptic! 🎉', {
                       body: `مرحباً بك يا ${studentName}! يسعدنا انضمامك لرحلة إتقان اللغة القبطية.`,
-                      icon: logoUrl,
+                      icon: iconUrl,
                       badge: iconUrl,
-                      image: logoUrl,
                       data: { deep_link: window.location.origin + '/learn.html' }
                     });
                   }).catch(() => {});

@@ -774,7 +774,7 @@
             }
           }
           if (game.getLessonProgress) {
-            const freshProg = await game.getLessonProgress(uid);
+            const freshProg = await game.getLessonProgress(uid, true);
             if (freshProg) {
               activeLessonProgress = freshProg;
               changed = true;

@@ -3426,24 +3426,25 @@ async function resetFullAccount(userId, userName) {
   });
 
   try {
-    // 1) حذف جميع سجلات تقدم الدروس لهذا الطالب نهائياً من قاعدة البيانات
-    const delRes = await sb.from('user_lesson_progress').delete().eq('user_id', userId);
-    if (delRes.error) {
-      console.warn('user_lesson_progress delete error:', delRes.error);
+    // 1) حذف جميع سجلات تقدم الدروس والتحديات والكتابة وتصفير التقدم عبر دالة السحابة المؤمنة (SECURITY DEFINER)
+    const { data: rpcData, error: rpcErr } = await sb.rpc('admin_reset_full_account', { p_user_id: userId });
+    if (rpcErr) {
+      console.warn('admin_reset_full_account RPC error, trying fallback:', rpcErr);
+      await sb.from('user_lesson_progress').delete().eq('user_id', userId);
+      await sb.from('user_challenge_progress').delete().eq('user_id', userId);
+      await sb.from('user_writing_progress').delete().eq('user_id', userId);
+      const todayStrFallback = new Date().toISOString().split('T')[0];
+      await sb.from('user_progress').upsert({
+        user_id: userId,
+        points: 0,
+        hearts: 5,
+        streak_days: 1,
+        claimed_chests: [],
+        last_active_date: todayStrFallback
+      });
     }
 
-    // 2) تصفير بيانات التقدم في user_progress
     const todayStr = new Date().toISOString().split('T')[0];
-    const { error: progErr } = await sb.from('user_progress').upsert({
-      user_id: userId,
-      points: 0,
-      hearts: 5,
-      streak_days: 1,
-      claimed_chests: [],
-      last_active_date: todayStr
-    });
-
-    if (progErr) throw progErr;
 
     // 3) بث التحديث ومسح الكاش المحلي إن وجد
     try {

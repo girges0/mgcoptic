@@ -15,9 +15,9 @@
         }
         if (isGuest) return;
 
-        var isMobile = (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+        // فقط لتطبيق الموبايل المجمّع كأبليكيشن أصلي (Capacitor Native App) - متصفحات الويب لا تُحوّل أبداً إلى welcome.html
         var isApp = typeof window.Capacitor !== 'undefined' || window.location.protocol === 'capacitor:';
-        if (isMobile || isApp) {
+        if (isApp) {
           var token = localStorage.getItem('mg_coptic_student_auth_token');
           var user = localStorage.getItem('mg_coptic_user');
           var hasAuth = false;
@@ -30,6 +30,24 @@
         }
       } catch (e) {}
     })();
+
+    // فاحص مصادقة فوري ومتزامن لمنع إغلاق الشاشات أو طلب تسجيل الدخول عند الدخول على الموقع
+    window.isUserAuthenticated = function () {
+      if (window.currentAuthUser) return true;
+      if (window.currentAuthSession && window.currentAuthSession.user) return true;
+      try {
+        var raw = localStorage.getItem('mg_coptic_user');
+        if (raw && raw.indexOf('"id"') !== -1) return true;
+        var token = localStorage.getItem('mg_coptic_student_auth_token');
+        if (token && token.trim().length > 15) return true;
+        var sbKey = Object.keys(localStorage).find(function(k) { return k.indexOf('-auth-token') !== -1; });
+        if (sbKey) {
+          var p = JSON.parse(localStorage.getItem(sbKey));
+          if (p && (p.access_token || p.user)) return true;
+        }
+      } catch (_) {}
+      return false;
+    };
   </script>
 
   <title>MG COPTIC – تعلم اللغة القبطية أونلاين </title>
@@ -7411,7 +7429,7 @@
 
       // حماية الأقسام غير الرئيسية في نسخة الويب
       if (tabName !== 'home') {
-        const isAuthed = !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
+        const isAuthed = typeof window.isUserAuthenticated === 'function' ? window.isUserAuthenticated() : !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
         if (!isAuthed) {
           if (typeof window.requireAuthOrPrompt === 'function') {
             window.requireAuthOrPrompt(() => switchTab(tabName, updateUrl));
@@ -7962,7 +7980,7 @@
     document.getElementById('quiz-new-btn').addEventListener('click', showQuizSetup);
 
     function startQuiz() {
-      const isAuthed = !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
+      const isAuthed = typeof window.isUserAuthenticated === 'function' ? window.isUserAuthenticated() : !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
       if (!isAuthed) {
         if (typeof window.requireAuthOrPrompt === 'function') {
           window.requireAuthOrPrompt(() => startQuiz());
@@ -8395,7 +8413,12 @@
 
     /* ============ USER PROFILE & REAL SUPABASE AUTH / LEADERBOARD LOGIC ============ */
     // إدارة المصادقة وتسجيل الدخول والحارس تتم مركزياً عبر js/services/auth-service.js
-    var currentAuthUser = window.currentAuthUser || null;
+    var currentAuthUser = window.currentAuthUser || (function () {
+      try {
+        var raw = localStorage.getItem('mg_coptic_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    })() || null;
     var currentAuthSession = window.currentAuthSession || null;
     var currentAuthMode = 'signin';
 
@@ -8431,10 +8454,40 @@
         // تنظيف أي جلسة أدمن قديمة تسربت سابقاً بالمفتاح العام القديم
         localStorage.removeItem('sb-kdoanxzpfiscprjjzzic-auth-token');
 
-        const { data: { session } } = await sb.auth.getSession();
+        let session = null;
+        try {
+          const res = await sb.auth.getSession();
+          session = res?.data?.session;
+        } catch (e) {
+          console.warn('initUserSession getSession error:', e);
+        }
+
+        // محاولة تجديد الجلسة تلقائياً إذا كانت منتهية الصلاحية
+        if (!session) {
+          try {
+            const storedSbKey = Object.keys(localStorage).find(k => k.includes('-auth-token'));
+            if (storedSbKey) {
+              const parsedSb = JSON.parse(localStorage.getItem(storedSbKey));
+              if (parsedSb?.refresh_token) {
+                const refreshed = await sb.auth.refreshSession({ refresh_token: parsedSb.refresh_token });
+                if (refreshed?.data?.session) {
+                  session = refreshed.data.session;
+                }
+              }
+            }
+          } catch (refErr) {
+            console.warn('initUserSession refresh error:', refErr);
+          }
+        }
+
         if (session && session.user) {
           currentAuthSession = session;
-          const { data: profile } = await sb.from('users').select('*').eq('id', session.user.id).single();
+          let profile = null;
+          try {
+            const { data } = await sb.from('users').select('*').eq('id', session.user.id).single();
+            profile = data;
+          } catch (_) {}
+
           currentAuthUser = {
             id: session.user.id,
             email: session.user.email,
@@ -8443,29 +8496,34 @@
             role: (profile && profile.role) ? profile.role : 'student'
           };
           localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+          window.currentAuthUser = currentAuthUser;
+          window.currentAuthSession = currentAuthSession;
 
           // جلب التقدم الحقيقي من Supabase
-          const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
-          if (prog) {
-            const freshProg = {
-              user_id: session.user.id,
-              points: prog.points ?? 0,
-              total_points: prog.points ?? 0,
-              streak_days: prog.streak_days || 1,
-              hearts: prog.hearts ?? 5,
-              claimed_chests: prog.claimed_chests || []
-            };
-            localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
-            localStorage.setItem(`mg_coptic_progress_${session.user.id}`, JSON.stringify(freshProg));
-            if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
-              window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
-            }
-          }
-
-          // ترحيل تقدم الزائر السابق لحساب المستخدم الجديد إن وجد ومزامنة الدروس سحابياً
           try {
+            const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
+            if (prog) {
+              const freshProg = {
+                user_id: session.user.id,
+                points: prog.points ?? 0,
+                total_points: prog.points ?? 0,
+                streak_days: prog.streak_days || 1,
+                hearts: prog.hearts ?? 5,
+                claimed_chests: prog.claimed_chests || []
+              };
+              localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
+              localStorage.setItem(`mg_coptic_progress_${session.user.id}`, JSON.stringify(freshProg));
+              if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
+                window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
+              }
+            }
+          } catch (_) {}
+
+          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد، أو مسح الكاش إن كان الحساب مصفراً
+          try {
+            const guestMigrated = localStorage.getItem('mg_coptic_guest_migrated');
             const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
-            if (guestLP) {
+            if (guestLP && !guestMigrated && prog && (prog.points || 0) > 0) {
               const userKey = `mg_coptic_lesson_progress_${session.user.id}`;
               const userExisting = localStorage.getItem(userKey);
               let merged = userExisting ? JSON.parse(userExisting) : {};
@@ -8476,6 +8534,12 @@
                 }
               });
               localStorage.setItem(userKey, JSON.stringify(merged));
+              localStorage.setItem('mg_coptic_guest_migrated', 'true');
+              localStorage.removeItem('mg_coptic_lesson_progress');
+            } else if (prog && (prog.points === 0 || !prog.points)) {
+              // إذا كان الحساب مصفراً (0 XP)، نمسح أي كاش قديم للدروس فورياً
+              localStorage.removeItem('mg_coptic_lesson_progress');
+              localStorage.removeItem(`mg_coptic_lesson_progress_${session.user.id}`);
             }
           } catch (_) {}
 
@@ -8486,20 +8550,28 @@
             }).catch(() => {});
           }
         } else {
+          // لم نتمكن من الوصول لشبكة Supabase لكن لدينا مستخدم مخزن محلياً: نحتفظ به ولا نسجل خروجه!
           var rawCachedUser = localStorage.getItem('mg_coptic_user');
-          var rawToken = localStorage.getItem('mg_coptic_student_auth_token');
-          if (rawCachedUser && rawToken) {
-            try { currentAuthUser = JSON.parse(rawCachedUser); } catch (_) {}
+          if (rawCachedUser) {
+            try {
+              currentAuthUser = JSON.parse(rawCachedUser);
+              window.currentAuthUser = currentAuthUser;
+            } catch (_) {}
           } else {
             currentAuthUser = null;
             currentAuthSession = null;
+            window.currentAuthUser = null;
+            window.currentAuthSession = null;
           }
         }
       } catch (err) {
         console.warn('initUserSession error:', err);
         var rawCachedUser = localStorage.getItem('mg_coptic_user');
         if (rawCachedUser) {
-          try { currentAuthUser = JSON.parse(rawCachedUser); } catch (_) {}
+          try {
+            currentAuthUser = JSON.parse(rawCachedUser);
+            window.currentAuthUser = currentAuthUser;
+          } catch (_) {}
         }
       }
 
@@ -8663,8 +8735,8 @@
         const userId = user ? user.id : null;
 
         const curriculum = await game.getCurriculum();
-        const progressMap = await game.getLessonProgress(userId);
         const userProg = (await game.getProgress(userId)) || getUserProgressData();
+        const progressMap = await game.getLessonProgress(userId, (userProg?.points || 0) === 0);
 
         const xp = userProg.points ?? userProg.total_points ?? 0;
         const streak = userProg.streak_days ?? 1;
@@ -10344,7 +10416,7 @@
             }
           }
           if (game.getLessonProgress) {
-            const freshProg = await game.getLessonProgress(uid);
+            const freshProg = await game.getLessonProgress(uid, true);
             if (freshProg) {
               activeLessonProgress = freshProg;
               changed = true;
@@ -10551,7 +10623,7 @@
       });
 
       function startLessonRunner(lesson) {
-        const isAuthed = !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
+        const isAuthed = typeof window.isUserAuthenticated === 'function' ? window.isUserAuthenticated() : !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
         if (!isAuthed) {
           if (typeof window.requireAuthOrPrompt === 'function') {
             window.requireAuthOrPrompt(() => startLessonRunner(lesson));
@@ -10586,7 +10658,7 @@
       }
 
       window.startWritingPractice = async function(exerciseId = null) {
-        const isAuthed = !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
+        const isAuthed = typeof window.isUserAuthenticated === 'function' ? window.isUserAuthenticated() : !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
         if (!isAuthed) {
           if (typeof window.requireAuthOrPrompt === 'function') {
             window.requireAuthOrPrompt(() => window.startWritingPractice(exerciseId));

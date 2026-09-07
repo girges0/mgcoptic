@@ -6,12 +6,23 @@
   <title>MG COPTIC — مسار التعلم</title>
   <script>
     (function () {
+      var isApp = typeof window.Capacitor !== 'undefined' || window.location.protocol === 'capacitor:';
       var token = localStorage.getItem('mg_coptic_student_auth_token');
       var user = localStorage.getItem('mg_coptic_user');
       var hasAuth = false;
       if (token && token.trim().length > 15) hasAuth = true;
       if (user && user.indexOf('"id"') !== -1) hasAuth = true;
       if (!hasAuth) {
+        try {
+          var sbKey = Object.keys(localStorage).find(function (k) { return k.indexOf('-auth-token') !== -1; });
+          if (sbKey) {
+            var p = JSON.parse(localStorage.getItem(sbKey));
+            if (p && (p.access_token || p.user)) hasAuth = true;
+          }
+        } catch (_) {}
+      }
+
+      if (!hasAuth && isApp) {
         window.location.replace('welcome.html');
       } else {
         window.location.replace('index.html#learn' + (window.location.search || ''));
