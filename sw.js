@@ -163,7 +163,7 @@ self.addEventListener('push', (event) => {
   const fullUrl = new URL(rawDeepLink, baseUrl).href;
 
   // دعم لوجو المنصة الرسمي الكامل والأيقونة والشعار المفرغ
-  const iconUrl = data.icon || data.notification?.icon || data.data?.icon || (baseUrl + '/logo.png');
+  const iconUrl = data.icon || data.notification?.icon || data.data?.icon || (baseUrl + '/icon-512.png');
   const badgeUrl = data.badge || data.notification?.badge || data.data?.badge || (baseUrl + '/icon-192.png');
   const imageUrl = data.image || data.notification?.image || data.data?.image || null;
 

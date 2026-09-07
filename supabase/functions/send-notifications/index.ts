@@ -278,7 +278,7 @@ serve(async (req: Request) => {
                   sound: "default",
                   channel_id: "mg_coptic_notifications",
                   icon: "ic_stat_notification",
-                  color: "#6B1530",
+                  color: "#E2D5AE",
                   image: officialLogoUrl,
                   notification_priority: "PRIORITY_HIGH",
                   visibility: "PUBLIC",
@@ -293,7 +293,7 @@ serve(async (req: Request) => {
                 notification: {
                   title: event.title,
                   body: event.body,
-                  icon: officialLogoUrl,
+                  icon: officialIconUrl,
                   badge: officialIconUrl,
                   image: officialLogoUrl
                 },
