@@ -24,7 +24,18 @@
    */
   async function shouldShowPrompt() {
     try {
-      // إذا كانت نافذة تسجيل الدخول/إنشاء الحساب مفتوحة، نؤجل نافذة الإشعارات
+      // 1. إذا تم رفضها أو تأجيلها في هذه الجلسة الحالية، لا تظهر مطلقاً
+      if (sessionStorage.getItem('mg_notif_prompt_session_dismissed')) {
+        return false;
+      }
+
+      // 2. فحص المهلة الزمنية للتأجيل (تعمل على الأندرويد والويب معاً)
+      const dismissedAt = localStorage.getItem(PROMPT_DISMISS_KEY);
+      if (dismissedAt && (Date.now() - Number(dismissedAt) < DISMISS_COOLDOWN_MS)) {
+        return false;
+      }
+
+      // 3. إذا كانت نافذة تسجيل الدخول/إنشاء الحساب مفتوحة، نؤجل نافذة الإشعارات
       if (isAuthModalOpen()) {
         return 'postpone';
       }
@@ -33,7 +44,7 @@
                        typeof window.Capacitor.isNativePlatform === 'function' && 
                        window.Capacitor.isNativePlatform();
 
-      // 1. فحص بيئة الأندرويد الأصلية
+      // 4. فحص بيئة الأندرويد الأصلية
       if (isNative) {
         const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
         if (!PushNotifications) return false;
@@ -46,10 +57,14 @@
           }
           return false;
         }
+        if (permStatus?.receive === 'denied') {
+          // إذا كان المستخدم قد رفض الإشعارات من نظام الهاتف، لا نزعجه بالنافذة
+          return false;
+        }
         return true;
       }
 
-      // 2. فحص بيئة متصفح الويب و PWA
+      // 5. فحص بيئة متصفح الويب و PWA
       if ('Notification' in window) {
         const perm = Notification.permission;
         if (perm === 'granted') {
@@ -61,12 +76,6 @@
         }
         if (perm === 'denied') {
           // المتصفح حظر الإشعارات بشكل دائم
-          return false;
-        }
-
-        // حالة default: لم يُطلب الإذن بعد
-        const dismissedAt = localStorage.getItem(PROMPT_DISMISS_KEY);
-        if (dismissedAt && (Date.now() - Number(dismissedAt) < DISMISS_COOLDOWN_MS)) {
           return false;
         }
 
@@ -348,14 +357,26 @@
       }
 
       // في حال الرفض أو عدم التوافق
+      localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
+      sessionStorage.setItem('mg_notif_prompt_session_dismissed', 'true');
       closePrompt();
     });
 
-    // زر "لاحقاً"
+    // زر "سأقوم بالتفعيل لاحقاً"
     const laterBtn = overlay.querySelector('#mg-btn-dismiss-notif');
     laterBtn.addEventListener('click', () => {
       localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
+      sessionStorage.setItem('mg_notif_prompt_session_dismissed', 'true');
       closePrompt();
+    });
+
+    // إغلاق عند النقر خارج البطاقة
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        localStorage.setItem(PROMPT_DISMISS_KEY, Date.now().toString());
+        sessionStorage.setItem('mg_notif_prompt_session_dismissed', 'true');
+        closePrompt();
+      }
     });
 
     document.body.appendChild(overlay);
