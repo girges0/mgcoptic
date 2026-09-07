@@ -1150,7 +1150,7 @@
 <div id="toast"></div>
 
 <!-- ============ MODAL: STUDENT FULL DETAILS & CONTROLS ============ -->
-<div class="curriculum-modal-overlay" id="modal-student-details" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:10050; align-items:center; justify-content:center;">
+<div class="curriculum-modal-overlay" id="modal-student-details" onclick="if(event.target===this)closeStudentModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:10050; align-items:center; justify-content:center;">
   <div class="curriculum-modal-card" style="max-width:760px; width:95%; max-height:90vh; display:flex; flex-direction:column; background:#FFFDF9; border-radius:18px; border:2px solid #D4AF37; box-shadow:0 25px 65px rgba(0,0,0,0.45); overflow:hidden;">
     <div class="curriculum-modal-header" style="background:#6B1530; color:#FFF; padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -1341,10 +1341,6 @@
           </button>
         </div>
       </div>
-    </div>
-
-    <div class="curriculum-modal-footer" style="padding:14px 24px; border-top:1px solid #E7DCC8; display:flex; justify-content:flex-end;">
-      <button type="button" class="curriculum-btn curriculum-btn-secondary" onclick="closeStudentModal()">إغلاق</button>
     </div>
   </div>
 </div>
