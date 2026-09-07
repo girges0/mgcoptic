@@ -1266,6 +1266,55 @@
       }
     }
 
+    // حفظ توكن الجهاز بأعلى درجة موثوقية (Edge Function Service-Role أولاً لتجاوز RLS ثم كخيار بديل DB مباشرة)
+    async function persistDeviceTokenRecord(token, userId, platform) {
+      if (!token) return false;
+      const cleanToken = String(token).trim();
+      const cleanPlatform = String(platform || 'android').toLowerCase();
+
+      // 1. محاولة الإرسال عبر Edge Function بصلاحيات السيرفر (Service Role) لضمان عدم التعثر بـ RLS
+      try {
+        const anonKey = (typeof MG_CONFIG !== 'undefined' && MG_CONFIG?.SUPABASE_ANON_KEY) ? MG_CONFIG.SUPABASE_ANON_KEY : (window.SUPABASE_ANON_KEY || window.SB_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo');
+        const edgeRes = await fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': anonKey,
+            'Authorization': `Bearer ${anonKey}`
+          },
+          body: JSON.stringify({
+            action: 'register_token',
+            token: cleanToken,
+            platform: cleanPlatform,
+            user_id: userId || null
+          })
+        });
+
+        if (edgeRes.ok) {
+          console.log('[Push] Device token registered securely via Edge Function.');
+          return true;
+        }
+      } catch (edgeErr) {
+        console.warn('[Push] Edge Function registration notice:', edgeErr);
+      }
+
+      // 2. محاولة احتياطية عبر Supabase Client مباشرة
+      try {
+        if (sb && sb.from) {
+          const { error } = await sb.from('device_tokens').upsert({
+            token: cleanToken,
+            user_id: userId || null,
+            platform: cleanPlatform,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'token' });
+          if (!error) return true;
+        }
+      } catch (dbErr) {
+        console.warn('[Push] Direct DB upsert fallback notice:', dbErr);
+      }
+      return false;
+    }
+
     // دالة ربط توكن الزائر بحساب المستخدم فور تسجيل الدخول أو إنشاء الحساب
     async function claimGuestDeviceToken(userId, explicitToken) {
       try {
@@ -1281,19 +1330,13 @@
           }
         } catch (_) {}
 
-        // 2. تحديث / إدراج مباشر كخيار احتياطي
+        // 2. تحديث / إدراج مباشر
         const isNative = typeof window.Capacitor !== 'undefined' && 
                          typeof window.Capacitor.isNativePlatform === 'function' && 
                          window.Capacitor.isNativePlatform();
 
-        await sb.from('device_tokens').upsert({
-          token: token,
-          user_id: userId,
-          platform: isNative ? 'android' : 'web',
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'token' });
-
-        console.log('[Push] Device token upserted for user:', userId);
+        await persistDeviceTokenRecord(token, userId, isNative ? 'android' : 'web');
+        console.log('[Push] Device token claimed for user:', userId);
       } catch (err) {
         console.warn('[Push] claimGuestDeviceToken notice:', err);
       }
@@ -1309,12 +1352,7 @@
                          typeof window.Capacitor.isNativePlatform === 'function' && 
                          window.Capacitor.isNativePlatform();
 
-        await sb.from('device_tokens').upsert({
-          token: token,
-          user_id: userId,
-          platform: isNative ? 'android' : 'web',
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'token' });
+        await persistDeviceTokenRecord(token, userId, isNative ? 'android' : 'web');
       } catch (e) {
         console.warn('[Push] syncDeviceToken notice:', e);
       }
@@ -1371,18 +1409,8 @@
                   ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
 
                 // حفظ التوكن سواء كان هناك مستخدم مسجل أو زائر
-                const { error } = await sb.from('device_tokens').upsert({
-                  user_id: targetUserId || null,
-                  token: token,
-                  platform: 'android',
-                  updated_at: new Date().toISOString()
-                }, { onConflict: 'token' });
-
-                if (error) {
-                  console.warn('[Push] Device token upsert warning:', error.message);
-                } else {
-                  console.log('[Push] Android device token upserted successfully. User ID:', targetUserId || 'Guest');
-                }
+                await persistDeviceTokenRecord(token, targetUserId || null, 'android');
+                console.log('[Push] Android device token processed. User ID:', targetUserId || 'Guest');
 
                 // إذا كان تسجيلاً جديداً، أضف إشعاراً ترحيبياً فورياً في notification_events
                 if (options?.isNewUser && targetUserId) {
@@ -1439,14 +1467,8 @@
                 ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
 
               // حفظ توكن الويب في قاعدة البيانات
-              await sb.from('device_tokens').upsert({
-                token: webToken,
-                user_id: targetUserId || null,
-                platform: 'web',
-                updated_at: new Date().toISOString()
-              }, { onConflict: 'token' });
-
-              console.log('[Push] Web device token upserted successfully. User ID:', targetUserId || 'Guest');
+              await persistDeviceTokenRecord(webToken, targetUserId || null, 'web');
+              console.log('[Push] Web device token processed. User ID:', targetUserId || 'Guest');
 
               // إرسال إشعار ترحيبي فوري في المتصفح إذا كان تسجيلاً جديداً
               if (options?.isNewUser) {

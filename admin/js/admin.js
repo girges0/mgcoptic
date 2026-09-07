@@ -3938,7 +3938,13 @@ async function loadNotificationsAdmin() {
           <td>${ev.deep_link ? `<code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem; word-break:break-all;">${escapeHtml(ev.deep_link)}</code>` : '<span style="color:#A8A29E; font-size:0.8rem;">-</span>'}</td>
           <td>${statusBadge}</td>
           <td style="font-size:0.8rem; color:#746B6F; white-space:nowrap;">${dateStr}</td>
-          <td style="text-align:center;">
+          <td style="text-align:center; white-space:nowrap;">
+            <button type="button" class="btn secondary" onclick="resendNotificationEvent('${escapeHtml(ev.id)}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#FEF0C7; border:1px solid #FEDF89; color:#B54708; cursor:pointer; margin-left:4px;" title="إعادة إرسال هذا الإشعار الآن">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+            <button type="button" class="btn secondary" onclick="fillNotificationForm('${escapeHtml(ev.title || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.body || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.deep_link || '').replace(/'/g, "\\'")}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#E0F2FE; border:1px solid #BAE6FD; color:#0284C7; cursor:pointer; margin-left:4px;" title="نسخ إلى نموذج الإرسال">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
             <button type="button" class="btn danger" onclick="deleteNotificationEvent('${escapeHtml(ev.id)}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#FEE4E2; border:1px solid #FECDCA; color:#D92D20; cursor:pointer;" title="حذف هذا الإشعار من السجل">
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
             </button>
@@ -3958,6 +3964,126 @@ async function loadNotificationsAdmin() {
   }
 }
 window.loadNotificationsAdmin = loadNotificationsAdmin;
+
+function fillNotificationForm(title, body, link) {
+  const titleInput = document.getElementById('notif-input-title');
+  const bodyInput = document.getElementById('notif-input-body');
+  const linkInput = document.getElementById('notif-input-link');
+  if (titleInput) titleInput.value = title || '';
+  if (bodyInput) bodyInput.value = body || '';
+  if (linkInput) linkInput.value = link || '';
+  if (titleInput) {
+    titleInput.focus();
+    titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  if (typeof toast === 'function') toast('تم نسخ بيانات الإشعار إلى النموذج أعلاه');
+}
+window.fillNotificationForm = fillNotificationForm;
+
+async function resendNotificationEvent(eventId) {
+  if (!eventId) return;
+
+  if (window.currentAdminRole !== 'super_admin') {
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'غير مصرح',
+        text: 'إعادة إرسال الإشعارات متاح فقط لحسابات Super Admin',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('إعادة إرسال الإشعارات متاح فقط لحسابات Super Admin');
+    }
+    return;
+  }
+
+  try {
+    const { data: originalEvent, error: fetchErr } = await sb
+      .from('notification_events')
+      .select('*')
+      .eq('id', eventId)
+      .single();
+
+    if (fetchErr || !originalEvent) {
+      throw new Error(fetchErr ? fetchErr.message : 'لم يتم العثور على الإشعار في السجل');
+    }
+
+    let confirmed = false;
+    if (typeof Swal !== 'undefined') {
+      const res = await Swal.fire({
+        title: 'إعادة إرسال الإشعار',
+        html: `هل تريد بالتأكيد إعادة بث هذا الإشعار الآن؟<br><br><b>«${escapeHtml(originalEvent.title || '')}»</b>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'نعم، أعد الإرسال فوراً',
+        cancelButtonText: 'إلغاء',
+        confirmButtonColor: '#6B1530',
+        cancelButtonColor: '#746B6F'
+      });
+      confirmed = res.isConfirmed;
+    } else {
+      confirmed = confirm(`هل تريد إعادة إرسال الإشعار: "${originalEvent.title}"؟`);
+    }
+
+    if (!confirmed) return;
+
+    // إدراج سجل جديد بحالة pending في جدول الإشعارات
+    const { data: newEvent, error: insertErr } = await sb
+      .from('notification_events')
+      .insert({
+        event_type: originalEvent.event_type || 'admin_broadcast',
+        target_user_id: originalEvent.target_user_id || null,
+        title: originalEvent.title,
+        body: originalEvent.body,
+        deep_link: originalEvent.deep_link,
+        status: 'pending'
+      })
+      .select()
+      .single();
+
+    if (insertErr) throw insertErr;
+
+    // استدعاء دالة الإرسال الفوري Edge Function
+    const anonKey = window.SUPABASE_ANON_KEY || window.SB_ANON_KEY || (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '');
+    fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
+      },
+      body: JSON.stringify({ action: 'send', event_id: newEvent?.id || eventId })
+    }).catch(e => console.warn('[Resend Notif Fetch]', e));
+
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'success',
+        title: 'تمت إعادة الإرسال',
+        text: 'تم وضع الإشعار في طابور الإرسال وبثه لكافة الأجهزة والطلاب فوراً.',
+        confirmButtonColor: '#6B1530',
+        timer: 2200
+      });
+    } else if (typeof toast === 'function') {
+      toast('تمت إعادة إرسال الإشعار بنجاح');
+    }
+
+    loadNotificationsAdmin();
+  } catch (err) {
+    console.error('[Admin Notif] Resend error:', err);
+    if (typeof Swal !== 'undefined') {
+      Swal.fire({
+        icon: 'error',
+        title: 'تعذر إعادة الإرسال',
+        text: 'حدث خطأ: ' + (err.message || String(err)),
+        confirmButtonColor: '#6B1530'
+      });
+    } else {
+      alert('خطأ: ' + (err.message || String(err)));
+    }
+  }
+}
+window.resendNotificationEvent = resendNotificationEvent;
 
 async function deleteNotificationEvent(eventId) {
   if (!eventId) return;

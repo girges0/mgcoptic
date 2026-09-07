@@ -391,13 +391,89 @@
     }
   });
 
+  /**
+   * الاستماع اللحظي لإشعارات السيرفر والإدارة (Realtime In-App Notifications)
+   */
+  function initRealtimeNotificationListener() {
+    const sb = window.sbClient || window.sb;
+    if (!sb || typeof sb.channel !== 'function') return;
+
+    try {
+      sb.channel('realtime-user-notifications')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notification_events'
+        }, (payload) => {
+          const ev = payload.new;
+          if (!ev) return;
+
+          const myId = window.currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
+          if (ev.target_user_id && ev.target_user_id !== myId) {
+            return;
+          }
+
+          // تشغيل صوت الإشعار الاحتفالي اللطيف
+          if (window.Sound && typeof window.Sound.playVictory === 'function') {
+            try { window.Sound.playVictory(); } catch (_) {}
+          }
+
+          // إظهار إشعار النظام إذا كان مسموحاً
+          if ('Notification' in window && Notification.permission === 'granted') {
+            try {
+              if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.ready.then(reg => {
+                  reg.showNotification(ev.title, {
+                    body: ev.body,
+                    icon: 'logo.png',
+                    badge: 'icon-192.png',
+                    data: { url: ev.deep_link || 'index.html' }
+                  });
+                });
+              } else {
+                new Notification(ev.title, { body: ev.body, icon: 'icon-192.png' });
+              }
+            } catch (_) {}
+          }
+
+          // عرض إشعار داخلي فوري راقٍ (In-App Banner)
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              title: ev.title,
+              text: ev.body,
+              imageUrl: 'logo.png',
+              imageWidth: 54,
+              imageHeight: 54,
+              imageAlt: 'MG Coptic',
+              confirmButtonText: ev.deep_link ? 'فتح الآن 🚀' : 'حسناً',
+              confirmButtonColor: '#6B1530',
+              showCancelButton: Boolean(ev.deep_link),
+              cancelButtonText: 'إغلاق',
+              cancelButtonColor: '#746B6F'
+            }).then(r => {
+              if (r.isConfirmed && ev.deep_link) {
+                window.location.href = ev.deep_link;
+              }
+            });
+          }
+        })
+        .subscribe();
+    } catch (err) {
+      console.warn('[Realtime Notif] Subscription notice:', err);
+    }
+  }
+
   // تصدير دالة الفحص العام
   window.checkAndShowNotificationPrompt = createAndShowPrompt;
 
   // التشغيل التلقائي عند اكتمال تحميل الصفحة
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNotificationPrompt);
+    document.addEventListener('DOMContentLoaded', () => {
+      initNotificationPrompt();
+      setTimeout(initRealtimeNotificationListener, 2000);
+    });
   } else {
     initNotificationPrompt();
+    setTimeout(initRealtimeNotificationListener, 2000);
   }
 })();

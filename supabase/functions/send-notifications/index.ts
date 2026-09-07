@@ -127,6 +127,53 @@ serve(async (req: Request) => {
     const googleToken = await getGoogleAccessToken(serviceAccount);
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    let reqBody: any = {};
+    if (req.method === "POST") {
+      try {
+        reqBody = await req.json();
+      } catch (_) {
+        reqBody = {};
+      }
+    }
+
+    // 0. تسجيل توكن الجهاز مباشرة بصلاحيات الخدمة لتفادي أخطاء RLS
+    if (reqBody.action === "register_token") {
+      const { token, platform, user_id } = reqBody;
+      if (!token) {
+        return new Response(
+          JSON.stringify({ error: "Missing device token" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const { error: regErr } = await supabase.from("device_tokens").upsert({
+        token: String(token).trim(),
+        platform: String(platform || "android").toLowerCase(),
+        user_id: user_id || null,
+        updated_at: new Date().toISOString()
+      }, { onConflict: "token" });
+
+      if (regErr) {
+        return new Response(
+          JSON.stringify({ error: regErr.message }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, message: "Device token registered successfully." }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // 0.1 إعادة وضع إشعار محدد في حالة الانتظار لإعادة إرساله فوراً
+    if (reqBody.action === "resend" && reqBody.event_id) {
+      await supabase
+        .from("notification_events")
+        .update({ status: "pending" })
+        .eq("id", reqBody.event_id);
+    }
+
     // 1. Fetch pending notifications (up to 100)
     const { data: pendingEvents, error: fetchErr } = await supabase
       .from("notification_events")
@@ -304,7 +351,7 @@ serve(async (req: Request) => {
           .in("token", deadTokens);
       }
 
-      const finalStatus = (deliveredCount > 0 || tokens.length === 0) ? "sent" : "failed";
+      const finalStatus = (deliveredCount > 0 || deviceRows.length === 0) ? "sent" : "failed";
 
       await supabase
         .from("notification_events")

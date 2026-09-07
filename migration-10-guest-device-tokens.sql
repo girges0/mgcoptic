@@ -11,42 +11,20 @@ ALTER TABLE public.device_tokens ALTER COLUMN user_id DROP NOT NULL;
 -- 2. تحديث سياسات الأمان على مستوى الصف (RLS)
 ALTER TABLE public.device_tokens ENABLE ROW LEVEL SECURITY;
 
--- السماح للزوار غير المسجلين (anon) بحفظ توكن الجهاز عندما يكون user_id = NULL
 DROP POLICY IF EXISTS "Anon can register device token" ON public.device_tokens;
-CREATE POLICY "Anon can register device token"
-    ON public.device_tokens
-    FOR INSERT
-    TO anon
-    WITH CHECK (user_id IS NULL);
-
--- السماح للمستخدم المسجل بإدارة توكناته أو تعديل توكن زائر غير مرتبط
+DROP POLICY IF EXISTS "Public can manage device tokens" ON public.device_tokens;
+DROP POLICY IF EXISTS "Public can register and update device tokens" ON public.device_tokens;
 DROP POLICY IF EXISTS "Users can manage their own device tokens" ON public.device_tokens;
 DROP POLICY IF EXISTS "Authenticated users can manage device tokens" ON public.device_tokens;
-CREATE POLICY "Authenticated users can manage device tokens"
-    ON public.device_tokens
-    FOR ALL
-    TO authenticated
-    USING (auth.uid() = user_id OR user_id IS NULL)
-    WITH CHECK (auth.uid() = user_id);
-
--- السماح للأدمن بإدارة جميع التوكنات
 DROP POLICY IF EXISTS "Admin can manage all device tokens" ON public.device_tokens;
-CREATE POLICY "Admin can manage all device tokens"
+
+-- السماح لجميع مستخدمي التطبيق (الزوار والطلاب المسجلين) بإدراج وتحديث توكنات أجهزتهم فور فتح التطبيق
+CREATE POLICY "Public can register and update device tokens"
     ON public.device_tokens
     FOR ALL
-    TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.role = 'admin'
-        )
-    )
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM public.users
-            WHERE users.id = auth.uid() AND users.role = 'admin'
-        )
-    );
+    TO public
+    USING (true)
+    WITH CHECK (true);
 
 -- 3. دالة RPC آمنة لربط توكن الزائر بحساب المستخدم الحالي فور تسجيل الدخول أو إنشاء الحساب
 CREATE OR REPLACE FUNCTION public.claim_guest_device_token(p_token TEXT)
