@@ -680,7 +680,18 @@ class SoundEffects {
   }
 
   playClick(){
-    // تم إلغاء صوت اللمس والضغط نهائياً
+    this._runAudio((ctx, now) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(700, now);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    });
   }
   _audioBufferCache = new Map();
   _currentSourceNode = null;
@@ -954,7 +965,22 @@ if (typeof window !== 'undefined') {
     if ('speechSynthesis' in window && window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
     }
-    // تم إلغاء صوت اللمس نهائياً
+    const now = Date.now();
+    if (now - _lastClickSoundTime < 75) return;
+    try {
+      const el = e.target && e.target.closest ? e.target.closest(_interactiveSelector) : null;
+      if (!el || el.disabled || el.classList.contains('disabled') || el.dataset.noSound || el.closest('.audio-icon-btn, .listen-pulse, [data-no-sound]')) {
+        return;
+      }
+
+      // إلغاء صوت اللمس فقط أثناء التنقل في الموقع (البار السفلي، التابات، الروابط، القوائم)
+      if (el.closest('.bottom-nav, .bottom-nav-item, .nav-btn, .tab-btn, .header-nav, .nav-item, .settings-card, a, [data-nav]')) {
+        return;
+      }
+
+      _lastClickSoundTime = now;
+      Sound.playClick();
+    } catch (_) {}
   };
 
   const _evtTypes = window.PointerEvent ? ['pointerdown'] : ['touchstart', 'mousedown'];
