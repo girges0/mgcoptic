@@ -1321,7 +1321,9 @@ class GamificationService {
             last_active_date: new Date().toISOString().split('T')[0],
             claimed_chests: []
           };
-          sbClient.from('user_progress').insert(initialProg).catch(()=>{});
+          try {
+            sbClient.from('user_progress').insert(initialProg).then(()=>{}, ()=>{});
+          } catch(_) {}
           progress = initialProg;
           this.saveProgressLocal(progress, uid, false);
         }

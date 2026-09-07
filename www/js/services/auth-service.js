@@ -475,7 +475,9 @@
 
           // مزامنة البيانات وتحديث كلمة المرور بالخلفية دون حجب أو تأخير النقل اللحظي
           if (targetUser) {
-            sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).catch(() => {});
+            try {
+              sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).then(() => {}, () => {});
+            } catch (_) {}
           }
 
           // نقل لحظي فوري دون أي شاشة أو تأخير زمني
@@ -501,7 +503,9 @@
             }
 
             // تحديث كلمة المرور في قاعدة البيانات في الخلفية دون تأخير عملية النقل
-            sb.from('users').update({ password: password }).eq('id', data.user.id).catch(() => {});
+            try {
+              sb.from('users').update({ password: password }).eq('id', data.user.id).then(() => {}, () => {});
+            } catch (_) {}
           }
 
           // نقل لحظي فوري دون أي شاشة أو تأخير زمني
