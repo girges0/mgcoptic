@@ -3248,6 +3248,8 @@ async function adjustUserXP(userId, currentPoints = 0) {
           localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
         } catch(e){}
 
+        broadcastAdminActionToClient(userId, 'xp', { points: val });
+
         return val;
       } catch (err) {
         if (msgEl) msgEl.style.display = 'none';
@@ -3345,6 +3347,8 @@ async function refillUserHearts(userId) {
     localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
   } catch(e){}
 
+  broadcastAdminActionToClient(userId, 'hearts', { hearts: 5 });
+
   // تحديث فوري ولحظي في الذاكرة
   const student = allLoadedStudents.find(s => s.id === userId);
   if (student) student.hearts = 5;
@@ -3424,6 +3428,8 @@ async function resetUserPoints(userId) {
     }
     localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
   } catch(e){}
+
+  broadcastAdminActionToClient(userId, 'xp', { points: 0 });
 
   // تحديث فوري ولحظي في الذاكرة
   const student = allLoadedStudents.find(s => s.id === userId);
@@ -3534,6 +3540,8 @@ async function resetFullAccount(userId, userName) {
       }
       localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
     } catch(e) {}
+
+    broadcastAdminActionToClient(userId, 'reset');
 
     // 4) تحديث الذاكرة الحية allLoadedStudents
     const student = allLoadedStudents.find(s => s.id === userId);
@@ -3671,6 +3679,35 @@ function handleStudentBanActionModal() {
 }
 window.handleStudentBanActionModal = handleStudentBanActionModal;
 
+function broadcastAdminActionToClient(userId, actionType, payload = {}) {
+  try {
+    if (window.sb && typeof window.sb.channel === 'function') {
+      const channelName = 'user-realtime-' + userId;
+      const liveCh = sb.channel(channelName);
+      liveCh.subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          liveCh.send({
+            type: 'broadcast',
+            event: 'admin_student_action',
+            payload: { userId, actionType, ...payload, timestamp: Date.now() }
+          }).then(() => {
+            setTimeout(() => { try { sb.removeChannel(liveCh); } catch (_) {} }, 1000);
+          }).catch(() => {});
+        }
+      });
+    }
+
+    if (typeof BroadcastChannel !== 'undefined') {
+      const bc = new BroadcastChannel('mg_coptic_gamification_sync');
+      bc.postMessage({ type: 'ADMIN_ACTION', userId, actionType, ...payload });
+      setTimeout(() => { try { bc.close(); } catch (_) {} }, 1000);
+    }
+  } catch (e) {
+    console.warn('broadcastAdminActionToClient error:', e);
+  }
+}
+window.broadcastAdminActionToClient = broadcastAdminActionToClient;
+
 async function promptBanStudentModal() {
   if (!activeSelectedStudent) return;
   const s = activeSelectedStudent;
@@ -3794,8 +3831,18 @@ async function promptBanStudentModal() {
     renderStudentsTable();
     viewStudentDetails(s.id);
 
+    // إرسال تنبيه لحظي فوري لجهاز/متصفح الطالب لحظر شاشته في نفس الثانية (0ms)
+    broadcastAdminActionToClient(s.id, 'ban', {
+      is_banned: true,
+      ban_reason: reason,
+      banned_until: bannedUntil,
+      banned_at: bannedAt,
+      full_name: s.full_name,
+      email: s.email
+    });
+
     Swal.close();
-    toast('تم حظر الحساب بنجاح وتم تسجيل السبب والمدة');
+    toast('تم حظر الحساب بنجاح وانعكس فوراً على شاشة الطالب');
   } catch (err) {
     Swal.close();
     console.error('Ban student error:', err);
@@ -3848,8 +3895,13 @@ async function promptUnbanStudentModal() {
     renderStudentsTable();
     viewStudentDetails(s.id);
 
+    // إرسال تنبيه لحظي فوري لجهاز/متصفح الطالب لفك الحظر عن شاشته في نفس الثانية (0ms)
+    broadcastAdminActionToClient(s.id, 'unban', {
+      is_banned: false
+    });
+
     Swal.close();
-    toast('تم فك الحظر عن الحساب واستعادة الوصول بنجاح');
+    toast('تم فك الحظر عن الحساب وانعكس فوراً على شاشة الطالب');
   } catch (err) {
     Swal.close();
     console.error('Unban student error:', err);

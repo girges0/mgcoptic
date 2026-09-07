@@ -720,6 +720,11 @@
       if (typeof renderRealLeaderboard === 'function') {
         try { renderRealLeaderboard(); } catch (e) { console.warn(e); }
       }
+
+      // تفعيل الاستماع اللحظي لتحديثات المشرف بالسحابة فورا (0ms) دون ريلود
+      if (currentAuthUser && currentAuthUser.id) {
+        initRealtimeAccountSync(currentAuthUser.id);
+      }
     }
 
     function getUserProfileData() {
@@ -1993,9 +1998,190 @@
       }
     }
 
+    /* ============ REALTIME ADMIN ACTIONS SYNC (INSTANT 0ms REFLECTION) ============ */
+    let userRealtimeChannel = null;
+    let localAdminSyncChannel = null;
+
+    function dismissBannedAccountScreen() {
+      const overlay = document.getElementById('mg-banned-account-overlay');
+      if (overlay) {
+        overlay.remove();
+        if (typeof bannedCountdownInterval !== 'undefined' && bannedCountdownInterval) {
+          clearInterval(bannedCountdownInterval);
+          bannedCountdownInterval = null;
+        }
+        if (currentAuthUser) currentAuthUser.is_banned = false;
+        try {
+          const cachedUser = localStorage.getItem('mg_coptic_user');
+          if (cachedUser) {
+            const parsed = JSON.parse(cachedUser);
+            parsed.is_banned = false;
+            parsed.ban_reason = null;
+            parsed.banned_until = null;
+            localStorage.setItem('mg_coptic_user', JSON.stringify(parsed));
+          }
+        } catch (_) {}
+
+        if (window.Swal) {
+          Swal.fire({
+            icon: 'success',
+            title: 'تم فك الحظر عن حسابك! 🎉',
+            text: 'أهلاً بك مجدداً، لقد قامت الإدارة برفع الحظر عن حسابك ويمكنك الآن متابعة رحلتك التعليمية فوراً.',
+            confirmButtonText: 'متابعة التعلم',
+            confirmButtonColor: '#10B981'
+          });
+        } else if (typeof mgAlert === 'function') {
+          mgAlert('تم فك الحظر عن حسابك', 'لقد قامت الإدارة برفع الحظر عن حسابك، يمكنك متابعة التعلم الآن!', 'success');
+        }
+      }
+    }
+
+    function handleAdminActionEvent(data) {
+      if (!data) return;
+      console.log('[Admin Action Event Received]:', data);
+
+      if (data.actionType === 'ban') {
+        showBannedAccountScreen({
+          full_name: data.full_name || (currentAuthUser ? currentAuthUser.full_name : 'طالب'),
+          email: data.email || (currentAuthUser ? currentAuthUser.email : ''),
+          ban_reason: data.ban_reason,
+          banned_until: data.banned_until,
+          banned_at: data.banned_at
+        });
+      } else if (data.actionType === 'unban') {
+        dismissBannedAccountScreen();
+      } else if (data.actionType === 'xp') {
+        const newPts = typeof data.points === 'number' ? data.points : 0;
+        let cached = getUserProgressData();
+        cached.points = newPts;
+        cached.total_points = newPts;
+        try {
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(cached));
+          if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(cached));
+        } catch (_) {}
+        if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
+        if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+        if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+      } else if (data.actionType === 'hearts') {
+        let cached = getUserProgressData();
+        cached.hearts = 5;
+        try {
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(cached));
+          if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(cached));
+        } catch (_) {}
+        if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
+      } else if (data.actionType === 'reset') {
+        if (currentAuthUser) {
+          localStorage.removeItem(`mg_coptic_lesson_progress_${currentAuthUser.id}`);
+        }
+        localStorage.removeItem('mg_coptic_lesson_progress');
+        let zeroProg = { points: 0, total_points: 0, hearts: 5, streak_days: 1 };
+        try {
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(zeroProg));
+          if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(zeroProg));
+        } catch (_) {}
+        if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(zeroProg);
+        if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+        if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+        if (typeof renderSkillMap === 'function') renderSkillMap();
+      }
+    }
+
+    function initRealtimeAccountSync(userId) {
+      if (!userId) return;
+
+      // 1. التزامن الفوري المحلي داخل نفس المتصفح
+      if (typeof BroadcastChannel !== 'undefined' && !localAdminSyncChannel) {
+        try {
+          localAdminSyncChannel = new BroadcastChannel('mg_coptic_gamification_sync');
+          localAdminSyncChannel.onmessage = (event) => {
+            const data = event.data;
+            if (!data) return;
+            if (data.type === 'ADMIN_ACTION' && (!data.userId || data.userId === userId)) {
+              handleAdminActionEvent(data);
+            }
+          };
+        } catch (_) {}
+      }
+
+      // 2. التزامن السحابي الفوري عبر Supabase Realtime
+      if (!window.sb || typeof window.sb.channel !== 'function') return;
+
+      if (userRealtimeChannel) {
+        try { window.sb.removeChannel(userRealtimeChannel); } catch (_) {}
+        userRealtimeChannel = null;
+      }
+
+      try {
+        const chName = 'user-realtime-' + userId;
+        userRealtimeChannel = sb.channel(chName)
+          // استماع لتحديثات جدول المستخدمين (حظر / فك حظر / بيانات)
+          .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'users', filter: `id=eq.${userId}` }, (payload) => {
+            const updated = payload.new;
+            if (!updated) return;
+            console.log('[Realtime] Profile updated from cloud:', updated);
+
+            if (updated.is_banned) {
+              const now = new Date();
+              if (updated.banned_until && new Date(updated.banned_until) <= now) {
+                sb.from('users').update({ is_banned: false, ban_reason: null, banned_until: null, banned_at: null }).eq('id', userId).then(() => {}, () => {});
+              } else {
+                showBannedAccountScreen(updated);
+              }
+            } else {
+              dismissBannedAccountScreen();
+            }
+
+            if (currentAuthUser) {
+              if (updated.full_name) currentAuthUser.full_name = updated.full_name;
+              if (updated.avatar_url) currentAuthUser.avatar_url = updated.avatar_url;
+              currentAuthUser.is_banned = updated.is_banned || false;
+              try { localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser)); } catch (_) {}
+              if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+            }
+          })
+          // استماع لتحديثات رصيد النقاط والقلوب والإنجازات (XP, Hearts, Streak)
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress', filter: `user_id=eq.${userId}` }, (payload) => {
+            const prog = payload.new;
+            if (!prog) return;
+            console.log('[Realtime] Progress updated from cloud:', prog);
+            const freshProg = {
+              user_id: userId,
+              points: prog.points ?? 0,
+              total_points: prog.points ?? 0,
+              streak_days: prog.streak_days || 1,
+              hearts: prog.hearts ?? 5,
+              claimed_chests: prog.claimed_chests || []
+            };
+            try {
+              localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
+              localStorage.setItem(`mg_coptic_progress_${userId}`, JSON.stringify(freshProg));
+            } catch (_) {}
+            if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(freshProg);
+            if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+            if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+          })
+          // استماع لبث رسائل المشرف الفورية (Broadcast Actions)
+          .on('broadcast', { event: 'admin_student_action' }, ({ payload }) => {
+            if (!payload || payload.userId !== userId) return;
+            handleAdminActionEvent(payload);
+          });
+
+        userRealtimeChannel.subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('[Realtime] Subscribed to account channel for user:', userId);
+          }
+        });
+      } catch (e) {
+        console.warn('initRealtimeAccountSync error:', e);
+      }
+    }
+
     // تصدير الدوال للاستخدام العام عبر الصفحات
     window.openWhatsAppSupport = openWhatsAppSupport;
     window.showBannedAccountScreen = showBannedAccountScreen;
+    window.dismissBannedAccountScreen = dismissBannedAccountScreen;
+    window.initRealtimeAccountSync = initRealtimeAccountSync;
     window.enforceAccessControl = enforceAccessControl;
     window.requireAuthOrPrompt = requireAuthOrPrompt;
     window.handleAuthSubmit = handleAuthSubmit;
