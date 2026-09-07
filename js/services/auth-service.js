@@ -1778,12 +1778,12 @@
             color: ${isPermanent ? '#FCA5A5' : '#FCD34D'};
             border: 1px solid ${isPermanent ? 'rgba(220, 38, 38, 0.35)' : 'rgba(217, 119, 6, 0.35)'};
           ">
-            <span>${isPermanent ? '⛔ حظر حساب نهائي' : '⏳ تعليق حساب مؤقت'}</span>
+            <span>${isPermanent ? '⛔ حظر حساب نهائي' : '⏳ حظر حساب مؤقت'}</span>
           </div>
 
           <!-- Header -->
           <h2 style="font-size: 1.45rem; font-weight: 800; color: #FFF; margin: 0 0 8px 0;">
-            ${isPermanent ? 'تم حظر حسابك نهائياً' : 'تم تعليق حسابك مؤقتاً'}
+            ${isPermanent ? 'تم حظر حسابك نهائياً' : 'تم حظر حسابك مؤقتاً'}
           </h2>
           <p style="font-size: 0.9rem; color: #D1C7BD; line-height: 1.55; margin: 0 0 18px 0;">
             نأسف لإبلاغك بأنه تم إيقاف صلاحية دخولك إلى المنصة بقرار من إدارة منصة MG Coptic.
@@ -1841,7 +1841,7 @@
               margin-bottom: 22px;
             ">
               <div style="font-size: 0.82rem; color: #FCD34D; font-weight: 700; margin-bottom: 10px;">
-                الوقت المتبقي لانتهاء فترة التعليق وفك الحظر تلقائياً:
+                الوقت المتبقي لانتهاء فترة الحظر وفك الحظر تلقائياً:
               </div>
               <div id="mg-ban-countdown-timer" style="
                 display: flex;
@@ -1852,7 +1852,7 @@
               ">
               </div>
               <div style="font-size: 0.78rem; color: #BFAEA1; margin-top: 10px;">
-                تاريخ انتهاء التعليق: <span style="color: #FFF; font-weight: 700;">${bannedUntilStr}</span>
+                تاريخ انتهاء الحظر: <span style="color: #FFF; font-weight: 700;">${bannedUntilStr}</span>
               </div>
             </div>
           ` : `
@@ -1937,7 +1937,7 @@
             if (container) {
               container.innerHTML = `
                 <div style="color: #34D399; font-weight: 800; font-size: 1rem; margin-bottom: 8px;">
-                  🎉 انتهت فترة التعليق! تم فك الحظر عن حسابك الآن.
+                  🎉 انتهت فترة الحظر! تم فك الحظر عن حسابك الآن.
                 </div>
                 <button onclick="window.location.reload()" style="padding: 8px 18px; border-radius: 8px; background: #10B981; color: #FFF; border: none; font-weight: 700; cursor: pointer;">
                   تحديث الصفحة والدخول
@@ -1987,7 +1987,7 @@
       const btnSupport = document.getElementById('btn-banned-support');
       if (btnSupport) {
         btnSupport.onclick = function () {
-          const msg = `مرحباً الدعم الفني لمنصة MG Coptic 👋\nأستفسر بخصوص تعليق حسابي في المنصة:\n• الاسم: ${fullName}\n• البريد الإلكتروني: ${email}\n• السبب الموضح: ${banReason}\n\nيرجى المساعدة في مراجعة الحساب. شكراً لكم.`;
+          const msg = `مرحباً الدعم الفني لمنصة MG Coptic 👋\nأستفسر بخصوص حظر حسابي في المنصة:\n• الاسم: ${fullName}\n• البريد الإلكتروني: ${email}\n• السبب الموضح: ${banReason}\n\nيرجى المساعدة في مراجعة الحساب. شكراً لكم.`;
           openWhatsAppSupport(msg);
         };
       }
