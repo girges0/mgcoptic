@@ -355,32 +355,28 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      // Check if already logged in -> redirect directly
+      try {
+        sessionStorage.removeItem('mg_coptic_guest_mode');
+        localStorage.removeItem('mg_coptic_guest_mode');
+      } catch (_) {}
+
+      // Check if already logged in with an active Supabase session
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect');
-        let hasSession = false;
-        if (window.sb && window.sb.auth) {
+        if (window.sb && window.sb.auth && !urlParams.has('force')) {
           const { data: { session } } = await sb.auth.getSession();
-          if (session && session.user) hasSession = true;
-        }
-        if (!hasSession) {
-          const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
-          const rawUser = localStorage.getItem('mg_coptic_user');
-          if ((rawToken && rawToken.length > 20) || (rawUser && rawUser.includes('"id"'))) {
-            hasSession = true;
+          if (session && session.user) {
+            const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
+              ? redirectUrl
+              : 'index.html';
+            try {
+              window.location.replace(target);
+            } catch (_) {
+              window.location.href = target;
+            }
+            return;
           }
-        }
-        if (hasSession) {
-          const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
-            ? redirectUrl
-            : 'index.html';
-          try {
-            window.location.replace(target);
-          } catch (_) {
-            window.location.href = target;
-          }
-          return;
         }
       } catch (err) {
         console.warn('Session check warning:', err);

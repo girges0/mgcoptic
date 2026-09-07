@@ -61,6 +61,10 @@
     }
 
     function handlePostAuthSuccess() {
+      try {
+        sessionStorage.removeItem('mg_coptic_guest_mode');
+        localStorage.removeItem('mg_coptic_guest_mode');
+      } catch (_) {}
       const currentPath = normalizePath(window.location.pathname);
       const isAuthPage = (
         currentPath === '/login' ||
