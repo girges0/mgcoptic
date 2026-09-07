@@ -107,58 +107,30 @@
       }
     }
 
-    async function handleForgotPassword(prefilledEmail) {
-      const emailInput = document.querySelector('[name="email"], #auth-email-input');
-      const defaultVal = prefilledEmail || (emailInput ? emailInput.value.trim() : '');
-
-      if (window.Swal) {
-        const { value: email } = await Swal.fire({
-          title: 'استعادة كلمة المرور',
-          text: 'أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور:',
-          input: 'email',
-          inputValue: defaultVal,
-          inputPlaceholder: 'name@example.com',
-          showCancelButton: true,
-          confirmButtonText: 'إرسال الرابط',
-          cancelButtonText: 'إلغاء',
-          customClass: {
-            popup: 'mg-swal-popup'
-          }
-        });
-
-        if (email) {
-          try {
-            const { error } = await sb.auth.resetPasswordForEmail(email.trim(), {
-              redirectTo: new URL('login.html', window.location.href).href
-            });
-            if (error) throw error;
-            Swal.fire({
-              icon: 'success',
-              title: 'تم الإرسال!',
-              text: 'تم إرسال تعليمات إعادة التعيين إلى بريدك الإلكتروني بنجاح.',
-              confirmButtonText: 'حسناً'
-            });
-          } catch (err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'تعذر الإرسال',
-              text: err.message || 'حدث خطأ أثناء محاولة إرسال الرابط.',
-              confirmButtonText: 'حسناً'
-            });
-          }
+    function openWhatsAppSupport(message) {
+      const defaultText = message || 'مرحباً، أود التواصل مع الدعم الفني لمنصة MG Coptic.';
+      const encoded = encodeURIComponent(defaultText);
+      const waUrl = `https://wa.me/ggirges?text=${encoded}`;
+      try {
+        const win = window.open(waUrl, '_blank');
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+          window.location.href = waUrl;
         }
-      } else {
-        const email = prompt('أدخل بريدك الإلكتروني لاستعادة كلمة المرور:', defaultVal);
-        if (email && email.trim()) {
-          try {
-            const { error } = await sb.auth.resetPasswordForEmail(email.trim());
-            if (error) alert('تعذر الإرسال: ' + error.message);
-            else alert('تم إرسال رابط استعادة كلمة المرور إلى بريدك!');
-          } catch (e) {
-            alert('حدث خطأ: ' + e.message);
-          }
-        }
+      } catch (_) {
+        window.location.href = waUrl;
       }
+    }
+
+    function handleForgotPassword(prefilledEmail) {
+      const emailInput = document.querySelector('[name="email"], #auth-email-input');
+      const defaultEmail = (prefilledEmail || (emailInput ? emailInput.value.trim() : '') || (currentAuthUser ? currentAuthUser.email : '')).trim();
+
+      let msg = 'مرحباً الدعم الفني لمنصة MG Coptic 👋\nلقد نسيت كلمة المرور الخاصة بحسابي وأحتاج إلى المساعدة في استعادة الحساب.';
+      if (defaultEmail) {
+        msg += `\n• البريد الإلكتروني المسجل: ${defaultEmail}`;
+      }
+
+      openWhatsAppSupport(msg);
     }
 
     // حقن أنماط مؤشر التحميل الخاصة بنماذج تسجيل الدخول وإنشاء الحساب
@@ -1903,8 +1875,8 @@
               width: 100%;
               padding: 12px 18px;
               border-radius: 12px;
-              border: 1px solid rgba(212, 175, 55, 0.5);
-              background: linear-gradient(135deg, #B8892E 0%, #94691B 100%);
+              border: 1px solid rgba(37, 211, 102, 0.5);
+              background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
               color: #FFF;
               font-weight: 800;
               font-size: 0.95rem;
@@ -1914,10 +1886,10 @@
               justify-content: center;
               gap: 8px;
               transition: all 0.2s;
-              box-shadow: 0 4px 14px rgba(184, 137, 46, 0.3);
+              box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
             ">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              <span>التواصل مع الإدارة / الدعم الفني</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c4.54 0 8.24 3.7 8.24 8.24 0 2.2-.86 4.28-2.42 5.84-1.56 1.56-3.64 2.42-5.84 2.42-1.44 0-2.86-.38-4.12-1.12l-.3-.18-3.12.82.83-3.04-.2-.31c-.81-1.3-1.24-2.82-1.24-4.43 0-4.54 3.7-8.24 8.24-8.24m4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.01-1.24-.74-.66-1.24-1.48-1.39-1.73-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.13-.56-1.34-.76-1.84-.2-.49-.4-.42-.56-.43h-.47c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.23.89 2.42 1.02 2.59.13.17 1.76 2.69 4.26 3.77.6.26 1.06.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.19-.48-.32z"/></svg>
+              <span>التواصل مع الدعم الفني (واتساب)</span>
             </button>
 
             <button id="btn-banned-signout" type="button" style="
@@ -2015,14 +1987,14 @@
       const btnSupport = document.getElementById('btn-banned-support');
       if (btnSupport) {
         btnSupport.onclick = function () {
-          const subject = encodeURIComponent('استفسار بخصوص تعليق حسابي في منصة MG Coptic');
-          const body = encodeURIComponent(`مرحباً إدارة منصة MG Coptic،\n\nأستفسر عن سبب تعليق حسابي:\nالاسم: ${fullName}\nالبريد: ${email}\nالسبب الموضح: ${banReason}\n\nشكراً لكم.`);
-          window.open(`mailto:support@mgcoptic.com?subject=${subject}&body=${body}`, '_blank');
+          const msg = `مرحباً الدعم الفني لمنصة MG Coptic 👋\nأستفسر بخصوص تعليق حسابي في المنصة:\n• الاسم: ${fullName}\n• البريد الإلكتروني: ${email}\n• السبب الموضح: ${banReason}\n\nيرجى المساعدة في مراجعة الحساب. شكراً لكم.`;
+          openWhatsAppSupport(msg);
         };
       }
     }
 
     // تصدير الدوال للاستخدام العام عبر الصفحات
+    window.openWhatsAppSupport = openWhatsAppSupport;
     window.showBannedAccountScreen = showBannedAccountScreen;
     window.enforceAccessControl = enforceAccessControl;
     window.requireAuthOrPrompt = requireAuthOrPrompt;
