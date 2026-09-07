@@ -3794,8 +3794,10 @@ async function promptBanStudentModal() {
     renderStudentsTable();
     viewStudentDetails(s.id);
 
+    Swal.close();
     toast('تم حظر الحساب بنجاح وتم تسجيل السبب والمدة');
   } catch (err) {
+    Swal.close();
     console.error('Ban student error:', err);
     toast('تعذر حظر الحساب: ' + err.message, true);
   }
@@ -3846,8 +3848,10 @@ async function promptUnbanStudentModal() {
     renderStudentsTable();
     viewStudentDetails(s.id);
 
+    Swal.close();
     toast('تم فك الحظر عن الحساب واستعادة الوصول بنجاح');
   } catch (err) {
+    Swal.close();
     console.error('Unban student error:', err);
     toast('تعذر فك الحظر: ' + err.message, true);
   }
