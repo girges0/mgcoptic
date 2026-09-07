@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v1.0.7';
+const CACHE_NAME = 'mgcoptic-v1.0.8';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -156,21 +156,30 @@ self.addEventListener('push', (event) => {
     }
   }
 
-  const title = data.title || data.notification?.title || 'MG COPTIC';
-  const body = data.body || data.notification?.body || '';
+  const title = data.title || data.notification?.title || data.data?.title || 'MG COPTIC';
+  const body = data.body || data.notification?.body || data.data?.body || '';
   const rawDeepLink = data.deep_link || data.data?.deep_link || data.link || '/';
   const baseUrl = self.location.origin;
   const fullUrl = new URL(rawDeepLink, baseUrl).href;
-  const iconUrl = new URL('/icon-192.png', baseUrl).href;
+
+  // دعم لوجو المنصة الرسمي الكامل والأيقونة والشعار المفرغ
+  const iconUrl = data.icon || data.notification?.icon || data.data?.icon || (baseUrl + '/logo.png');
+  const badgeUrl = data.badge || data.notification?.badge || data.data?.badge || (baseUrl + '/icon-192.png');
+  const imageUrl = data.image || data.notification?.image || data.data?.image || null;
 
   const options = {
     body: body,
     icon: iconUrl,
-    badge: iconUrl,
-    image: data.image || data.notification?.image || iconUrl,
-    vibrate: [100, 50, 100],
+    badge: badgeUrl,
+    tag: data.tag || 'mg_coptic_notification_' + Date.now(),
+    renotify: true,
+    vibrate: [150, 75, 150],
     data: { deep_link: fullUrl }
   };
+
+  if (imageUrl) {
+    options.image = imageUrl;
+  }
 
   event.waitUntil(self.registration.showNotification(title, options));
 });

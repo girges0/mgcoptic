@@ -287,9 +287,12 @@
       } else if ('Notification' in window) {
         let perm = await Notification.requestPermission();
         if (perm === 'granted') {
+          const logoUrl = new URL('logo.png', window.location.origin).href;
+          const iconUrl = new URL('icon-192.png', window.location.origin).href;
           new Notification(title, {
             body: body,
-            icon: '/icon-192.png'
+            icon: logoUrl,
+            badge: iconUrl
           });
           return { success: true, mode: 'web_notification' };
         } else {

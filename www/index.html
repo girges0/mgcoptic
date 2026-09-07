@@ -8,9 +8,10 @@
   <script id="__mgEarlyMobileCheck">
     (function () {
       try {
-        var isGuest = window.location.search.includes('guest=') || sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
+        var isGuest = window.location.search.includes('guest=') || localStorage.getItem('mg_coptic_guest_mode') === 'true' || sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
         if (window.location.search.includes('guest=')) {
-          sessionStorage.setItem('mg_coptic_guest_mode', 'true');
+          try { localStorage.setItem('mg_coptic_guest_mode', 'true'); } catch(_) {}
+          try { sessionStorage.setItem('mg_coptic_guest_mode', 'true'); } catch(_) {}
         }
         if (isGuest) return;
 
@@ -94,7 +95,7 @@
   <script src="js/config/supabase.js"></script>
   <script>window.__mgAuthCheckPending = true;</script>
   <script src="js/services/auth-service.js"></script>
-  <script src="gamification-service.js" defer></script>
+  <script src="gamification-service.js"></script>
   <script src="js/presence-tracker.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js" defer></script>
   <script src="js/writing-tracer.js?v=2.8" defer></script>
@@ -8443,6 +8444,30 @@
               window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
             }
           }
+
+          // ترحيل تقدم الزائر السابق لحساب المستخدم الجديد إن وجد ومزامنة الدروس سحابياً
+          try {
+            const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
+            if (guestLP) {
+              const userKey = `mg_coptic_lesson_progress_${session.user.id}`;
+              const userExisting = localStorage.getItem(userKey);
+              let merged = userExisting ? JSON.parse(userExisting) : {};
+              const parsedGuest = JSON.parse(guestLP);
+              Object.keys(parsedGuest).forEach(k => {
+                if (parsedGuest[k].status === 'completed' && (!merged[k] || merged[k].status !== 'completed')) {
+                  merged[k] = parsedGuest[k];
+                }
+              });
+              localStorage.setItem(userKey, JSON.stringify(merged));
+            }
+          } catch (_) {}
+
+          if (window.MGCopticGame && typeof window.MGCopticGame.getLessonProgress === 'function') {
+            window.MGCopticGame.getLessonProgress(session.user.id, true).then(() => {
+              if (typeof renderSkillMap === 'function') renderSkillMap();
+              if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+            }).catch(() => {});
+          }
         } else {
           var rawCachedUser = localStorage.getItem('mg_coptic_user');
           var rawToken = localStorage.getItem('mg_coptic_student_auth_token');
@@ -8451,7 +8476,6 @@
           } else {
             currentAuthUser = null;
             currentAuthSession = null;
-            localStorage.removeItem('mg_coptic_user');
           }
         }
       } catch (err) {
@@ -8472,11 +8496,6 @@
     function getUserProfileData() {
       if (currentAuthUser) return currentAuthUser;
       try {
-        const studentToken = localStorage.getItem('mg_coptic_student_auth_token');
-        if (!studentToken) {
-          localStorage.removeItem('mg_coptic_user');
-          return null;
-        }
         const raw = localStorage.getItem('mg_coptic_user');
         if (raw) return JSON.parse(raw);
       } catch (e) { }
@@ -9516,7 +9535,12 @@
         return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       }
 
-      const game = window.MGCopticGame || {};
+      const game = new Proxy({}, {
+        get: (target, prop) => {
+          if (prop === 'sound') return window.Sound || window.MGCopticGame?.sound;
+          return window.MGCopticGame ? window.MGCopticGame[prop] : target[prop];
+        }
+      });
 
       let activeCurriculum = null;
       let activeLessonProgress = {};
@@ -9653,7 +9677,9 @@
         }
 
         if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
-          const rawLP = localStorage.getItem('mg_coptic_lesson_progress');
+          const uid = getAuthUserId();
+          const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
+          const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
           if (rawLP) {
             try { activeLessonProgress = JSON.parse(rawLP); } catch (e) { }
           }
@@ -11659,8 +11685,9 @@
     </div>
   </div>
 
-  <!-- PWA Service Worker Registration -->
+  <!-- PWA Service Worker Registration & Notification Prompt -->
   <script src="js/pwa-register.js" defer></script>
+  <script src="js/notification-prompt.js" defer></script>
 </body>
 
 </html>

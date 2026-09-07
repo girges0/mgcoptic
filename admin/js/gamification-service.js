@@ -67,8 +67,6 @@ const DEFAULT_CURRICULUM = {
           title: 'الدرس 1: نطق الحروف ⲁ ⲃ ⲅ ⲇ ⲉ',
           order_index: 1,
           xp_reward: 20,
-          practice_xp: 20,
-          challenge_xp: 30,
           challenges: [
             {
               id: 101,
@@ -562,7 +560,9 @@ const DEFAULT_CURRICULUM = {
 class SoundEffects {
   constructor(){
     this.ctx = null;
+    this._unlocked = false;
   }
+
   _init(){
     if(!this.ctx){
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -574,109 +574,124 @@ class SoundEffects {
       this.ctx.resume().catch(()=>{});
     }
   }
+
   unlock(){
     try {
       this._init();
-      if(this.ctx && this.ctx.state === 'suspended'){
-        this.ctx.resume().catch(()=>{});
+      if(this.ctx){
+        if(this.ctx.state === 'suspended'){
+          this.ctx.resume().catch(()=>{});
+        }
+        if(!this._unlocked){
+          this._unlocked = true;
+          const buf = this.ctx.createBuffer(1, 1, 22050);
+          const src = this.ctx.createBufferSource();
+          src.buffer = buf;
+          src.connect(this.ctx.destination);
+          src.start(0);
+        }
       }
     } catch(e){}
   }
-  playCorrect(){
+
+  _runAudio(fn){
     try {
       this._init();
       if(!this.ctx) return;
-      const now = this.ctx.currentTime;
+      if(this.ctx.state === 'suspended'){
+        this.ctx.resume().then(() => {
+          try { fn(this.ctx, this.ctx.currentTime); } catch(_) {}
+        }).catch(() => {});
+      } else {
+        fn(this.ctx, this.ctx.currentTime);
+      }
+    } catch(e){}
+  }
+
+  playCorrect(){
+    this._runAudio((ctx, now) => {
       // نغمة نجاح ثنائية فائقة السرعة والمرح (F5 -> A5)
       [698.46, 880.00].forEach((freq, idx) => {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + idx * 0.07);
         gain.gain.setValueAtTime(0.2, now + idx * 0.07);
         gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.22);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(ctx.destination);
         osc.start(now + idx * 0.07);
         osc.stop(now + idx * 0.07 + 0.23);
       });
-    } catch(e){}
+    });
   }
+
   playWrong(){
-    try {
-      this._init();
-      if(!this.ctx) return;
-      const now = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
+    this._runAudio((ctx, now) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(240, now);
       osc.frequency.linearRampToValueAtTime(160, now + 0.2);
       gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.23);
-    } catch(e){}
+    });
   }
+
   playVictory(){
-    try {
-      this._init();
-      if(!this.ctx) return;
-      const now = this.ctx.currentTime;
+    this._runAudio((ctx, now) => {
       const notes = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.50];
       const times = [0, 0.1, 0.2, 0.32, 0.46, 0.65];
       const durs  = [0.09, 0.09, 0.09, 0.12, 0.16, 0.55];
       notes.forEach((freq, i) => {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + times[i]);
         gain.gain.setValueAtTime(0.18, now + times[i]);
         gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + durs[i]);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(ctx.destination);
         osc.start(now + times[i]);
         osc.stop(now + times[i] + durs[i]);
       });
-    } catch(e){}
+    });
   }
+
   playChestReward(){
-    try {
-      this._init();
-      if(!this.ctx) return;
-      const now = this.ctx.currentTime;
+    this._runAudio((ctx, now) => {
       [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, idx) => {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, now + idx * 0.08);
         gain.gain.setValueAtTime(0.2, now + idx * 0.08);
         gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
         osc.connect(gain);
-        gain.connect(this.ctx.destination);
+        gain.connect(ctx.destination);
         osc.start(now + idx * 0.08);
         osc.stop(now + idx * 0.08 + 0.3);
       });
-    } catch(e){}
+    });
   }
+
   playClick(){
-    try {
-      this._init();
-      if(!this.ctx) return;
-      const now = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
+    this._runAudio((ctx, now) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(700, now);
-      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.setValueAtTime(0.08, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.05);
-    } catch(e){}
+    });
   }
   _audioBufferCache = new Map();
   _currentSourceNode = null;
@@ -919,13 +934,51 @@ if (typeof window !== 'undefined') {
       try { window.speechSynthesis.getVoices(); } catch(e){}
     };
   }
-  ['click', 'touchstart', 'keydown', 'mousedown'].forEach(evt => {
-    window.addEventListener(evt, () => {
-      Sound.unlock();
-      if('speechSynthesis' in window && window.speechSynthesis.paused){
-        window.speechSynthesis.resume();
+  // تفعيل الصوت وفك قفل Web Audio API وتفعيل صوت النقر (Tactile Click) لجميع الأزرار التفاعلية
+  let _lastClickSoundTime = 0;
+  const _interactiveSelector = [
+    'button',
+    '.btn',
+    '.choice-btn',
+    '.option-card',
+    '.lesson-node-btn',
+    '.mystery-chest-btn',
+    '.nav-btn',
+    '.tab-btn',
+    '.coptic-swal-confirm',
+    '.coptic-swal-cancel',
+    'a.btn',
+    '.quiz-opt-btn',
+    '.user-chip',
+    '.word-tile',
+    '.coptic-key',
+    '.settings-card',
+    '.swal2-confirm',
+    '.swal2-cancel',
+    '.bottom-nav-item',
+    '.trophy-node-btn',
+    '[role="button"]'
+  ].join(', ');
+
+  const _handleGlobalInteraction = (e) => {
+    Sound.unlock();
+    if ('speechSynthesis' in window && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
+    const now = Date.now();
+    if (now - _lastClickSoundTime < 75) return;
+    try {
+      const el = e.target && e.target.closest ? e.target.closest(_interactiveSelector) : null;
+      if (el && !el.disabled && !el.classList.contains('disabled') && !el.dataset.noSound && !el.closest('.audio-icon-btn, .listen-pulse, [data-no-sound]')) {
+        _lastClickSoundTime = now;
+        Sound.playClick();
       }
-    }, { once: true, passive: true });
+    } catch (_) {}
+  };
+
+  const _evtTypes = window.PointerEvent ? ['pointerdown'] : ['touchstart', 'mousedown'];
+  _evtTypes.forEach(evt => {
+    window.addEventListener(evt, _handleGlobalInteraction, { passive: true, capture: true });
   });
 }
 
@@ -1254,7 +1307,7 @@ class GamificationService {
     return null;
   }
 
-  // تسجيل الخروج ومسح بيانات الجلسة السابقة
+  // تسجيل الخروج ومسح بيانات الجلسة السابقة مع الاحتفاظ بالتقدم المخزن
   async signOut(){
     if(sbClient){
       try {
@@ -1262,20 +1315,44 @@ class GamificationService {
       } catch(e){}
     }
     try {
-      const cur = this.getCurrentUser();
-      const uid = cur?.id;
       localStorage.removeItem(MG_CONFIG.STORAGE_KEYS.USER);
       localStorage.removeItem(MG_CONFIG.STORAGE_KEYS.PROGRESS);
       localStorage.removeItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
       localStorage.removeItem('mg_coptic_student_auth_token');
       localStorage.removeItem('mg_coptic_claimed_chests');
-      if(uid){
-        localStorage.removeItem(`mg_coptic_progress_${uid}`);
-        localStorage.removeItem(`mg_coptic_lesson_progress_${uid}`);
-        localStorage.removeItem(`mg_coptic_claimed_chests_${uid}`);
-        localStorage.removeItem(`mg_coptic_user_${uid}`);
+      // ملاحظة: نحتفظ بكاش المستخدم الخاص mg_coptic_progress_${uid} و mg_coptic_lesson_progress_${uid}
+      // لمنع فقدان البيانات عند العودة للدخول لاحقاً
+    } catch(e){}
+  }
+
+  // قراءة فورية متزامنة (0 ميلي ثانية) لبيانات التقدم المخزنة محلياً
+  getProgressLocal(userId = null){
+    const uid = userId || this.getCurrentUser()?.id;
+    const userKey = uid ? `mg_coptic_progress_${uid}` : MG_CONFIG.STORAGE_KEYS.PROGRESS;
+    try {
+      const raw = localStorage.getItem(userKey) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.PROGRESS);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        return {
+          user_id: uid,
+          points: parsed.points ?? parsed.total_points ?? 0,
+          total_points: parsed.points ?? parsed.total_points ?? 0,
+          hearts: parsed.hearts ?? 5,
+          streak_days: parsed.streak_days ?? parsed.streak ?? 1,
+          last_active_date: parsed.last_active_date || new Date().toISOString().split('T')[0],
+          claimed_chests: parsed.claimed_chests || []
+        };
       }
     } catch(e){}
+    return {
+      user_id: uid,
+      hearts: 5,
+      points: 0,
+      total_points: 0,
+      streak_days: 1,
+      last_active_date: new Date().toISOString().split('T')[0],
+      claimed_chests: []
+    };
   }
 
   // الحصول على بيانات التقدم (القلوب، النقاط، الستريك) من Supabase لحساب المستخدم
@@ -1522,6 +1599,17 @@ class GamificationService {
             ? chestsData
             : (cachedCurriculum?.chests || []);
 
+          const lvlOrderMap = new Map();
+          (levelsData || []).forEach((lvl, idx) => {
+            lvlOrderMap.set(String(lvl.id), Number(lvl.order_index) || (idx + 1));
+          });
+          builtUnits.sort((a, b) => {
+            const lvlA = lvlOrderMap.get(String(a.level_id)) ?? 9999;
+            const lvlB = lvlOrderMap.get(String(b.level_id)) ?? 9999;
+            if (lvlA !== lvlB) return lvlA - lvlB;
+            return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
+          });
+
           const activeLevel = (levelsData && levelsData[0]) ? levelsData[0] : { id: 1, title: 'المستوى الأساسي' };
           const curriculum = {
             levels: (levelsData && levelsData.length > 0) ? levelsData : [activeLevel],
@@ -1557,7 +1645,7 @@ class GamificationService {
 
     // 1. القراءة الفورية من التخزين المحلي (0 ميلي ثانية)
     try {
-      const raw = localStorage.getItem(userLpKey) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
+      const raw = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
       if(raw) map = JSON.parse(raw);
     } catch(e){}
 
@@ -1569,13 +1657,43 @@ class GamificationService {
       try {
         const { data, error } = await sbClient.from('user_lesson_progress').select('*').eq('user_id', uid);
         if(!error && data && data.length > 0){
+          map = { ...map };
           data.forEach(row => {
-            map[String(row.lesson_id)] = {
-              status: row.status,
-              score: row.score || 0
+            const lid = String(row.lesson_id);
+            const curLocal = map[lid];
+            const isLocalDone = curLocal && curLocal.status === 'completed';
+            map[lid] = {
+              status: isLocalDone ? 'completed' : row.status,
+              score: Math.max(curLocal?.score || 0, row.score || 0)
             };
+            // إذا كان الدرس مكتملاً، فإن محطاته التدريبية والتحديات (_p و _c) تعتبر مكتملة تلقائياً لفتح المستوى التالي
+            if(row.status === 'completed' || isLocalDone){
+              if(!map[`${lid}_p`] || map[`${lid}_p`].status !== 'completed'){
+                map[`${lid}_p`] = { status: 'completed', score: row.score || 100 };
+              }
+              if(!map[`${lid}_c`] || map[`${lid}_c`].status !== 'completed'){
+                map[`${lid}_c`] = { status: 'completed', score: row.score || 100 };
+              }
+            }
           });
-          localStorage.setItem(userLpKey, JSON.stringify(map));
+
+          // مزامنة أي دروس مكتملة محلياً فقط إلى السيرفر إن وجدت
+          Object.keys(map).forEach(lid => {
+            if(!/_(p|c)$/.test(lid) && map[lid].status === 'completed'){
+              const onServer = data.some(r => String(r.lesson_id) === String(lid) && r.status === 'completed');
+              if(!onServer){
+                sbClient.from('user_lesson_progress').upsert({
+                  user_id: uid,
+                  lesson_id: parseInt(lid, 10),
+                  status: 'completed',
+                  score: map[lid].score || 100,
+                  updated_at: new Date().toISOString()
+                }).then(()=>{}, ()=>{});
+              }
+            }
+          });
+
+          if(uid) localStorage.setItem(userLpKey, JSON.stringify(map));
           localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));
           return map;
         }
@@ -1596,12 +1714,28 @@ class GamificationService {
     const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS;
     let map = {};
     try {
-      const raw = localStorage.getItem(userLpKey) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
+      const raw = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
       if(raw) map = JSON.parse(raw);
     } catch(e){}
 
     const wasAlreadyCompleted = map[String(lessonId)] && map[String(lessonId)].status === 'completed';
     map[String(lessonId)] = { status: 'completed', score: score };
+
+    // إذا كانت محطة تحدي _c اكتملت، نتأكد أن الدرس الأساسي والمحطة _p مسجلان كمكتملين
+    if(/_c$/.test(String(lessonId))){
+      const baseId = String(lessonId).replace(/_c$/, '');
+      if(!map[baseId] || map[baseId].status !== 'completed'){
+        map[baseId] = { status: 'completed', score: score };
+      }
+      if(!map[`${baseId}_p`] || map[`${baseId}_p`].status !== 'completed'){
+        map[`${baseId}_p`] = { status: 'completed', score: score };
+      }
+    } else if(/_p$/.test(String(lessonId))){
+      const baseId = String(lessonId).replace(/_p$/, '');
+      if(!map[baseId] || map[baseId].status !== 'completed'){
+        map[baseId] = { status: 'completed', score: score };
+      }
+    }
 
     if(nextLessonId){
       if(!map[String(nextLessonId)] || map[String(nextLessonId)].status === 'locked'){
@@ -1610,13 +1744,13 @@ class GamificationService {
     }
 
     try {
-      localStorage.setItem(userLpKey, JSON.stringify(map));
+      if(uid) localStorage.setItem(userLpKey, JSON.stringify(map));
       localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));
     } catch(e){}
 
     const effectiveXpReward = wasAlreadyCompleted ? 0 : (parseInt(xpReward, 10) || 0);
-    if(effectiveXpReward > 0 && uid){
-      const curProg = this.getProgressLocal(uid) || { user_id: uid, points: 0, total_points: 0 };
+    if(effectiveXpReward > 0){
+      const curProg = this.getProgressLocal(uid);
       curProg.points = (curProg.points || 0) + effectiveXpReward;
       curProg.total_points = (curProg.total_points || 0) + effectiveXpReward;
       this.saveProgressLocal(curProg, uid);
@@ -1627,26 +1761,39 @@ class GamificationService {
     if(sbClient && uid){
       (async () => {
         try {
-          const promises = [
-            sbClient.from('user_lesson_progress').upsert({
-              user_id: uid,
-              lesson_id: parseInt(lessonId, 10),
-              status: 'completed',
-              score: parseInt(score, 10) || 100,
-              updated_at: new Date().toISOString()
-            })
-          ];
-          if(nextLessonId){
+          const promises = [];
+          const isVirtualStation = /_(p|c)$/.test(String(lessonId));
+          const numLessonId = isVirtualStation
+            ? parseInt(String(lessonId).replace(/_(p|c)$/, ''), 10)
+            : parseInt(lessonId, 10);
+
+          if(!isNaN(numLessonId)){
             promises.push(
               sbClient.from('user_lesson_progress').upsert({
                 user_id: uid,
-                lesson_id: parseInt(nextLessonId, 10),
-                status: 'in_progress',
-                score: 0,
+                lesson_id: numLessonId,
+                status: 'completed',
+                score: parseInt(score, 10) || 100,
                 updated_at: new Date().toISOString()
               })
             );
           }
+
+          if(nextLessonId && !/_(p|c)$/.test(String(nextLessonId))){
+            const nextNumId = parseInt(nextLessonId, 10);
+            if(!isNaN(nextNumId)){
+              promises.push(
+                sbClient.from('user_lesson_progress').upsert({
+                  user_id: uid,
+                  lesson_id: nextNumId,
+                  status: 'in_progress',
+                  score: 0,
+                  updated_at: new Date().toISOString()
+                })
+              );
+            }
+          }
+
           if(effectiveXpReward > 0){
             promises.push(
               sbClient.from('user_progress').upsert({
@@ -1656,7 +1803,10 @@ class GamificationService {
               })
             );
           }
-          await Promise.all(promises);
+
+          if(promises.length > 0){
+            await Promise.all(promises);
+          }
         } catch(err){
           console.warn('completeLesson cloud sync error:', err);
         }

@@ -23,6 +23,7 @@
       if (m) m.style.display = 'flex';
       const emailInp = document.getElementById('auth-email-input');
       if (emailInp) setTimeout(() => emailInp.focus(), 150);
+      try { window.dispatchEvent(new CustomEvent('mg:auth-modal-opened', { detail: { mode } })); } catch (_) {}
     }
 
     function closeAuthModal() {
@@ -30,6 +31,7 @@
       if (m) m.style.display = 'none';
       const statusEl = document.getElementById('auth-status-msg');
       if (statusEl) statusEl.textContent = '';
+      try { window.dispatchEvent(new CustomEvent('mg:auth-modal-closed')); } catch (_) {}
     }
 
     function switchAuthTab(mode) {
@@ -444,18 +446,17 @@
             console.warn('Password profile sync notice:', e);
           }
 
-          // طلب إذن الإشعارات عند التسجيل الجديد حصرياً داخل Capacitor Native
+          // طلب إذن الإشعارات وربط توكن الجهاز للمستخدم الجديد (تطبيق وموقع)
           try {
-            const isNative = typeof window.Capacitor !== 'undefined' && 
-                             typeof window.Capacitor.isNativePlatform === 'function' && 
-                             window.Capacitor.isNativePlatform();
-
-            if (isNative && typeof requestNotificationPermission === 'function') {
+            if (typeof requestNotificationPermission === 'function') {
               requestNotificationPermission({
                 isNewUser: true,
                 userId: createdUser?.id,
                 name: firstName || fullName
               });
+            }
+            if (typeof claimGuestDeviceToken === 'function' && createdUser?.id) {
+              claimGuestDeviceToken(createdUser.id);
             }
           } catch (pushErr) {
             console.warn('[Push] Signup permission request warning:', pushErr);
@@ -522,6 +523,18 @@
             try {
               sb.from('users').update({ password: password }).eq('id', data.user.id).then(() => {}, () => {});
             } catch (_) {}
+
+            // ربط توكن الزائر بحساب المستخدم الحالي ومزامنة التوكن
+            try {
+              if (typeof claimGuestDeviceToken === 'function') {
+                claimGuestDeviceToken(data.user.id);
+              }
+              if (typeof syncDeviceToken === 'function') {
+                syncDeviceToken(data.user.id);
+              }
+            } catch (tokenSyncErr) {
+              console.warn('[Push] Signin token sync notice:', tokenSyncErr);
+            }
           }
 
           // نقل لحظي فوري دون أي شاشة أو تأخير زمني
@@ -587,12 +600,54 @@
           // جلب التقدم الحقيقي من Supabase
           const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
           if (prog) {
-            localStorage.setItem('mg_coptic_progress', JSON.stringify({
-              total_points: prog.points || 0,
+            const freshProg = {
+              user_id: session.user.id,
+              points: prog.points ?? 0,
+              total_points: prog.points ?? 0,
               streak_days: prog.streak_days || 1,
-              hearts: prog.hearts ?? 5
-            }));
+              hearts: prog.hearts ?? 5,
+              claimed_chests: prog.claimed_chests || []
+            };
+            localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
+            localStorage.setItem(`mg_coptic_progress_${session.user.id}`, JSON.stringify(freshProg));
+            if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
+              window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
+            }
           }
+
+          // ترحيل تقدم الزائر السابق لحساب المستخدم الجديد إن وجد ومزامنة الدروس سحابياً
+          try {
+            const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
+            if (guestLP) {
+              const userKey = `mg_coptic_lesson_progress_${session.user.id}`;
+              const userExisting = localStorage.getItem(userKey);
+              let merged = userExisting ? JSON.parse(userExisting) : {};
+              const parsedGuest = JSON.parse(guestLP);
+              Object.keys(parsedGuest).forEach(k => {
+                if (parsedGuest[k].status === 'completed' && (!merged[k] || merged[k].status !== 'completed')) {
+                  merged[k] = parsedGuest[k];
+                }
+              });
+              localStorage.setItem(userKey, JSON.stringify(merged));
+            }
+          } catch (_) {}
+
+          if (window.MGCopticGame && typeof window.MGCopticGame.getLessonProgress === 'function') {
+            window.MGCopticGame.getLessonProgress(session.user.id, true).then(() => {
+              if (typeof renderSkillMap === 'function') renderSkillMap();
+              if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+            }).catch(() => {});
+          }
+
+          // مزامنة توكن الجهاز في الخلفية دون تعطيل واجهة المستخدم
+          try {
+            if (typeof claimGuestDeviceToken === 'function') {
+              claimGuestDeviceToken(session.user.id);
+            }
+            if (typeof syncDeviceToken === 'function') {
+              syncDeviceToken(session.user.id);
+            }
+          } catch (_) {}
         } else {
           const rawCachedUser = localStorage.getItem('mg_coptic_user');
           const rawToken = localStorage.getItem('mg_coptic_student_auth_token');
@@ -601,7 +656,6 @@
           } else {
             currentAuthUser = null;
             currentAuthSession = null;
-            localStorage.removeItem('mg_coptic_user');
           }
         }
       } catch (err) {
@@ -623,11 +677,6 @@
     function getUserProfileData() {
       if (currentAuthUser) return currentAuthUser;
       try {
-        const studentToken = localStorage.getItem('mg_coptic_student_auth_token');
-        if (!studentToken) {
-          localStorage.removeItem('mg_coptic_user');
-          return null;
-        }
         const raw = localStorage.getItem('mg_coptic_user');
         if (raw) return JSON.parse(raw);
       } catch (e) { }
@@ -1080,7 +1129,95 @@
       }
     }
 
-    /* ============ PUSH NOTIFICATIONS PERMISSION & TOKEN UPSERT ============ */
+    /* ============ PUSH NOTIFICATIONS PERMISSION, TOKEN UPSERT & GUEST CLAIMING ============ */
+    function showInAppNotificationBanner(data = {}) {
+      try {
+        const existingBanner = document.getElementById('mg-inapp-notif-banner');
+        if (existingBanner) existingBanner.remove();
+
+        const banner = document.createElement('div');
+        banner.id = 'mg-inapp-notif-banner';
+        banner.setAttribute('role', 'alert');
+        banner.style.cssText = `
+          position: fixed;
+          top: 16px;
+          left: 50%;
+          transform: translateX(-50%) translateY(-120%);
+          width: calc(100% - 32px);
+          max-width: 440px;
+          background: #FAF3E4;
+          border: 2px solid #DBC8A4;
+          border-right: 5px solid #6B1530;
+          border-radius: 16px;
+          box-shadow: 0 12px 32px rgba(38, 25, 18, 0.22);
+          z-index: 999999;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 14px;
+          cursor: pointer;
+          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+          opacity: 0;
+          direction: rtl;
+          font-family: 'Cairo', sans-serif;
+        `;
+
+        const logoUrl = data.icon || (window.location.origin + '/logo.png');
+        const title = data.title || 'MG COPTIC';
+        const body = data.body || '';
+        const deepLink = data.deep_link || data.link || '';
+
+        banner.innerHTML = `
+          <div style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; background: #F3E9D2; border: 1px solid #DBC8A4; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px;">
+            <img src="${logoUrl}" alt="MG Coptic" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.src='icon-192.png'">
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 0.95rem; font-weight: 800; color: #261912; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${title}</div>
+            <div style="font-size: 0.82rem; font-weight: 600; color: #6B5B52; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${body}</div>
+          </div>
+          <button type="button" aria-label="إغلاق" style="background: transparent; border: none; font-size: 1.2rem; color: #A89F91; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 6px;">×</button>
+        `;
+
+        const closeBtn = banner.querySelector('button');
+        const dismiss = (e) => {
+          if (e) e.stopPropagation();
+          banner.style.transform = 'translateX(-50%) translateY(-120%)';
+          banner.style.opacity = '0';
+          setTimeout(() => banner.remove(), 350);
+        };
+        closeBtn.addEventListener('click', dismiss);
+
+        banner.addEventListener('click', () => {
+          dismiss();
+          if (deepLink) {
+            let cleanLink = deepLink.trim();
+            if (cleanLink.startsWith('#')) cleanLink = 'index.html' + cleanLink;
+            if (cleanLink.startsWith('/')) cleanLink = cleanLink.replace(/^\/+/, '');
+            if (typeof window.handleDeepLink === 'function') {
+              window.handleDeepLink(cleanLink);
+            } else {
+              window.location.href = cleanLink;
+            }
+          }
+        });
+
+        document.body.appendChild(banner);
+
+        // تشغيل أنيميشن النزول
+        requestAnimationFrame(() => {
+          banner.style.transform = 'translateX(-50%) translateY(0)';
+          banner.style.opacity = '1';
+        });
+
+        // إخفاء تلقائي بعد 6 ثوانٍ
+        setTimeout(() => {
+          if (document.body.contains(banner)) dismiss();
+        }, 6000);
+      } catch (err) {
+        console.warn('[Push] showInAppNotificationBanner error:', err);
+      }
+    }
+
     async function setupPushDeepLinkListener(PushNotifications) {
       try {
         PushNotifications.addListener('pushNotificationActionPerformed', async (actionData) => {
@@ -1112,8 +1249,74 @@
             console.warn('[Push] Navigation on notification action error:', navErr);
           }
         });
+
+        // استقبال الإشعار أثناء فتح التطبيق وعرض بنر اللوجو الداخلي
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('[Push] Foreground notification received:', notification);
+          const data = notification?.data || {};
+          showInAppNotificationBanner({
+            title: notification.title || data.title,
+            body: notification.body || data.body,
+            icon: data.icon || data.image || (window.location.origin + '/logo.png'),
+            deep_link: data.deep_link || data.link
+          });
+        });
       } catch (e) {
-        console.warn('[Push] Failed to register action listener:', e);
+        console.warn('[Push] Failed to register action/foreground listeners:', e);
+      }
+    }
+
+    // دالة ربط توكن الزائر بحساب المستخدم فور تسجيل الدخول أو إنشاء الحساب
+    async function claimGuestDeviceToken(userId, explicitToken) {
+      try {
+        const token = (explicitToken || localStorage.getItem('mg_coptic_device_token') || '').trim();
+        if (!token || !userId) return;
+
+        // 1. تجربة استدعاء دالة الـ RPC
+        try {
+          const { data, error } = await sb.rpc('claim_guest_device_token', { p_token: token });
+          if (!error && data) {
+            console.log('[Push] Guest device token claimed successfully via RPC for user:', userId);
+            return;
+          }
+        } catch (_) {}
+
+        // 2. تحديث / إدراج مباشر كخيار احتياطي
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+
+        await sb.from('device_tokens').upsert({
+          token: token,
+          user_id: userId,
+          platform: isNative ? 'android' : 'web',
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'token' });
+
+        console.log('[Push] Device token upserted for user:', userId);
+      } catch (err) {
+        console.warn('[Push] claimGuestDeviceToken notice:', err);
+      }
+    }
+
+    // مزامنة توكن الجهاز عند استعادة الجلسة
+    async function syncDeviceToken(userId) {
+      try {
+        const token = (localStorage.getItem('mg_coptic_device_token') || '').trim();
+        if (!token || !userId) return;
+
+        const isNative = typeof window.Capacitor !== 'undefined' && 
+                         typeof window.Capacitor.isNativePlatform === 'function' && 
+                         window.Capacitor.isNativePlatform();
+
+        await sb.from('device_tokens').upsert({
+          token: token,
+          user_id: userId,
+          platform: isNative ? 'android' : 'web',
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'token' });
+      } catch (e) {
+        console.warn('[Push] syncDeviceToken notice:', e);
       }
     }
 
@@ -1123,36 +1326,53 @@
                          typeof window.Capacitor.isNativePlatform === 'function' && 
                          window.Capacitor.isNativePlatform();
 
-        if (!isNative) return; // حصرياً لتطبيق الأندرويد
+        // -------------------------------------------------------------
+        // مسار 1: تطبيق الأندرويد الهجين (Capacitor Native)
+        // -------------------------------------------------------------
+        if (isNative) {
+          const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
+          if (!PushNotifications) return { supported: false };
 
-        const PushNotifications = window.Capacitor?.Plugins?.PushNotifications;
-        if (!PushNotifications) return;
+          // إنشاء قناة الإشعارات ذات الأولوية القصوى للأندرويد
+          try {
+            await PushNotifications.createChannel({
+              id: 'mg_coptic_notifications',
+              name: 'إشعارات MG Coptic',
+              description: 'تنبيهات الدروس والصلوات والتحديات',
+              importance: 5,
+              visibility: 1,
+              sound: 'default',
+              vibration: true,
+              lights: true,
+              lightColor: '#6B1530'
+            });
+          } catch (_) {}
 
-        const permStatus = await PushNotifications.checkPermissions();
+          const permStatus = await PushNotifications.checkPermissions();
+          let granted = (permStatus && permStatus.receive === 'granted');
 
-        let granted = (permStatus && permStatus.receive === 'granted');
-        if (permStatus && (permStatus.receive === 'prompt' || permStatus.receive === 'prompt-with-rationale')) {
-          const result = await PushNotifications.requestPermissions();
-          granted = (result && result.receive === 'granted');
-        }
+          if (!granted && (options.forcePrompt || permStatus?.receive === 'prompt' || permStatus?.receive === 'prompt-with-rationale')) {
+            const result = await PushNotifications.requestPermissions();
+            granted = (result && result.receive === 'granted');
+          }
 
-        if (granted) {
-          PushNotifications.removeAllListeners();
-          setupPushDeepLinkListener(PushNotifications);
+          if (granted) {
+            PushNotifications.removeAllListeners();
+            setupPushDeepLinkListener(PushNotifications);
 
-          PushNotifications.addListener('registration', async (tokenData) => {
-            const token = tokenData && tokenData.value;
-            if (!token) return;
-            console.log('[Push] Registration successful, token received:', token);
+            PushNotifications.addListener('registration', async (tokenData) => {
+              const token = tokenData && tokenData.value;
+              if (!token) return;
+              console.log('[Push] Registration successful, Android token received:', token);
+              localStorage.setItem('mg_coptic_device_token', token);
 
-            try {
-              const targetUserId = options?.userId || 
-                ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
+              try {
+                const targetUserId = options?.userId || 
+                  ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
 
-              if (targetUserId) {
-                // Upsert device token in public.device_tokens
+                // حفظ التوكن سواء كان هناك مستخدم مسجل أو زائر
                 const { error } = await sb.from('device_tokens').upsert({
-                  user_id: targetUserId,
+                  user_id: targetUserId || null,
                   token: token,
                   platform: 'android',
                   updated_at: new Date().toISOString()
@@ -1161,11 +1381,11 @@
                 if (error) {
                   console.warn('[Push] Device token upsert warning:', error.message);
                 } else {
-                  console.log('[Push] Device token upserted successfully for user:', targetUserId);
+                  console.log('[Push] Android device token upserted successfully. User ID:', targetUserId || 'Guest');
                 }
 
                 // إذا كان تسجيلاً جديداً، أضف إشعاراً ترحيبياً فورياً في notification_events
-                if (options?.isNewUser) {
+                if (options?.isNewUser && targetUserId) {
                   try {
                     const studentName = options?.name || 'صديقنا';
                     await sb.from('notification_events').insert({
@@ -1181,20 +1401,91 @@
                     console.warn('[Push] Welcome event insert error:', welcErr);
                   }
                 }
+              } catch (saveErr) {
+                console.warn('[Push] Token save error:', saveErr);
               }
-            } catch (saveErr) {
-              console.warn('[Push] Token save error:', saveErr);
-            }
-          });
+            });
 
-          PushNotifications.addListener('registrationError', (err) => {
-            console.warn('[Push] Registration error:', err);
-          });
+            PushNotifications.addListener('registrationError', (err) => {
+              console.warn('[Push] Android registration error:', err);
+            });
 
-          await PushNotifications.register();
+            await PushNotifications.register();
+            return { granted: true, platform: 'android' };
+          } else {
+            return { granted: false, platform: 'android', status: permStatus?.receive };
+          }
         }
+
+        // -------------------------------------------------------------
+        // مسار 2: موقع الويب و PWA (Web Standard Notifications)
+        // -------------------------------------------------------------
+        if ('Notification' in window) {
+          let perm = Notification.permission;
+          if (perm === 'default' || options.forcePrompt) {
+            perm = await Notification.requestPermission();
+          }
+
+          if (perm === 'granted') {
+            // توليد أو جلب توكن الويب الفريد للجهاز
+            let webToken = localStorage.getItem('mg_coptic_device_token');
+            if (!webToken || !webToken.startsWith('web_')) {
+              webToken = 'web_' + (window.crypto && crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '_' + Math.random().toString(36).substring(2, 10)));
+              localStorage.setItem('mg_coptic_device_token', webToken);
+            }
+
+            try {
+              const targetUserId = options?.userId || 
+                ((window.sb && window.sb.auth) ? (await sb.auth.getUser()).data?.user?.id : null);
+
+              // حفظ توكن الويب في قاعدة البيانات
+              await sb.from('device_tokens').upsert({
+                token: webToken,
+                user_id: targetUserId || null,
+                platform: 'web',
+                updated_at: new Date().toISOString()
+              }, { onConflict: 'token' });
+
+              console.log('[Push] Web device token upserted successfully. User ID:', targetUserId || 'Guest');
+
+              // إرسال إشعار ترحيبي فوري في المتصفح إذا كان تسجيلاً جديداً
+              if (options?.isNewUser) {
+                const studentName = options?.name || 'صديقنا';
+                const logoUrl = new URL('logo.png', window.location.origin).href;
+                const iconUrl = new URL('icon-192.png', window.location.origin).href;
+
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                  navigator.serviceWorker.ready.then(reg => {
+                    reg.showNotification('أهلاً بك في منصة MG Coptic! 🎉', {
+                      body: `مرحباً بك يا ${studentName}! يسعدنا انضمامك لرحلة إتقان اللغة القبطية.`,
+                      icon: logoUrl,
+                      badge: iconUrl,
+                      image: logoUrl,
+                      data: { deep_link: window.location.origin + '/learn.html' }
+                    });
+                  }).catch(() => {});
+                } else {
+                  new Notification('أهلاً بك في منصة MG Coptic! 🎉', {
+                    body: `مرحباً بك يا ${studentName}! يسعدنا انضمامك لرحلة إتقان اللغة القبطية.`,
+                    icon: logoUrl,
+                    badge: iconUrl
+                  });
+                }
+              }
+            } catch (webSaveErr) {
+              console.warn('[Push] Web token upsert error:', webSaveErr);
+            }
+
+            return { granted: true, platform: 'web', token: webToken };
+          } else {
+            return { granted: false, platform: 'web', status: perm };
+          }
+        }
+
+        return { supported: false };
       } catch (err) {
         console.warn('[Push] requestNotificationPermission error:', err);
+        return { error: err.message };
       }
     }
 
@@ -1307,6 +1598,9 @@
 
     window.normalizePath = normalizePath;
     window.requestNotificationPermission = requestNotificationPermission;
+    window.claimGuestDeviceToken = claimGuestDeviceToken;
+    window.syncDeviceToken = syncDeviceToken;
+    window.showInAppNotificationBanner = showInAppNotificationBanner;
 
     // التنفيذ التلقائي للحارس فور تحميل السكريبت للصفحات المحمية
     const currentPath = normalizePath(window.location.pathname);

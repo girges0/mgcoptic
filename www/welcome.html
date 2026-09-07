@@ -11,27 +11,31 @@
   <script>
     try {
       const urlParams = new URLSearchParams(window.location.search);
-      const isGuestMode = sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
-      if (!urlParams.has('from_logout') && !urlParams.has('force') && !isGuestMode) {
-        const savedToken = localStorage.getItem('mg_coptic_student_auth_token');
-        const savedUser = localStorage.getItem('mg_coptic_user');
-        let hasSession = false;
-        if (savedToken) {
-          try {
-            const parsed = JSON.parse(savedToken);
-            if (parsed && (parsed.access_token || parsed.user || parsed.token)) hasSession = true;
-          } catch (_) {
-            if (typeof savedToken === 'string' && savedToken.trim().length > 20) hasSession = true;
+      const isGuestMode = localStorage.getItem('mg_coptic_guest_mode') === 'true' || sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
+      if (!urlParams.has('from_logout') && !urlParams.has('force')) {
+        if (isGuestMode) {
+          window.location.replace('index.html?guest=true');
+        } else {
+          const savedToken = localStorage.getItem('mg_coptic_student_auth_token');
+          const savedUser = localStorage.getItem('mg_coptic_user');
+          let hasSession = false;
+          if (savedToken) {
+            try {
+              const parsed = JSON.parse(savedToken);
+              if (parsed && (parsed.access_token || parsed.user || parsed.token)) hasSession = true;
+            } catch (_) {
+              if (typeof savedToken === 'string' && savedToken.trim().length > 20) hasSession = true;
+            }
           }
-        }
-        if (!hasSession && savedUser) {
-          try {
-            const parsedUser = JSON.parse(savedUser);
-            if (parsedUser && parsedUser.id && parsedUser.id !== 'guest') hasSession = true;
-          } catch (_) {}
-        }
-        if (hasSession) {
-          window.location.replace('index.html');
+          if (!hasSession && savedUser) {
+            try {
+              const parsedUser = JSON.parse(savedUser);
+              if (parsedUser && parsedUser.id && parsedUser.id !== 'guest') hasSession = true;
+            } catch (_) {}
+          }
+          if (hasSession) {
+            window.location.replace('index.html');
+          }
         }
       }
     } catch(e) {}
@@ -222,7 +226,7 @@
     <div class="buttons-section">
       <a href="signup.html" class="btn btn-primary" onclick="try{sessionStorage.removeItem('mg_coptic_guest_mode');localStorage.removeItem('mg_coptic_guest_mode');}catch(e){}">ابدأ الآن</a>
       <a href="login.html" class="btn btn-secondary" onclick="try{sessionStorage.removeItem('mg_coptic_guest_mode');localStorage.removeItem('mg_coptic_guest_mode');}catch(e){}">لدي حساب بالفعل</a>
-      <a href="index.html?guest=true" onclick="try{sessionStorage.setItem('mg_coptic_guest_mode','true');}catch(e){}" style="color:var(--ink-subtle);font-size:0.95rem;font-weight:700;text-decoration:none;margin-top:6px;text-align:center;display:block;">متابعة كزائر ←</a>
+      <a href="index.html?guest=true" onclick="try{localStorage.setItem('mg_coptic_guest_mode','true');sessionStorage.setItem('mg_coptic_guest_mode','true');}catch(e){}" style="color:var(--ink-subtle);font-size:0.95rem;font-weight:700;text-decoration:none;margin-top:6px;text-align:center;display:block;">متابعة كزائر ←</a>
     </div>
 
   </div>

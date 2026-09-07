@@ -3,7 +3,12 @@
         return String(str ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       }
 
-      const game = window.MGCopticGame || {};
+      const game = new Proxy({}, {
+        get: (target, prop) => {
+          if (prop === 'sound') return window.Sound || window.MGCopticGame?.sound;
+          return window.MGCopticGame ? window.MGCopticGame[prop] : target[prop];
+        }
+      });
 
       let activeCurriculum = null;
       let activeLessonProgress = {};
@@ -126,7 +131,9 @@
         }
 
         if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
-          const rawLP = localStorage.getItem('mg_coptic_lesson_progress');
+          const uid = getAuthUserId();
+          const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
+          const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
           if (rawLP) {
             try { activeLessonProgress = JSON.parse(rawLP); } catch (e) { }
           }
