@@ -643,96 +643,104 @@ class SoundEffects {
   }
 
   playCorrect(){
-    this._playSoundFile('correct', () => {
-      this._runAudio((ctx, now) => {
-        [698.46, 880.00, 1046.50].forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-          gain.gain.setValueAtTime(0.22, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.31);
-        });
+    try {
+      this._init();
+      if(!this.ctx) return;
+      const now = this.ctx.currentTime;
+      // نغمة نجاح ثنائية فائقة السرعة والمرح (F5 -> A5)
+      [698.46, 880.00].forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.07);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.22);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + idx * 0.07);
+        osc.stop(now + idx * 0.07 + 0.23);
       });
-    });
+    } catch(e){}
   }
 
   playWrong(){
-    this._playSoundFile('wrong', () => {
-      this._runAudio((ctx, now) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(240, now);
-        osc.frequency.linearRampToValueAtTime(160, now + 0.2);
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.23);
-      });
-    });
+    try {
+      this._init();
+      if(!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(240, now);
+      osc.frequency.linearRampToValueAtTime(160, now + 0.2);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.23);
+    } catch(e){}
   }
 
   playVictory(){
-    this._runAudio((ctx, now) => {
+    try {
+      this._init();
+      if(!this.ctx) return;
+      const now = this.ctx.currentTime;
       const notes = [523.25, 523.25, 523.25, 659.25, 783.99, 1046.50];
       const times = [0, 0.1, 0.2, 0.32, 0.46, 0.65];
       const durs  = [0.09, 0.09, 0.09, 0.12, 0.16, 0.55];
       notes.forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + times[i]);
         gain.gain.setValueAtTime(0.18, now + times[i]);
         gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + durs[i]);
         osc.connect(gain);
-        gain.connect(ctx.destination);
+        gain.connect(this.ctx.destination);
         osc.start(now + times[i]);
         osc.stop(now + times[i] + durs[i]);
       });
-    });
+    } catch(e){}
   }
 
   playChestReward(){
-    this._playSoundFile('chest', () => {
-      this._runAudio((ctx, now) => {
-        [587.33, 739.99, 880.00, 1174.66, 1479.98].forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-          gain.gain.setValueAtTime(0.2, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.3);
-        });
+    try {
+      this._init();
+      if(!this.ctx) return;
+      const now = this.ctx.currentTime;
+      [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.3);
       });
-    });
+    } catch(e){}
   }
 
   playClick(){
-    this._playSoundFile('click', () => {
-      this._runAudio((ctx, now) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(700, now);
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + 0.05);
-      });
-    });
+    try {
+      this._init();
+      if(!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(700, now);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } catch(e){}
   }
   _audioBufferCache = new Map();
   _currentSourceNode = null;
