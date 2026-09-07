@@ -128,19 +128,19 @@
     }
 
     var path = window.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-    var isRootPage = (path === '/' || path === '' || path === '/index' || path === '/welcome');
+    var isRootPage = (path === '/' || path === '' || path === '/index' || path === '/welcome' || path.endsWith('/index') || path.endsWith('/welcome'));
 
     // أولوية 2: إذا كنا في صفحة فرعية (مثل learn, login, signup, onboarding)
     if (!isRootPage) {
-      if (path === '/login' || path === '/signup') {
+      if (path === '/login' || path === '/signup' || path.endsWith('/login') || path.endsWith('/signup')) {
         // العودة إلى صفحة الترحيب
-        window.location.replace('/welcome');
+        window.location.replace('welcome.html');
         return;
       }
 
-      if (path === '/learn' || path === '/onboarding') {
+      if (path === '/learn' || path === '/onboarding' || path.endsWith('/learn') || path.endsWith('/onboarding')) {
         // العودة إلى الصفحة الرئيسية
-        window.location.replace('/');
+        window.location.replace('index.html');
         return;
       }
 
@@ -148,7 +148,7 @@
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        window.location.replace('/');
+        window.location.replace('index.html');
       }
       return;
     }
@@ -199,7 +199,7 @@
   // دعم الرجوع أيضاً عبر الـ Web History API للمتصفحات والـ PWA
   function initWebHistoryFallback() {
     var path = window.location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-    var isRootPage = (path === '/' || path === '' || path === '/index' || path === '/welcome');
+    var isRootPage = (path === '/' || path === '' || path === '/index' || path === '/welcome' || path.endsWith('/index') || path.endsWith('/welcome'));
 
     if (isRootPage) {
       try {

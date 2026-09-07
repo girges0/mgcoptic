@@ -10,9 +10,10 @@
 
     function normalizePath(pathname) {
       const raw = pathname || '';
-      const normalized = raw.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-      console.log(`[MG Path Diagnostic] raw: "${raw}" → normalized: "${normalized}"`);
-      return normalized;
+      const parts = raw.split('/');
+      const last = (parts[parts.length - 1] || '').replace(/\.html$/, '').toLowerCase();
+      if (!last || last === 'index') return '/index';
+      return '/' + last;
     }
 
     function openAuthModal(mode = 'signin') {
@@ -75,7 +76,7 @@
         const redirectUrl = urlParams.get('redirect');
         const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
           ? redirectUrl
-          : ((window.location.protocol === 'file:') ? 'index.html' : '/');
+          : 'index.html';
 
         try {
           window.location.replace(target);
@@ -118,7 +119,7 @@
         if (email) {
           try {
             const { error } = await sb.auth.resetPasswordForEmail(email.trim(), {
-              redirectTo: window.location.origin + '/login'
+              redirectTo: new URL('login.html', window.location.href).href
             });
             if (error) throw error;
             Swal.fire({
@@ -407,7 +408,7 @@
             } else {
               setTimeout(() => {
                 const redirectParam = redirectTarget ? '&redirect=' + encodeURIComponent(redirectTarget) : '';
-                window.location.href = '/login?email=' + encodeURIComponent(email) + redirectParam;
+                window.location.href = 'login.html?email=' + encodeURIComponent(email) + redirectParam;
               }, 1500);
               return;
             }
@@ -906,7 +907,7 @@
                          window.Capacitor.isNativePlatform();
 
         const currentPath = normalizePath(window.location.pathname);
-        const isHomePage = (currentPath === '' || currentPath === '/' || currentPath === '/index');
+        const isHomePage = (currentPath === '/' || currentPath === '/index' || currentPath === '');
         const isAuthPage = (currentPath === '/login' || currentPath === '/signup' || currentPath === '/welcome');
 
         if (isAuthPage) {
@@ -915,6 +916,11 @@
             window.MGPreloader.dismiss();
           }
           return;
+        }
+
+        const isGuest = window.location.search.includes('guest=') || sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
+        if (window.location.search.includes('guest=')) {
+          sessionStorage.setItem('mg_coptic_guest_mode', 'true');
         }
 
         // Fast local session check
@@ -932,9 +938,9 @@
         const isMobileScreen = (typeof window !== 'undefined' && (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)));
 
         // Fast-path 1: Unauthenticated mobile / app visitor -> immediately redirect to welcome
-        if ((isNative || (isMobileScreen && isHomePage)) && !hasCachedSession) {
+        if (!isGuest && (isNative || (isMobileScreen && isHomePage)) && !hasCachedSession) {
           window.__mgRedirecting = true;
-          window.location.replace('/welcome');
+          window.location.replace('welcome.html');
           return;
         }
 
@@ -950,10 +956,10 @@
         const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
         const isLoggedIn = !!(session && session.user);
 
-        if (isNative || (isMobileScreen && isHomePage)) {
+        if (!isGuest && (isNative || (isMobileScreen && isHomePage))) {
           if (!isLoggedIn) {
             window.__mgRedirecting = true;
-            window.location.replace('/welcome');
+            window.location.replace('welcome.html');
             return;
           }
         } else {
@@ -962,10 +968,10 @@
                                    window.location.hash !== '#home';
           const isDirectProtectedLink = !isHomePage || hasProtectedHash;
 
-          if (!isLoggedIn && isDirectProtectedLink) {
+          if (!isLoggedIn && isDirectProtectedLink && !isGuest) {
             window.__mgRedirecting = true;
             const redirectTarget = encodeURIComponent(window.location.pathname + window.location.search + (window.location.hash || ''));
-            window.location.replace('/login?redirect=' + redirectTarget);
+            window.location.replace('login.html?redirect=' + redirectTarget);
             return;
           }
         }
@@ -993,7 +999,7 @@
         if (isNative) {
           const { data: { session } } = (window.sb && window.sb.auth) ? await sb.auth.getSession() : { data: { session: null } };
           if (!session || !session.user) {
-            window.location.replace('/login');
+            window.location.replace('login.html');
             return false;
           }
           if (typeof callback === 'function') callback();
@@ -1020,7 +1026,7 @@
         if (typeof openAuthModal === 'function' && document.getElementById('auth-modal')) {
           openAuthModal('signin');
         } else {
-          window.location.replace('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
+          window.location.replace('login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
         }
         return false;
       } catch (err) {

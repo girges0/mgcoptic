@@ -1,12 +1,11 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v1.0.6';
+const CACHE_NAME = 'mgcoptic-v1.0.7';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/welcome.html',
-  '/welcome',
   '/learn.html',
   '/login.html',
   '/signup.html',
@@ -74,6 +73,17 @@ self.addEventListener('fetch', (event) => {
   // 1. Navigation requests (HTML pages): Fast Network-First with 1.2s timeout
   // Ensures fresh updates on good connections, but avoids screen freeze on slow connections
   if (request.mode === 'navigate' || request.destination === 'document') {
+    let reqToFetch = request;
+    if (url.pathname === '/welcome' || url.pathname.endsWith('/welcome')) {
+      reqToFetch = new Request(new URL('welcome.html', request.url).href, request);
+    } else if (url.pathname === '/login' || url.pathname.endsWith('/login')) {
+      reqToFetch = new Request(new URL('login.html' + url.search, request.url).href, request);
+    } else if (url.pathname === '/signup' || url.pathname.endsWith('/signup')) {
+      reqToFetch = new Request(new URL('signup.html' + url.search, request.url).href, request);
+    } else if (url.pathname === '/learn' || url.pathname.endsWith('/learn')) {
+      reqToFetch = new Request(new URL('learn.html' + url.search, request.url).href, request);
+    }
+
     event.respondWith(
       new Promise((resolve) => {
         let isResolved = false;
@@ -81,7 +91,7 @@ self.addEventListener('fetch', (event) => {
         // If network takes > 1200ms, immediately serve cached HTML if available
         const timeoutId = setTimeout(async () => {
           if (!isResolved) {
-            const cached = await caches.match(request);
+            const cached = (await caches.match(reqToFetch)) || (await caches.match(request));
             if (cached) {
               isResolved = true;
               resolve(cached);
@@ -89,7 +99,7 @@ self.addEventListener('fetch', (event) => {
           }
         }, 1200);
 
-        fetch(request)
+        fetch(reqToFetch)
           .then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
               const responseClone = networkResponse.clone();

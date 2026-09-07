@@ -8,9 +8,9 @@
     (function () {
       var token = localStorage.getItem('mg_coptic_student_auth_token');
       if (!token) {
-        window.location.replace('/welcome');
+        window.location.replace('welcome.html');
       } else {
-        window.location.replace('/#learn' + (window.location.search || ''));
+        window.location.replace('index.html#learn' + (window.location.search || ''));
       }
     })();
   </script>

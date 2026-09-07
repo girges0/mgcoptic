@@ -8,13 +8,19 @@
   <script id="__mgEarlyMobileCheck">
     (function () {
       try {
+        var isGuest = window.location.search.includes('guest=') || sessionStorage.getItem('mg_coptic_guest_mode') === 'true';
+        if (window.location.search.includes('guest=')) {
+          sessionStorage.setItem('mg_coptic_guest_mode', 'true');
+        }
+        if (isGuest) return;
+
         var isMobile = (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
         var isApp = typeof window.Capacitor !== 'undefined' || window.location.protocol === 'capacitor:';
         if (isMobile || isApp) {
           var token = localStorage.getItem('mg_coptic_student_auth_token');
           if (!token) {
             window.__mgRedirecting = true;
-            window.location.replace('/welcome');
+            window.location.replace('welcome.html');
           }
         }
       } catch (e) {}
@@ -6989,7 +6995,10 @@
             <div style="font-size:.88rem;color:var(--ink-soft);margin-bottom:18px;">الرتبة: <span
                 id="settings-user-role" class="pill" style="font-size:.82rem;padding:3px 10px;background:rgba(168,130,58,.15);border:1px solid rgba(168,130,58,.3);border-radius:999px;">طالب</span></div>
             <a id="settings-admin-dashboard-link" href="admin/index.html" target="_blank" style="display:none; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; margin-bottom:14px; background:linear-gradient(135deg, #6F1737, #4A0D24); color:#FFFFFF; border-radius:12px; text-decoration:none; font-weight:800; font-size:0.95rem; box-shadow:0 4px 14px rgba(111,23,55,0.25); transition:all 0.2s ease;">
-              <span style="font-size:1.2rem;">⚙️</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1.51 1.65 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
               <span>لوحة تحكم المنصة (Admin Dashboard)</span>
             </a>
             <button type="button" class="btn-logout-danger" onclick="signOutStudent()">

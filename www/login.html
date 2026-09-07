@@ -342,9 +342,9 @@
 
     <div class="auth-footer-links">
       ليس لديك حساب بعد؟
-      <a id="signup-link" href="/signup">سجل دلوقتي</a>
+      <a id="signup-link" href="signup.html">سجل دلوقتي</a>
 
-      <a href="/" class="web-only-back">← العودة للصفحة الرئيسية</a>
+      <a href="index.html?guest=true" class="web-only-back">← العودة للصفحة الرئيسية</a>
     </div>
   </div>
 
@@ -363,7 +363,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const target = (redirectUrl && !redirectUrl.includes('login') && !redirectUrl.includes('signup'))
               ? redirectUrl
-              : ((window.location.protocol === 'file:') ? 'index.html' : '/');
+              : 'index.html';
             try {
               window.location.replace(target);
             } catch (_) {
@@ -389,7 +389,7 @@
       const redirect = urlParams.get('redirect');
       if (redirect) {
         const signupLink = document.getElementById('signup-link');
-        if (signupLink) signupLink.href = '/signup?redirect=' + encodeURIComponent(redirect);
+        if (signupLink) signupLink.href = 'signup.html?redirect=' + encodeURIComponent(redirect);
       }
 
       // إذا جاي من صفحة التسجيل بإيميل مسجل مسبقاً، املأ الإيميل تلقائي وأظهر رسالة
