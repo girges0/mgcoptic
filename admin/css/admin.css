@@ -51,9 +51,17 @@
   #login-screen .sub{color:var(--ink-soft);font-size:.85rem;margin-top:-10px;margin-bottom:18px;}
   #login-screen input{width:100%;padding:11px 12px;margin-bottom:12px;border:1px solid var(--line);
     border-radius:8px;font-family:var(--font-body);font-size:.95rem;background:#fff;}
-  #login-screen button{width:100%;padding:12px;background:var(--madder);color:#fff;border:none;border-radius:8px;
-    font-family:var(--font-display);font-weight:700;cursor:pointer;font-size:.95rem;}
-  #login-screen button:hover{background:var(--madder-dark);}
+  #login-screen button.login-btn{width:100%;padding:12px;background:var(--madder);color:#fff;border:none;border-radius:8px;
+    font-family:var(--font-display);font-weight:700;cursor:pointer;font-size:.95rem;transition:background-color .2s, transform .15s;}
+  #login-screen button.login-btn:hover{background:var(--madder-dark);}
+  #login-screen .login-pass-wrap{position:relative;width:100%;margin-bottom:12px;}
+  #login-screen .login-pass-wrap input{margin-bottom:0 !important;padding-left:42px !important;padding-right:12px !important;box-sizing:border-box;}
+  #login-screen .toggle-pass-btn{position:absolute;left:8px;top:50%;transform:translateY(-50%);
+    width:32px !important;max-width:32px !important;min-width:32px !important;height:32px !important;
+    padding:0 !important;margin:0 !important;background:transparent !important;border:none !important;
+    border-radius:6px;color:#7A6953 !important;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:color .2s, background-color .2s;z-index:2;}
+  #login-screen .toggle-pass-btn:hover{background:rgba(107, 21, 48, 0.08) !important;color:var(--madder) !important;}
   #login-msg{font-size:.85rem;margin-top:10px;min-height:1.2em;}
   .config-warning{background:#fbe6c8;border:1px solid #d9a442;padding:14px 18px;border-radius:10px;margin:16px auto;max-width:600px;font-size:.88rem;}
 

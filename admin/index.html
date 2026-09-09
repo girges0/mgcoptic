@@ -73,10 +73,10 @@
       </div>
       <div class="login-field">
         <label for="admin-pass">كلمة المرور</label>
-        <div style="position:relative; width:100%; display:flex; align-items:center;">
-          <input type="password" id="admin-pass" name="admin_user_password" placeholder="••••••••" autocomplete="new-password" required style="width:100%; padding-left:40px; box-sizing:border-box;">
+        <div class="login-pass-wrap" style="position:relative; width:100%; margin-bottom:12px;">
+          <input type="password" id="admin-pass" name="admin_user_password" placeholder="••••••••" autocomplete="new-password" required style="width:100%; padding-left:42px; padding-right:12px; margin-bottom:0; box-sizing:border-box;">
           <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('admin-pass', this)"
-            style="position:absolute; left:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:#7A6953; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; transition:color .2s;"
+            style="position:absolute; left:8px; top:50%; transform:translateY(-50%); width:32px; height:32px; background:transparent; border:none; color:#7A6953; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; transition:color .2s; z-index:2;"
             title="إظهار كلمة المرور" aria-label="إظهار كلمة المرور">
             <svg class="eye-open-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
