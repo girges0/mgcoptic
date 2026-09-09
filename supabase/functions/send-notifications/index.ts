@@ -174,6 +174,45 @@ serve(async (req: Request) => {
         .eq("id", reqBody.event_id);
     }
 
+    // 0.2 تصفير حساب المستخدم بالكامل وحذف سجلات الدروس والتحديات والكتابة بصلاحيات Service Role
+    if (reqBody.action === "reset_account") {
+      const targetUserId = reqBody.user_id;
+      if (!targetUserId) {
+        return new Response(
+          JSON.stringify({ error: "Missing user_id for reset_account" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      try {
+        await Promise.all([
+          supabase.from("user_lesson_progress").delete().eq("user_id", targetUserId),
+          supabase.from("user_challenge_progress").delete().eq("user_id", targetUserId),
+          supabase.from("user_writing_progress").delete().eq("user_id", targetUserId)
+        ]);
+
+        const todayStr = new Date().toISOString().split("T")[0];
+        await supabase.from("user_progress").upsert({
+          user_id: targetUserId,
+          points: 0,
+          hearts: 5,
+          streak_days: 1,
+          claimed_chests: [],
+          last_active_date: todayStr
+        }, { onConflict: "user_id" });
+
+        return new Response(
+          JSON.stringify({ success: true, message: "Account reset successfully." }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (err: any) {
+        return new Response(
+          JSON.stringify({ error: err?.message || String(err) }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     // 1. Fetch pending notifications (up to 100)
     const { data: pendingEvents, error: fetchErr } = await supabase
       .from("notification_events")

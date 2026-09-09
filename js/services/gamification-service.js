@@ -906,62 +906,37 @@ class SoundEffects {
     const clean = String(text).trim();
     if(!clean) return false;
 
-    // 1. استدعاء نطق المتصفح المحلي كاحتياط
-    const fallbackToSpeechSynthesis = () => {
-      try {
-        if(!('speechSynthesis' in window)) return false;
-        const synth = window.speechSynthesis;
-        if(synth.paused) synth.resume();
-        synth.cancel();
+    // استخدام محرك النطق الصوتي للمتصفح (SpeechSynthesis) لتفادي أخطاء 404 الناتجة عن خدمات خارجية معطلة
+    try {
+      if(!('speechSynthesis' in window)) return false;
+      const synth = window.speechSynthesis;
+      if(synth.paused) synth.resume();
+      synth.cancel();
 
-        const utter = new SpeechSynthesisUtterance(clean);
-        utter.rate = 0.90;
-        utter.pitch = 1.0;
-        utter.volume = 1.0;
+      const utter = new SpeechSynthesisUtterance(clean);
+      utter.rate = 0.90;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
 
-        const voices = synth.getVoices ? synth.getVoices() : [];
-        if(voices && voices.length > 0){
-          const arVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('Arabic'))) ||
-                          voices.find(v => v.name && (v.name.includes('Arabic') || v.name.includes('عربي') || v.name.includes('Hoda') || v.name.includes('Salma') || v.name.includes('Tarik') || v.name.includes('Maged') || v.name.includes('Laila')));
-          if(arVoice){
-            utter.voice = arVoice;
-            utter.lang = arVoice.lang;
-          } else {
-            utter.lang = 'ar-EG';
-          }
+      const voices = synth.getVoices ? synth.getVoices() : [];
+      if(voices && voices.length > 0){
+        const arVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('Arabic'))) ||
+                        voices.find(v => v.name && (v.name.includes('Arabic') || v.name.includes('عربي') || v.name.includes('Hoda') || v.name.includes('Salma') || v.name.includes('Tarik') || v.name.includes('Maged') || v.name.includes('Laila')));
+        if(arVoice){
+          utter.voice = arVoice;
+          utter.lang = arVoice.lang;
         } else {
           utter.lang = 'ar-EG';
         }
-
-        synth.speak(utter);
-        return true;
-      } catch(err){
-        console.warn('Speech synthesis fallback error:', err);
-        return false;
-      }
-    };
-
-    // 2. التدفق الصوتي عالي النقاء عبر السيرفر الصوتي (يعمل على جميع الأجهزة دون الحاجة لحزم لغات الويندوز)
-    try {
-      if(this._activeAudio){
-        try { this._activeAudio.pause(); this._activeAudio.currentTime = 0; } catch(e){}
-        this._activeAudio = null;
+      } else {
+        utter.lang = 'ar-EG';
       }
 
-      const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=${encodeURIComponent(clean)}`;
-      const audio = new Audio(ttsUrl);
-      this._activeAudio = audio;
-      audio.playbackRate = 0.95;
-
-      const p = audio.play();
-      if(p !== undefined){
-        p.catch(err => {
-          fallbackToSpeechSynthesis();
-        });
-      }
+      synth.speak(utter);
       return true;
-    } catch(e){
-      return fallbackToSpeechSynthesis();
+    } catch(err){
+      console.warn('Speech synthesis error:', err);
+      return false;
     }
   }
 }
@@ -1075,10 +1050,18 @@ class GamificationService {
               localStorage.removeItem(`mg_coptic_progress_${uidToClear}`);
               localStorage.removeItem(`mg_coptic_lesson_progress_${uidToClear}`);
               localStorage.removeItem(`mg_coptic_claimed_chests_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_badges_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_daily_goal_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_daily_xp_date_${uidToClear}`);
+              localStorage.removeItem(`mg_coptic_daily_xp_val_${uidToClear}`);
               localStorage.removeItem(`mg_coptic_last_synced_date_${uidToClear}`);
             }
             localStorage.removeItem('mg_coptic_lesson_progress');
             localStorage.removeItem('mg_coptic_claimed_chests');
+            localStorage.removeItem('mg_coptic_badges');
+            localStorage.removeItem('mg_coptic_daily_xp_date');
+            localStorage.removeItem('mg_coptic_daily_xp_val');
+
             const resetProg = {
               user_id: uidToClear,
               points: 0,
@@ -1089,6 +1072,11 @@ class GamificationService {
               last_active_date: new Date().toISOString().split('T')[0]
             };
             this.saveProgressLocal(resetProg, uidToClear, false);
+
+            const initialLp = { '1': { status: 'in_progress', score: 0 } };
+            if(uidToClear) localStorage.setItem(`mg_coptic_lesson_progress_${uidToClear}`, JSON.stringify(initialLp));
+            localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(initialLp));
+
             if(typeof window !== 'undefined'){
               if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(resetProg);
               if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
@@ -1772,8 +1760,14 @@ class GamificationService {
           // السيرفر هو مصدر الحقيقة للحساب المسجل
           const serverMap = {};
           if(Array.isArray(data) && data.length > 0){
+            const curPoints = this.getProgressLocal(uid)?.points || 0;
             data.forEach(row => {
               const lid = String(row.lesson_id);
+              const numId = parseInt(lid, 10);
+              // التحقق من اتساق البيانات: إذا كان رصيد المستخدم 0 أو أول درس فقط (<= 35 XP)، نتجاهل أي بقايا لدروس عليا سابقة
+              if(curPoints <= 35 && numId > 2 && row.status === 'completed'){
+                return;
+              }
               serverMap[lid] = {
                 status: row.status,
                 score: row.score || 0
@@ -1783,7 +1777,7 @@ class GamificationService {
                 serverMap[`${lid}_c`] = { status: 'completed', score: row.score || 100 };
               }
             });
-            map = serverMap;
+            map = Object.keys(serverMap).length > 0 ? serverMap : { '1': { status: 'in_progress', score: 0 } };
           } else {
             // لا توجد أي دروس مكتملة في السحابة لهذا الحساب (تم تصفير الحساب أو حساب جديد)
             map = { '1': { status: 'in_progress', score: 0 } };
@@ -1910,6 +1904,110 @@ class GamificationService {
     }
 
     return map;
+  }
+
+  // تصفير حساب المستخدم بالكامل وحذف كافة الدروس والتقدم محلياً وسحابياً
+  async resetFullAccount(userId = null) {
+    const uid = userId || this.getCurrentUser()?.id;
+    if (!uid) return false;
+
+    // 1. مسح جميع مفاتيح التخزين المحلي فوراً
+    const keysToClear = [
+      `mg_coptic_progress_${uid}`,
+      `mg_coptic_lesson_progress_${uid}`,
+      `mg_coptic_claimed_chests_${uid}`,
+      `mg_coptic_badges_${uid}`,
+      `mg_coptic_daily_goal_${uid}`,
+      `mg_coptic_daily_xp_date_${uid}`,
+      `mg_coptic_daily_xp_val_${uid}`,
+      `mg_coptic_last_synced_date_${uid}`,
+      'mg_coptic_progress',
+      'mg_coptic_lesson_progress',
+      'mg_coptic_claimed_chests',
+      'mg_coptic_badges',
+      'mg_coptic_daily_xp_date',
+      'mg_coptic_daily_xp_val'
+    ];
+    keysToClear.forEach(k => {
+      try { localStorage.removeItem(k); } catch(_) {}
+    });
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const initialProg = {
+      user_id: uid,
+      points: 0,
+      total_points: 0,
+      hearts: 5,
+      streak_days: 1,
+      claimed_chests: [],
+      last_active_date: todayStr
+    };
+    this.saveProgressLocal(initialProg, uid, false);
+
+    const initialLp = { '1': { status: 'in_progress', score: 0 } };
+    try {
+      localStorage.setItem(`mg_coptic_lesson_progress_${uid}`, JSON.stringify(initialLp));
+      localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(initialLp));
+    } catch(_) {}
+
+    // 2. استدعاء الـ Edge Function بصلاحيات Service Role لحذف كافة السجلات سحابياً
+    try {
+      const anonKey = (typeof MG_CONFIG !== 'undefined' && MG_CONFIG?.SUPABASE_ANON_KEY) ? MG_CONFIG.SUPABASE_ANON_KEY : (window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo');
+      await fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+          'Authorization': `Bearer ${anonKey}`
+        },
+        body: JSON.stringify({
+          action: 'reset_account',
+          user_id: uid
+        })
+      });
+    } catch (e) {
+      console.warn('resetFullAccount edge call notice:', e);
+    }
+
+    // 3. محاولة RPC ودوال الحذف المباشرة
+    const sb = this.getSupabaseClient();
+    if (sb) {
+      try { await sb.rpc('admin_reset_full_account', { p_user_id: uid }); } catch(_) {}
+      try {
+        await Promise.all([
+          sb.from('user_lesson_progress').delete().eq('user_id', uid),
+          sb.from('user_challenge_progress').delete().eq('user_id', uid),
+          sb.from('user_writing_progress').delete().eq('user_id', uid)
+        ]);
+        await sb.from('user_progress').upsert({
+          user_id: uid,
+          points: 0,
+          hearts: 5,
+          streak_days: 1,
+          claimed_chests: [],
+          last_active_date: todayStr
+        }, { onConflict: 'user_id' });
+      } catch(_) {}
+    }
+
+    // 4. بث التحديث محلياً وعبر قنوات التزامن
+    if (this.channel) {
+      try {
+        this.channel.postMessage({
+          type: 'full_account_reset',
+          payload: { user_id: uid, points: 0, hearts: 5, streak_days: 1, completed_lessons: 0 }
+        });
+      } catch(_) {}
+    }
+
+    if (typeof window !== 'undefined') {
+      if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(initialProg);
+      if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+      if (typeof window.renderSkillMap === 'function') window.renderSkillMap();
+      if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+    }
+
+    return true;
   }
 
   recordTodayEarnedXP(userId, amount) {

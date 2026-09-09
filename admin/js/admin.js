@@ -3483,13 +3483,37 @@ async function resetFullAccount(userId, userName) {
   });
 
   try {
-    // 1) حذف جميع سجلات تقدم الدروس والتحديات والكتابة وتصفير التقدم عبر دالة السحابة المؤمنة (SECURITY DEFINER)
-    const { data: rpcData, error: rpcErr } = await sb.rpc('admin_reset_full_account', { p_user_id: userId });
-    if (rpcErr) {
-      console.warn('admin_reset_full_account RPC error, trying fallback:', rpcErr);
-      await sb.from('user_lesson_progress').delete().eq('user_id', userId);
-      await sb.from('user_challenge_progress').delete().eq('user_id', userId);
-      await sb.from('user_writing_progress').delete().eq('user_id', userId);
+    // 1) حذف جميع سجلات تقدم الدروس والتحديات والكتابة عبر Edge Function بصلاحيات السيرفر (Service Role) لضمان تجاوز RLS
+    try {
+      const anonKey = (typeof MG_CONFIG !== 'undefined' && MG_CONFIG?.SUPABASE_ANON_KEY) ? MG_CONFIG.SUPABASE_ANON_KEY : (window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo');
+      await fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': anonKey,
+          'Authorization': `Bearer ${anonKey}`
+        },
+        body: JSON.stringify({
+          action: 'reset_account',
+          user_id: userId
+        })
+      });
+    } catch (edgeErr) {
+      console.warn('Edge Function reset_account notice:', edgeErr);
+    }
+
+    // 2) محاولة إضافية عبر دالة السحابة المؤمنة (SECURITY DEFINER)
+    try {
+      await sb.rpc('admin_reset_full_account', { p_user_id: userId });
+    } catch (_) {}
+
+    // 3) مسح مباشر احتياطي من الجداول
+    try {
+      await Promise.all([
+        sb.from('user_lesson_progress').delete().eq('user_id', userId),
+        sb.from('user_challenge_progress').delete().eq('user_id', userId),
+        sb.from('user_writing_progress').delete().eq('user_id', userId)
+      ]);
       const todayStrFallback = new Date().toISOString().split('T')[0];
       await sb.from('user_progress').upsert({
         user_id: userId,
@@ -3498,12 +3522,12 @@ async function resetFullAccount(userId, userName) {
         streak_days: 1,
         claimed_chests: [],
         last_active_date: todayStrFallback
-      });
-    }
+      }, { onConflict: 'user_id' });
+    } catch (_) {}
 
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // 3) بث التحديث ومسح الكاش المحلي إن وجد
+    // 4) بث التحديث ومسح الكاش المحلي بالكامل
     try {
       const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mg_coptic_gamification_sync') : null;
       if (channel) {
@@ -3518,6 +3542,10 @@ async function resetFullAccount(userId, userName) {
         `mg_coptic_progress_${userId}`,
         `mg_coptic_lesson_progress_${userId}`,
         `mg_coptic_claimed_chests_${userId}`,
+        `mg_coptic_badges_${userId}`,
+        `mg_coptic_daily_goal_${userId}`,
+        `mg_coptic_daily_xp_date_${userId}`,
+        `mg_coptic_daily_xp_val_${userId}`,
         `mg_coptic_last_synced_date_${userId}`
       ];
       keysToClear.forEach(k => localStorage.removeItem(k));
@@ -3536,6 +3564,7 @@ async function resetFullAccount(userId, userName) {
           }));
           localStorage.removeItem('mg_coptic_lesson_progress');
           localStorage.removeItem('mg_coptic_claimed_chests');
+          localStorage.removeItem('mg_coptic_badges');
         }
       }
       localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());

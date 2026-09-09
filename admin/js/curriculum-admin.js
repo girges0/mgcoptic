@@ -114,53 +114,36 @@ const CurriculumAdminSystem = (function(){
         }
       };
 
-      const fallbackSpeechSynthesis = () => {
-        try {
-          if(!('speechSynthesis' in window)){
-            done();
-            return;
-          }
-          const synth = window.speechSynthesis;
-          if(synth.paused) synth.resume();
-          synth.cancel();
-
-          const u = new SpeechSynthesisUtterance(clean);
-          u.rate = 0.9;
-          u.pitch = 1.0;
-          u.lang = 'ar-EG';
-
-          const voices = synth.getVoices ? synth.getVoices() : [];
-          if(voices && voices.length > 0){
-            const arVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('Arabic'))) ||
-                            voices.find(v => v.name && (v.name.includes('Arabic') || v.name.includes('عربي') || v.name.includes('Hoda') || v.name.includes('Salma') || v.name.includes('Tarik') || v.name.includes('Maged') || v.name.includes('Laila')));
-            if(arVoice){
-              u.voice = arVoice;
-              u.lang = arVoice.lang;
-            }
-          }
-
-          u.onend = done;
-          u.onerror = done;
-          synth.speak(u);
-        } catch(err){
-          console.warn('Speech synthesis fallback error:', err);
-          done();
-        }
-      };
-
       try {
-        const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ar&client=tw-ob&q=${encodeURIComponent(clean)}`;
-        const a = new Audio(ttsUrl);
-        _currentPlayingAudio = a;
-        a.playbackRate = 0.95;
-        a.onended = done;
-        a.onerror = fallbackSpeechSynthesis;
-        const p = a.play();
-        if(p !== undefined){
-          p.catch(fallbackSpeechSynthesis);
+        if(!('speechSynthesis' in window)){
+          done();
+          return;
         }
-      } catch(e){
-        fallbackSpeechSynthesis();
+        const synth = window.speechSynthesis;
+        if(synth.paused) synth.resume();
+        synth.cancel();
+
+        const u = new SpeechSynthesisUtterance(clean);
+        u.rate = 0.9;
+        u.pitch = 1.0;
+        u.lang = 'ar-EG';
+
+        const voices = synth.getVoices ? synth.getVoices() : [];
+        if(voices && voices.length > 0){
+          const arVoice = voices.find(v => v.lang && (v.lang.startsWith('ar') || v.lang.includes('Arabic'))) ||
+                          voices.find(v => v.name && (v.name.includes('Arabic') || v.name.includes('عربي') || v.name.includes('Hoda') || v.name.includes('Salma') || v.name.includes('Tarik') || v.name.includes('Maged') || v.name.includes('Laila')));
+          if(arVoice){
+            u.voice = arVoice;
+            u.lang = arVoice.lang;
+          }
+        }
+
+        u.onend = done;
+        u.onerror = done;
+        synth.speak(u);
+      } catch(err){
+        console.warn('Speech synthesis error:', err);
+        done();
       }
     }
   };

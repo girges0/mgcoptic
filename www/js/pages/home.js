@@ -657,11 +657,31 @@
     async function resetUserProgressConfirm() {
       const confirmed = await mgConfirm('إعادة تعيين التقدم', 'هل أنت متأكد من رغبتك في إعادة تعيين كافة نقاطك وتقدمك الدراسي؟<br><strong>لا يمكن التراجع عن هذا الإجراء.</strong>', 'warning', { confirmText: 'نعم، إعادة التعيين', cancelText: 'تراجع' });
       if (confirmed) {
-        localStorage.removeItem('mg_coptic_progress');
-        localStorage.removeItem('mg_coptic_lesson_progress');
-        localStorage.removeItem('mg_coptic_claimed_chests');
-        syncUserProfileUI();
-        renderLeaderboardList();
+        const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser?.id) || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
+        if (window.MGCopticGame && typeof window.MGCopticGame.resetFullAccount === 'function') {
+          await window.MGCopticGame.resetFullAccount(uid);
+        } else if (window.Sound && typeof window.Sound.resetFullAccount === 'function') {
+          await window.Sound.resetFullAccount(uid);
+        } else {
+          localStorage.removeItem('mg_coptic_progress');
+          localStorage.removeItem('mg_coptic_lesson_progress');
+          localStorage.removeItem('mg_coptic_claimed_chests');
+          localStorage.removeItem('mg_coptic_badges');
+          if (uid) {
+            localStorage.removeItem(`mg_coptic_progress_${uid}`);
+            localStorage.removeItem(`mg_coptic_lesson_progress_${uid}`);
+            localStorage.removeItem(`mg_coptic_claimed_chests_${uid}`);
+            localStorage.removeItem(`mg_coptic_badges_${uid}`);
+            localStorage.removeItem(`mg_coptic_daily_goal_${uid}`);
+            localStorage.removeItem(`mg_coptic_daily_xp_date_${uid}`);
+            localStorage.removeItem(`mg_coptic_daily_xp_val_${uid}`);
+            localStorage.removeItem(`mg_coptic_last_synced_date_${uid}`);
+          }
+        }
+        if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+        if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+        if (typeof renderSkillMap === 'function') renderSkillMap();
+        if (typeof renderLeaderboardList === 'function') renderLeaderboardList();
         mgSuccess('تمت إعادة التعيين', 'تمت إعادة تعيين التقدم بنجاح.');
       }
     }

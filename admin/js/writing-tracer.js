@@ -245,16 +245,37 @@
             return;
           }
           const currentUrl = uniqueCandidates[index++];
-          window.opentype.load(currentUrl, (err, font) => {
-            if (err || !font) {
-              tryNext();
-            } else {
+          fetch(currentUrl)
+            .then(res => {
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              return res.arrayBuffer();
+            })
+            .then(buffer => {
+              const font = (typeof window.opentype?.parse === 'function')
+                ? window.opentype.parse(buffer)
+                : null;
+              if (!font) throw new Error('Could not parse font buffer');
               fontCache[url] = font;
               fontCache[currentUrl] = font;
               this.font = font;
               resolve(font);
-            }
-          });
+            })
+            .catch(() => {
+              if (typeof window.opentype?.load === 'function') {
+                window.opentype.load(currentUrl, (err, font) => {
+                  if (err || !font) {
+                    tryNext();
+                  } else {
+                    fontCache[url] = font;
+                    fontCache[currentUrl] = font;
+                    this.font = font;
+                    resolve(font);
+                  }
+                });
+              } else {
+                tryNext();
+              }
+            });
         };
         tryNext();
       });

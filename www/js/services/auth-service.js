@@ -1396,16 +1396,6 @@
         const token = (explicitToken || localStorage.getItem('mg_coptic_device_token') || '').trim();
         if (!token || !userId) return;
 
-        // 1. تجربة استدعاء دالة الـ RPC
-        try {
-          const { data, error } = await sb.rpc('claim_guest_device_token', { p_token: token });
-          if (!error && data) {
-            console.log('[Push] Guest device token claimed successfully via RPC for user:', userId);
-            return;
-          }
-        } catch (_) {}
-
-        // 2. تحديث / إدراج مباشر
         const isNative = typeof window.Capacitor !== 'undefined' && 
                          typeof window.Capacitor.isNativePlatform === 'function' && 
                          window.Capacitor.isNativePlatform();
