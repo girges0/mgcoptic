@@ -2417,20 +2417,24 @@ function handlePresenceStateChange() {
 
       const lastActiveEl = document.getElementById('m-student-last-active');
       if (lastActiveEl) {
-        if (isOnline) {
+        const rawModalActive = String(activeSelectedStudent.last_active_date || '').trim();
+        const isExplicitOnline = isOnline || rawModalActive === 'نشط الآن' || rawModalActive.toLowerCase() === 'online' || rawModalActive.includes('نشط الآن');
+        const todayStr = new Date().toISOString().split('T')[0];
+        const isActiveToday = (rawModalActive === todayStr || rawModalActive === 'اليوم' || rawModalActive === 'نشط اليوم');
+
+        if (isExplicitOnline) {
           lastActiveEl.innerHTML = `
             <span class="live-status-pill is-online" style="font-size:0.95rem; padding:6px 14px; font-weight:900;">
               <span class="live-dot-pulse"></span>
               <span>متصل ونشط الآن بالموقع (Online Live)</span>
             </span>
           `;
+        } else if (rawModalActive) {
+          lastActiveEl.innerHTML = isActiveToday ?
+            `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` :
+            `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${esc(rawModalActive)}</span>`;
         } else {
-          const todayStr = new Date().toISOString().split('T')[0];
-          const isActiveToday = (activeSelectedStudent.last_active_date === todayStr);
-          lastActiveEl.innerHTML = activeSelectedStudent.last_active_date ?
-            (isActiveToday ? `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` :
-            `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${activeSelectedStudent.last_active_date}</span>`) :
-            `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
+          lastActiveEl.innerHTML = `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
         }
       }
     }
@@ -2449,28 +2453,29 @@ function updateTableOnlineIndicators() {
     if (!cell) return;
     const isOnline = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(userId));
     const userObj = (allLoadedStudents || []).find(s => String(s.id) === String(userId));
-    const lastActiveDate = userObj ? userObj.last_active_date : null;
-    const isActiveToday = (lastActiveDate === todayStr);
+    const lastActiveRaw = String((userObj && userObj.last_active_date) || '').trim();
+    const isExplicitlyOnline = isOnline || lastActiveRaw === 'نشط الآن' || lastActiveRaw.toLowerCase() === 'online' || lastActiveRaw.includes('نشط الآن');
+    const isActiveToday = (lastActiveRaw === todayStr || lastActiveRaw === 'اليوم' || lastActiveRaw === 'نشط اليوم');
 
-    if (isOnline) {
+    if (isExplicitlyOnline) {
       cell.innerHTML = `
-        <span class="live-status-pill is-online" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
-          <span class="live-dot-pulse"></span>
-          <span>نشط الآن</span>
+        <span class="live-status-pill is-online" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:4px 12px; border-radius:9999px; background:linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); color:#065F46; border:1.5px solid #10B981; font-weight:800; font-size:0.84rem; box-shadow:0 2px 8px rgba(16,185,129,0.22); white-space:nowrap;" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
+          <span class="live-dot-pulse" style="position:relative; width:8px; height:8px; border-radius:50%; background:#10B981; display:inline-block; flex-shrink:0; box-shadow:0 0 6px rgba(16,185,129,0.8);"></span>
+          <span style="color:#065F46; font-weight:900;">نشط الآن</span>
         </span>
       `;
-    } else if (lastActiveDate) {
+    } else if (lastActiveRaw) {
       if (isActiveToday) {
         cell.innerHTML = `
-          <span class="live-status-pill is-today" title="كان نشطاً في وقت سابق من اليوم">
-            <span class="today-dot"></span>
-            <span>اليوم</span>
+          <span class="live-status-pill is-today" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:4px 10px; border-radius:9999px; background:#F0FDF4; color:#166534; border:1.2px solid #86EFAC; font-weight:700; font-size:0.82rem; white-space:nowrap;" title="كان نشطاً في وقت سابق من اليوم">
+            <span class="today-dot" style="width:7px; height:7px; border-radius:50%; background:#22C55E; display:inline-block; flex-shrink:0;"></span>
+            <span style="color:#166534; font-weight:800;">نشط اليوم</span>
           </span>
         `;
       } else {
         cell.innerHTML = `
-          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${lastActiveDate}">
-            ${lastActiveDate}
+          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${esc(lastActiveRaw)}">
+            ${esc(lastActiveRaw)}
           </span>
         `;
       }
@@ -2739,25 +2744,29 @@ function renderStudentsTable(list) {
     const joinedFormatted = u.created_at ? new Date(u.created_at).toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
 
     let lastActiveFormatted = '';
-    if (isOnlineNow) {
+    const rawActive = String(u.last_active_date || '').trim();
+    const isExplicitlyOnline = isOnlineNow || rawActive === 'نشط الآن' || rawActive.toLowerCase() === 'online' || rawActive.includes('نشط الآن');
+    const isTodayActive = (rawActive === todayStr || rawActive === 'اليوم' || rawActive === 'نشط اليوم');
+
+    if (isExplicitlyOnline) {
       lastActiveFormatted = `
-        <span class="live-status-pill is-online" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
-          <span class="live-dot-pulse"></span>
-          <span>نشط الآن</span>
+        <span class="live-status-pill is-online" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:4px 12px; border-radius:9999px; background:linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); color:#065F46; border:1.5px solid #10B981; font-weight:800; font-size:0.84rem; box-shadow:0 2px 8px rgba(16,185,129,0.22); white-space:nowrap;" title="متصل الآن بالمنصة لحظياً (حقيقي 100%)">
+          <span class="live-dot-pulse" style="position:relative; width:8px; height:8px; border-radius:50%; background:#10B981; display:inline-block; flex-shrink:0; box-shadow:0 0 6px rgba(16,185,129,0.8);"></span>
+          <span style="color:#065F46; font-weight:900;">نشط الآن</span>
         </span>
       `;
-    } else if (u.last_active_date) {
-      if (isActiveToday) {
+    } else if (rawActive) {
+      if (isTodayActive) {
         lastActiveFormatted = `
-          <span class="live-status-pill is-today" title="كان نشطاً في وقت سابق من اليوم">
-            <span class="today-dot"></span>
-            <span>اليوم</span>
+          <span class="live-status-pill is-today" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:4px 10px; border-radius:9999px; background:#F0FDF4; color:#166534; border:1.2px solid #86EFAC; font-weight:700; font-size:0.82rem; white-space:nowrap;" title="كان نشطاً في وقت سابق من اليوم">
+            <span class="today-dot" style="width:7px; height:7px; border-radius:50%; background:#22C55E; display:inline-block; flex-shrink:0;"></span>
+            <span style="color:#166534; font-weight:800;">نشط اليوم</span>
           </span>
         `;
       } else {
         lastActiveFormatted = `
-          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${u.last_active_date}">
-            ${u.last_active_date}
+          <span class="live-status-pill is-past" title="آخر نشاط مسجل: ${esc(rawActive)}">
+            ${esc(rawActive)}
           </span>
         `;
       }
@@ -2908,19 +2917,23 @@ function viewStudentDetails(userId) {
   const todayStr = new Date().toISOString().split('T')[0];
   const lastActiveEl = document.getElementById('m-student-last-active');
   if (lastActiveEl) {
-    if (isOnline) {
+    const rawStudentActive = String(student.last_active_date || '').trim();
+    const isExplicitOnline = isOnline || rawStudentActive === 'نشط الآن' || rawStudentActive.toLowerCase() === 'online' || rawStudentActive.includes('نشط الآن');
+    const isActiveToday = (rawStudentActive === todayStr || rawStudentActive === 'اليوم' || rawStudentActive === 'نشط اليوم');
+
+    if (isExplicitOnline) {
       lastActiveEl.innerHTML = `
         <span class="live-status-pill is-online" style="font-size:0.95rem; padding:6px 14px; font-weight:900;">
           <span class="live-dot-pulse"></span>
           <span>متصل ونشط الآن بالموقع (Online Live)</span>
         </span>
       `;
+    } else if (rawStudentActive) {
+      lastActiveEl.innerHTML = isActiveToday ? 
+        `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` : 
+        `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${esc(rawStudentActive)}</span>`;
     } else {
-      const isActiveToday = (student.last_active_date === todayStr);
-      lastActiveEl.innerHTML = student.last_active_date ? 
-        (isActiveToday ? `<span class="live-status-pill is-today" style="font-size:0.9rem; padding:5px 12px;"><span class="today-dot"></span><span>نشط اليوم</span></span>` : 
-        `<span class="live-status-pill is-past" style="font-size:0.9rem; padding:5px 12px;">${student.last_active_date}</span>`) : 
-        `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
+      lastActiveEl.innerHTML = `<span class="live-status-empty" style="font-size:0.88rem;">لم ينشط بعد</span>`;
     }
   }
 
