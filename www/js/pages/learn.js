@@ -1050,7 +1050,7 @@
         const ch = currentChallenges[index];
         renderChallengeContent(ch);
 
-        if (ch && ch.type === 'image_view' && btnCheck) {
+        if (ch && (ch.type === 'image_view' || ch.type === 'text_view') && btnCheck) {
           btnCheck.disabled = false;
           btnCheck.textContent = 'فهمت ومتابعة';
           btnCheck.classList.add('ready');
@@ -1093,6 +1093,44 @@
             ${ch.explanation ? `
               <div class="challenge-explanation-card" style="background:#FFFDF7; border:1.5px solid #E4D5BC; border-radius:14px; padding:14px 18px; margin:14px auto 0; max-width:540px; text-align:center; color:#4A3525; font-size:1.02rem; line-height:1.6; font-weight:600; box-shadow:0 3px 12px rgba(0,0,0,0.04);">
                 ${escapeHtml(ch.explanation)}
+              </div>
+            ` : ''}
+          `;
+        } else if (ch.type === 'text_view') {
+          html += `
+            <div class="question-heading">${escapeHtml(ch.question || 'شرح وقراءة (تأمّل وتعلّم)')}</div>
+            ${ch.image_url ? `
+              <div class="challenge-image-container">
+                <div class="challenge-image-card" onclick="window.openImageZoomModal ? window.openImageZoomModal('${(ch.image_url || '').replace(/'/g, "\\'")}', '${(ch.question || '').replace(/'/g, "\\'")}') : null" title="انقر لتكبير الصورة">
+                  <img src="${escapeHtml(ch.image_url)}" alt="صورة توضيحية" class="challenge-image-tag" loading="lazy" />
+                  <div class="challenge-image-zoom-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <span>تكبير الصورة</span>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+            ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
+              <div class="coptic-letter-display">
+                ${ch.coptic_display ? `<span class="coptic-big-glyph">${escapeHtml(ch.coptic_display)}</span>` : ''}
+                ${(ch.audio_text || ch.audio_url) ? `
+                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this)">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  </button>
+                ` : ''}
+              </div>
+            ` : ''}
+            ${ch.explanation ? `
+              <div class="challenge-text-view-card" style="background:linear-gradient(180deg, #FFFCF5 0%, #FAF4E8 100%); border:2px solid #E2D3BE; border-radius:18px; padding:22px 24px; margin:18px auto 0; max-width:580px; text-align:right; color:#3A271B; font-size:1.12rem; line-height:1.85; font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,0.05); white-space:pre-line; position:relative;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#6F1737; font-weight:800; font-size:0.95rem; border-bottom:1px dashed #DCCDB7; padding-bottom:8px;">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  <span>شرح وتوضيح تعليمي</span>
+                </div>
+                <div>${escapeHtml(ch.explanation)}</div>
               </div>
             ` : ''}
           `;
@@ -1750,7 +1788,7 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'image_view') {
+        if (ch.type === 'image_view' || ch.type === 'text_view') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const selectedOpt = ch.options[currentSelection];
@@ -1830,7 +1868,7 @@
 
         if (isCorrect) {
           correctAnswersCount++;
-          const rawChallengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null) ? ch.xp_reward : (ch.xp !== undefined && ch.xp !== null ? ch.xp : (ch.type === 'image_view' ? 0 : 10));
+          const rawChallengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null) ? ch.xp_reward : (ch.xp !== undefined && ch.xp !== null ? ch.xp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 10));
           const parsedChallengeXp = parseInt(rawChallengeXp, 10);
           const challengeXp = (!isNaN(parsedChallengeXp) && parsedChallengeXp >= 0) ? parsedChallengeXp : 0;
 
@@ -1848,7 +1886,7 @@
             feedbackBox.className = 'feedback-msg correct';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
-              if (ch.type === 'image_view') {
+              if (ch.type === 'image_view' || ch.type === 'text_view') {
                 feedbackText.textContent = challengeXp > 0 ? `أحسنت! واصل التعلّم (+${challengeXp} XP)` : 'أحسنت! واصل التعلّم';
               } else {
                 feedbackText.textContent = isReplayingLesson ? 'إجابة صحيحة وممتازة! (وضع المراجعة)' : (challengeXp > 0 ? `إجابة صحيحة وممتازة! (+${challengeXp} XP)` : 'إجابة صحيحة وممتازة!');

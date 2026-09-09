@@ -2506,6 +2506,7 @@ const CurriculumAdminSystem = (function(){
       case 'trace': return 'تتبع ورسم قبطي (Tracing)';
       case 'image_select': return 'انظر للصورة واختر (Image & Select)';
       case 'image_view': return 'انظر للصورة فقط (Image Only)';
+      case 'text_view': return 'قراءة نص وشرح (Text & Info)';
       case 'read_select': return 'اقرأ واختر (Read & Select)';
       case 'listen_write': return 'استمع واكتب (Listen & Type)';
       case 'select': return 'اختيار من متعدد';
@@ -4115,6 +4116,35 @@ const CurriculumAdminSystem = (function(){
           <span>هذا التمرين للعرض والتوضيح فقط: لا يتطلب خيارات إجابة، وسيقوم الطالب بالضغط على "متابعة" مباشرةً.</span>
         </div>
       `;
+    } else if(type === 'text_view'){
+      const qInput = document.getElementById('challenge-input-question');
+      if(qInput && !qInput.value.trim()){
+        qInput.value = 'شرح وقراءة (تأمّل وتعلّم)';
+      }
+      const xpInput = document.getElementById('challenge-input-xp');
+      if(xpInput && (!existingData || existingData.xp_reward === undefined)){
+        xpInput.value = 0;
+      }
+      const textContent = (existingData && (existingData.explanation || existingData.meaning)) || '';
+      container.innerHTML = `
+        <div style="background:#FAF6EE; border:1.5px solid #D6C8B2; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+          <div style="font-weight:800; color:#6F1737; margin-bottom:6px; font-size:0.95rem; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>إعدادات بطاقة "قراءة نص وشرح" (Text & Info):</span>
+          </div>
+          <p style="font-size:0.83rem; color:#666; margin:0 0 12px 0;">أضف نصاً تعليمياً، أو شرحاً لقاعدة لغوية أو طقسية، أو قطعة للقراءة. لا يتطلب هذا النوع أي خيارات أو أسئلة، ويتم ضبط الـ XP بـ 0 تلقائياً (ويمكنك زيادتها بحرية)، وسيقوم الطالب بقراءة النص والنقر على متابعة مباشرةً.</p>
+
+          <div class="curriculum-field">
+            <label style="font-weight:700;">محتوى النص أو الشرح التعليمي *</label>
+            <textarea id="challenge-input-text-content" rows="6" placeholder="اكتب هنا نص الدرس أو الشرح أو القواعد اللغوية أو النطق... يدعم السطور المتعددة والنقاط." style="width:100%; padding:12px; border-radius:10px; border:1.5px solid #D6C8B2; font-family:inherit; font-size:0.95rem; line-height:1.7; resize:vertical;">${escapeHtml(textContent)}</textarea>
+          </div>
+
+          <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:10px; padding:10px 14px; margin-top:8px; display:flex; align-items:center; gap:8px; color:#166534; font-size:0.86rem; font-weight:700;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span>هذا التمرين نصي فقط بدون أسئلة: يمكنك ربطه بصوت أو نص قبطي في الأعلى، وزر المتابعة سيكون متاحاً مباشرة للطالب.</span>
+          </div>
+        </div>
+      `;
     } else if(type === 'select' || type === 'listen'){
       const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
         { text: '', is_correct: true },
@@ -4303,7 +4333,7 @@ const CurriculumAdminSystem = (function(){
     const existingOrder = oldChallenge ? (oldChallenge.order_index || 1) : (targetLesson.challenges.length + 1);
     const rawXpVal = document.getElementById('challenge-input-xp')?.value;
     const parsedXp = parseInt(rawXpVal, 10);
-    const xpVal = (!isNaN(parsedXp) && parsedXp >= 0) ? parsedXp : (type === 'image_view' ? 0 : 10);
+    const xpVal = (!isNaN(parsedXp) && parsedXp >= 0) ? parsedXp : ((type === 'image_view' || type === 'text_view') ? 0 : 10);
 
     const editorImgVal = document.getElementById('challenge-input-image-url')?.value.trim() || null;
     const challengeObj = {
@@ -4369,6 +4399,14 @@ const CurriculumAdminSystem = (function(){
       if(explInput){
         challengeObj.explanation = explInput.value.trim() || null;
       }
+      challengeObj.options = [];
+    } else if(type === 'text_view'){
+      const textVal = document.getElementById('challenge-input-text-content')?.value.trim() || '';
+      if(!textVal && !challengeObj.coptic_display){
+        toast('يرجى كتابة محتوى النص أو الشرح التعليمي', true);
+        return;
+      }
+      challengeObj.explanation = textVal;
       challengeObj.options = [];
     } else if(type === 'read_select'){
       if(!challengeObj.coptic_display){
@@ -4514,7 +4552,7 @@ const CurriculumAdminSystem = (function(){
           }
         }
 
-        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select' || challengeObj.type === 'image_select' || challengeObj.type === 'image_view')){
+        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select' || challengeObj.type === 'image_select' || challengeObj.type === 'image_view' || challengeObj.type === 'text_view')){
           await sb.from('challenge_options').delete().eq('challenge_id', targetChallengeId);
           if(challengeObj.options && challengeObj.options.length > 0){
             const optPayloads = challengeObj.options.map(o => ({
@@ -4925,7 +4963,7 @@ const CurriculumAdminSystem = (function(){
             }
 
             // 5. Challenge Options
-            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'image_view')){
+            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'image_view' || c.type === 'text_view')){
               await sb.from('challenge_options').delete().eq('challenge_id', cid);
               if(c.options && Array.isArray(c.options) && c.options.length > 0){
                 const optPayloads = c.options.map(opt => ({
@@ -5337,9 +5375,9 @@ const CurriculumAdminSystem = (function(){
           </div>
         </div>
       `;
-    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'image_select' || challenge.type === 'image_view'){
+    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'image_select' || challenge.type === 'image_view' || challenge.type === 'text_view'){
       challengeContent = `
-        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : (challenge.type === 'image_select' ? 'انظر إلى الصورة ثم اختر الإجابة الصحيحة' : (challenge.type === 'image_view' ? 'انظر إلى الصورة وتأملها' : 'اختر الإجابة الصحيحة'))))}</div>
+        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : (challenge.type === 'image_select' ? 'انظر إلى الصورة ثم اختر الإجابة الصحيحة' : (challenge.type === 'image_view' ? 'انظر إلى الصورة وتأملها' : (challenge.type === 'text_view' ? 'اقرأ وتأمّل' : 'اختر الإجابة الصحيحة')))))}</div>
         ${challenge.image_url ? `
           <div class="challenge-image-container">
             <div class="challenge-image-card" onclick="CurriculumAdminSystem.openImageZoomModal('${escapeJs(challenge.image_url)}', '${escapeJs(challenge.question || '')}')" title="انقر لتكبير الصورة">
@@ -5377,12 +5415,12 @@ const CurriculumAdminSystem = (function(){
         ` : '')}
 
         ${challenge.explanation ? `
-          <div style="background:#FFFDF7; border:1.5px solid #E4D5BC; border-radius:12px; padding:12px 16px; margin:14px auto 0; max-width:540px; text-align:center; color:#4A3525; font-size:1rem; line-height:1.6; font-weight:600;">
+          <div style="background:#FFFDF7; border:1.5px solid #E4D5BC; border-radius:14px; padding:16px 20px; margin:14px auto 0; max-width:540px; text-align:right; color:#4A3525; font-size:1.05rem; line-height:1.8; font-weight:600; white-space:pre-line; box-shadow:0 3px 12px rgba(0,0,0,0.04);">
             ${escapeHtml(challenge.explanation)}
           </div>
         ` : ''}
 
-        ${challenge.type !== 'image_view' ? `
+        ${(challenge.type !== 'image_view' && challenge.type !== 'text_view') ? `
           <div class="options-grid">
             ${(challenge.options || []).map((opt, idx) => {
               let cls = 'option-card';
@@ -5562,7 +5600,7 @@ const CurriculumAdminSystem = (function(){
     let canCheck = false;
     if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false' || challenge.type === 'image_select'){
       canCheck = previewState.selectedAnswerIndex !== null;
-    } else if(challenge.type === 'image_view'){
+    } else if(challenge.type === 'image_view' || challenge.type === 'text_view'){
       canCheck = true;
     } else if(challenge.type === 'listen_write'){
       canCheck = Boolean((previewState.listenWriteValue || '').trim());
@@ -5849,7 +5887,7 @@ const CurriculumAdminSystem = (function(){
     if(isCorrect){
       previewState.correctCount++;
       const currentChallenge = previewState.challenges[previewState.currentIndex];
-      const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : (currentChallenge && currentChallenge.type === 'image_view' ? 0 : 10);
+      const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : ((currentChallenge && (currentChallenge.type === 'image_view' || currentChallenge.type === 'text_view')) ? 0 : 10);
       previewState.score += earnedXp;
       PreviewSound.playCorrect();
     } else {
