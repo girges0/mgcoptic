@@ -2505,6 +2505,7 @@ const CurriculumAdminSystem = (function(){
     switch(type){
       case 'trace': return 'تتبع ورسم قبطي (Tracing)';
       case 'image_select': return 'انظر للصورة واختر (Image & Select)';
+      case 'image_view': return 'انظر للصورة فقط (Image Only)';
       case 'read_select': return 'اقرأ واختر (Read & Select)';
       case 'listen_write': return 'استمع واكتب (Listen & Type)';
       case 'select': return 'اختيار من متعدد';
@@ -4055,6 +4056,65 @@ const CurriculumAdminSystem = (function(){
           `).join('')}
         </div>
       `;
+    } else if(type === 'image_view'){
+      const qInput = document.getElementById('challenge-input-question');
+      if(qInput && !qInput.value.trim()){
+        qInput.value = 'انظر إلى الصورة وتأملها';
+      }
+      const xpInput = document.getElementById('challenge-input-xp');
+      if(xpInput && (!existingData || existingData.xp_reward === undefined)){
+        xpInput.value = 0;
+      }
+      const imageUrl = (existingData && existingData.image_url) || '';
+      const explanation = (existingData && existingData.explanation) || '';
+      container.innerHTML = `
+        <div style="background:#FAF6EE; border:1.5px solid #D6C8B2; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+          <div style="font-weight:800; color:#6F1737; margin-bottom:6px; font-size:0.95rem; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>إعدادات تمرين "انظر للصورة فقط" (عرض وتوضيح / Image Only):</span>
+          </div>
+          <p style="font-size:0.83rem; color:#666; margin:0 0 12px 0;">تمرين لعرض صورة تعليمية توضيحية بدون خيارات أو أسئلة. يقوم الطالب بمشاهدة الصورة وتكبيرها وقراءة التوضيح ثم النقر على متابعة مباشرةً. يمكنك ترك نقاط XP بـ 0 أو تحديد أي نقاط تريدها.</p>
+
+          <div class="curriculum-field">
+            <label style="font-weight:700;">رابط الصورة (Image URL - رابط مباشر أو Google Drive أو رفع ملف) *</label>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="text" id="challenge-input-image-url" value="${escapeHtml(imageUrl)}" oninput="CurriculumAdminSystem.updateImageEditorPreview()" placeholder="https://... رابط الصورة المباشر أو من Google Drive" dir="ltr" style="flex:1; min-width:240px;">
+              <label class="curriculum-btn curriculum-btn-secondary" style="margin:0; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>رفع صورة</span>
+                <input type="file" id="challenge-file-image-upload" accept="image/*" style="display:none;" onchange="CurriculumAdminSystem.onImageFileSelected(event)">
+              </label>
+              <button type="button" class="curriculum-btn curriculum-btn-danger" id="btn-delete-challenge-image" onclick="CurriculumAdminSystem.removeEditorImage()" style="${imageUrl ? 'display:inline-flex;' : 'display:none;'} white-space:nowrap; align-items:center; gap:6px;" title="إزالة الصورة">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>إزالة الصورة</span>
+              </button>
+            </div>
+            <p style="font-size:0.78rem; color:#746B6F; margin:4px 0 0 0;">يدعم الرفع المباشر (.png, .jpg, .webp, .svg) وروابط الويب وروابط Google Drive العامة.</p>
+          </div>
+
+          <!-- معاينة الصورة داخل نافذة التعديل مع زر فحص التكبير -->
+          <div id="challenge-image-preview-box" style="${imageUrl ? 'display:block;' : 'display:none;'} margin-top:10px;">
+            <label style="font-size:0.82rem; font-weight:700; color:#6F1737; display:block; margin-bottom:4px;">معاينة مظهر الصورة (انقر للتكبير والتجربة):</label>
+            <div style="position:relative; width:100%; max-width:280px; height:160px; border-radius:12px; border:2px solid #E7DCC8; overflow:hidden; background:#FFF; cursor:zoom-in; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.06);" onclick="const u=document.getElementById('challenge-input-image-url')?.value.trim(); if(u && window.CurriculumAdminSystem?.openImageZoomModal) CurriculumAdminSystem.openImageZoomModal(u, 'معاينة صورة التمرين');" title="انقر لتجربة التكبير">
+              <img id="challenge-image-preview-thumb" src="${escapeHtml(imageUrl)}" style="width:100%; height:100%; object-fit:contain;" alt="معاينة صورة التمرين" />
+              <div style="position:absolute; bottom:6px; left:6px; background:rgba(111,23,55,0.85); color:#fff; font-size:0.75rem; padding:3px 8px; border-radius:12px; display:flex; align-items:center; gap:4px; font-weight:700; backdrop-filter:blur(4px);">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                <span>تكبير</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculum-field" style="margin-top:10px;">
+          <label style="font-weight:700;">نص أو شرح توضيحي أسفل الصورة (اختياري)</label>
+          <textarea id="challenge-input-view-explanation" rows="2" placeholder="اكتب هنا أي شرح أو تعليق تريده أن يظهر تحت الصورة للطلاب..." style="width:100%; padding:10px; border-radius:10px; border:1.5px solid #D6C8B2; font-family:inherit; font-size:0.9rem; resize:vertical;">${escapeHtml(explanation)}</textarea>
+        </div>
+
+        <div style="background:#F0FDF4; border:1.5px solid #BBF7D0; border-radius:10px; padding:10px 14px; margin-top:8px; display:flex; align-items:center; gap:8px; color:#166534; font-size:0.86rem; font-weight:700;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>هذا التمرين للعرض والتوضيح فقط: لا يتطلب خيارات إجابة، وسيقوم الطالب بالضغط على "متابعة" مباشرةً.</span>
+        </div>
+      `;
     } else if(type === 'select' || type === 'listen'){
       const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
         { text: '', is_correct: true },
@@ -4241,7 +4301,9 @@ const CurriculumAdminSystem = (function(){
     if(!targetLesson.challenges) targetLesson.challenges = [];
 
     const existingOrder = oldChallenge ? (oldChallenge.order_index || 1) : (targetLesson.challenges.length + 1);
-    const xpVal = parseInt(document.getElementById('challenge-input-xp').value) || 10;
+    const rawXpVal = document.getElementById('challenge-input-xp')?.value;
+    const parsedXp = parseInt(rawXpVal, 10);
+    const xpVal = (!isNaN(parsedXp) && parsedXp >= 0) ? parsedXp : (type === 'image_view' ? 0 : 10);
 
     const editorImgVal = document.getElementById('challenge-input-image-url')?.value.trim() || null;
     const challengeObj = {
@@ -4296,6 +4358,18 @@ const CurriculumAdminSystem = (function(){
       if(!hasCorrect && challengeObj.options.length > 0){
         challengeObj.options[0].is_correct = true;
       }
+    } else if(type === 'image_view'){
+      const imgVal = document.getElementById('challenge-input-image-url')?.value.trim() || challengeObj.image_url;
+      if(!imgVal){
+        toast('يرجى إضافة رابط الصورة أو رفع ملف صورة لهذا التمرين', true);
+        return;
+      }
+      challengeObj.image_url = imgVal;
+      const explInput = document.getElementById('challenge-input-view-explanation');
+      if(explInput){
+        challengeObj.explanation = explInput.value.trim() || null;
+      }
+      challengeObj.options = [];
     } else if(type === 'read_select'){
       if(!challengeObj.coptic_display){
         toast('يرجى كتابة الحرف أو الكلمة القبطية في حقل (النص القبطي المعروض)', true);
@@ -4440,7 +4514,7 @@ const CurriculumAdminSystem = (function(){
           }
         }
 
-        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select' || challengeObj.type === 'image_select')){
+        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select' || challengeObj.type === 'image_select' || challengeObj.type === 'image_view')){
           await sb.from('challenge_options').delete().eq('challenge_id', targetChallengeId);
           if(challengeObj.options && challengeObj.options.length > 0){
             const optPayloads = challengeObj.options.map(o => ({
@@ -4851,7 +4925,7 @@ const CurriculumAdminSystem = (function(){
             }
 
             // 5. Challenge Options
-            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank' || c.type === 'read_select' || c.type === 'image_select')){
+            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'image_view')){
               await sb.from('challenge_options').delete().eq('challenge_id', cid);
               if(c.options && Array.isArray(c.options) && c.options.length > 0){
                 const optPayloads = c.options.map(opt => ({
@@ -5263,9 +5337,9 @@ const CurriculumAdminSystem = (function(){
           </div>
         </div>
       `;
-    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'image_select'){
+    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'image_select' || challenge.type === 'image_view'){
       challengeContent = `
-        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : (challenge.type === 'image_select' ? 'انظر إلى الصورة ثم اختر الإجابة الصحيحة' : 'اختر الإجابة الصحيحة')))}</div>
+        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : (challenge.type === 'image_select' ? 'انظر إلى الصورة ثم اختر الإجابة الصحيحة' : (challenge.type === 'image_view' ? 'انظر إلى الصورة وتأملها' : 'اختر الإجابة الصحيحة'))))}</div>
         ${challenge.image_url ? `
           <div class="challenge-image-container">
             <div class="challenge-image-card" onclick="CurriculumAdminSystem.openImageZoomModal('${escapeJs(challenge.image_url)}', '${escapeJs(challenge.question || '')}')" title="انقر لتكبير الصورة">
@@ -5302,22 +5376,30 @@ const CurriculumAdminSystem = (function(){
           </div>
         ` : '')}
 
-        <div class="options-grid">
-          ${(challenge.options || []).map((opt, idx) => {
-            let cls = 'option-card';
-            if(previewState.isAnswered){
-              if(opt.is_correct) cls += ' correct';
-              else if(previewState.selectedAnswerIndex === idx) cls += ' wrong';
-            } else if(previewState.selectedAnswerIndex === idx){
-              cls += ' selected';
-            }
-            return `
-              <div class="${cls}" onclick="CurriculumAdminSystem.selectPreviewAnswer(${idx})">
-                <span>${escapeHtml(opt.text)}</span>
-              </div>
-            `;
-          }).join('')}
-        </div>
+        ${challenge.explanation ? `
+          <div style="background:#FFFDF7; border:1.5px solid #E4D5BC; border-radius:12px; padding:12px 16px; margin:14px auto 0; max-width:540px; text-align:center; color:#4A3525; font-size:1rem; line-height:1.6; font-weight:600;">
+            ${escapeHtml(challenge.explanation)}
+          </div>
+        ` : ''}
+
+        ${challenge.type !== 'image_view' ? `
+          <div class="options-grid">
+            ${(challenge.options || []).map((opt, idx) => {
+              let cls = 'option-card';
+              if(previewState.isAnswered){
+                if(opt.is_correct) cls += ' correct';
+                else if(previewState.selectedAnswerIndex === idx) cls += ' wrong';
+              } else if(previewState.selectedAnswerIndex === idx){
+                cls += ' selected';
+              }
+              return `
+                <div class="${cls}" onclick="CurriculumAdminSystem.selectPreviewAnswer(${idx})">
+                  <span>${escapeHtml(opt.text)}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : ''}
       `;
     } else if(challenge.type === 'write'){
       const selected = previewState.selectedTiles || [];
@@ -5480,6 +5562,8 @@ const CurriculumAdminSystem = (function(){
     let canCheck = false;
     if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false' || challenge.type === 'image_select'){
       canCheck = previewState.selectedAnswerIndex !== null;
+    } else if(challenge.type === 'image_view'){
+      canCheck = true;
     } else if(challenge.type === 'listen_write'){
       canCheck = Boolean((previewState.listenWriteValue || '').trim());
     } else if(challenge.type === 'fill_blank'){
@@ -5765,7 +5849,7 @@ const CurriculumAdminSystem = (function(){
     if(isCorrect){
       previewState.correctCount++;
       const currentChallenge = previewState.challenges[previewState.currentIndex];
-      const earnedXp = currentChallenge && currentChallenge.xp_reward ? currentChallenge.xp_reward : 10;
+      const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : (currentChallenge && currentChallenge.type === 'image_view' ? 0 : 10);
       previewState.score += earnedXp;
       PreviewSound.playCorrect();
     } else {
