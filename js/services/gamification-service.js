@@ -1381,7 +1381,7 @@ class GamificationService {
         list.push(cleanChestId);
         if (uid) localStorage.setItem(key, JSON.stringify(list));
         localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(list));
-        await this.updateProgress(uid, { addPoints: xpReward, addHearts: heartsReward });
+        await this.updateProgress(uid, { addPoints: xpReward, addHearts: heartsReward, claimed_chests: list });
       }
 
       // حفظ الشارة إن وُجدت
@@ -1534,7 +1534,7 @@ class GamificationService {
         if(!error && data){
           const serverResetVersion = Number(data.reset_version || 0);
           const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
-          const isResetDetected = (serverResetVersion > localResetVersion) || (data.points === 0 && (progress?.points || 0) > 0);
+          const isResetDetected = (serverResetVersion > localResetVersion);
 
           if (isResetDetected) {
             console.log('[Gamification] Account reset detected from server. Purging local stale cache...');
@@ -1625,6 +1625,7 @@ class GamificationService {
     if(typeof updates.addPoints === 'number') prog.points = Math.max(0, (prog.points || 0) + updates.addPoints);
     if(typeof updates.addHearts === 'number') prog.hearts = Math.max(0, (prog.hearts ?? 5) + updates.addHearts);
     if(typeof updates.streak_days === 'number') prog.streak_days = updates.streak_days;
+    if(Array.isArray(updates.claimed_chests)) prog.claimed_chests = updates.claimed_chests;
 
     this.saveProgressLocal(prog, uid);
 
@@ -1830,21 +1831,8 @@ class GamificationService {
           // السيرفر هو مصدر الحقيقة للحساب المسجل
           const serverMap = {};
           if(Array.isArray(data) && data.length > 0){
-            const curPoints = this.getProgressLocal(uid)?.points || 0;
-            // التحقق من اتساق البيانات: إذا كان رصيد المستخدم 0 (تم تصفير الحساب أو حساب جديد)، يتم حذف وتجاهل أي سجلات سابقة فوراً
-            if (curPoints === 0) {
-              map = { '1': { status: 'in_progress', score: 0 } };
-              if (uid) localStorage.setItem(userLpKey, JSON.stringify(map));
-              localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));
-              return map;
-            }
             data.forEach(row => {
               const lid = String(row.lesson_id);
-              const numId = parseInt(lid, 10);
-              // إذا كان رصيد المستخدم أول درس فقط (<= 35 XP)، نتجاهل أي بقايا لدروس عليا سابقة
-              if(curPoints <= 35 && numId > 1 && row.status === 'completed'){
-                return;
-              }
               serverMap[lid] = {
                 status: row.status,
                 score: row.score || 0
@@ -1968,12 +1956,26 @@ class GamificationService {
     // احتياطي غير متصل (Offline fallback) فقط في حال تعذر الاتصال بالسيرفر
     if(!serverHandled && !wasAlreadyCompleted){
       const fallbackXp = parseInt(xpReward, 10) || 20;
+      const curProg = this.getProgressLocal(uid) || {};
       if(fallbackXp > 0){
-        const curProg = this.getProgressLocal(uid) || {};
         curProg.points = (curProg.points || 0) + fallbackXp;
         curProg.total_points = (curProg.total_points || 0) + fallbackXp;
         this.saveProgressLocal(curProg, uid);
         this.recordTodayEarnedXP(uid, fallbackXp);
+      }
+      if(sbClient && uid && !isNaN(numLessonId)){
+        sbClient.from('user_lesson_progress').upsert({
+          user_id: uid,
+          lesson_id: numLessonId,
+          status: 'completed',
+          score: parseInt(score, 10) || 100,
+          updated_at: new Date().toISOString()
+        }).then(()=>{}, ()=>{});
+
+        sbClient.from('user_progress').update({
+          points: curProg.points || 0,
+          last_active_date: new Date().toISOString().split('T')[0]
+        }).eq('user_id', uid).then(()=>{}, ()=>{});
       }
     }
 

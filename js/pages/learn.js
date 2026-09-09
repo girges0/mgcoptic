@@ -131,17 +131,15 @@
         }
 
         const uid = getAuthUserId();
-        const curProg = (typeof getUserProgressData === 'function' ? getUserProgressData() : null) || (window.MGCopticGame?.getProgressLocal ? window.MGCopticGame.getProgressLocal(uid) : null);
-        const isResetAccount = curProg && (curProg.points === 0 || !curProg.points) && (!curProg.total_points || curProg.total_points === 0);
-
-        if (isResetAccount) {
-          activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
-        } else if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
+        if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
           const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
           const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
           if (rawLP) {
             try { activeLessonProgress = JSON.parse(rawLP); } catch (e) { }
           }
+        }
+        if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
+          activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
         }
 
         if (!activeCurriculum || !activeCurriculum.units || activeCurriculum.units.length === 0) {

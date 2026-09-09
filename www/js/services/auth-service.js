@@ -654,7 +654,7 @@
             const localPoints = Number(localProg?.points || 0);
             const serverPoints = Number(prog.points || 0);
 
-            const resetOccurred = (serverResetVersion > localResetVersion) || (serverPoints === 0 && localPoints > 0);
+            const resetOccurred = (serverResetVersion > localResetVersion);
 
             if (resetOccurred) {
               console.log('[Auth] Account reset detected on session init. Purging all local caches...');
