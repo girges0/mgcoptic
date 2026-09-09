@@ -2177,7 +2177,28 @@
       }
     }
 
+    function togglePassVisibility(inputId, btn) {
+      const inp = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+      if (!inp) return;
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+
+      const targetBtn = btn || (inp.parentElement ? inp.parentElement.querySelector('.toggle-pass-btn') : null);
+      if (targetBtn) {
+        const eyeOpen = targetBtn.querySelector('.eye-open-icon');
+        const eyeClosed = targetBtn.querySelector('.eye-closed-icon');
+        if (eyeOpen && eyeClosed) {
+          eyeOpen.style.display = isPass ? 'none' : 'block';
+          eyeClosed.style.display = isPass ? 'block' : 'none';
+        }
+        targetBtn.title = isPass ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور';
+        targetBtn.setAttribute('aria-label', targetBtn.title);
+        targetBtn.style.color = isPass ? 'var(--madder, #6B1530)' : 'var(--ink-soft, #7A6953)';
+      }
+    }
+
     // تصدير الدوال للاستخدام العام عبر الصفحات
+    window.togglePassVisibility = togglePassVisibility;
     window.openWhatsAppSupport = openWhatsAppSupport;
     window.showBannedAccountScreen = showBannedAccountScreen;
     window.dismissBannedAccountScreen = dismissBannedAccountScreen;

@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS public.challenges (
     coptic_display TEXT,
     audio_text TEXT,
     audio_url TEXT,
+    image_url TEXT,
     correct_word TEXT,
     tiles JSONB,
     pairs JSONB,

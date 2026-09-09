@@ -73,7 +73,21 @@
       </div>
       <div class="login-field">
         <label for="admin-pass">كلمة المرور</label>
-        <input type="password" id="admin-pass" name="admin_user_password" placeholder="••••••••" autocomplete="new-password" required>
+        <div style="position:relative; width:100%; display:flex; align-items:center;">
+          <input type="password" id="admin-pass" name="admin_user_password" placeholder="••••••••" autocomplete="new-password" required style="width:100%; padding-left:40px; box-sizing:border-box;">
+          <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('admin-pass', this)"
+            style="position:absolute; left:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:#7A6953; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; transition:color .2s;"
+            title="إظهار كلمة المرور" aria-label="إظهار كلمة المرور">
+            <svg class="eye-open-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg class="eye-closed-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
         <input type="hidden" id="login-password">
       </div>
       <button class="login-btn" id="login-btn" type="submit">تسجيل الدخول</button>
@@ -625,6 +639,7 @@
                 <select id="challenge-input-type" onchange="CurriculumAdminSystem.onChallengeTypeChange(this.value)">
                   <option value="listen_write">استمع واكتب (Listen & Type)</option>
                   <option value="read_select">اقرأ واختر (Read & Select)</option>
+                  <option value="image_select">انظر للصورة واختر (Image & Select)</option>
                   <option value="select">اختر الإجابة الصحيحة (Multiple Choice - Select)</option>
                   <option value="trace">سبورة تتبع ورسم الحروف والكلمات (Letter / Word Tracing)</option>
                   <option value="listen">استمع واختر (Listen & Select)</option>
@@ -1444,5 +1459,26 @@
   <script src="js/admin.js"></script>
   <script src="js/curriculum-admin.js"></script>
   <script src="../js/pwa-register.js" defer></script>
+  <script>
+    function togglePassVisibility(inputId, btn) {
+      const inp = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+      if (!inp) return;
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+
+      const targetBtn = btn || (inp.parentElement ? inp.parentElement.querySelector('.toggle-pass-btn') : null);
+      if (targetBtn) {
+        const eyeOpen = targetBtn.querySelector('.eye-open-icon');
+        const eyeClosed = targetBtn.querySelector('.eye-closed-icon');
+        if (eyeOpen && eyeClosed) {
+          eyeOpen.style.display = isPass ? 'none' : 'block';
+          eyeClosed.style.display = isPass ? 'block' : 'none';
+        }
+        targetBtn.title = isPass ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور';
+        targetBtn.setAttribute('aria-label', targetBtn.title);
+        targetBtn.style.color = isPass ? '#6F1737' : '#7A6953';
+      }
+    }
+  </script>
 </body>
 </html>

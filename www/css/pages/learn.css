@@ -1085,7 +1085,7 @@
     /* لوحة التتبع التفاعلية (Tracing Exercise) */
     .trace-interactive-card {
       width: 100%;
-      max-width: 360px;
+      max-width: 390px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -1095,62 +1095,66 @@
     .trace-interactive-card .question-heading {
       width: 100%;
       text-align: right;
-      margin: 0 0 6px;
-      font-size: 1.25rem;
+      margin: 6px 4px 6px;
+      font-size: 1.45rem;
+      font-weight: 900;
     }
     .trace-audio-wrap {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin: 2px 0 2px;
+      margin: 2px 0 6px;
     }
     .trace-info-container {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
       width: 100%;
     }
     .trace-target-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--gold, #C5A059);
-      min-height: 22px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--gold, #B8860B);
+      font-family: 'Coptic Girges', Cairo, 'Noto Sans Coptic', sans-serif;
+      letter-spacing: 2px;
+      min-height: 28px;
+      text-align: center;
     }
     .trace-stroke-control {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 4px auto 8px;
-      background: var(--parchment-2, #F4ECE1);
-      padding: 4px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--line, rgba(168, 130, 58, 0.25));
-      max-width: 300px;
+      justify-content: space-between;
+      background: #EFE6D5;
+      padding: 7px 14px;
+      border-radius: 28px;
+      border: 1.5px solid #DFD2BD;
       width: 100%;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      max-width: 340px;
+      margin: 0 auto 14px;
       box-sizing: border-box;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
     }
     .trace-stroke-label {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--ink-soft);
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #5A4A3E;
       white-space: nowrap;
     }
     .trace-stroke-slider {
       flex: 1;
-      max-width: 120px;
+      max-width: 130px;
+      margin: 0 10px;
       accent-color: var(--madder, #6F1737);
       cursor: pointer;
     }
     .trace-stroke-val {
-      min-width: 30px;
-      font-weight: 700;
+      min-width: 32px;
+      font-weight: 800;
       color: var(--madder, #6F1737);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       text-align: center;
     }
     .trace-stroke-preview {
@@ -1158,7 +1162,7 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: #2e6b3e;
+      background: #2e7d32;
       flex-shrink: 0;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
       transition: width 0.1s ease, height 0.1s ease;
@@ -1166,13 +1170,13 @@
     .trace-canvas-wrapper {
       position: relative;
       width: 100%;
-      max-width: 320px;
-      height: 230px;
+      max-width: 340px;
+      height: 310px;
       margin: 0 auto;
-      background: var(--parchment-card, #FFFFFF);
-      border-radius: 18px;
-      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      background: #FFFDF8;
+      border-radius: 24px;
+      border: 2px solid #D6C8B2;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       touch-action: none;
       box-sizing: border-box;
@@ -1186,48 +1190,49 @@
     }
     .trace-accuracy-badge {
       position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(255, 255, 255, 0.94);
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(4px);
-      padding: 3px 10px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--ink-soft);
-      border: 1px solid var(--line, rgba(168, 130, 58, 0.25));
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #2A1F17;
+      border: 1px solid #D6C8B2;
       display: none;
       z-index: 2;
     }
     .trace-actions-row {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-top: 8px;
+      gap: 12px;
+      margin: 16px auto 0;
       width: 100%;
-      max-width: 320px;
+      max-width: 340px;
       box-sizing: border-box;
     }
     .trace-action-btn {
       flex: 1;
-      padding: 8px 14px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      border-radius: 14px;
       cursor: pointer;
-      min-height: 40px;
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       user-select: none;
       font-family: var(--font-display);
       transition: all 0.15s ease;
       box-sizing: border-box;
     }
     .btn-trace-clear {
-      background: var(--parchment-2, #F4ECE1);
-      color: var(--ink);
-      border: 1px solid var(--line, rgba(168, 130, 58, 0.3));
+      background: #EFE6D5;
+      color: #2A1F17;
+      border: 1.5px solid #DFD2BD;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
     }
     .btn-trace-clear:hover {
@@ -1658,5 +1663,184 @@
         font-size: .84rem;
         gap: 8px;
         max-width: calc(100vw - 20px);
+      }
+    }
+
+    /* حاوية ومعاينة الصور التفاعلية في التمارين */
+    .challenge-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 4px auto 14px;
+      box-sizing: border-box;
+    }
+    .challenge-image-card {
+      position: relative;
+      background: #FFFFFF;
+      border: 2px solid rgba(168, 130, 58, 0.35);
+      border-radius: 18px;
+      padding: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 380px;
+      width: 100%;
+      height: 220px;
+      max-height: 36vh;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .challenge-image-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--madder, #6F1737);
+      box-shadow: 0 8px 24px rgba(111, 23, 55, 0.16);
+    }
+    .challenge-image-card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      display: block;
+      pointer-events: none;
+    }
+    .challenge-image-zoom-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(26, 18, 16, 0.78);
+      backdrop-filter: blur(4px);
+      color: #FFFDF8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+      transition: background 0.2s ease;
+    }
+    .challenge-image-card:hover .challenge-image-zoom-badge {
+      background: rgba(111, 23, 55, 0.9);
+    }
+
+    /* نافذة تكبير الصورة بملء الشاشة مع أزرار التحكم */
+    .global-image-zoom-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 10, 12, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 100002;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      box-sizing: border-box;
+    }
+    .global-image-zoom-modal.active {
+      opacity: 1;
+    }
+    .global-image-zoom-modal .image-zoom-controls {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .global-image-zoom-modal .image-zoom-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+    .global-image-zoom-modal .image-zoom-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.08);
+    }
+    .global-image-zoom-modal .image-zoom-btn.close-btn {
+      background: rgba(220, 53, 69, 0.35);
+      border-color: rgba(220, 53, 69, 0.6);
+    }
+    .global-image-zoom-modal .image-zoom-btn.close-btn:hover {
+      background: rgba(220, 53, 69, 0.7);
+    }
+    .global-image-zoom-modal .image-zoom-viewport {
+      max-width: 92vw;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .global-image-zoom-modal .image-zoom-viewport img {
+      max-width: 90vw;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform-origin: center center;
+      cursor: grab;
+      user-select: none;
+    }
+    .global-image-zoom-modal .image-zoom-caption {
+      color: #FDFBF7;
+      margin-top: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+    .global-image-zoom-modal .image-zoom-hint {
+      position: absolute;
+      bottom: 16px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.82rem;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .challenge-image-card {
+        height: 180px;
+        max-height: 30vh;
+      }
+      .challenge-image-zoom-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+      }
+      .global-image-zoom-modal .image-zoom-controls {
+        top: 12px;
+        right: 12px;
+        gap: 6px;
+      }
+      .global-image-zoom-modal .image-zoom-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
       }
     }

@@ -1778,6 +1778,173 @@
   .coptic-letter-display .coptic-audio-circle-btn {
     width: 44px; height: 44px; min-width: 44px; margin-top: 14px;
     box-shadow: 0 3px 10px rgba(168, 130, 58, 0.22);
+  /* Challenge Responsive Image Card */
+  .challenge-image-container {
+    width: 100%;
+    max-width: 440px;
+    margin: 10px auto 20px auto;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  .challenge-image-card {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    height: 220px;
+    max-height: 38vh;
+    border-radius: 18px;
+    background: #FAF3E4;
+    border: 2px solid rgba(168, 130, 58, 0.35);
+    box-shadow: 0 8px 24px rgba(36, 27, 18, 0.08);
+    overflow: hidden;
+    cursor: zoom-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  @media(max-width: 480px) {
+    .challenge-image-card {
+      height: 180px;
+      max-height: 30vh;
+      border-radius: 14px;
+    }
+  }
+  .challenge-image-card:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 12px 28px rgba(107, 21, 48, 0.16);
+    border-color: #6B1530;
+  }
+  .challenge-image-tag {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #FFFFFF;
+    transition: transform 0.3s ease;
+  }
+  .challenge-image-card:hover .challenge-image-tag {
+    transform: scale(1.03);
+  }
+  .challenge-image-zoom-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(107, 21, 48, 0.88);
+    color: #FFFFFF;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    pointer-events: none;
+    transition: background 0.2s ease;
+  }
+  .challenge-image-card:hover .challenge-image-zoom-badge {
+    background: rgba(212, 175, 55, 0.95);
+    color: #382005;
+  }
+
+  /* Global Image Zoom Lightbox Modal */
+  .global-image-zoom-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(18, 12, 14, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+    box-sizing: border-box;
+    cursor: default;
+  }
+  .global-image-zoom-modal.active {
+    opacity: 1;
+  }
+  .global-image-zoom-modal .image-zoom-controls {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000000;
+  }
+  .global-image-zoom-modal .image-zoom-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: all 0.18s ease;
+  }
+  .global-image-zoom-modal .image-zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.08);
+  }
+  .global-image-zoom-modal .image-zoom-btn.close-btn {
+    background: #D4AF37;
+    color: #2E1B00;
+    border: none;
+    font-size: 20px;
+  }
+  .global-image-zoom-modal .image-zoom-btn.close-btn:hover {
+    background: #ECC757;
+  }
+  .global-image-zoom-modal .image-zoom-viewport {
+    max-width: 92vw;
+    max-height: 82vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+  }
+  .global-image-zoom-modal #image-zoom-target {
+    max-width: 90vw;
+    max-height: 78vh;
+    object-fit: contain;
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+    user-select: none;
+    cursor: zoom-in;
+  }
+  .global-image-zoom-modal .image-zoom-caption {
+    color: #FFF9E6;
+    font-size: 0.98rem;
+    font-weight: 800;
+    margin-top: 14px;
+    text-align: center;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+    max-width: 85vw;
+  }
+  .global-image-zoom-modal .image-zoom-hint {
+    position: absolute;
+    bottom: 14px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.8rem;
+    pointer-events: none;
+    text-align: center;
   }
 
   /* 3D Option Cards Matching Website */

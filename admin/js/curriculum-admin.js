@@ -2504,6 +2504,9 @@ const CurriculumAdminSystem = (function(){
   function getChallengeTypeName(type){
     switch(type){
       case 'trace': return 'تتبع ورسم قبطي (Tracing)';
+      case 'image_select': return 'انظر للصورة واختر (Image & Select)';
+      case 'read_select': return 'اقرأ واختر (Read & Select)';
+      case 'listen_write': return 'استمع واكتب (Listen & Type)';
       case 'select': return 'اختيار من متعدد';
       case 'listen': return 'استماع وتعرف';
       case 'match': return 'توصيل أزواج';
@@ -3989,6 +3992,69 @@ const CurriculumAdminSystem = (function(){
           `).join('')}
         </div>
       `;
+    } else if(type === 'image_select'){
+      const qInput = document.getElementById('challenge-input-question');
+      if(qInput && !qInput.value.trim()){
+        qInput.value = 'انظر إلى الصورة ثم اختر الإجابة الصحيحة';
+      }
+      const imageUrl = (existingData && existingData.image_url) || '';
+      const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
+        { text: '', is_correct: true },
+        { text: '', is_correct: false },
+        { text: '', is_correct: false }
+      ];
+      container.innerHTML = `
+        <div style="background:#FAF6EE; border:1.5px solid #D6C8B2; border-radius:12px; padding:14px 16px; margin-bottom:14px;">
+          <div style="font-weight:800; color:#6F1737; margin-bottom:6px; font-size:0.95rem; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>إعدادات تمرين "انظر للصورة واختر" (Image & Select):</span>
+          </div>
+          <p style="font-size:0.83rem; color:#666; margin:0 0 12px 0;">أضف صورة واضحة للسؤال من خلال رابط مباشر أو Google Drive أو رفعها مباشرة من جهازك. تُعرض الصورة بحجم متجاوب ممتاز لكافة الشاشات ويمكن للطالب النقر عليها لتكبيرها.</p>
+
+          <div class="curriculum-field">
+            <label style="font-weight:700;">رابط الصورة (Image URL - رابط مباشر أو Google Drive أو رفع ملف) *</label>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="text" id="challenge-input-image-url" value="${escapeHtml(imageUrl)}" oninput="CurriculumAdminSystem.updateImageEditorPreview()" placeholder="https://... رابط الصورة المباشر أو من Google Drive" dir="ltr" style="flex:1; min-width:240px;">
+              <label class="curriculum-btn curriculum-btn-secondary" style="margin:0; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>رفع صورة</span>
+                <input type="file" id="challenge-file-image-upload" accept="image/*" style="display:none;" onchange="CurriculumAdminSystem.onImageFileSelected(event)">
+              </label>
+              <button type="button" class="curriculum-btn curriculum-btn-danger" id="btn-delete-challenge-image" onclick="CurriculumAdminSystem.removeEditorImage()" style="${imageUrl ? 'display:inline-flex;' : 'display:none;'} white-space:nowrap; align-items:center; gap:6px;" title="إزالة الصورة">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>إزالة الصورة</span>
+              </button>
+            </div>
+            <p style="font-size:0.78rem; color:#746B6F; margin:4px 0 0 0;">يدعم الرفع المباشر (.png, .jpg, .webp, .svg) وروابط الويب وروابط Google Drive العامة.</p>
+          </div>
+
+          <!-- معاينة الصورة داخل نافذة التعديل مع زر فحص التكبير -->
+          <div id="challenge-image-preview-box" style="${imageUrl ? 'display:block;' : 'display:none;'} margin-top:10px;">
+            <label style="font-size:0.82rem; font-weight:700; color:#6F1737; display:block; margin-bottom:4px;">معاينة مظهر الصورة (انقر للتكبير والتجربة):</label>
+            <div style="position:relative; width:100%; max-width:280px; height:160px; border-radius:12px; border:2px solid #E7DCC8; overflow:hidden; background:#FFF; cursor:zoom-in; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.06);" onclick="const u=document.getElementById('challenge-input-image-url')?.value.trim(); if(u && window.CurriculumAdminSystem?.openImageZoomModal) CurriculumAdminSystem.openImageZoomModal(u, 'معاينة صورة التمرين');" title="انقر لتجربة التكبير">
+              <img id="challenge-image-preview-thumb" src="${escapeHtml(imageUrl)}" style="width:100%; height:100%; object-fit:contain;" alt="معاينة صورة التمرين" />
+              <div style="position:absolute; bottom:6px; left:6px; background:rgba(111,23,55,0.85); color:#fff; font-size:0.75rem; padding:3px 8px; border-radius:12px; display:flex; align-items:center; gap:4px; font-weight:700; backdrop-filter:blur(4px);">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                <span>تكبير</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <label style="font-weight:700; font-size:0.86rem; color:#241D20;">خيارات الإجابة (حدّد الإجابة الصحيحة):</label>
+          <button type="button" class="curriculum-btn curriculum-btn-secondary" style="padding:3px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.addOptionRow()">+ إضافة اختيار</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="options-rows-container">
+          ${options.map((opt, i) => `
+            <div class="curriculum-dynamic-opt-row" style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="correct_opt_radio" value="${i}" ${opt.is_correct ? 'checked' : ''} style="width:20px; height:20px; cursor:pointer;" title="تحديد كإجابة صحيحة">
+              <input type="text" class="challenge-opt-input" value="${escapeHtml(opt.text)}" placeholder="نص الاختيار #${i+1}" style="flex:1;">
+              <button type="button" class="curriculum-btn curriculum-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.removeOptionRow(this)" title="حذف هذا الاختيار">✕</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
     } else if(type === 'select' || type === 'listen'){
       const options = (existingData && existingData.options && existingData.options.length > 0) ? existingData.options : [
         { text: '', is_correct: true },
@@ -4177,6 +4243,7 @@ const CurriculumAdminSystem = (function(){
     const existingOrder = oldChallenge ? (oldChallenge.order_index || 1) : (targetLesson.challenges.length + 1);
     const xpVal = parseInt(document.getElementById('challenge-input-xp').value) || 10;
 
+    const editorImgVal = document.getElementById('challenge-input-image-url')?.value.trim() || null;
     const challengeObj = {
       id: idVal ? idVal : generateTempId('ch'),
       lesson_id: lessonId,
@@ -4186,6 +4253,7 @@ const CurriculumAdminSystem = (function(){
       coptic_display: document.getElementById('challenge-input-coptic').value.trim() || null,
       audio_text: document.getElementById('challenge-input-audio-text').value.trim() || null,
       audio_url: document.getElementById('challenge-input-audio-url').value.trim() || null,
+      image_url: editorImgVal || (oldChallenge ? oldChallenge.image_url : null) || null,
       order_index: existingOrder
     };
 
@@ -4201,6 +4269,32 @@ const CurriculumAdminSystem = (function(){
       challengeObj.meaning = meaning;
       if(!challengeObj.audio_text && meaning){
         challengeObj.audio_text = meaning;
+      }
+    } else if(type === 'image_select'){
+      const imgVal = document.getElementById('challenge-input-image-url')?.value.trim() || challengeObj.image_url;
+      if(!imgVal){
+        toast('يرجى إضافة رابط الصورة أو رفع ملف صورة لهذا التمرين', true);
+        return;
+      }
+      challengeObj.image_url = imgVal;
+      const allRows = document.querySelectorAll('#options-rows-container .curriculum-dynamic-opt-row');
+      challengeObj.options = [];
+      allRows.forEach((row, idx) => {
+        const inp = row.querySelector('.challenge-opt-input');
+        const radio = row.querySelector('input[name="correct_opt_radio"]');
+        if(inp && inp.value.trim()){
+          challengeObj.options.push({
+            text: inp.value.trim(),
+            is_correct: (radio && radio.checked)
+          });
+        }
+      });
+      if(challengeObj.options.length === 0){
+        toast('يرجى كتابة اختيار واحد على الأقل', true); return;
+      }
+      const hasCorrect = challengeObj.options.some(o => o.is_correct);
+      if(!hasCorrect && challengeObj.options.length > 0){
+        challengeObj.options[0].is_correct = true;
       }
     } else if(type === 'read_select'){
       if(!challengeObj.coptic_display){
@@ -4279,17 +4373,22 @@ const CurriculumAdminSystem = (function(){
     }
 
     let oldAudioUrl = null;
+    let oldImageUrl = null;
     if(idVal){
       (curriculumData.units || []).forEach(u => {
         (u.lessons || []).forEach(l => {
           const prev = (l.challenges || []).find(c => String(c.id) === String(idVal));
           if(prev && prev.audio_url) oldAudioUrl = prev.audio_url;
+          if(prev && prev.image_url) oldImageUrl = prev.image_url;
           l.challenges = (l.challenges || []).filter(c => String(c.id) !== String(idVal));
         });
       });
-      // إذا تم استبدال التسجيل الصوتي القديم بتسجيل جديد، نحذف القديم نهائياً من التخزين السحابي
+      // إذا تم استبدال الملفات القديمة، يتم تنظيفها سحابياً
       if(oldAudioUrl && oldAudioUrl !== challengeObj.audio_url && window.deleteStorageFile){
         window.deleteStorageFile(oldAudioUrl);
+      }
+      if(oldImageUrl && oldImageUrl !== challengeObj.image_url && window.deleteStorageFile){
+        window.deleteStorageFile(oldImageUrl);
       }
     }
     targetLesson.challenges.push(challengeObj);
@@ -4309,6 +4408,7 @@ const CurriculumAdminSystem = (function(){
           coptic_display: challengeObj.coptic_display || null,
           audio_text: challengeObj.audio_text || null,
           audio_url: challengeObj.audio_url || null,
+          image_url: challengeObj.image_url || null,
           correct_word: challengeObj.correct_word || null,
           tiles: challengeObj.tiles ? JSON.parse(JSON.stringify(challengeObj.tiles)) : null,
           pairs: challengeObj.pairs ? JSON.parse(JSON.stringify(challengeObj.pairs)) : null,
@@ -4318,10 +4418,21 @@ const CurriculumAdminSystem = (function(){
 
         let targetChallengeId = (!isTempId(idVal) && !isNaN(parseInt(idVal))) ? parseInt(idVal) : null;
         if(targetChallengeId){
-          const { error: updErr } = await sb.from('challenges').update(dbPayload).eq('id', targetChallengeId);
+          let { error: updErr } = await sb.from('challenges').update(dbPayload).eq('id', targetChallengeId);
+          if(updErr && updErr.message && updErr.message.includes('image_url')){
+            delete dbPayload.image_url;
+            const res = await sb.from('challenges').update(dbPayload).eq('id', targetChallengeId);
+            updErr = res.error;
+          }
           if(updErr) throw updErr;
         } else {
-          const { data: newC, error: insErr } = await sb.from('challenges').insert(dbPayload).select().single();
+          let { data: newC, error: insErr } = await sb.from('challenges').insert(dbPayload).select().single();
+          if(insErr && insErr.message && insErr.message.includes('image_url')){
+            delete dbPayload.image_url;
+            const res = await sb.from('challenges').insert(dbPayload).select().single();
+            newC = res.data;
+            insErr = res.error;
+          }
           if(insErr) throw insErr;
           if(newC){
             targetChallengeId = newC.id;
@@ -4329,7 +4440,7 @@ const CurriculumAdminSystem = (function(){
           }
         }
 
-        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select')){
+        if(targetChallengeId && (challengeObj.type === 'select' || challengeObj.type === 'listen' || challengeObj.type === 'fill_blank' || challengeObj.type === 'read_select' || challengeObj.type === 'image_select')){
           await sb.from('challenge_options').delete().eq('challenge_id', targetChallengeId);
           if(challengeObj.options && challengeObj.options.length > 0){
             const optPayloads = challengeObj.options.map(o => ({
@@ -4399,6 +4510,152 @@ const CurriculumAdminSystem = (function(){
     } finally {
       e.target.value = '';
     }
+  }
+
+  async function onImageFileSelected(e){
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+
+    try {
+      const publicUrl = await window.uploadFile(file, 'curriculum-images', 'جارٍ رفع وتحسين صورة التمرين...');
+      if(publicUrl){
+        const inp = document.getElementById('challenge-input-image-url');
+        if(inp){
+          inp.value = publicUrl;
+          updateImageEditorPreview();
+        }
+        toast('تم رفع الصورة بنجاح وتحديث الرابط ✓');
+      } else {
+        toast('تعذر رفع الصورة — تأكد من اتصالك بالإنترنت', true);
+      }
+    } catch(err){
+      console.error('Image upload error:', err);
+      toast('تعذر رفع الصورة: ' + (err.message || ''), true);
+    } finally {
+      e.target.value = '';
+    }
+  }
+
+  function updateImageEditorPreview(){
+    const input = document.getElementById('challenge-input-image-url');
+    const previewBox = document.getElementById('challenge-image-preview-box');
+    const previewThumb = document.getElementById('challenge-image-preview-thumb');
+    const deleteBtn = document.getElementById('btn-delete-challenge-image');
+    if(!input || !previewBox || !previewThumb) return;
+
+    let val = input.value.trim();
+    // تحويل روابط Google Drive العامة تلقائياً إلى روابط عرض صور مباشرة
+    if(val.includes('drive.google.com/file/d/')){
+      const match = val.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if(match && match[1]){
+        val = `https://drive.google.com/uc?export=view&id=${match[1]}`;
+        input.value = val;
+      }
+    }
+
+    if(val){
+      previewBox.style.display = 'block';
+      previewThumb.src = val;
+      if(deleteBtn) deleteBtn.style.display = 'inline-flex';
+    } else {
+      previewBox.style.display = 'none';
+      previewThumb.src = '';
+      if(deleteBtn) deleteBtn.style.display = 'none';
+    }
+  }
+
+  async function removeEditorImage(){
+    const input = document.getElementById('challenge-input-image-url');
+    if(input){
+      const oldUrl = input.value.trim();
+      input.value = '';
+      updateImageEditorPreview();
+      if(oldUrl && window.deleteStorageFile){
+        await window.deleteStorageFile(oldUrl);
+      }
+      toast('تمت إزالة الصورة بنجاح ✓');
+    }
+  }
+
+  function openImageZoomModal(imageUrl, caption){
+    if(!imageUrl) return;
+    let modal = document.getElementById('global-image-zoom-modal');
+    if(!modal){
+      modal = document.createElement('div');
+      modal.id = 'global-image-zoom-modal';
+      modal.className = 'global-image-zoom-modal';
+      modal.innerHTML = `
+        <div class="image-zoom-controls">
+          <button type="button" id="btn-zoom-in-action" class="image-zoom-btn" title="تكبير (+)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+          <button type="button" id="btn-zoom-out-action" class="image-zoom-btn" title="تصغير (−)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </button>
+          <button type="button" id="btn-zoom-close-action" class="image-zoom-btn close-btn" title="إغلاق (Esc)">✕</button>
+        </div>
+        <div class="image-zoom-viewport" id="image-zoom-viewport">
+          <img id="image-zoom-target" src="" alt="صورة مكبرة" />
+          <div id="image-zoom-caption" class="image-zoom-caption"></div>
+        </div>
+        <div class="image-zoom-hint">انقر نقراً مزدوجاً للتبديل بين التكبير، أو انقر في أي مكان فارغ للإغلاق</div>
+      `;
+      document.body.appendChild(modal);
+
+      let currentZoom = 1;
+      const targetImg = modal.querySelector('#image-zoom-target');
+      const setZoom = (z) => {
+        currentZoom = Math.max(0.6, Math.min(3.5, z));
+        targetImg.style.transform = `scale(${currentZoom})`;
+      };
+
+      modal.querySelector('#btn-zoom-in-action').onclick = (e) => {
+        e.stopPropagation();
+        setZoom(currentZoom + 0.35);
+      };
+      modal.querySelector('#btn-zoom-out-action').onclick = (e) => {
+        e.stopPropagation();
+        setZoom(currentZoom - 0.35);
+      };
+      modal.querySelector('#btn-zoom-close-action').onclick = (e) => {
+        e.stopPropagation();
+        closeZoom();
+      };
+
+      modal.onclick = (e) => {
+        if(e.target === modal || e.target.id === 'image-zoom-viewport'){
+          closeZoom();
+        }
+      };
+
+      targetImg.ondblclick = (e) => {
+        e.stopPropagation();
+        setZoom(currentZoom > 1.2 ? 1 : 1.8);
+      };
+
+      function closeZoom(){
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          currentZoom = 1;
+          targetImg.style.transform = 'scale(1)';
+        }, 220);
+      }
+      modal._closeZoom = closeZoom;
+    }
+
+    const img = modal.querySelector('#image-zoom-target');
+    const cap = modal.querySelector('#image-zoom-caption');
+    if(img){
+      img.src = imageUrl;
+      img.style.transform = 'scale(1)';
+    }
+    if(cap){
+      cap.textContent = caption || '';
+      cap.style.display = caption ? 'block' : 'none';
+    }
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => modal.classList.add('active'));
   }
 
   /* ============ COMPLETE HIERARCHICAL SYNC TO DATABASE (DEPENDENCY-AWARE) ============ */
@@ -4560,6 +4817,7 @@ const CurriculumAdminSystem = (function(){
               coptic_display: c.coptic_display || null,
               audio_text: c.audio_text || null,
               audio_url: c.audio_url || null,
+              image_url: c.image_url || null,
               correct_word: c.correct_word || null,
               tiles: c.tiles ? JSON.parse(JSON.stringify(c.tiles)) : null,
               pairs: c.pairs ? JSON.parse(JSON.stringify(c.pairs)) : null,
@@ -4570,10 +4828,21 @@ const CurriculumAdminSystem = (function(){
             const oldChallengeId = c.id;
             let cid = (!isTempId(oldChallengeId) && !isNaN(parseInt(oldChallengeId))) ? parseInt(oldChallengeId) : null;
             if(cid){
-              const { error } = await sb.from('challenges').update(cPayload).eq('id', cid);
+              let { error } = await sb.from('challenges').update(cPayload).eq('id', cid);
+              if(error && error.message && error.message.includes('image_url')){
+                delete cPayload.image_url;
+                const res = await sb.from('challenges').update(cPayload).eq('id', cid);
+                error = res.error;
+              }
               if(error) throw error;
             } else {
-              const { data: newC, error } = await sb.from('challenges').insert(cPayload).select().single();
+              let { data: newC, error } = await sb.from('challenges').insert(cPayload).select().single();
+              if(error && error.message && error.message.includes('image_url')){
+                delete cPayload.image_url;
+                const res = await sb.from('challenges').insert(cPayload).select().single();
+                newC = res.data;
+                error = res.error;
+              }
               if(error) throw error;
               if(newC){
                 c.id = newC.id;
@@ -4582,7 +4851,7 @@ const CurriculumAdminSystem = (function(){
             }
 
             // 5. Challenge Options
-            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank')){
+            if(cid && (c.type === 'select' || c.type === 'listen' || c.type === 'fill_blank' || c.type === 'read_select' || c.type === 'image_select')){
               await sb.from('challenge_options').delete().eq('challenge_id', cid);
               if(c.options && Array.isArray(c.options) && c.options.length > 0){
                 const optPayloads = c.options.map(opt => ({
@@ -4994,9 +5263,20 @@ const CurriculumAdminSystem = (function(){
           </div>
         </div>
       `;
-    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen'){
+    } else if(challenge.type === 'read_select' || challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'image_select'){
       challengeContent = `
-        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : 'اختر الإجابة الصحيحة'))}</div>
+        <div class="question-heading">${escapeHtml(challenge.question || (challenge.type === 'read_select' ? 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح' : (challenge.type === 'image_select' ? 'انظر إلى الصورة ثم اختر الإجابة الصحيحة' : 'اختر الإجابة الصحيحة')))}</div>
+        ${challenge.image_url ? `
+          <div class="challenge-image-container">
+            <div class="challenge-image-card" onclick="CurriculumAdminSystem.openImageZoomModal('${escapeJs(challenge.image_url)}', '${escapeJs(challenge.question || '')}')" title="انقر لتكبير الصورة">
+              <img src="${escapeHtml(challenge.image_url)}" alt="صورة التمرين" class="challenge-image-tag" loading="lazy" />
+              <div class="challenge-image-zoom-badge">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                <span>تكبير الصورة</span>
+              </div>
+            </div>
+          </div>
+        ` : ''}
         ${challenge.coptic_display ? `
           <div class="coptic-letter-display">
             <span class="coptic-big-glyph" style="font-size:3.5rem; line-height:1.2; font-weight:800;">${escapeHtml(challenge.coptic_display)}</span>
@@ -5198,7 +5478,7 @@ const CurriculumAdminSystem = (function(){
     const isMatchingComplete = isMatchingType && matchedCount >= totalPairs;
 
     let canCheck = false;
-    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false'){
+    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false' || challenge.type === 'image_select'){
       canCheck = previewState.selectedAnswerIndex !== null;
     } else if(challenge.type === 'listen_write'){
       canCheck = Boolean((previewState.listenWriteValue || '').trim());
@@ -5450,7 +5730,7 @@ const CurriculumAdminSystem = (function(){
     const challenge = previewState.challenges[previewState.currentIndex];
     let isCorrect = false;
 
-    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select'){
+    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'image_select'){
       if(previewState.selectedAnswerIndex === null) return;
       const selectedOpt = challenge.options[previewState.selectedAnswerIndex];
       isCorrect = selectedOpt ? !!selectedOpt.is_correct : false;
@@ -5547,6 +5827,10 @@ const CurriculumAdminSystem = (function(){
     onAudioFileSelected,
     removeEditorAudio,
     updateAudioDeleteBtnVisibility,
+    onImageFileSelected,
+    updateImageEditorPreview,
+    removeEditorImage,
+    openImageZoomModal,
     triggerImportJSON,
     onFileSelected,
     confirmApplyImport,

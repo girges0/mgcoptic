@@ -824,7 +824,7 @@
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
           lessonCopy.xp_reward = parseInt(foundLesson.practice_xp, 10) || 20;
-          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
+          const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
@@ -1083,9 +1083,56 @@
               </div>
             </div>
           `;
+        } else if (ch.type === 'image_select') {
+          html += `
+            <div class="question-heading">${ch.question || 'انظر إلى الصورة ثم اختر الإجابة الصحيحة'}</div>
+            ${ch.image_url ? `
+              <div class="challenge-image-container">
+                <div class="challenge-image-card" onclick="window.openImageZoomModal ? window.openImageZoomModal('${(ch.image_url || '').replace(/'/g, "\\'")}', '${(ch.question || '').replace(/'/g, "\\'")}') : null" title="انقر لتكبير الصورة">
+                  <img src="${escapeHtml(ch.image_url)}" alt="صورة السؤال" class="challenge-image-tag" loading="lazy" />
+                  <div class="challenge-image-zoom-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <span>تكبير الصورة</span>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+            ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
+              <div class="coptic-letter-display">
+                ${ch.coptic_display ? `<span class="coptic-big-glyph">${ch.coptic_display}</span>` : ''}
+                ${(ch.audio_text || ch.audio_url) ? `
+                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this)">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  </button>
+                ` : ''}
+              </div>
+            ` : ''}
+            <div class="options-grid">
+              ${(ch.options || []).map((opt, i) => `
+                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                  ${opt.text}
+                </div>
+              `).join('')}
+            </div>
+          `;
         } else if (ch.type === 'read_select') {
           html += `
             <div class="question-heading">${ch.question || 'اقرأ الحرف/الكلمة ثم اختر النطق الصحيح'}</div>
+            ${ch.image_url ? `
+              <div class="challenge-image-container">
+                <div class="challenge-image-card" onclick="window.openImageZoomModal ? window.openImageZoomModal('${(ch.image_url || '').replace(/'/g, "\\'")}', '${(ch.question || '').replace(/'/g, "\\'")}') : null" title="انقر لتكبير الصورة">
+                  <img src="${escapeHtml(ch.image_url)}" alt="صورة السؤال" class="challenge-image-tag" loading="lazy" />
+                  <div class="challenge-image-zoom-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <span>تكبير الصورة</span>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
             <div class="coptic-letter-display">
               ${ch.coptic_display ? `<span class="coptic-big-glyph" style="font-size:3.6rem; line-height:1.2; font-weight:800;">${ch.coptic_display}</span>` : ''}
               ${(ch.audio_text || ch.audio_url) ? `
@@ -1109,6 +1156,17 @@
         } else if (ch.type === 'select') {
           html += `
             <div class="question-heading">${ch.question}</div>
+            ${ch.image_url ? `
+              <div class="challenge-image-container">
+                <div class="challenge-image-card" onclick="window.openImageZoomModal ? window.openImageZoomModal('${(ch.image_url || '').replace(/'/g, "\\'")}', '${(ch.question || '').replace(/'/g, "\\'")}') : null" title="انقر لتكبير الصورة">
+                  <img src="${escapeHtml(ch.image_url)}" alt="صورة السؤال" class="challenge-image-tag" loading="lazy" />
+                  <div class="challenge-image-zoom-badge">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    <span>تكبير الصورة</span>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
             ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
               <div class="coptic-letter-display">
                 ${ch.coptic_display ? `<span class="coptic-big-glyph">${ch.coptic_display}</span>` : ''}
@@ -1214,6 +1272,60 @@
                     ${p.right}
                   </button>
                 `).join('')}
+              </div>
+            </div>
+          `;
+        } else if (ch.type === 'trace') {
+          const questionText = ch.question || 'تتبّع كتابة الحرف / الكلمة بدقة على السبورة';
+          html += `
+            <div class="trace-interactive-card">
+              <div class="question-heading">${questionText}</div>
+              ${(ch.audio_text || ch.audio_url) ? `
+                <div class="trace-audio-wrap">
+                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this) : (game && game.sound && game.sound.speakArabic ? game.sound.speakArabic('${ch.audio_text}') : null)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  </button>
+                </div>
+              ` : ''}
+              <div id="trace-info-container" class="trace-info-container">
+                <div id="trace-target-title" class="trace-target-title">جاري تجهيز لوحة التتبع...</div>
+              </div>
+
+              <!-- مؤشر التحكم في سمك الكتابة -->
+              <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;width:100%;max-width:340px;margin:0 auto 14px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
+                  <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
+                </div>
+                <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
+                <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="M2 2l7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                  </svg>
+                  سُمْك القلم:
+                </span>
+              </div>
+
+              <div class="trace-canvas-wrapper" style="position:relative;width:100%;max-width:340px;height:310px;margin:0 auto;background:#FFFDF8;border-radius:24px;border:2px solid #D6C8B2;box-shadow:0 8px 24px rgba(0,0,0,0.05);overflow:hidden;touch-action:none;">
+                <canvas id="trace-exercise-canvas" style="width:100%;height:100%;touch-action:none;display:block;cursor:crosshair;"></canvas>
+                <div id="trace-accuracy-badge" class="trace-accuracy-badge" style="position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.95);backdrop-filter:blur(4px);padding:4px 12px;border-radius:12px;font-size:.82rem;font-weight:800;color:#2A1F17;border:1px solid #D6C8B2;display:none;">الدقة: <span id="trace-score-val">0</span>%</div>
+              </div>
+              <div class="trace-actions-row" style="display:flex;justify-content:center;gap:12px;margin:16px auto 0;width:100%;max-width:340px;">
+                <button type="button" id="btn-trace-evaluate" class="trace-action-btn btn-trace-evaluate" style="flex:1;padding:12px 16px;font-size:.92rem;font-weight:800;background:linear-gradient(135deg, #B8860B, #8F6310);color:#fff;border:none;border-radius:14px;cursor:pointer;box-shadow:0 4px 12px rgba(184,134,11,0.25);display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>فحص النتيجة</span>
+                </button>
+                <button type="button" id="btn-trace-clear" class="trace-action-btn btn-trace-clear" style="flex:1;padding:12px 16px;font-size:.92rem;font-weight:800;background:#EFE6D5;color:#2A1F17;border:1.5px solid #DFD2BD;border-radius:14px;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                  <span>مسح وإعادة</span>
+                </button>
               </div>
             </div>
           `;
@@ -1340,6 +1452,150 @@
             }
           }, 250);
         }
+
+        if (ch.type === 'trace') {
+          initTraceChallenge(ch);
+        }
+      }
+
+      async function initTraceChallenge(ch) {
+        const canvasEl = document.getElementById('trace-exercise-canvas');
+        if (!canvasEl) return;
+
+        let targetText = ch.text_to_trace || ch.coptic_display || ch.custom_word;
+        let exerciseId = ch.writing_exercise_id || ch.exercise_id;
+
+        if (!targetText) {
+          const qCoptic = String(ch.question || '').match(/[\u2C80-\u2CFF\u0370-\u03FF\s]+/);
+          if (qCoptic) {
+            targetText = qCoptic[0].trim();
+          } else {
+            targetText = ch.question || 'Ⲁ';
+          }
+        }
+
+        let cleanText = String(targetText).trim();
+
+        const titleEl = document.getElementById('trace-target-title');
+        if (titleEl) {
+          titleEl.textContent = cleanText;
+        }
+
+        const badge = document.getElementById('trace-accuracy-badge');
+        const scoreVal = document.getElementById('trace-score-val');
+        const btnCheck = document.getElementById('btn-check-action');
+
+        if (window.activeRunnerTracer) {
+          try { window.activeRunnerTracer.destroy(); } catch (_) {}
+          window.activeRunnerTracer = null;
+        }
+
+        if (typeof LetterTracer !== 'undefined') {
+          window.activeRunnerTracer = new LetterTracer({
+            canvasId: canvasEl,
+            fontUrl: 'assets/fonts/girges.woff',
+            text: cleanText,
+            passThreshold: 85,
+            minCoverageThreshold: 80,
+            onStrokeEnd: (count) => {
+              if (btnCheck && count > 0) btnCheck.disabled = false;
+            },
+            onSuccess: (score) => {
+              if (badge && scoreVal) {
+                scoreVal.textContent = score;
+                badge.style.display = 'block';
+                badge.style.color = '#2e6b3e';
+                badge.style.borderColor = '#2e6b3e';
+              }
+              ch._tracePassed = true;
+              ch._lastScore = score;
+              if (btnCheck) btnCheck.disabled = false;
+            }
+          });
+        }
+
+        const btnClear = document.getElementById('btn-trace-clear');
+        if (btnClear) {
+          btnClear.onclick = () => {
+            if (window.activeRunnerTracer) window.activeRunnerTracer.clear();
+            if (badge) badge.style.display = 'none';
+            if (btnCheck) btnCheck.disabled = true;
+            ch._tracePassed = false;
+          };
+        }
+
+        const btnEval = document.getElementById('btn-trace-evaluate');
+        if (btnEval) {
+          btnEval.onclick = () => {
+            if (window.activeRunnerTracer) {
+              const evalRes = window.activeRunnerTracer.evaluate();
+              if (badge && scoreVal) {
+                scoreVal.textContent = evalRes.finalScore;
+                badge.style.display = 'block';
+                badge.style.color = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#c2410c' : '#a13030');
+                badge.style.borderColor = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#ea580c' : '#a13030');
+              }
+              if (evalRes.incomplete) {
+                Swal.fire({
+                  toast: true,
+                  position: 'top',
+                  icon: 'warning',
+                  title: evalRes.message || `يرجى إكمال كتابة الحرف كاملاً (${evalRes.coveragePercent}%)`,
+                  showConfirmButton: false,
+                  timer: 2500
+                });
+              } else if (!evalRes.passed) {
+                Swal.fire({
+                  toast: true,
+                  position: 'top',
+                  icon: 'info',
+                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 85%`,
+                  showConfirmButton: false,
+                  timer: 2500
+                });
+              } else {
+                Swal.fire({
+                  toast: true,
+                  position: 'top',
+                  icon: 'success',
+                  title: `ممتاز! الدقة: ${evalRes.finalScore}% — اضغط تحقق للمتابعة`,
+                  showConfirmButton: false,
+                  timer: 2500
+                });
+              }
+            }
+          };
+        }
+
+        const strokeSlider = document.getElementById('trace-stroke-slider');
+        const strokeVal = document.getElementById('trace-stroke-val');
+        const strokePreview = document.getElementById('trace-stroke-preview');
+        if (strokeSlider) {
+          strokeSlider.value = 12;
+          if (strokeVal) strokeVal.textContent = '12px';
+          if (strokePreview) {
+            strokePreview.style.width = '12px';
+            strokePreview.style.height = '12px';
+          }
+          strokeSlider.oninput = (e) => {
+            const w = parseInt(e.target.value, 10);
+            if (strokeVal) strokeVal.textContent = `${w}px`;
+            if (strokePreview) {
+              strokePreview.style.width = `${w}px`;
+              strokePreview.style.height = `${w}px`;
+            }
+            if (window.activeRunnerTracer) {
+              window.activeRunnerTracer.setStrokeWidth(w);
+            }
+          };
+        }
+
+        setTimeout(() => {
+          if (window.activeRunnerTracer) {
+            window.activeRunnerTracer._setupCanvasSize();
+            window.activeRunnerTracer.draw();
+          }
+        }, 60);
       }
 
       window.pickFillBlankChip = function(btn, word) {
@@ -1454,7 +1710,7 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const selectedOpt = ch.options[currentSelection];
           isCorrect = selectedOpt && selectedOpt.is_correct;
         } else if (ch.type === 'listen_write') {
@@ -1491,6 +1747,21 @@
             if (cardVal === isTrue) card.classList.add('correct');
             else if (card.classList.contains('selected')) card.classList.add('wrong');
           });
+        } else if (ch.type === 'trace') {
+          if (window.activeRunnerTracer) {
+            const evalRes = window.activeRunnerTracer.evaluate();
+            const badge = document.getElementById('trace-accuracy-badge');
+            const scoreVal = document.getElementById('trace-score-val');
+            if (badge && scoreVal) {
+              scoreVal.textContent = evalRes.finalScore;
+              badge.style.display = 'block';
+              badge.style.color = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#c2410c' : '#a13030');
+              badge.style.borderColor = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#ea580c' : '#a13030');
+            }
+            isCorrect = evalRes.passed || ch._tracePassed === true;
+          } else {
+            isCorrect = ch._tracePassed === true;
+          }
         }
 
         runnerState = 'checked';
@@ -1499,7 +1770,7 @@
         const feedbackIcon = document.getElementById('feedback-icon');
         const feedbackText = document.getElementById('feedback-text');
 
-        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select') {
+        if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const allOptionCards = document.querySelectorAll('.option-card');
           allOptionCards.forEach((c, idx) => {
             const isThisCorrect = ch.options && ch.options[idx] && ch.options[idx].is_correct;
@@ -1695,4 +1966,90 @@
           });
         }
       }
+
+      window.openImageZoomModal = function(imageUrl, caption) {
+        if (!imageUrl) return;
+        let modal = document.getElementById('global-image-zoom-modal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'global-image-zoom-modal';
+          modal.className = 'global-image-zoom-modal';
+          modal.innerHTML = `
+            <div class="image-zoom-controls">
+              <button type="button" id="btn-zoom-in-action" class="image-zoom-btn" title="تكبير (+)">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+              <button type="button" id="btn-zoom-out-action" class="image-zoom-btn" title="تصغير (−)">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+              <button type="button" id="btn-zoom-close-action" class="image-zoom-btn close-btn" title="إغلاق (Esc)">✕</button>
+            </div>
+            <div class="image-zoom-viewport" id="image-zoom-viewport">
+              <img id="image-zoom-target" src="" alt="صورة مكبرة" />
+              <div id="image-zoom-caption" class="image-zoom-caption"></div>
+            </div>
+            <div class="image-zoom-hint">انقر نقراً مزدوجاً للتبديل بين التكبير، أو انقر في أي مكان فارغ للإغلاق</div>
+          `;
+          document.body.appendChild(modal);
+
+          let currentZoom = 1;
+          const targetImg = modal.querySelector('#image-zoom-target');
+          const setZoom = (z) => {
+            currentZoom = Math.max(0.6, Math.min(3.5, z));
+            targetImg.style.transform = `scale(${currentZoom})`;
+          };
+
+          modal.querySelector('#btn-zoom-in-action').onclick = (e) => {
+            e.stopPropagation();
+            setZoom(currentZoom + 0.35);
+          };
+          modal.querySelector('#btn-zoom-out-action').onclick = (e) => {
+            e.stopPropagation();
+            setZoom(currentZoom - 0.35);
+          };
+          modal.querySelector('#btn-zoom-close-action').onclick = (e) => {
+            e.stopPropagation();
+            closeZoom();
+          };
+
+          modal.onclick = (e) => {
+            if (e.target === modal || e.target.id === 'image-zoom-viewport') {
+              closeZoom();
+            }
+          };
+
+          targetImg.ondblclick = (e) => {
+            e.stopPropagation();
+            setZoom(currentZoom > 1.2 ? 1 : 1.8);
+          };
+
+          function closeZoom() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+              modal.style.display = 'none';
+              currentZoom = 1;
+              targetImg.style.transform = 'scale(1)';
+            }, 220);
+          }
+          modal._closeZoom = closeZoom;
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.style.display !== 'none') {
+              closeZoom();
+            }
+          });
+        }
+
+        const img = modal.querySelector('#image-zoom-target');
+        const cap = modal.querySelector('#image-zoom-caption');
+        if (img) {
+          img.src = imageUrl;
+          img.style.transform = 'scale(1)';
+        }
+        if (cap) {
+          cap.textContent = caption || '';
+          cap.style.display = caption ? 'block' : 'none';
+        }
+        modal.style.display = 'flex';
+        requestAnimationFrame(() => modal.classList.add('active'));
+      };
     })();
