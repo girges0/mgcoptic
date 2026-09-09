@@ -9882,6 +9882,10 @@
             localStorage.removeItem(`mg_coptic_last_synced_date_${uid}`);
           }
         }
+        try {
+          localStorage.setItem('mg_coptic_claimed_chests', '[]');
+          if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
+        } catch (_) {}
         if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
         if (typeof renderSkillMap === 'function') renderSkillMap();
@@ -10532,7 +10536,7 @@
         container.querySelectorAll('.mystery-chest-btn').forEach(chestBtn => {
           chestBtn.addEventListener('click', () => {
             const chestId = chestBtn.dataset.chestId;
-            const isClaimed = chestBtn.dataset.claimed === 'true';
+            const isClaimed = game.isChestClaimed ? game.isChestClaimed(chestId) : (chestBtn.dataset.claimed === 'true');
             const isUnlocked = chestBtn.dataset.unlocked === 'true';
 
             if (isClaimed) {

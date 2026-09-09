@@ -678,6 +678,10 @@
             localStorage.removeItem(`mg_coptic_last_synced_date_${uid}`);
           }
         }
+        try {
+          localStorage.setItem('mg_coptic_claimed_chests', '[]');
+          if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
+        } catch (_) {}
         if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
         if (typeof renderSkillMap === 'function') renderSkillMap();

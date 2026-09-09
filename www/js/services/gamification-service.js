@@ -1286,10 +1286,36 @@ class GamificationService {
   isChestClaimed(chestId, userId = null){
     const uid = userId || this.getCurrentUser()?.id;
     try {
-      const key = uid ? `mg_coptic_claimed_chests_${uid}` : 'mg_coptic_claimed_chests';
-      const raw = localStorage.getItem(key) || localStorage.getItem('mg_coptic_claimed_chests');
-      const list = raw ? JSON.parse(raw) : [];
-      return list.includes(String(chestId));
+      // حماية تصفير الحساب: إذا كان المستخدم مصفر الحساب (نقاطه <= 35) وبدون دروس مكتملة
+      // فإن الصناديق تكون غير مفتوحة قطعاً
+      const prog = this.getProgressSync ? this.getProgressSync(uid) : null;
+      const points = prog?.points || 0;
+      const lessonProg = this.getLessonProgress ? this.getLessonProgress(uid) : null;
+      const hasCompletedLessons = Object.values(lessonProg || {}).some(l => l.status === 'completed');
+
+      if (points <= 35 && !hasCompletedLessons) {
+        if (uid) {
+          try { localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]'); } catch(_) {}
+        }
+        try { localStorage.setItem('mg_coptic_claimed_chests', '[]'); } catch(_) {}
+        return false;
+      }
+
+      let list = [];
+      if (uid) {
+        const userRaw = localStorage.getItem(`mg_coptic_claimed_chests_${uid}`);
+        if (userRaw !== null) {
+          list = JSON.parse(userRaw);
+        } else if (prog && Array.isArray(prog.claimed_chests)) {
+          list = prog.claimed_chests;
+        } else {
+          list = [];
+        }
+      } else {
+        const raw = localStorage.getItem('mg_coptic_claimed_chests');
+        list = raw ? JSON.parse(raw) : [];
+      }
+      return Array.isArray(list) && list.includes(String(chestId));
     } catch(e){ return false; }
   }
 
@@ -1943,6 +1969,12 @@ class GamificationService {
       last_active_date: todayStr
     };
     this.saveProgressLocal(initialProg, uid, false);
+    try {
+      localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
+      localStorage.setItem('mg_coptic_claimed_chests', '[]');
+      localStorage.setItem(`mg_coptic_badges_${uid}`, '[]');
+      localStorage.setItem('mg_coptic_badges', '[]');
+    } catch(_) {}
 
     const initialLp = { '1': { status: 'in_progress', score: 0 } };
     try {

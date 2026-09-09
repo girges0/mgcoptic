@@ -3562,6 +3562,10 @@ async function resetFullAccount(userId, userName) {
         `mg_coptic_last_synced_date_${userId}`
       ];
       keysToClear.forEach(k => localStorage.removeItem(k));
+      try {
+        localStorage.setItem(`mg_coptic_claimed_chests_${userId}`, '[]');
+        localStorage.setItem('mg_coptic_claimed_chests', '[]');
+      } catch (_) {}
 
       const localUserRaw = localStorage.getItem('mg_coptic_user');
       if (localUserRaw) {

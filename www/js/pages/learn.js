@@ -581,7 +581,7 @@
         container.querySelectorAll('.mystery-chest-btn').forEach(chestBtn => {
           chestBtn.addEventListener('click', () => {
             const chestId = chestBtn.dataset.chestId;
-            const isClaimed = chestBtn.dataset.claimed === 'true';
+            const isClaimed = game.isChestClaimed ? game.isChestClaimed(chestId) : (chestBtn.dataset.claimed === 'true');
             const isUnlocked = chestBtn.dataset.unlocked === 'true';
 
             if (isClaimed) {
