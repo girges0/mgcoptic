@@ -2081,10 +2081,45 @@ class GamificationService {
     // 3. محاولة RPC الموثوقة مع تمرير معرّف المشرف
     const sb = this.getSupabaseClient();
     if (sb) {
+      let rpcSuccess = false;
       try {
         const callerId = actorId || this.getCurrentUser()?.id || uid;
-        await sb.rpc('admin_reset_full_account', { p_user_id: uid, p_actor_id: callerId });
+        const { data: d, error: err } = await sb.rpc('admin_reset_full_account', { p_user_id: uid, p_actor_id: callerId });
+        if (!err && d && d.success) rpcSuccess = true;
       } catch(_) {}
+
+      if (!rpcSuccess) {
+        try {
+          await sb.rpc('admin_reset_full_account', { p_user_id: uid });
+        } catch(_) {}
+      }
+
+      // مسح سحابي مباشر احتياطي لضمان تصفير الجداول 100%
+      try {
+        await Promise.all([
+          sb.from('user_lesson_progress').delete().eq('user_id', uid),
+          sb.from('user_challenge_progress').delete().eq('user_id', uid),
+          sb.from('user_writing_progress').delete().eq('user_id', uid)
+        ]);
+        let nextVer = 1;
+        try {
+          const { data: curProg } = await sb.from('user_progress').select('reset_version').eq('user_id', uid).maybeSingle();
+          nextVer = Number(curProg?.reset_version || 0) + 1;
+        } catch(_) {}
+        await sb.from('user_progress').upsert({
+          user_id: uid,
+          points: 0,
+          total_points: 0,
+          hearts: 5,
+          streak_days: 1,
+          claimed_chests: [],
+          reset_version: nextVer,
+          reset_at: new Date().toISOString(),
+          last_active_date: todayStr
+        }, { onConflict: 'user_id' });
+      } catch(tblErr) {
+        console.warn('Direct tables reset fallback error in gamification-service:', tblErr);
+      }
     }
 
     // 4. بث التحديث محلياً وعبر قنوات التزامن

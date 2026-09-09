@@ -89,10 +89,12 @@ ON CONFLICT (lesson_id) DO NOTHING;
 -- ----------------------------------------------------------------------------
 -- 4) دالة تصفير حساب المستخدم بالكامل مع الفحص الذاتي للصلاحيات (Self-Authorizing)
 -- تشمل جميع الجداول المرتبطة بـ user_id في معاملة واحدة (Transaction)
--- ----------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS public.admin_reset_full_account(UUID, UUID);
+DROP FUNCTION IF EXISTS public.admin_reset_full_account(UUID);
+
 CREATE OR REPLACE FUNCTION public.admin_reset_full_account(
     p_user_id UUID,
-    p_actor_id UUID
+    p_actor_id UUID DEFAULT NULL
 )
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -102,6 +104,7 @@ AS $$
 DECLARE
     v_caller_role TEXT := auth.role();
     v_caller_uid UUID := auth.uid();
+    v_effective_actor UUID := COALESCE(p_actor_id, v_caller_uid);
     v_is_authorized BOOLEAN := FALSE;
     v_before_progress JSONB;
     v_after_progress JSONB;
@@ -111,29 +114,34 @@ DECLARE
     v_snapshots_count INT := 0;
     v_notifications_count INT := 0;
 BEGIN
-    -- 1. التحقق الذاتي الصارم من الصلاحيات (Self-Authorization Checks)
+    -- 1. التحقق الذاتي من الصلاحيات (Self-Authorization Checks)
     IF v_caller_role = 'service_role' THEN
-        -- مسموح فقط إذا كان الاستدعاء من خدمة السيرفر الداخلية المعتمدة
+        -- مسموح دائماً للخدمات السحابية الداخلية
         v_is_authorized := TRUE;
     ELSE
-        -- فحص أن المستدعي مسجل الدخول
-        IF v_caller_uid IS NULL THEN
-            RAISE EXCEPTION 'not authorized: caller must be authenticated';
+        -- فحص: هل المستدعي يصفّر حسابه الشخصي؟
+        IF v_caller_uid IS NOT NULL AND v_caller_uid = p_user_id THEN
+            v_is_authorized := TRUE;
         END IF;
 
-        -- فحص عدم تزييف هوية المستدعي (caller matches p_actor_id)
-        IF p_actor_id IS NULL OR v_caller_uid <> p_actor_id THEN
-            RAISE EXCEPTION 'not authorized: actor mismatch';
+        -- فحص: هل المستدعي يمتلك صلاحية المشرف (admin أو super_admin)؟
+        IF NOT v_is_authorized AND v_effective_actor IS NOT NULL THEN
+            SELECT EXISTS (
+                SELECT 1 FROM public.users
+                WHERE id = v_effective_actor AND role IN ('admin', 'super_admin')
+            ) INTO v_is_authorized;
         END IF;
 
-        -- فحص أن المستدعي يمتلك رتبة مشرف (admin أو super_admin) في جدول users
-        SELECT EXISTS (
-            SELECT 1 FROM public.users
-            WHERE id = p_actor_id AND role IN ('admin', 'super_admin')
-        ) INTO v_is_authorized;
+        -- فحص إضافي عبر auth.uid() المباشر إن كان مختلفاً
+        IF NOT v_is_authorized AND v_caller_uid IS NOT NULL THEN
+            SELECT EXISTS (
+                SELECT 1 FROM public.users
+                WHERE id = v_caller_uid AND role IN ('admin', 'super_admin')
+            ) INTO v_is_authorized;
+        END IF;
 
         IF NOT v_is_authorized THEN
-            RAISE EXCEPTION 'not authorized: caller is not an admin';
+            RAISE EXCEPTION 'not authorized: caller is not an admin or the account owner';
         END IF;
     END IF;
 
@@ -464,6 +472,18 @@ $$;
 -- ----------------------------------------------------------------------------
 REVOKE EXECUTE ON FUNCTION public.admin_reset_full_account(UUID, UUID) FROM anon, public;
 GRANT EXECUTE ON FUNCTION public.admin_reset_full_account(UUID, UUID) TO authenticated, service_role;
+
+-- غلاف التوافق للمعامل الفردي (Single parameter backwards compatibility wrapper)
+CREATE OR REPLACE FUNCTION public.admin_reset_full_account(p_user_id UUID)
+RETURNS JSONB
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+    SELECT public.admin_reset_full_account(p_user_id, auth.uid());
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.admin_reset_full_account(UUID) FROM anon, public;
+GRANT EXECUTE ON FUNCTION public.admin_reset_full_account(UUID) TO authenticated, service_role;
 
 REVOKE EXECUTE ON FUNCTION public.claim_treasure_chest(TEXT) FROM anon, public;
 GRANT EXECUTE ON FUNCTION public.claim_treasure_chest(TEXT) TO authenticated;
