@@ -107,24 +107,6 @@ serve(async (req: Request) => {
       );
     }
 
-    if (!rawServiceAccount) {
-      return new Response(
-        JSON.stringify({
-          error: "Missing FIREBASE_SERVICE_ACCOUNT secret. Please set FIREBASE_SERVICE_ACCOUNT in Supabase Edge Functions Secrets."
-        }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    let serviceAccount: Record<string, any>;
-    try {
-      serviceAccount = JSON.parse(rawServiceAccount);
-    } catch (e) {
-      throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT JSON: " + (e as Error).message);
-    }
-
-    const projectId = serviceAccount.project_id || "mg-coptic";
-    const googleToken = await getGoogleAccessToken(serviceAccount);
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     let reqBody: any = {};
@@ -136,7 +118,44 @@ serve(async (req: Request) => {
       }
     }
 
-    // 0. تسجيل توكن الجهاز مباشرة بصلاحيات الخدمة لتفادي أخطاء RLS
+    // 0. تصفير حساب المستخدم بالكامل وحذف سجلات مسار التعلم والتحديات والكتابة بصلاحيات Service Role عبر دالة السيرفر المعتمدة
+    if (reqBody.action === "reset_account") {
+      const targetUserId = reqBody.user_id;
+      const actorId = reqBody.actor_id || null;
+      if (!targetUserId) {
+        return new Response(
+          JSON.stringify({ error: "Missing user_id for reset_account" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      try {
+        const { data: rpcData, error: rpcErr } = await supabase.rpc("admin_reset_full_account", {
+          p_user_id: targetUserId,
+          p_actor_id: actorId
+        });
+
+        if (rpcErr) {
+          throw new Error(rpcErr.message);
+        }
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: "Account learning path and progress reset successfully via RPC.",
+            data: rpcData
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (err: any) {
+        return new Response(
+          JSON.stringify({ error: err?.message || String(err) }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // 0.1 تسجيل توكن الجهاز مباشرة بصلاحيات الخدمة لتفادي أخطاء RLS
     if (reqBody.action === "register_token") {
       const { token, platform, user_id } = reqBody;
       if (!token) {
@@ -166,7 +185,7 @@ serve(async (req: Request) => {
       );
     }
 
-    // 0.1 إعادة وضع إشعار محدد في حالة الانتظار لإعادة إرساله فوراً
+    // 0.2 إعادة وضع إشعار محدد في حالة الانتظار لإعادة إرساله فوراً
     if (reqBody.action === "resend" && reqBody.event_id) {
       await supabase
         .from("notification_events")
@@ -174,44 +193,24 @@ serve(async (req: Request) => {
         .eq("id", reqBody.event_id);
     }
 
-    // 0.2 تصفير حساب المستخدم بالكامل وحذف سجلات الدروس والتحديات والكتابة بصلاحيات Service Role
-    if (reqBody.action === "reset_account") {
-      const targetUserId = reqBody.user_id;
-      if (!targetUserId) {
-        return new Response(
-          JSON.stringify({ error: "Missing user_id for reset_account" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      try {
-        await Promise.all([
-          supabase.from("user_lesson_progress").delete().eq("user_id", targetUserId),
-          supabase.from("user_challenge_progress").delete().eq("user_id", targetUserId),
-          supabase.from("user_writing_progress").delete().eq("user_id", targetUserId)
-        ]);
-
-        const todayStr = new Date().toISOString().split("T")[0];
-        await supabase.from("user_progress").upsert({
-          user_id: targetUserId,
-          points: 0,
-          hearts: 5,
-          streak_days: 1,
-          claimed_chests: [],
-          last_active_date: todayStr
-        }, { onConflict: "user_id" });
-
-        return new Response(
-          JSON.stringify({ success: true, message: "Account reset successfully." }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      } catch (err: any) {
-        return new Response(
-          JSON.stringify({ error: err?.message || String(err) }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
+    if (!rawServiceAccount) {
+      return new Response(
+        JSON.stringify({
+          error: "Missing FIREBASE_SERVICE_ACCOUNT secret. Please set FIREBASE_SERVICE_ACCOUNT in Supabase Edge Functions Secrets."
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
+
+    let serviceAccount: Record<string, any>;
+    try {
+      serviceAccount = JSON.parse(rawServiceAccount);
+    } catch (e) {
+      throw new Error("Failed to parse FIREBASE_SERVICE_ACCOUNT JSON: " + (e as Error).message);
+    }
+
+    const projectId = serviceAccount.project_id || "mg-coptic";
+    const googleToken = await getGoogleAccessToken(serviceAccount);
 
     // 1. Fetch pending notifications (up to 100)
     const { data: pendingEvents, error: fetchErr } = await supabase

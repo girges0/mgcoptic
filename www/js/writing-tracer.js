@@ -303,31 +303,46 @@
     }
 
     _onResize() {
-
       const prevW = this.displayWidth;
       const prevH = this.displayHeight;
+      const prevFontSize = this.calculatedFontSize || 100;
+      const prevCenterX = prevW / 2;
+      const prevCenterY = prevH / 2;
+
       this._setupCanvasSize();
 
       if (this.displayWidth !== prevW || this.displayHeight !== prevH) {
-        // Proportionally scale user strokes so they match the resized canvas
-        if (prevW > 0 && prevH > 0) {
-          const scaleX = this.displayWidth / prevW;
-          const scaleY = this.displayHeight / prevH;
+        // Re-prepare glyph path to calculate the new optimal font size and dimensions
+        this._prepareGlyphPath();
+        const newFontSize = this.calculatedFontSize || 100;
+        const newCenterX = this.displayWidth / 2;
+        const newCenterY = this.displayHeight / 2;
+
+        const uniformScale = (prevFontSize > 0 && newFontSize > 0)
+          ? (newFontSize / prevFontSize)
+          : Math.min(this.displayWidth / (prevW || 1), this.displayHeight / (prevH || 1));
+
+        // Uniformly scale user strokes aligned with glyph center to prevent distortion
+        if (prevW > 0 && prevH > 0 && uniformScale > 0) {
           for (const stroke of this.userStrokes) {
+            if (stroke.strokeWidth) {
+              stroke.strokeWidth = Math.max(3, Math.min(48, Math.round(stroke.strokeWidth * uniformScale)));
+            }
             for (const pt of stroke) {
-              pt.x *= scaleX;
-              pt.y *= scaleY;
+              pt.x = newCenterX + (pt.x - prevCenterX) * uniformScale;
+              pt.y = newCenterY + (pt.y - prevCenterY) * uniformScale;
             }
           }
           if (this.currentStroke) {
+            if (this.currentStroke.strokeWidth) {
+              this.currentStroke.strokeWidth = Math.max(3, Math.min(48, Math.round(this.currentStroke.strokeWidth * uniformScale)));
+            }
             for (const pt of this.currentStroke) {
-              pt.x *= scaleX;
-              pt.y *= scaleY;
+              pt.x = newCenterX + (pt.x - prevCenterX) * uniformScale;
+              pt.y = newCenterY + (pt.y - prevCenterY) * uniformScale;
             }
           }
         }
-
-        this._prepareGlyphPath();
       }
       this.draw();
     }

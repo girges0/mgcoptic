@@ -682,6 +682,7 @@
           localStorage.setItem('mg_coptic_claimed_chests', '[]');
           if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
         } catch (_) {}
+        if (typeof window.resetLearningPathUI === 'function') window.resetLearningPathUI();
         if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
         if (typeof renderSkillMap === 'function') renderSkillMap();

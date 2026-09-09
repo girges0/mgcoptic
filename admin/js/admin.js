@@ -3482,13 +3482,25 @@ async function resetFullAccount(userId, userName) {
   );
   if (!c) return;
 
+  // التحقق من هوية المشرف الحالي
+  let currentAdminId = null;
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    currentAdminId = session?.user?.id || null;
+  } catch (_) {}
+
+  if (!currentAdminId) {
+    Swal.fire('خطأ في الصلاحيات', 'يجب أن تكون مسجل الدخول كمشرف لتصفير الحساب.', 'error');
+    return;
+  }
+
   // إظهار شاشة التحميل الفوري
   Swal.fire({
     title: 'جارٍ تصفير الحساب بالكامل...',
     html: `
       <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:10px 0;">
         <div class="spinner" style="width:36px; height:36px; border-width:3px;"></div>
-        <p style="margin:0; font-weight:800; color:#2E2018; font-size:1rem;">يتم حذف سجل الدروس وتصفير المستويات والنقاط بالسحابة...</p>
+        <p style="margin:0; font-weight:800; color:#2E2018; font-size:1rem;">يتم حذف سجل الدروس وتصفير المستويات والنقاط بالسحابة وتحديث سجل التدقيق...</p>
       </div>
     `,
     allowOutsideClick: false,
@@ -3496,7 +3508,18 @@ async function resetFullAccount(userId, userName) {
   });
 
   try {
-    // 1) حذف جميع سجلات تقدم الدروس والتحديات والكتابة عبر Edge Function بصلاحيات السيرفر (Service Role) لضمان تجاوز RLS
+    // 1) استدعاء دالة السحابة المؤمنة ذاتياً (Self-Authorizing SECURITY DEFINER RPC)
+    const { data: rpcData, error: rpcErr } = await sb.rpc('admin_reset_full_account', {
+      p_user_id: userId,
+      p_actor_id: currentAdminId
+    });
+
+    if (rpcErr) {
+      console.error('admin_reset_full_account RPC error:', rpcErr);
+      throw new Error(rpcErr.message || 'فشل استدعاء دالة التصفير بالسحابة');
+    }
+
+    // 2) إشعار الـ Edge Function بصلاحيات الخدمة مع تمرير معرّف المشرف الحالي
     try {
       const anonKey = (typeof MG_CONFIG !== 'undefined' && MG_CONFIG?.SUPABASE_ANON_KEY) ? MG_CONFIG.SUPABASE_ANON_KEY : (window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo');
       await fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
@@ -3508,35 +3531,13 @@ async function resetFullAccount(userId, userName) {
         },
         body: JSON.stringify({
           action: 'reset_account',
-          user_id: userId
+          user_id: userId,
+          actor_id: currentAdminId
         })
       });
     } catch (edgeErr) {
       console.warn('Edge Function reset_account notice:', edgeErr);
     }
-
-    // 2) محاولة إضافية عبر دالة السحابة المؤمنة (SECURITY DEFINER)
-    try {
-      await sb.rpc('admin_reset_full_account', { p_user_id: userId });
-    } catch (_) {}
-
-    // 3) مسح مباشر احتياطي من الجداول
-    try {
-      await Promise.all([
-        sb.from('user_lesson_progress').delete().eq('user_id', userId),
-        sb.from('user_challenge_progress').delete().eq('user_id', userId),
-        sb.from('user_writing_progress').delete().eq('user_id', userId)
-      ]);
-      const todayStrFallback = new Date().toISOString().split('T')[0];
-      await sb.from('user_progress').upsert({
-        user_id: userId,
-        points: 0,
-        hearts: 5,
-        streak_days: 1,
-        claimed_chests: [],
-        last_active_date: todayStrFallback
-      }, { onConflict: 'user_id' });
-    } catch (_) {}
 
     const todayStr = new Date().toISOString().split('T')[0];
 

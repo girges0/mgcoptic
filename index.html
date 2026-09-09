@@ -5724,6 +5724,240 @@
       box-shadow: 0 5px 14px rgba(184, 134, 11, 0.35);
     }
 
+    /* شريط أدوات السبورة: زر التكبير ومؤشر سمك القلم */
+    .trace-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      max-width: 340px;
+      margin: 0 auto 12px;
+      box-sizing: border-box;
+    }
+    .trace-toolbar-row .trace-stroke-control {
+      flex: 1;
+      margin: 0;
+      max-width: 100%;
+    }
+    .trace-expand-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      background: #FAF7EE;
+      border: 2px solid #C5A059;
+      border-radius: 50%;
+      color: #6B1530;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: all .2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(168, 130, 58, 0.22);
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .trace-expand-btn:hover {
+      background: #FDF1D6;
+      border-color: #A8823A;
+      color: #4A0E21;
+      transform: scale(1.06);
+      box-shadow: 0 6px 18px rgba(107, 21, 48, 0.25);
+    }
+    .trace-expand-btn:active, .trace-expand-btn.is-active {
+      background: #6B1530;
+      color: #FFFFFF;
+      border-color: #6B1530;
+      transform: scale(0.94);
+      box-shadow: 0 0 0 5px rgba(107, 21, 48, 0.2);
+    }
+    .trace-expand-btn svg {
+      display: block;
+      transition: transform 0.18s ease;
+    }
+
+    /* زر الإغلاق والعودة من وضع ملء الشاشة */
+    .trace-expanded-header {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 4px 8px 2px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+    .trace-collapse-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-soft, #5A4A3E);
+      padding: 6px 10px;
+      font-size: 1.85rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .2s, transform .15s;
+      line-height: 1;
+    }
+    .trace-collapse-btn:hover {
+      color: var(--madder, #6F1737);
+      transform: scale(1.1);
+    }
+
+    /* بطاقة التتبع التفاعلية والانتقال السلس */
+    .trace-interactive-card {
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    /* وضع ملء الشاشة للسبورة (Expanded Mode) */
+    .trace-interactive-card.is-expanded {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      width: 100dvw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      max-width: 100% !important;
+      z-index: 10000 !important;
+      background: #FFFDF7 !important;
+      padding: calc(6px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) calc(14px + env(safe-area-inset-left, 0px)) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+    }
+    .trace-interactive-card.is-expanded .trace-expanded-header {
+      display: flex !important;
+    }
+    .trace-interactive-card.is-expanded .question-heading {
+      font-size: 1.05rem !important;
+      margin: 0 0 4px !important;
+      text-align: center !important;
+    }
+    .trace-interactive-card.is-expanded .trace-audio-wrap {
+      margin: 0 0 4px !important;
+    }
+    .trace-interactive-card.is-expanded .trace-audio-wrap .audio-icon-btn {
+      width: 42px !important;
+      height: 42px !important;
+      min-width: 42px !important;
+      margin-top: 0 !important;
+    }
+    .trace-interactive-card.is-expanded .trace-info-container {
+      margin-bottom: 4px !important;
+    }
+    .trace-interactive-card.is-expanded .trace-target-title {
+      font-size: 1.25rem !important;
+      min-height: 24px !important;
+    }
+    .trace-interactive-card.is-expanded .trace-toolbar-row {
+      max-width: 520px !important;
+      margin: 0 auto 6px !important;
+    }
+    .trace-interactive-card.is-expanded .trace-canvas-wrapper {
+      flex: 1 1 0 !important;
+      min-height: 120px !important;
+      width: calc(100% - 12px) !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 2px auto !important;
+    }
+    .trace-interactive-card.is-expanded .trace-actions-row {
+      flex-shrink: 0 !important;
+      width: 100% !important;
+      max-width: 480px !important;
+      margin: 6px auto calc(4px + env(safe-area-inset-bottom, 0px)) !important;
+      padding: 0 4px !important;
+    }
+
+    /* إخفاء شريط القلوب والفوتر فقط أثناء التكبير مع الحفاظ على حالتهما */
+    .challenge-runner-overlay.trace-fullscreen-active .runner-topbar,
+    .challenge-runner-overlay.trace-fullscreen-active .runner-footer {
+      display: none !important;
+    }
+    .challenge-runner-overlay.trace-fullscreen-active .runner-body {
+      padding: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+
+    /* تحسين وضع الشاشات العريضة والأجهزة في الوضع الأفقي (Landscape) */
+    @media (orientation: landscape) and (max-height: 520px) {
+      .trace-interactive-card.is-expanded {
+        padding: calc(4px + env(safe-area-inset-top, 0px)) calc(12px + env(safe-area-inset-right, 0px)) calc(4px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)) !important;
+      }
+      .trace-interactive-card.is-expanded .trace-expanded-header {
+        padding: 0 4px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-collapse-btn {
+        font-size: 1.55rem !important;
+        padding: 2px 6px !important;
+      }
+      .trace-interactive-card.is-expanded .question-heading {
+        font-size: 0.95rem !important;
+        margin: 0 0 2px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-target-title {
+        font-size: 1.1rem !important;
+        min-height: 20px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-info-container {
+        margin-bottom: 2px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-audio-wrap {
+        margin: 0 0 2px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-audio-wrap .audio-icon-btn {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-audio-wrap .audio-icon-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-toolbar-row {
+        margin: 0 auto 4px !important;
+        gap: 6px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-expand-btn {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-expand-btn svg {
+        width: 15px !important;
+        height: 15px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-stroke-control {
+        padding: 4px 10px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-stroke-label {
+        font-size: 0.78rem !important;
+      }
+      .trace-interactive-card.is-expanded .trace-stroke-val {
+        font-size: 0.78rem !important;
+        min-width: 26px !important;
+      }
+      .trace-interactive-card.is-expanded .trace-action-btn {
+        padding: 8px 12px !important;
+        min-height: 36px !important;
+        font-size: 0.85rem !important;
+      }
+      .trace-interactive-card.is-expanded .trace-actions-row {
+        margin-top: 4px !important;
+        margin-bottom: 2px !important;
+        gap: 8px !important;
+      }
+    }
+
     /* تمرين ترتيب الحروف */
     .write-area { display: flex; flex-direction: column; gap: 16px; align-items: center; }
     .tiles-dropzone {
@@ -8749,31 +8983,75 @@
           window.currentAuthUser = currentAuthUser;
           window.currentAuthSession = currentAuthSession;
 
-          // جلب التقدم الحقيقي من Supabase
+          // جلب التقدم الحقيقي من Supabase وفحص إصدار التصفير (reset_version)
+          let fetchedProg = null;
           try {
             const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', session.user.id).maybeSingle();
+            fetchedProg = prog;
             if (prog) {
+              const uid = session.user.id;
+              const serverResetVersion = Number(prog.reset_version || 0);
+              const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
+
+              const localProgRaw = localStorage.getItem(`mg_coptic_progress_${uid}`) || localStorage.getItem('mg_coptic_progress');
+              let localProg = null;
+              try { localProg = localProgRaw ? JSON.parse(localProgRaw) : null; } catch (_) {}
+              const localPoints = Number(localProg?.points || 0);
+              const serverPoints = Number(prog.points || 0);
+
+              const resetOccurred = (serverResetVersion > localResetVersion) || (serverPoints === 0 && localPoints > 0);
+
+              if (resetOccurred) {
+                console.log('[Auth] Account reset detected on session init. Purging all local caches...');
+                const purgeKeys = [
+                  `mg_coptic_progress_${uid}`,
+                  `mg_coptic_lesson_progress_${uid}`,
+                  `mg_coptic_claimed_chests_${uid}`,
+                  `mg_coptic_badges_${uid}`,
+                  `mg_coptic_daily_goal_${uid}`,
+                  `mg_coptic_daily_xp_date_${uid}`,
+                  `mg_coptic_daily_xp_val_${uid}`,
+                  `mg_coptic_last_synced_date_${uid}`,
+                  'mg_coptic_progress',
+                  'mg_coptic_lesson_progress',
+                  'mg_coptic_claimed_chests',
+                  'mg_coptic_badges',
+                  'mg_coptic_guest_migrated'
+                ];
+                purgeKeys.forEach(k => {
+                  try { localStorage.removeItem(k); } catch (_) {}
+                });
+                localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+              }
+
               const freshProg = {
-                user_id: session.user.id,
-                points: prog.points ?? 0,
-                total_points: prog.points ?? 0,
+                user_id: uid,
+                points: serverPoints,
+                total_points: serverPoints,
                 streak_days: prog.streak_days || 1,
                 hearts: prog.hearts ?? 5,
-                claimed_chests: prog.claimed_chests || []
+                reset_version: serverResetVersion,
+                reset_at: prog.reset_at || null,
+                claimed_chests: Array.isArray(prog.claimed_chests) ? prog.claimed_chests : []
               };
+
               localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
-              localStorage.setItem(`mg_coptic_progress_${session.user.id}`, JSON.stringify(freshProg));
+              localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(freshProg));
+              localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(freshProg.claimed_chests));
+              localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(freshProg.claimed_chests));
+              localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+
               if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
-                window.MGCopticGame.saveProgressLocal(freshProg, session.user.id);
+                window.MGCopticGame.saveProgressLocal(freshProg, uid);
               }
             }
           } catch (_) {}
 
-          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد، أو مسح الكاش إن كان الحساب مصفراً
+          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد (فقط إذا لم يكن الحساب مصفراً)
           try {
             const guestMigrated = localStorage.getItem('mg_coptic_guest_migrated');
             const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
-            if (guestLP && !guestMigrated && prog && (prog.points || 0) > 0) {
+            if (guestLP && !guestMigrated && fetchedProg && Number(fetchedProg.points || 0) > 0) {
               const userKey = `mg_coptic_lesson_progress_${session.user.id}`;
               const userExisting = localStorage.getItem(userKey);
               let merged = userExisting ? JSON.parse(userExisting) : {};
@@ -8786,7 +9064,7 @@
               localStorage.setItem(userKey, JSON.stringify(merged));
               localStorage.setItem('mg_coptic_guest_migrated', 'true');
               localStorage.removeItem('mg_coptic_lesson_progress');
-            } else if (prog && (prog.points === 0 || !prog.points)) {
+            } else if (fetchedProg && Number(fetchedProg.points || 0) === 0) {
               // إذا كان الحساب مصفراً (0 XP)، نمسح أي كاش قديم للدروس فورياً
               localStorage.removeItem('mg_coptic_lesson_progress');
               localStorage.removeItem(`mg_coptic_lesson_progress_${session.user.id}`);
@@ -9886,6 +10164,7 @@
           localStorage.setItem('mg_coptic_claimed_chests', '[]');
           if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
         } catch (_) {}
+        if (typeof window.resetLearningPathUI === 'function') window.resetLearningPathUI();
         if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
         if (typeof renderSkillMap === 'function') renderSkillMap();
@@ -10043,8 +10322,13 @@
           }
         }
 
-        if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
-          const uid = getAuthUserId();
+        const uid = getAuthUserId();
+        const curProg = (typeof getUserProgressData === 'function' ? getUserProgressData() : null) || (window.MGCopticGame?.getProgressLocal ? window.MGCopticGame.getProgressLocal(uid) : null);
+        const isResetAccount = curProg && (curProg.points === 0 || !curProg.points) && (!curProg.total_points || curProg.total_points === 0);
+
+        if (isResetAccount) {
+          activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+        } else if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
           const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
           const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
           if (rawLP) {
@@ -10711,6 +10995,16 @@
       }
       window.renderSkillMap = renderSkillMap;
 
+      window.resetLearningPathUI = function() {
+        activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+        selectedLesson = null;
+        selectedNextLessonId = null;
+        currentActiveChestId = null;
+        if (typeof drawSkillMapDOM === 'function') {
+          drawSkillMapDOM();
+        }
+      };
+
       // تهيئة خريطة المسار فور تحميل الصفحة والسكريبت
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => renderSkillMap());
@@ -10840,32 +11134,43 @@
 
         if (btnClaimChest && chestModal) {
           btnClaimChest.onclick = async () => {
-            if (!currentActiveChestId) return;
+            if (!currentActiveChestId || btnClaimChest.disabled) return;
+            btnClaimChest.disabled = true;
+            btnClaimChest.style.opacity = '0.6';
+            btnClaimChest.style.pointerEvents = 'none';
+
             const chestId = currentActiveChestId;
-            const cData = currentActiveChestData;
-            closeChestModal();
             const uid = getAuthUserId();
 
-            let xpReward = 30;
-            if (cData) {
-              if (cData.xp_mode === 'range') {
-                const min = cData.xp_min || 20;
-                const max = Math.max(min, cData.xp_max || 50);
-                xpReward = Math.floor(Math.random() * (max - min + 1)) + min;
-              } else {
-                xpReward = cData.xp_min || 30;
+            try {
+              let claimed = false;
+              if (game.claimChest) {
+                claimed = await game.claimChest(uid, chestId);
               }
-            }
-            const heartsReward = (cData && cData.hearts !== undefined) ? cData.hearts : 1;
 
-            if (game.claimChest) await game.claimChest(uid, chestId, xpReward, heartsReward);
-            showFloatingXpBadge(`+${xpReward} XP ⭐  +${heartsReward} ❤️`);
-            if (game.sound) game.sound.playVictory();
-            await refreshStatsDisplay();
-            renderSkillMap();
-            showToast(`مبروك! تمت إضافة +${xpReward} XP و +${heartsReward} ❤️ لرصيدك بنجاح.`);
-            currentActiveChestId = null;
-            currentActiveChestData = null;
+              closeChestModal();
+
+              if (claimed) {
+                showFloatingXpBadge('+30 XP ⭐  +1 ❤️');
+                if (game.sound) game.sound.playVictory();
+                await refreshStatsDisplay();
+                renderSkillMap();
+                showToast('مبروك! تم فتح صندوق الكنز بنجاح.');
+              } else {
+                await refreshStatsDisplay();
+                renderSkillMap();
+                showToast('هذا الصندوق مفتوح مسبقاً أو غير متاح حالياً.');
+              }
+            } catch (err) {
+              console.warn('Error opening chest:', err);
+              closeChestModal();
+            } finally {
+              btnClaimChest.disabled = false;
+              btnClaimChest.style.opacity = '1';
+              btnClaimChest.style.pointerEvents = 'auto';
+              currentActiveChestId = null;
+              currentActiveChestData = null;
+            }
           };
         }
 
@@ -11006,18 +11311,27 @@
       };
 
       function closeRunner() {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
         if (window.activeRunnerTracer) {
           try { window.activeRunnerTracer.destroy(); } catch (_) {}
           window.activeRunnerTracer = null;
         }
         const runnerOverlay = document.getElementById('challenge-runner-overlay');
-        if (runnerOverlay) runnerOverlay.style.display = 'none';
+        if (runnerOverlay) {
+          runnerOverlay.style.display = 'none';
+          runnerOverlay.classList.remove('trace-fullscreen-active');
+        }
         document.body.style.overflow = 'auto';
         refreshStatsDisplay();
         renderSkillMap();
       }
 
       function loadChallenge(index) {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
         if (window.activeRunnerTracer) {
           try { window.activeRunnerTracer.destroy(); } catch (_) {}
           window.activeRunnerTracer = null;
@@ -11353,6 +11667,9 @@
           const questionText = ch.question || 'تتبّع كتابة الحرف / الكلمة بدقة على السبورة';
           html += `
             <div class="trace-interactive-card">
+              <div class="trace-expanded-header">
+                <button type="button" id="btn-trace-collapse" class="trace-collapse-btn" aria-label="تصغير لوحة التتبع" title="تصغير السبورة">&times;</button>
+              </div>
               <div class="question-heading">${questionText}</div>
               ${(ch.audio_text || ch.audio_url) ? `
                 <div class="trace-audio-wrap">
@@ -11369,22 +11686,32 @@
                 <div id="trace-target-title" class="trace-target-title">جاري تجهيز لوحة التتبع...</div>
               </div>
 
-              <!-- مؤشر التحكم في سمك الكتابة -->
-              <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;width:100%;max-width:340px;margin:0 auto 14px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
-                  <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
-                </div>
-                <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
-                <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                    <path d="M2 2l7.586 7.586"></path>
-                    <circle cx="11" cy="11" r="2"></circle>
+              <!-- شريط أدوات السبورة: زر التكبير ومؤشر سمك القلم -->
+              <div class="trace-toolbar-row">
+                <button type="button" id="btn-trace-expand" class="trace-expand-btn" aria-label="تكبير السبورة" title="تكبير السبورة (ملء الشاشة)">
+                  <svg class="icon-expand" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
                   </svg>
-                  سُمْك القلم:
-                </span>
+                  <svg class="icon-collapse" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/>
+                  </svg>
+                </button>
+                <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
+                    <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
+                  </div>
+                  <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
+                  <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                      <path d="M2 2l7.586 7.586"></path>
+                      <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                    سُمْك القلم:
+                  </span>
+                </div>
               </div>
 
               <div class="trace-canvas-wrapper" style="position:relative;width:100%;max-width:340px;height:310px;margin:0 auto;background:#FFFDF8;border-radius:24px;border:2px solid #D6C8B2;box-shadow:0 8px 24px rgba(0,0,0,0.05);overflow:hidden;touch-action:none;">
@@ -11524,6 +11851,129 @@
         }
       }
 
+      // ==========================================
+      // إدارة وضع ملء الشاشة وتدوير السبورة (Trace Fullscreen & Landscape Auto-Expand)
+      // ==========================================
+      let traceExpandedManually = false;
+      let traceExpandedByRotation = false;
+      let traceOrientationMql = null;
+      let traceOrientationHandler = null;
+
+      window.setTraceFullscreenMode = function(expanded, source = 'manual') {
+        const card = document.querySelector('.trace-interactive-card');
+        const overlay = document.getElementById('challenge-runner-overlay');
+        const expandBtn = document.getElementById('btn-trace-expand');
+        if (!card) return;
+
+        if (expanded) {
+          if (source === 'manual') {
+            traceExpandedManually = true;
+            traceExpandedByRotation = false;
+          } else if (source === 'rotation') {
+            if (!traceExpandedManually) {
+              traceExpandedByRotation = true;
+            }
+          }
+
+          card.classList.add('is-expanded');
+          if (overlay) overlay.classList.add('trace-fullscreen-active');
+          if (expandBtn) {
+            expandBtn.classList.add('is-active');
+            expandBtn.setAttribute('aria-label', 'تصغير السبورة');
+            expandBtn.setAttribute('title', 'تصغير السبورة');
+            const expIcon = expandBtn.querySelector('.icon-expand');
+            const colIcon = expandBtn.querySelector('.icon-collapse');
+            if (expIcon) expIcon.style.display = 'none';
+            if (colIcon) colIcon.style.display = 'block';
+          }
+        } else {
+          traceExpandedManually = false;
+          traceExpandedByRotation = false;
+
+          card.classList.remove('is-expanded');
+          if (overlay) overlay.classList.remove('trace-fullscreen-active');
+          if (expandBtn) {
+            expandBtn.classList.remove('is-active');
+            expandBtn.setAttribute('aria-label', 'تكبير السبورة');
+            expandBtn.setAttribute('title', 'تكبير السبورة (ملء الشاشة)');
+            const expIcon = expandBtn.querySelector('.icon-expand');
+            const colIcon = expandBtn.querySelector('.icon-collapse');
+            if (expIcon) expIcon.style.display = 'block';
+            if (colIcon) colIcon.style.display = 'none';
+          }
+        }
+
+        // تحديث أبعاد الكانفاس وإعادة رسمه مع الحفاظ الكامل على ضربات القلم
+        requestAnimationFrame(() => {
+          if (window.activeRunnerTracer) {
+            window.activeRunnerTracer.resize();
+          }
+          setTimeout(() => {
+            if (window.activeRunnerTracer) {
+              window.activeRunnerTracer.resize();
+            }
+          }, 230);
+        });
+      };
+
+      function setupTraceOrientationListener() {
+        cleanupTraceOrientationListener();
+        if (!window.matchMedia) return;
+
+        try {
+          traceOrientationMql = window.matchMedia('(orientation: landscape)');
+          traceOrientationHandler = function(e) {
+            const card = document.querySelector('.trace-interactive-card');
+            const overlay = document.getElementById('challenge-runner-overlay');
+            if (!card || !overlay || overlay.style.display === 'none') return;
+
+            const isLandscape = !!e.matches;
+            if (isLandscape) {
+              // التدوير للوضع الأفقي: تكبير تلقائي للسبورة
+              window.setTraceFullscreenMode(true, 'rotation');
+            } else {
+              // العودة للوضع الرأسي: يتم التصغير فقط إذا تم التكبير تلقائياً بسبب الدوران
+              if (traceExpandedByRotation && !traceExpandedManually) {
+                window.setTraceFullscreenMode(false, 'rotation');
+              }
+            }
+          };
+
+          if (traceOrientationMql.addEventListener) {
+            traceOrientationMql.addEventListener('change', traceOrientationHandler);
+          } else if (traceOrientationMql.addListener) {
+            traceOrientationMql.addListener(traceOrientationHandler);
+          }
+
+          // إذا كان الجهاز بالفعل في الوضع الأفقي عند فتح شاشة التتبع
+          if (traceOrientationMql.matches) {
+            window.setTraceFullscreenMode(true, 'rotation');
+          }
+        } catch (err) {
+          console.warn('Trace orientation listener setup warning:', err);
+        }
+      }
+
+      function cleanupTraceOrientationListener() {
+        if (traceOrientationMql && traceOrientationHandler) {
+          try {
+            if (traceOrientationMql.removeEventListener) {
+              traceOrientationMql.removeEventListener('change', traceOrientationHandler);
+            } else if (traceOrientationMql.removeListener) {
+              traceOrientationMql.removeListener(traceOrientationHandler);
+            }
+          } catch (_) {}
+        }
+        traceOrientationMql = null;
+        traceOrientationHandler = null;
+        traceExpandedManually = false;
+        traceExpandedByRotation = false;
+        const overlay = document.getElementById('challenge-runner-overlay');
+        if (overlay) overlay.classList.remove('trace-fullscreen-active');
+        const card = document.querySelector('.trace-interactive-card');
+        if (card) card.classList.remove('is-expanded');
+      }
+
       async function initTraceChallenge(ch) {
         const canvasEl = document.getElementById('trace-exercise-canvas');
         if (!canvasEl) return;
@@ -11584,7 +12034,11 @@
 
         const titleEl = document.getElementById('trace-target-title');
         if (titleEl) {
-          titleEl.textContent = cleanText;
+          if (targetTitle && !targetTitle.includes(cleanText)) {
+            titleEl.textContent = `${targetTitle} (${cleanText})`;
+          } else {
+            titleEl.textContent = targetTitle || cleanText;
+          }
         }
 
         const badge = document.getElementById('trace-accuracy-badge');
@@ -11722,6 +12176,26 @@
             }
           };
         }
+
+        // ربط زر التكبير/التصغير اليدوي وزر الإغلاق في وضع ملء الشاشة
+        const btnExpand = document.getElementById('btn-trace-expand');
+        if (btnExpand) {
+          btnExpand.onclick = () => {
+            const card = document.querySelector('.trace-interactive-card');
+            const isExp = card && card.classList.contains('is-expanded');
+            window.setTraceFullscreenMode(!isExp, 'manual');
+          };
+        }
+
+        const btnCollapse = document.getElementById('btn-trace-collapse');
+        if (btnCollapse) {
+          btnCollapse.onclick = () => {
+            window.setTraceFullscreenMode(false, 'manual');
+          };
+        }
+
+        // تفعيل الاستماع لدوران الشاشة التلقائي (Landscape auto-expand)
+        setupTraceOrientationListener();
 
         setTimeout(() => {
           if (window.activeRunnerTracer) {
@@ -12103,6 +12577,9 @@
       }
 
       function finishLessonSuccess() {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
         const runnerProgress = document.getElementById('runner-progress-fill');
         if (runnerProgress) runnerProgress.style.width = '100%';
         if (game.sound) game.sound.playVictory();

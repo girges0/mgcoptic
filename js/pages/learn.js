@@ -130,8 +130,13 @@
           }
         }
 
-        if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
-          const uid = getAuthUserId();
+        const uid = getAuthUserId();
+        const curProg = (typeof getUserProgressData === 'function' ? getUserProgressData() : null) || (window.MGCopticGame?.getProgressLocal ? window.MGCopticGame.getProgressLocal(uid) : null);
+        const isResetAccount = curProg && (curProg.points === 0 || !curProg.points) && (!curProg.total_points || curProg.total_points === 0);
+
+        if (isResetAccount) {
+          activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+        } else if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
           const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
           const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
           if (rawLP) {
@@ -789,6 +794,16 @@
       }
       window.renderSkillMap = renderSkillMap;
 
+      window.resetLearningPathUI = function() {
+        activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+        selectedLesson = null;
+        selectedNextLessonId = null;
+        currentActiveChestId = null;
+        if (typeof drawSkillMapDOM === 'function') {
+          drawSkillMapDOM();
+        }
+      };
+
       // تهيئة خريطة المسار فور تحميل الصفحة والسكريبت
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => renderSkillMap());
@@ -918,45 +933,48 @@
 
         if (btnClaimChest && chestModal) {
           btnClaimChest.onclick = async () => {
-            if (!currentActiveChestId) return;
+            if (!currentActiveChestId || btnClaimChest.disabled) return;
+            btnClaimChest.disabled = true;
+            btnClaimChest.style.opacity = '0.6';
+            btnClaimChest.style.pointerEvents = 'none';
+
             const chestId = currentActiveChestId;
-            const cData = currentActiveChestData || {};
-            closeChestModal();
             const uid = getAuthUserId();
 
-            let rolledXp = 30;
-            if (cData.xp_mode === 'range') {
-              const min = parseInt(cData.xp_min, 10) || 20;
-              const max = Math.max(min, parseInt(cData.xp_max, 10) || 50);
-              rolledXp = Math.floor(Math.random() * (max - min + 1)) + min;
-            } else if (cData.xp_min !== undefined) {
-              rolledXp = parseInt(cData.xp_min, 10) || 30;
+            try {
+              let claimed = false;
+              if (game.claimChest) {
+                claimed = await game.claimChest(uid, chestId);
+              }
+
+              closeChestModal();
+
+              if (claimed) {
+                showFloatingXpBadge('+30 XP ⭐  +1 ❤️');
+                if (game.sound && typeof game.sound.playChestReward === 'function') {
+                  game.sound.playChestReward();
+                } else if (game.sound && typeof game.sound.playVictory === 'function') {
+                  game.sound.playVictory();
+                }
+
+                await refreshStatsDisplay();
+                renderSkillMap();
+                showToast('مبروك! تم فتح صندوق الكنز بنجاح.');
+              } else {
+                await refreshStatsDisplay();
+                renderSkillMap();
+                showToast('هذا الصندوق مفتوح مسبقاً أو غير متاح حالياً.');
+              }
+            } catch (err) {
+              console.warn('Error opening chest:', err);
+              closeChestModal();
+            } finally {
+              btnClaimChest.disabled = false;
+              btnClaimChest.style.opacity = '1';
+              btnClaimChest.style.pointerEvents = 'auto';
+              currentActiveChestId = null;
+              currentActiveChestData = null;
             }
-
-            const heartsToAdd = cData.hearts !== undefined ? parseInt(cData.hearts, 10) : 1;
-
-            if (game.claimChest) await game.claimChest(uid, chestId, rolledXp, heartsToAdd);
-
-            let floatMsg = `+${rolledXp} XP ⭐`;
-            if (heartsToAdd > 0) floatMsg += `  +${heartsToAdd} ❤️`;
-            showFloatingXpBadge(floatMsg);
-
-            if (game.sound && typeof game.sound.playChestReward === 'function') {
-              game.sound.playChestReward();
-            } else if (game.sound && typeof game.sound.playVictory === 'function') {
-              game.sound.playVictory();
-            }
-
-            await refreshStatsDisplay();
-            renderSkillMap();
-
-            let toastMsg = `مبروك! حصلت على +${rolledXp} XP`;
-            if (heartsToAdd > 0) toastMsg += ` و +${heartsToAdd} ❤️ محاولات إضافية`;
-            if (badgeObj) toastMsg += ` و وسام "${badgeObj.title}"`;
-            showToast(toastMsg + ' بنجاح.');
-
-            currentActiveChestId = null;
-            currentActiveChestData = null;
           };
         }
 
@@ -1018,14 +1036,31 @@
       }
 
       function closeRunner() {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
+        if (window.activeRunnerTracer) {
+          try { window.activeRunnerTracer.destroy(); } catch (_) {}
+          window.activeRunnerTracer = null;
+        }
         const runnerOverlay = document.getElementById('challenge-runner-overlay');
-        if (runnerOverlay) runnerOverlay.style.display = 'none';
+        if (runnerOverlay) {
+          runnerOverlay.style.display = 'none';
+          runnerOverlay.classList.remove('trace-fullscreen-active');
+        }
         document.body.style.overflow = 'auto';
         refreshStatsDisplay();
         renderSkillMap();
       }
 
       function loadChallenge(index) {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
+        if (window.activeRunnerTracer) {
+          try { window.activeRunnerTracer.destroy(); } catch (_) {}
+          window.activeRunnerTracer = null;
+        }
         if (index >= currentChallenges.length) {
           finishLessonSuccess();
           return;
@@ -1357,6 +1392,9 @@
           const questionText = ch.question || 'تتبّع كتابة الحرف / الكلمة بدقة على السبورة';
           html += `
             <div class="trace-interactive-card">
+              <div class="trace-expanded-header">
+                <button type="button" id="btn-trace-collapse" class="trace-collapse-btn" aria-label="تصغير لوحة التتبع" title="تصغير السبورة">&times;</button>
+              </div>
               <div class="question-heading">${questionText}</div>
               ${(ch.audio_text || ch.audio_url) ? `
                 <div class="trace-audio-wrap">
@@ -1373,22 +1411,32 @@
                 <div id="trace-target-title" class="trace-target-title">جاري تجهيز لوحة التتبع...</div>
               </div>
 
-              <!-- مؤشر التحكم في سمك الكتابة -->
-              <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;width:100%;max-width:340px;margin:0 auto 14px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
-                  <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
-                </div>
-                <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
-                <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                    <path d="M2 2l7.586 7.586"></path>
-                    <circle cx="11" cy="11" r="2"></circle>
+              <!-- شريط أدوات السبورة: زر التكبير ومؤشر سمك القلم -->
+              <div class="trace-toolbar-row">
+                <button type="button" id="btn-trace-expand" class="trace-expand-btn" aria-label="تكبير السبورة" title="تكبير السبورة (ملء الشاشة)">
+                  <svg class="icon-expand" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
                   </svg>
-                  سُمْك القلم:
-                </span>
+                  <svg class="icon-collapse" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/>
+                  </svg>
+                </button>
+                <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
+                    <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
+                  </div>
+                  <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
+                  <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                      <path d="M2 2l7.586 7.586"></path>
+                      <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                    سُمْك القلم:
+                  </span>
+                </div>
               </div>
 
               <div class="trace-canvas-wrapper" style="position:relative;width:100%;max-width:340px;height:310px;margin:0 auto;background:#FFFDF8;border-radius:24px;border:2px solid #D6C8B2;box-shadow:0 8px 24px rgba(0,0,0,0.05);overflow:hidden;touch-action:none;">
@@ -1536,11 +1584,131 @@
         }
       }
 
+      // ==========================================
+      // إدارة وضع ملء الشاشة وتدوير السبورة (Trace Fullscreen & Landscape Auto-Expand)
+      // ==========================================
+      let traceExpandedManually = false;
+      let traceExpandedByRotation = false;
+      let traceOrientationMql = null;
+      let traceOrientationHandler = null;
+
+      window.setTraceFullscreenMode = function(expanded, source = 'manual') {
+        const card = document.querySelector('.trace-interactive-card');
+        const overlay = document.getElementById('challenge-runner-overlay');
+        const expandBtn = document.getElementById('btn-trace-expand');
+        if (!card) return;
+
+        if (expanded) {
+          if (source === 'manual') {
+            traceExpandedManually = true;
+            traceExpandedByRotation = false;
+          } else if (source === 'rotation') {
+            if (!traceExpandedManually) {
+              traceExpandedByRotation = true;
+            }
+          }
+
+          card.classList.add('is-expanded');
+          if (overlay) overlay.classList.add('trace-fullscreen-active');
+          if (expandBtn) {
+            expandBtn.classList.add('is-active');
+            expandBtn.setAttribute('aria-label', 'تصغير السبورة');
+            expandBtn.setAttribute('title', 'تصغير السبورة');
+            const expIcon = expandBtn.querySelector('.icon-expand');
+            const colIcon = expandBtn.querySelector('.icon-collapse');
+            if (expIcon) expIcon.style.display = 'none';
+            if (colIcon) colIcon.style.display = 'block';
+          }
+        } else {
+          traceExpandedManually = false;
+          traceExpandedByRotation = false;
+
+          card.classList.remove('is-expanded');
+          if (overlay) overlay.classList.remove('trace-fullscreen-active');
+          if (expandBtn) {
+            expandBtn.classList.remove('is-active');
+            expandBtn.setAttribute('aria-label', 'تكبير السبورة');
+            expandBtn.setAttribute('title', 'تكبير السبورة (ملء الشاشة)');
+            const expIcon = expandBtn.querySelector('.icon-expand');
+            const colIcon = expandBtn.querySelector('.icon-collapse');
+            if (expIcon) expIcon.style.display = 'block';
+            if (colIcon) colIcon.style.display = 'none';
+          }
+        }
+
+        requestAnimationFrame(() => {
+          if (window.activeRunnerTracer) {
+            window.activeRunnerTracer.resize();
+          }
+          setTimeout(() => {
+            if (window.activeRunnerTracer) {
+              window.activeRunnerTracer.resize();
+            }
+          }, 230);
+        });
+      };
+
+      function setupTraceOrientationListener() {
+        cleanupTraceOrientationListener();
+        if (!window.matchMedia) return;
+
+        try {
+          traceOrientationMql = window.matchMedia('(orientation: landscape)');
+          traceOrientationHandler = function(e) {
+            const card = document.querySelector('.trace-interactive-card');
+            const overlay = document.getElementById('challenge-runner-overlay');
+            if (!card || !overlay || overlay.style.display === 'none') return;
+
+            const isLandscape = !!e.matches;
+            if (isLandscape) {
+              window.setTraceFullscreenMode(true, 'rotation');
+            } else {
+              if (traceExpandedByRotation && !traceExpandedManually) {
+                window.setTraceFullscreenMode(false, 'rotation');
+              }
+            }
+          };
+
+          if (traceOrientationMql.addEventListener) {
+            traceOrientationMql.addEventListener('change', traceOrientationHandler);
+          } else if (traceOrientationMql.addListener) {
+            traceOrientationMql.addListener(traceOrientationHandler);
+          }
+
+          if (traceOrientationMql.matches) {
+            window.setTraceFullscreenMode(true, 'rotation');
+          }
+        } catch (err) {
+          console.warn('Trace orientation listener setup warning:', err);
+        }
+      }
+
+      function cleanupTraceOrientationListener() {
+        if (traceOrientationMql && traceOrientationHandler) {
+          try {
+            if (traceOrientationMql.removeEventListener) {
+              traceOrientationMql.removeEventListener('change', traceOrientationHandler);
+            } else if (traceOrientationMql.removeListener) {
+              traceOrientationMql.removeListener(traceOrientationHandler);
+            }
+          } catch (_) {}
+        }
+        traceOrientationMql = null;
+        traceOrientationHandler = null;
+        traceExpandedManually = false;
+        traceExpandedByRotation = false;
+        const overlay = document.getElementById('challenge-runner-overlay');
+        if (overlay) overlay.classList.remove('trace-fullscreen-active');
+        const card = document.querySelector('.trace-interactive-card');
+        if (card) card.classList.remove('is-expanded');
+      }
+
       async function initTraceChallenge(ch) {
         const canvasEl = document.getElementById('trace-exercise-canvas');
         if (!canvasEl) return;
 
         let targetText = ch.text_to_trace || ch.coptic_display || ch.custom_word;
+        let targetTitle = ch.target_title || '';
         let exerciseId = ch.writing_exercise_id || ch.exercise_id;
 
         if (!targetText) {
@@ -1556,7 +1724,11 @@
 
         const titleEl = document.getElementById('trace-target-title');
         if (titleEl) {
-          titleEl.textContent = cleanText;
+          if (targetTitle && !targetTitle.includes(cleanText)) {
+            titleEl.textContent = `${targetTitle} (${cleanText})`;
+          } else {
+            titleEl.textContent = targetTitle || cleanText;
+          }
         }
 
         const badge = document.getElementById('trace-accuracy-badge');
@@ -1644,6 +1816,24 @@
             }
           };
         }
+
+        const btnExpand = document.getElementById('btn-trace-expand');
+        if (btnExpand) {
+          btnExpand.onclick = () => {
+            const card = document.querySelector('.trace-interactive-card');
+            const isExp = card && card.classList.contains('is-expanded');
+            window.setTraceFullscreenMode(!isExp, 'manual');
+          };
+        }
+
+        const btnCollapse = document.getElementById('btn-trace-collapse');
+        if (btnCollapse) {
+          btnCollapse.onclick = () => {
+            window.setTraceFullscreenMode(false, 'manual');
+          };
+        }
+
+        setupTraceOrientationListener();
 
         const strokeSlider = document.getElementById('trace-stroke-slider');
         const strokeVal = document.getElementById('trace-stroke-val');
@@ -2027,6 +2217,9 @@
       }
 
       function finishLessonSuccess() {
+        if (typeof cleanupTraceOrientationListener === 'function') {
+          cleanupTraceOrientationListener();
+        }
         const runnerProgress = document.getElementById('runner-progress-fill');
         if (runnerProgress) runnerProgress.style.width = '100%';
         if (game.sound) game.sound.playVictory();

@@ -641,29 +641,71 @@
           };
           localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
 
-          // جلب التقدم الحقيقي من Supabase
+          // جلب التقدم الحقيقي من Supabase وفحص إصدار التصفير (reset_version)
           const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', activeSession.user.id).maybeSingle();
           if (prog) {
+            const uid = activeSession.user.id;
+            const serverResetVersion = Number(prog.reset_version || 0);
+            const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
+
+            const localProgRaw = localStorage.getItem(`mg_coptic_progress_${uid}`) || localStorage.getItem('mg_coptic_progress');
+            let localProg = null;
+            try { localProg = localProgRaw ? JSON.parse(localProgRaw) : null; } catch (_) {}
+            const localPoints = Number(localProg?.points || 0);
+            const serverPoints = Number(prog.points || 0);
+
+            const resetOccurred = (serverResetVersion > localResetVersion) || (serverPoints === 0 && localPoints > 0);
+
+            if (resetOccurred) {
+              console.log('[Auth] Account reset detected on session init. Purging all local caches...');
+              const purgeKeys = [
+                `mg_coptic_progress_${uid}`,
+                `mg_coptic_lesson_progress_${uid}`,
+                `mg_coptic_claimed_chests_${uid}`,
+                `mg_coptic_badges_${uid}`,
+                `mg_coptic_daily_goal_${uid}`,
+                `mg_coptic_daily_xp_date_${uid}`,
+                `mg_coptic_daily_xp_val_${uid}`,
+                `mg_coptic_last_synced_date_${uid}`,
+                'mg_coptic_progress',
+                'mg_coptic_lesson_progress',
+                'mg_coptic_claimed_chests',
+                'mg_coptic_badges',
+                'mg_coptic_guest_migrated'
+              ];
+              purgeKeys.forEach(k => {
+                try { localStorage.removeItem(k); } catch (_) {}
+              });
+              localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+            }
+
             const freshProg = {
-              user_id: activeSession.user.id,
-              points: prog.points ?? 0,
-              total_points: prog.points ?? 0,
+              user_id: uid,
+              points: serverPoints,
+              total_points: serverPoints,
               streak_days: prog.streak_days || 1,
               hearts: prog.hearts ?? 5,
-              claimed_chests: prog.claimed_chests || []
+              reset_version: serverResetVersion,
+              reset_at: prog.reset_at || null,
+              claimed_chests: Array.isArray(prog.claimed_chests) ? prog.claimed_chests : []
             };
+
             localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
-            localStorage.setItem(`mg_coptic_progress_${activeSession.user.id}`, JSON.stringify(freshProg));
+            localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(freshProg));
+            localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(freshProg.claimed_chests));
+            localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(freshProg.claimed_chests));
+            localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+
             if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
-              window.MGCopticGame.saveProgressLocal(freshProg, activeSession.user.id);
+              window.MGCopticGame.saveProgressLocal(freshProg, uid);
             }
           }
 
-          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد، أو مسح الكاش إن كان الحساب مصفراً
+          // ترحيل تقدم الزائر السابق لحساب المستخدم لمرة واحدة فقط إن وجد (فقط إذا لم يكن الحساب مصفراً)
           try {
             const guestMigrated = localStorage.getItem('mg_coptic_guest_migrated');
             const guestLP = localStorage.getItem('mg_coptic_lesson_progress');
-            if (guestLP && !guestMigrated && prog && (prog.points || 0) > 0) {
+            if (guestLP && !guestMigrated && prog && Number(prog.points || 0) > 0) {
               const userKey = `mg_coptic_lesson_progress_${activeSession.user.id}`;
               const userExisting = localStorage.getItem(userKey);
               let merged = userExisting ? JSON.parse(userExisting) : {};
@@ -676,7 +718,7 @@
               localStorage.setItem(userKey, JSON.stringify(merged));
               localStorage.setItem('mg_coptic_guest_migrated', 'true');
               localStorage.removeItem('mg_coptic_lesson_progress');
-            } else if (prog && (prog.points === 0 || !prog.points)) {
+            } else if (prog && Number(prog.points || 0) === 0) {
               // إذا كان الحساب مصفراً (0 XP)، نمسح أي كاش قديم للدروس فورياً
               localStorage.removeItem('mg_coptic_lesson_progress');
               localStorage.removeItem(`mg_coptic_lesson_progress_${activeSession.user.id}`);
@@ -2061,15 +2103,37 @@
         } catch (_) {}
         if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
       } else if (data.actionType === 'reset') {
-        if (currentAuthUser) {
-          localStorage.removeItem(`mg_coptic_lesson_progress_${currentAuthUser.id}`);
+        const uid = currentAuthUser?.id || data.userId;
+        if (uid) {
+          localStorage.removeItem(`mg_coptic_lesson_progress_${uid}`);
+          localStorage.removeItem(`mg_coptic_claimed_chests_${uid}`);
+          localStorage.removeItem(`mg_coptic_badges_${uid}`);
+          localStorage.removeItem(`mg_coptic_daily_goal_${uid}`);
+          localStorage.removeItem(`mg_coptic_daily_xp_date_${uid}`);
+          localStorage.removeItem(`mg_coptic_daily_xp_val_${uid}`);
+          localStorage.removeItem(`mg_coptic_last_synced_date_${uid}`);
+          localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]');
+          localStorage.setItem(`mg_coptic_badges_${uid}`, '[]');
+          const initialLp = { '1': { status: 'in_progress', score: 0 } };
+          localStorage.setItem(`mg_coptic_lesson_progress_${uid}`, JSON.stringify(initialLp));
         }
         localStorage.removeItem('mg_coptic_lesson_progress');
-        let zeroProg = { points: 0, total_points: 0, hearts: 5, streak_days: 1 };
+        localStorage.removeItem('mg_coptic_claimed_chests');
+        localStorage.removeItem('mg_coptic_badges');
+        localStorage.setItem('mg_coptic_claimed_chests', '[]');
+        localStorage.setItem('mg_coptic_badges', '[]');
+        const initialLp = { '1': { status: 'in_progress', score: 0 } };
+        localStorage.setItem('mg_coptic_lesson_progress', JSON.stringify(initialLp));
+
+        let zeroProg = { points: 0, total_points: 0, hearts: 5, streak_days: 1, claimed_chests: [] };
         try {
           localStorage.setItem('mg_coptic_progress', JSON.stringify(zeroProg));
-          if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(zeroProg));
+          if (uid) localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(zeroProg));
         } catch (_) {}
+
+        if (typeof window.resetLearningPathUI === 'function') {
+          window.resetLearningPathUI();
+        }
         if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(zeroProg);
         if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
         if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();

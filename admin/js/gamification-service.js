@@ -1286,30 +1286,18 @@ class GamificationService {
   isChestClaimed(chestId, userId = null){
     const uid = userId || this.getCurrentUser()?.id;
     try {
-      // حماية تصفير الحساب: إذا كان المستخدم مصفر الحساب (نقاطه <= 35) وبدون دروس مكتملة
-      // فإن الصناديق تكون غير مفتوحة قطعاً
-      const prog = this.getProgressSync ? this.getProgressSync(uid) : null;
-      const points = prog?.points || 0;
-      const lessonProg = this.getLessonProgress ? this.getLessonProgress(uid) : null;
-      const hasCompletedLessons = Object.values(lessonProg || {}).some(l => l.status === 'completed');
-
-      if (points <= 35 && !hasCompletedLessons) {
-        if (uid) {
-          try { localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, '[]'); } catch(_) {}
-        }
-        try { localStorage.setItem('mg_coptic_claimed_chests', '[]'); } catch(_) {}
-        return false;
-      }
-
       let list = [];
       if (uid) {
         const userRaw = localStorage.getItem(`mg_coptic_claimed_chests_${uid}`);
         if (userRaw !== null) {
           list = JSON.parse(userRaw);
-        } else if (prog && Array.isArray(prog.claimed_chests)) {
-          list = prog.claimed_chests;
         } else {
-          list = [];
+          const prog = this.getProgressSync ? this.getProgressSync(uid) : null;
+          if (prog && Array.isArray(prog.claimed_chests)) {
+            list = prog.claimed_chests;
+          } else {
+            list = [];
+          }
         }
       } else {
         const raw = localStorage.getItem('mg_coptic_claimed_chests');
@@ -1331,29 +1319,73 @@ class GamificationService {
     }
   }
 
-  // فتح صندوق الكنز وحفظه سحابياً في Supabase لحساب المستخدم مع دعم الجوائز والشارات
+  // فتح صندوق الكنز وحفظه سحابياً في Supabase لحساب المستخدم عبر RPC الذرية الآمنة
   async claimChest(userId, chestId, xpReward = 30, heartsReward = 1, badgeReward = null){
     try {
       const uid = userId || this.getCurrentUser()?.id;
-      const key = uid ? `mg_coptic_claimed_chests_${uid}` : 'mg_coptic_claimed_chests';
-      const raw = localStorage.getItem(key) || localStorage.getItem('mg_coptic_claimed_chests');
-      let list = raw ? JSON.parse(raw) : [];
-      if(!list.includes(String(chestId))){
-        list.push(String(chestId));
-        if(uid) localStorage.setItem(key, JSON.stringify(list));
-        localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(list));
+      const cleanChestId = String(chestId).trim();
+
+      // فحص سريع محلي (UX Guard)
+      if (this.isChestClaimed(cleanChestId, uid)) {
+        return false;
       }
 
-      if(sbClient && uid){
+      let rpcHandled = false;
+
+      if (sbClient && uid) {
         try {
-          await sbClient.from('user_progress').update({ claimed_chests: list }).eq('user_id', uid);
-        } catch(err){
-          console.warn('Supabase claimChest update warning:', err);
+          const { data, error } = await sbClient.rpc('claim_treasure_chest', {
+            p_chest_id: cleanChestId
+          });
+
+          if (!error && data) {
+            rpcHandled = true;
+            // إذا كان الصندوق مفتوحاً مسبقاً في السيرفر، يتم مزامنة القائمة ورفض منح الجائزة
+            if (data.already_claimed || !data.success) {
+              const currentList = Array.isArray(data.claimed_chests) ? data.claimed_chests : [];
+              if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(currentList));
+              localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(currentList));
+              return false;
+            }
+
+            // اعتماد قيم السيرفر الحقيقية والموثوقة
+            const currentList = Array.isArray(data.claimed_chests) ? data.claimed_chests : [];
+            if (uid) localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(currentList));
+            localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(currentList));
+
+            const curProg = this.getProgressLocal(uid) || {};
+            curProg.points = Number(data.points ?? curProg.points ?? 0);
+            curProg.total_points = curProg.points;
+            curProg.hearts = Number(data.hearts ?? curProg.hearts ?? 5);
+            curProg.claimed_chests = currentList;
+            this.saveProgressLocal(curProg, uid);
+          } else if (error) {
+            console.warn('claim_treasure_chest RPC error:', error);
+            if (error.message && error.message.includes('مفتوح مسبقاً')) {
+              return false;
+            }
+          }
+        } catch (rpcErr) {
+          console.warn('claim_treasure_chest RPC call failed:', rpcErr);
         }
       }
 
+      // احتياطي غير متصل (Offline Fallback) فقط عند تعذر اتصال السيرفر
+      if (!rpcHandled) {
+        const key = uid ? `mg_coptic_claimed_chests_${uid}` : 'mg_coptic_claimed_chests';
+        const raw = localStorage.getItem(key) || localStorage.getItem('mg_coptic_claimed_chests');
+        let list = raw ? JSON.parse(raw) : [];
+        if (list.includes(cleanChestId)) {
+          return false;
+        }
+        list.push(cleanChestId);
+        if (uid) localStorage.setItem(key, JSON.stringify(list));
+        localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(list));
+        await this.updateProgress(uid, { addPoints: xpReward, addHearts: heartsReward });
+      }
+
       // حفظ الشارة إن وُجدت
-      if(badgeReward && (badgeReward.title || badgeReward.badge_title)){
+      if (badgeReward && (badgeReward.title || badgeReward.badge_title)) {
         try {
           const bTitle = badgeReward.title || badgeReward.badge_title;
           const bIcon = badgeReward.icon || badgeReward.badge_icon || '🏆';
@@ -1362,7 +1394,7 @@ class GamificationService {
           const rawBadges = localStorage.getItem(badgeKey) || localStorage.getItem('mg_coptic_badges') || '[]';
           let badgesList = JSON.parse(rawBadges);
           const alreadyHas = badgesList.some(b => (b.id === badgeReward.id || b.title === bTitle));
-          if(!alreadyHas){
+          if (!alreadyHas) {
             badgesList.push({
               id: badgeReward.id || `badge_${Date.now()}`,
               title: bTitle,
@@ -1370,18 +1402,17 @@ class GamificationService {
               description: bDesc,
               unlocked_at: new Date().toISOString()
             });
-            if(uid) localStorage.setItem(badgeKey, JSON.stringify(badgesList));
+            if (uid) localStorage.setItem(badgeKey, JSON.stringify(badgesList));
             localStorage.setItem('mg_coptic_badges', JSON.stringify(badgesList));
           }
-        } catch(bErr){
+        } catch (bErr) {
           console.warn('Saving chest badge error:', bErr);
         }
       }
 
-      await this.updateProgress(uid, { addPoints: xpReward, addHearts: heartsReward });
       this.sound.playChestReward();
       return true;
-    } catch(e){
+    } catch (e) {
       return false;
     }
   }
@@ -1501,12 +1532,24 @@ class GamificationService {
       try {
         const { data, error } = await sbClient.from('user_progress').select('*').eq('user_id', uid).maybeSingle();
         if(!error && data){
+          const serverResetVersion = Number(data.reset_version || 0);
+          const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
+          const isResetDetected = (serverResetVersion > localResetVersion) || (data.points === 0 && (progress?.points || 0) > 0);
+
+          if (isResetDetected) {
+            console.log('[Gamification] Account reset detected from server. Purging local stale cache...');
+            this.resetFullAccountLocal(uid);
+            localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+          }
+
           progress = {
             user_id: uid,
             hearts: data.hearts ?? 5,
             points: data.points ?? 0,
             total_points: data.points ?? 0,
             streak_days: data.streak_days ?? 1,
+            reset_version: serverResetVersion,
+            reset_at: data.reset_at || null,
             last_active_date: data.last_active_date || new Date().toISOString().split('T')[0],
             claimed_chests: data.claimed_chests || []
           };
@@ -1514,6 +1557,7 @@ class GamificationService {
             localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(data.claimed_chests));
             localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(data.claimed_chests));
           }
+          localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
           this.saveProgressLocal(progress, uid, false);
         } else if(!data && !error && uid){
           // إنشاء سجل تقدم جديد لهذا المستخدم في السحابة فقط إذا كان uid موجود
@@ -1787,11 +1831,18 @@ class GamificationService {
           const serverMap = {};
           if(Array.isArray(data) && data.length > 0){
             const curPoints = this.getProgressLocal(uid)?.points || 0;
+            // التحقق من اتساق البيانات: إذا كان رصيد المستخدم 0 (تم تصفير الحساب أو حساب جديد)، يتم حذف وتجاهل أي سجلات سابقة فوراً
+            if (curPoints === 0) {
+              map = { '1': { status: 'in_progress', score: 0 } };
+              if (uid) localStorage.setItem(userLpKey, JSON.stringify(map));
+              localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));
+              return map;
+            }
             data.forEach(row => {
               const lid = String(row.lesson_id);
               const numId = parseInt(lid, 10);
-              // التحقق من اتساق البيانات: إذا كان رصيد المستخدم 0 أو أول درس فقط (<= 35 XP)، نتجاهل أي بقايا لدروس عليا سابقة
-              if(curPoints <= 35 && numId > 2 && row.status === 'completed'){
+              // إذا كان رصيد المستخدم أول درس فقط (<= 35 XP)، نتجاهل أي بقايا لدروس عليا سابقة
+              if(curPoints <= 35 && numId > 1 && row.status === 'completed'){
                 return;
               }
               serverMap[lid] = {
@@ -1825,6 +1876,7 @@ class GamificationService {
   }
 
   // تسجيل إكمال درس وحفظه سحابياً في Supabase لحساب المستخدم
+  // تسجيل إكمال درس وحفظه سحابياً في Supabase لحساب المستخدم عبر complete_lesson_reward
   async completeLesson(userId, lessonId, score = 100, nextLessonId = null, xpReward = 20){
     const uid = userId || this.getCurrentUser()?.id;
     const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS;
@@ -1864,80 +1916,75 @@ class GamificationService {
       localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(map));
     } catch(e){}
 
-    const effectiveXpReward = wasAlreadyCompleted ? 0 : (parseInt(xpReward, 10) || 0);
-    if(effectiveXpReward > 0){
-      const curProg = this.getProgressLocal(uid);
-      curProg.points = (curProg.points || 0) + effectiveXpReward;
-      curProg.total_points = (curProg.total_points || 0) + effectiveXpReward;
-      this.saveProgressLocal(curProg, uid);
-      this.recordTodayEarnedXP(uid, effectiveXpReward);
+    const isVirtualStation = /_(p|c)$/.test(String(lessonId));
+    const numLessonId = isVirtualStation
+      ? parseInt(String(lessonId).replace(/_(p|c)$/, ''), 10)
+      : parseInt(lessonId, 10);
+
+    let serverHandled = false;
+
+    // المزامنة السحابية الموثوقة عبر complete_lesson_reward (بدون تمرير قيمة النقاط من العميل)
+    if(sbClient && uid && !isNaN(numLessonId)){
+      try {
+        const { data: rpcData, error: rpcErr } = await sbClient.rpc('complete_lesson_reward', {
+          p_lesson_id: numLessonId,
+          p_score: parseInt(score, 10) || 100
+        });
+
+        if(!rpcErr && rpcData && rpcData.success){
+          serverHandled = true;
+          const curProg = this.getProgressLocal(uid) || {};
+          curProg.points = Number(rpcData.points ?? curProg.points ?? 0);
+          curProg.total_points = curProg.points;
+          if(rpcData.hearts != null) curProg.hearts = Number(rpcData.hearts);
+          if(rpcData.streak_days != null) curProg.streak_days = Number(rpcData.streak_days);
+          this.saveProgressLocal(curProg, uid);
+
+          if(rpcData.added_xp > 0){
+            this.recordTodayEarnedXP(uid, rpcData.added_xp);
+          }
+        } else if(rpcErr){
+          console.warn('complete_lesson_reward RPC error:', rpcErr);
+        }
+
+        // فتح الدرس التالي بالسحابة
+        if(nextLessonId && !/_(p|c)$/.test(String(nextLessonId))){
+          const nextNumId = parseInt(nextLessonId, 10);
+          if(!isNaN(nextNumId)){
+            sbClient.from('user_lesson_progress').upsert({
+              user_id: uid,
+              lesson_id: nextNumId,
+              status: 'in_progress',
+              score: 0,
+              updated_at: new Date().toISOString()
+            }).then(()=>{}, ()=>{});
+          }
+        }
+      } catch(err){
+        console.warn('completeLesson cloud sync error:', err);
+      }
     }
 
-    // مزامنة سحابية غير معطلة في الخلفية وبشكل متوازٍ لمنع أي تعليق
-    if(sbClient && uid){
-      (async () => {
-        try {
-          const promises = [];
-          const isVirtualStation = /_(p|c)$/.test(String(lessonId));
-          const numLessonId = isVirtualStation
-            ? parseInt(String(lessonId).replace(/_(p|c)$/, ''), 10)
-            : parseInt(lessonId, 10);
-
-          if(!isNaN(numLessonId)){
-            promises.push(
-              sbClient.from('user_lesson_progress').upsert({
-                user_id: uid,
-                lesson_id: numLessonId,
-                status: 'completed',
-                score: parseInt(score, 10) || 100,
-                updated_at: new Date().toISOString()
-              })
-            );
-          }
-
-          if(nextLessonId && !/_(p|c)$/.test(String(nextLessonId))){
-            const nextNumId = parseInt(nextLessonId, 10);
-            if(!isNaN(nextNumId)){
-              promises.push(
-                sbClient.from('user_lesson_progress').upsert({
-                  user_id: uid,
-                  lesson_id: nextNumId,
-                  status: 'in_progress',
-                  score: 0,
-                  updated_at: new Date().toISOString()
-                })
-              );
-            }
-          }
-
-          if(effectiveXpReward > 0){
-            promises.push(
-              sbClient.from('user_progress').upsert({
-                user_id: uid,
-                points: (this.getProgressLocal(uid)?.points || 0),
-                last_active_date: new Date().toISOString().split('T')[0]
-              })
-            );
-          }
-
-          if(promises.length > 0){
-            await Promise.all(promises);
-          }
-        } catch(err){
-          console.warn('completeLesson cloud sync error:', err);
-        }
-      })();
+    // احتياطي غير متصل (Offline fallback) فقط في حال تعذر الاتصال بالسيرفر
+    if(!serverHandled && !wasAlreadyCompleted){
+      const fallbackXp = parseInt(xpReward, 10) || 20;
+      if(fallbackXp > 0){
+        const curProg = this.getProgressLocal(uid) || {};
+        curProg.points = (curProg.points || 0) + fallbackXp;
+        curProg.total_points = (curProg.total_points || 0) + fallbackXp;
+        this.saveProgressLocal(curProg, uid);
+        this.recordTodayEarnedXP(uid, fallbackXp);
+      }
     }
 
     return map;
   }
 
-  // تصفير حساب المستخدم بالكامل وحذف كافة الدروس والتقدم محلياً وسحابياً
-  async resetFullAccount(userId = null) {
+  // مسح كامل الكاش المحلي لحساب المستخدم فور تصفيره
+  resetFullAccountLocal(userId = null) {
     const uid = userId || this.getCurrentUser()?.id;
-    if (!uid) return false;
+    if (!uid) return;
 
-    // 1. مسح جميع مفاتيح التخزين المحلي فوراً
     const keysToClear = [
       `mg_coptic_progress_${uid}`,
       `mg_coptic_lesson_progress_${uid}`,
@@ -1952,7 +1999,8 @@ class GamificationService {
       'mg_coptic_claimed_chests',
       'mg_coptic_badges',
       'mg_coptic_daily_xp_date',
-      'mg_coptic_daily_xp_val'
+      'mg_coptic_daily_xp_val',
+      'mg_coptic_guest_migrated'
     ];
     keysToClear.forEach(k => {
       try { localStorage.removeItem(k); } catch(_) {}
@@ -1982,6 +2030,32 @@ class GamificationService {
       localStorage.setItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS, JSON.stringify(initialLp));
     } catch(_) {}
 
+    if (typeof window !== 'undefined') {
+      if (typeof window.resetLearningPathUI === 'function') window.resetLearningPathUI();
+      if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(initialProg);
+      if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+    }
+  }
+
+  // تصفير حساب المستخدم بالكامل وحذف كافة الدروس والتقدم محلياً وسحابياً
+  async resetFullAccount(userId = null, actorId = null) {
+    const uid = userId || this.getCurrentUser()?.id;
+    if (!uid) return false;
+
+    // 1. مسح جميع مفاتيح التخزين المحلي فوراً
+    this.resetFullAccountLocal(uid);
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const initialProg = {
+      user_id: uid,
+      points: 0,
+      total_points: 0,
+      hearts: 5,
+      streak_days: 1,
+      claimed_chests: [],
+      last_active_date: todayStr
+    };
+
     // 2. استدعاء الـ Edge Function بصلاحيات Service Role لحذف كافة السجلات سحابياً
     try {
       const anonKey = (typeof MG_CONFIG !== 'undefined' && MG_CONFIG?.SUPABASE_ANON_KEY) ? MG_CONFIG.SUPABASE_ANON_KEY : (window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo');
@@ -1994,31 +2068,20 @@ class GamificationService {
         },
         body: JSON.stringify({
           action: 'reset_account',
-          user_id: uid
+          user_id: uid,
+          actor_id: actorId || this.getCurrentUser()?.id || null
         })
       });
     } catch (e) {
       console.warn('resetFullAccount edge call notice:', e);
     }
 
-    // 3. محاولة RPC ودوال الحذف المباشرة
+    // 3. محاولة RPC الموثوقة مع تمرير معرّف المشرف
     const sb = this.getSupabaseClient();
     if (sb) {
-      try { await sb.rpc('admin_reset_full_account', { p_user_id: uid }); } catch(_) {}
       try {
-        await Promise.all([
-          sb.from('user_lesson_progress').delete().eq('user_id', uid),
-          sb.from('user_challenge_progress').delete().eq('user_id', uid),
-          sb.from('user_writing_progress').delete().eq('user_id', uid)
-        ]);
-        await sb.from('user_progress').upsert({
-          user_id: uid,
-          points: 0,
-          hearts: 5,
-          streak_days: 1,
-          claimed_chests: [],
-          last_active_date: todayStr
-        }, { onConflict: 'user_id' });
+        const callerId = actorId || this.getCurrentUser()?.id || uid;
+        await sb.rpc('admin_reset_full_account', { p_user_id: uid, p_actor_id: callerId });
       } catch(_) {}
     }
 
@@ -2033,6 +2096,7 @@ class GamificationService {
     }
 
     if (typeof window !== 'undefined') {
+      if (typeof window.resetLearningPathUI === 'function') window.resetLearningPathUI();
       if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(initialProg);
       if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
       if (typeof window.renderSkillMap === 'function') window.renderSkillMap();

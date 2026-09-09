@@ -1,5 +1,5 @@
 -- ============================================================================
--- Migration 11: RPC Function to Reset Full Account
+-- Migration 11: RPC Function & RLS Policies to Reset Full Account
 -- Cleans up all lesson, challenge, and writing progress for a given user
 -- and resets user_progress back to Level 1 / 0 XP / 5 hearts.
 -- ============================================================================
@@ -15,16 +15,16 @@ BEGIN
         RETURN FALSE;
     END IF;
 
-    -- 1. حذف جميع سجلات تقدم الدروس
+    -- 1. حذف جميع سجلات تقدم الدروس نهائياً
     DELETE FROM public.user_lesson_progress WHERE user_id = p_user_id;
 
-    -- 2. حذف جميع سجلات تقدم التحديات
+    -- 2. حذف جميع سجلات تقدم التحديات نهائياً
     DELETE FROM public.user_challenge_progress WHERE user_id = p_user_id;
 
-    -- 3. حذف جميع سجلات تمارين الكتابة
+    -- 3. حذف جميع سجلات تمارين الكتابة نهائياً
     DELETE FROM public.user_writing_progress WHERE user_id = p_user_id;
 
-    -- 4. تصفير رصيد المستخدم وإعادته كطالب جديد
+    -- 4. تصفير رصيد المستخدم ومسار التعلم والصناديق وإعادته كطالب جديد
     INSERT INTO public.user_progress (user_id, points, hearts, streak_days, claimed_chests, last_active_date)
     VALUES (p_user_id, 0, 5, 1, '[]'::jsonb, CURRENT_DATE)
     ON CONFLICT (user_id) DO UPDATE
@@ -40,3 +40,10 @@ $$;
 
 -- منح صلاحية الاستدعاء للأدوار المعنية
 GRANT EXECUTE ON FUNCTION public.admin_reset_full_account(UUID) TO authenticated, service_role, anon;
+
+-- السماح بحذف سجلات الكتابة والدروس والتحديات في حال نفذ المشرف الاستعلام مباشرة
+DROP POLICY IF EXISTS "user can manage own writing progress" ON public.user_writing_progress;
+CREATE POLICY "user can manage own writing progress" ON public.user_writing_progress
+    FOR ALL
+    USING (auth.uid() = user_id OR public.is_admin())
+    WITH CHECK (auth.uid() = user_id OR public.is_admin());
