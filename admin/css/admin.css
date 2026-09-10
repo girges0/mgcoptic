@@ -1,31 +1,112 @@
 @font-face {
   font-family: 'girges';
-  src: url('../girges.woff') format('woff'),
-       url('/girges.woff') format('woff'),
-       url('../../girges.woff') format('woff'),
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
        url('../assets/fonts/girges.woff') format('woff'),
-       url('../../assets/fonts/girges.woff') format('woff');
+       url('../../girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'girges';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'girges';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coptic Girges';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coptic Girges';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Coptic Girges';
-  src: url('../girges.woff') format('woff'),
-       url('/girges.woff') format('woff'),
-       url('../../girges.woff') format('woff'),
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
        url('../assets/fonts/girges.woff') format('woff'),
-       url('../../assets/fonts/girges.woff') format('woff');
+       url('../../girges.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('../assets/fonts/girges.woff') format('woff'),
+       url('../../girges.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
   :root{
     --parchment:#eee6d1; --parchment-card:#faf6e9; --ink:#241b12; --ink-soft:#5a4a34;
     --madder:#8c2430; --madder-dark:#5e161f; --gold:#a8823a; --gold-light:#c9a35c;
     --line:#d9c9a0; --ok:#2e6b3e; --err:#a13030;
-    --font-display:'Cairo','Tajawal',sans-serif; --font-body:'Tajawal','Cairo',sans-serif;
-    --font-coptic:'girges', 'Coptic Girges', 'Noto Sans Coptic', 'Cairo', serif;
+    --font-display:'Cairo', 'girges', 'Coptic Girges', 'Tajawal', sans-serif;
+    --font-body:'Tajawal', 'girges', 'Coptic Girges', 'Cairo', sans-serif;
+    --font-coptic:'girges', 'Coptic Girges', 'Noto Sans Coptic', sans-serif;
     --ease-float:cubic-bezier(0.23,1,0.32,1);
   }
   *{box-sizing:border-box;}
@@ -35,7 +116,20 @@
     *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
   }
   body{margin:0;background:var(--parchment);color:var(--ink);font-family:var(--font-body);min-height:100vh;}
-  .coptic{font-family:var(--font-coptic);}
+  .coptic,
+  .coptic-font,
+  .coptic-text,
+  .coptic-glyph,
+  .coptic-big-glyph,
+  .unit-accordion-badge,
+  .unit-accordion-badge span,
+  .key-coptic,
+  .badge-preview,
+  .challenge-coptic-preview,
+  [lang="cop"],
+  [data-coptic] {
+    font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
+  }
   a{color:inherit;}
 
   #login-screen{max-width:380px;margin:90px auto;background:var(--parchment-card);border:1px solid var(--line);

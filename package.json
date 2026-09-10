@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "backup": "node scripts/backup-db.js",
     "cap:sync": "powershell -Command \"Copy-Item -Path index.html, welcome.html, login.html, signup.html, learn.html, onboarding.html, manifest.json, sw.js, swal-theme.js, gamification-service.js, favicon.png, logo.png, icon-192.png, icon-512.png, girges.woff -Destination www/ -Force; Copy-Item -Path js, css, assets -Destination www/ -Recurse -Force\" && npx cap sync android"
   },
   "repository": {

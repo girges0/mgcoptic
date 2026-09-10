@@ -529,16 +529,14 @@ const CurriculumAdminSystem = (function(){
 
     const defaultCurriculum = (typeof DEFAULT_CURRICULUM !== 'undefined' ? DEFAULT_CURRICULUM : (window.DEFAULT_CURRICULUM || (window.GamificationService && window.GamificationService.DEFAULT_CURRICULUM)));
 
-    const hasUnits = curriculumData && Array.isArray(curriculumData.units) && curriculumData.units.length > 0;
-
-    if((!curriculumData || !hasUnits) && defaultCurriculum){
-      curriculumData = JSON.parse(JSON.stringify(defaultCurriculum));
-    } else if(!curriculumData){
-      curriculumData = {
+    if(!curriculumData){
+      curriculumData = defaultCurriculum ? JSON.parse(JSON.stringify(defaultCurriculum)) : {
         levels: [
-          { id: 1, title: 'المستوى 1: الأبجدية القبطية (اللهجة البحيرية)', description: 'تعلّم نطق وكتابة وقراءة جميع الحروف القبطية الـ 32 من خلال 7 وحدات تدريبية ممتعة.', order_index: 1 }
+          { id: 1, title: 'المستوى 1: الأساسيات', description: 'مسار تعلم اللغة القبطية', order_index: 1 }
         ],
-        units: []
+        level: { id: 1, title: 'المستوى 1: الأساسيات', description: 'مسار تعلم اللغة القبطية', order_index: 1 },
+        units: [],
+        chests: []
       };
     }
 
@@ -743,6 +741,9 @@ const CurriculumAdminSystem = (function(){
 
     const exportBtn = document.getElementById('btn-export-json-curriculum');
     if(exportBtn) exportBtn.onclick = exportJSON;
+
+    const resetAllBtn = document.getElementById('btn-reset-curriculum-all');
+    if(resetAllBtn) resetAllBtn.onclick = resetAllCurriculumData;
 
     const previewBtn = document.getElementById('btn-preview-curriculum');
     if(previewBtn) previewBtn.onclick = () => {
@@ -5024,6 +5025,140 @@ const CurriculumAdminSystem = (function(){
   }
   window.syncToDatabaseAndStorage = syncToDatabaseAndStorage;
 
+  /* ============ COMPLETE CURRICULUM & LEARNING PATH RESET (ZERO DATA) ============ */
+  async function resetAllCurriculumData(){
+    const confirmHtml = `
+      <div style="text-align:right; font-size:0.95rem; line-height:1.7; color:#241D20;">
+        <p>هل أنت متأكد من <strong>تصفير جميع بيانات مسار التعلم</strong>؟</p>
+        <div style="background:#FEF2F2; border-right:4px solid #EF4444; padding:10px 14px; border-radius:8px; margin:12px 0;">
+          <p style="color:#B91C1C; font-weight:700; margin:0 0 6px 0;">تحذير: سيتم تنفيذ الإجراءات التالية:</p>
+          <ul style="margin:0; padding-right:20px; color:#991B1B; font-size:0.9rem;">
+            <li>حذف جميع الوحدات والدروس والتمارين التفاعلية الحالية نهائياً.</li>
+            <li>حذف خيارات التمارين وصناديق المكافآت التابعة للمسار.</li>
+            <li>تصفير تقدم وسجلات الطلاب في مسار التعلم للبدء على نظيف.</li>
+            <li>مسح الذاكرة المؤقتة (Cache) لجميع المتصفحات فوراً.</li>
+          </ul>
+        </div>
+        <p style="color:#4B5563; font-size:0.88rem;">سيبقى المستوى الأول فارغاً تماماً لتتمكن من إضافة وحدات ودروس المنهج الفعلي الجديد بكل سهولة.</p>
+      </div>
+    `;
+
+    if(window.Swal){
+      const res = await Swal.fire({
+        title: 'تأكيد تصفير مسار التعلم بالكامل',
+        html: confirmHtml,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'نعم، صفّر مسار التعلم نهائياً',
+        cancelButtonText: 'إلغاء وتراجع',
+        confirmButtonColor: '#DC2626',
+        cancelButtonColor: '#6B7280'
+      });
+      if(!res.isConfirmed) return;
+    } else {
+      if(!confirm('هل أنت متأكد من تصفير جميع بيانات مسار التعلم وحذف جميع الوحدات والدروس؟')) return;
+    }
+
+    if(window.Swal){
+      Swal.fire({
+        title: 'جارٍ تصفير مسار التعلم...',
+        text: 'يتم حذف البيانات القديمة وتطهير قاعدة البيانات محلياً وسحابياً',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+    }
+
+    try {
+      // 1. حذف من قاعدة بيانات Supabase إن كانت متصلة
+      if(window.sb){
+        try { await window.sb.from('challenge_options').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('challenges').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('lessons').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('units').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('chests').delete().neq('id', '___'); } catch(e){ console.warn(e); }
+        try { await window.sb.from('user_challenge_progress').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('user_lesson_progress').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try { await window.sb.from('user_writing_progress').delete().neq('id', 0); } catch(e){ console.warn(e); }
+        try {
+          await window.sb.from('user_progress').update({
+            points: 0,
+            hearts: 5,
+            streak_days: 1,
+            claimed_chests: []
+          }).neq('user_id', '00000000-0000-0000-0000-000000000000');
+        } catch(e){ console.warn(e); }
+      }
+
+      // 2. تصفير الذاكرة المحلية localStorage
+      const keysToClear = [
+        'mg_coptic_curriculum_v2',
+        'mg_coptic_curriculum_v1',
+        'mg_coptic_curriculum_backup',
+        'mg_coptic_user_progress',
+        'mg_coptic_lesson_progress',
+        'mg_coptic_challenge_progress',
+        'mg_coptic_writing_progress',
+        'mg_coptic_claimed_chests',
+        'mg_coptic_cached_hero_card',
+        'mg_coptic_curriculum_dirty',
+        'mg_coptic_curriculum_raw'
+      ];
+      keysToClear.forEach(k => {
+        try { localStorage.removeItem(k); } catch(e){}
+      });
+      // مسح أي مفاتيح تخص معرف المستخدم
+      try {
+        for(let i = localStorage.length - 1; i >= 0; i--){
+          const key = localStorage.key(i);
+          if(key && (key.startsWith('mg_coptic_lesson_progress_') || key.startsWith('mg_coptic_challenge_progress_') || key.startsWith('mg_coptic_progress_'))){
+            localStorage.removeItem(key);
+          }
+        }
+      } catch(e){}
+
+      // 3. إعادة تعيين البيانات في الذاكرة الحالية كمنهج نظيف
+      curriculumData = {
+        levels: [
+          { id: 1, title: 'المستوى 1: الأساسيات', description: 'مسار تعلم اللغة القبطية', order_index: 1 }
+        ],
+        level: { id: 1, title: 'المستوى 1: الأساسيات', description: 'مسار تعلم اللغة القبطية', order_index: 1 },
+        units: [],
+        chests: []
+      };
+
+      saveLocal(false);
+      navState = { levelId: null, unitId: null, lessonId: null };
+      renderAll();
+      refreshStats();
+
+      // 4. بث التحديث للجميع
+      if(window.MGCopticGame && typeof window.MGCopticGame.broadcastUpdate === 'function'){
+        window.MGCopticGame.broadcastUpdate('curriculum', curriculumData);
+      }
+      window.dispatchEvent(new CustomEvent('coptic_curriculum_updated', { detail: curriculumData }));
+
+      if(window.Swal){
+        Swal.fire({
+          title: 'تم التصفير بنجاح! ✓',
+          text: 'تم تصفير جميع بيانات مسار التعلم السابقة بالكامل. يمكنك الآن البدء في إضافة وحدات ودروس المنهج الفعلي.',
+          icon: 'success',
+          confirmButtonText: 'ممتاز، ابدأ إضافة المنهج',
+          confirmButtonColor: '#15803D'
+        });
+      } else {
+        alert('تم تصفير جميع بيانات مسار التعلم بنجاح!');
+      }
+    } catch(err) {
+      console.error('Error during curriculum reset:', err);
+      if(window.Swal){
+        Swal.fire('خطأ أثناء التصفير', err.message || 'حدث خطأ غير متوقع', 'error');
+      } else {
+        alert('حدث خطأ: ' + (err.message || ''));
+      }
+    }
+  }
+  window.resetAllCurriculumData = resetAllCurriculumData;
+
   /* ============ EXPORT & IMPORT JSON ============ */
   function exportJSON(){
     if(!curriculumData){
@@ -5941,6 +6076,7 @@ const CurriculumAdminSystem = (function(){
     confirmApplyImport,
     exportJSON,
     syncToDatabaseAndStorage,
+    resetAllCurriculumData,
     openInteractivePreview,
     closeInteractivePreview,
     setPreviewDeviceMode,

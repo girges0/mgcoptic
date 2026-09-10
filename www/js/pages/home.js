@@ -168,63 +168,20 @@
           const levelTitle = lvl ? lvl.title : 'المستوى 1';
           const unitLessons = (unit.lessons && unit.lessons.length > 0)
             ? unit.lessons.slice().sort((a,b) => (a.order_index || 1) - (b.order_index || 1))
-            : [{ id: unit.id * 100 + 1, title: unit.title, xp_reward: 20, practice_xp: 20, challenge_xp: 30 }];
+            : [];
 
-          if (unitLessons.length === 1) {
-            const baseLesson = unitLessons[0];
-            const lesXp = parseInt(baseLesson.xp_reward, 10) || 20;
-            const pracXp = parseInt(baseLesson.practice_xp, 10) || 20;
-            const chalXp = parseInt(baseLesson.challenge_xp, 10) || 30;
-
-            // 1. درس الشرح الأساسي
+          unitLessons.forEach((les, lIdx) => {
             allSteps.push({
-              id: String(baseLesson.id),
-              title: baseLesson.title || unit.title,
+              id: String(les.id),
+              title: les.title || unit.title,
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
               levelTitle: levelTitle,
-              xpReward: lesXp,
+              xpReward: parseInt(les.xp_reward, 10) || 20,
               kind: 'lesson'
             });
-
-            // 2. محطة التطبيق والاستماع
-            allSteps.push({
-              id: `${baseLesson.id}_p`,
-              title: baseLesson.title || unit.title,
-              unitTitle: unit.title,
-              unitDesc: unit.description || '',
-              unitIndex: uIdx + 1,
-              levelTitle: levelTitle,
-              xpReward: pracXp,
-              kind: 'practice'
-            });
-
-            // 3. محطة تحدي الإتقان
-            allSteps.push({
-              id: `${baseLesson.id}_c`,
-              title: baseLesson.title || unit.title,
-              unitTitle: unit.title,
-              unitDesc: unit.description || '',
-              unitIndex: uIdx + 1,
-              levelTitle: levelTitle,
-              xpReward: chalXp,
-              kind: 'challenge'
-            });
-          } else {
-            unitLessons.forEach((les, lIdx) => {
-              allSteps.push({
-                id: String(les.id),
-                title: les.title || unit.title,
-                unitTitle: unit.title,
-                unitDesc: unit.description || '',
-                unitIndex: uIdx + 1,
-                levelTitle: levelTitle,
-                xpReward: parseInt(les.xp_reward, 10) || 20,
-                kind: 'lesson'
-              });
-            });
-          }
+          });
         });
 
         const totalStepsCount = allSteps.length;
@@ -303,6 +260,24 @@
               fillWidth: `${displayFillPct}%`
             }));
           } catch(e){}
+        } else {
+          const lTitleEl = document.getElementById('home-lesson-title');
+          if (lTitleEl) lTitleEl.textContent = 'مسار التعلم جاهز لاستقبال المنهج';
+
+          const uTitleEl = document.getElementById('home-unit-title');
+          if (uTitleEl) uTitleEl.textContent = 'بانتظار إضافة الوحدات والدروس من لوحة التحكم';
+
+          const tagText = document.getElementById('home-curriculum-tag-text');
+          if (tagText) tagText.textContent = 'مسار التعلم';
+
+          const countEl = document.getElementById('home-progress-count');
+          if (countEl) countEl.textContent = '0 من 0 محطات';
+
+          const pctEl = document.getElementById('home-progress-pct');
+          if (pctEl) pctEl.textContent = '0%';
+
+          const fillEl = document.getElementById('home-progress-fill');
+          if (fillEl) fillEl.style.width = '0%';
         }
 
         // تحديث هدف اليوم الحقيقي

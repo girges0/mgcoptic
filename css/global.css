@@ -2,7 +2,49 @@
   font-family: 'girges';
   src: url('../assets/fonts/girges.woff') format('woff'),
        url('../girges.woff') format('woff'),
-       url('/girges.woff') format('woff');
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coptic Girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Coptic Girges';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,8 +53,40 @@
   font-family: 'Coptic Girges';
   src: url('../assets/fonts/girges.woff') format('woff'),
        url('../girges.woff') format('woff'),
-       url('/girges.woff') format('woff');
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Noto Sans Coptic';
+  src: url('../assets/fonts/girges.woff') format('woff'),
+       url('../girges.woff') format('woff'),
+       url('assets/fonts/girges.woff') format('woff'),
+       url('girges.woff') format('woff');
+  font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
@@ -66,8 +140,20 @@
       box-sizing: border-box;
     }
 
-    .coptic {
-      font-family: var(--font-coptic);
+    .coptic,
+    .coptic-font,
+    .coptic-text,
+    .coptic-glyph,
+    .coptic-big-glyph,
+    .coptic-sub,
+    .coptic-letter-display,
+    .unit-banner-badge,
+    .unit-banner-badge span,
+    .key-coptic,
+    .trace-target-title,
+    [lang="cop"],
+    [data-coptic] {
+      font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
     }
 
     a {

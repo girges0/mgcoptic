@@ -1,4 +1,5 @@
 # Backups and temporary files
+backups/
 .backups/
 .backups_full/
 scratch/

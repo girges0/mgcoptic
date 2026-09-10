@@ -65,7 +65,7 @@
     }
     .unit-banner-info { flex: 1; text-align: right; }
     .unit-banner-badge {
-      font-family: var(--font-coptic);
+      font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
       font-size: 1.6rem;
       min-width: 52px;
       width: auto;
@@ -1094,73 +1094,91 @@
     }
     .trace-interactive-card .question-heading {
       width: 100%;
-      text-align: right;
-      margin: 6px 4px 6px;
-      font-size: 1.45rem;
+      text-align: center;
+      margin: 4px 0 6px;
+      font-size: 1.3rem;
       font-weight: 900;
+      color: #2E1520;
+      line-height: 1.35;
     }
     .trace-audio-wrap {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin: 2px 0 6px;
+      margin: 2px 0 4px;
     }
     .trace-info-container {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       width: 100%;
     }
     .trace-target-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--gold, #B8860B);
-      font-family: 'Coptic Girges', Cairo, 'Noto Sans Coptic', sans-serif;
-      letter-spacing: 2px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: var(--madder, #6F1737);
+      font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
+      letter-spacing: 1px;
       min-height: 28px;
       text-align: center;
     }
     .trace-stroke-control {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      flex: 1;
+      min-width: 0;
       background: #EFE6D5;
-      padding: 7px 14px;
-      border-radius: 28px;
+      padding: 5px 10px;
+      border-radius: 24px;
       border: 1.5px solid #DFD2BD;
-      width: 100%;
-      max-width: 340px;
-      margin: 0 auto 14px;
       box-sizing: border-box;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      gap: 6px;
     }
     .trace-stroke-label {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-size: 0.85rem;
+      gap: 4px;
+      font-size: 0.82rem;
       font-weight: 800;
       color: #5A4A3E;
       white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .trace-stroke-label svg {
+      flex-shrink: 0;
     }
     .trace-stroke-slider {
       flex: 1;
-      max-width: 130px;
-      margin: 0 10px;
+      min-width: 40px;
+      width: 100%;
+      margin: 0 4px;
       accent-color: var(--madder, #6F1737);
       cursor: pointer;
+      height: 6px;
+    }
+    .trace-stroke-val-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 2px 7px;
+      border-radius: 12px;
+      border: 1px solid rgba(223, 210, 189, 0.8);
     }
     .trace-stroke-val {
-      min-width: 32px;
+      min-width: 24px;
       font-weight: 800;
       color: var(--madder, #6F1737);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-align: center;
+      line-height: 1;
     }
     .trace-stroke-preview {
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: #2e7d32;
       flex-shrink: 0;
@@ -1254,24 +1272,25 @@
     .trace-toolbar-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
       max-width: 340px;
-      margin: 0 auto 12px;
+      margin: 0 auto 10px;
       box-sizing: border-box;
+      padding: 0;
     }
     .trace-toolbar-row .trace-stroke-control {
       flex: 1;
       margin: 0;
       max-width: 100%;
+      min-width: 0;
     }
     .trace-expand-btn {
-      width: 42px;
-      height: 42px;
-      min-width: 42px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
       background: #FAF7EE;
-      border: 2px solid #C5A059;
+      border: 1.5px solid #C5A059;
       border-radius: 50%;
       color: #6B1530;
       cursor: pointer;
@@ -1280,7 +1299,7 @@
       justify-content: center;
       padding: 0;
       transition: all .2s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 4px 14px rgba(168, 130, 58, 0.22);
+      box-shadow: 0 3px 10px rgba(168, 130, 58, 0.2);
       outline: none;
       -webkit-tap-highlight-color: transparent;
       flex-shrink: 0;
@@ -1289,15 +1308,13 @@
       background: #FDF1D6;
       border-color: #A8823A;
       color: #4A0E21;
-      transform: scale(1.06);
-      box-shadow: 0 6px 18px rgba(107, 21, 48, 0.25);
+      transform: scale(1.05);
     }
     .trace-expand-btn:active, .trace-expand-btn.is-active {
       background: #6B1530;
       color: #FFFFFF;
       border-color: #6B1530;
-      transform: scale(0.94);
-      box-shadow: 0 0 0 5px rgba(107, 21, 48, 0.2);
+      transform: scale(0.95);
     }
     .trace-expand-btn svg {
       display: block;

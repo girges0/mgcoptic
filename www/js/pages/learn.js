@@ -139,11 +139,16 @@
           }
         }
         if (!activeLessonProgress || Object.keys(activeLessonProgress).length === 0) {
-          activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+          activeLessonProgress = {};
         }
 
         if (!activeCurriculum || !activeCurriculum.units || activeCurriculum.units.length === 0) {
-          container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-soft);font-weight:700;">جاري تحميل مسار التعلم...</div>';
+          container.innerHTML = `
+            <div style="text-align:center;padding:60px 20px;color:var(--ink-soft);font-weight:700;">
+              <div style="font-size:3rem;margin-bottom:12px;">📚</div>
+              <div style="font-size:1.15rem;color:var(--ink);margin-bottom:8px;">مسار التعلم جاهز لاستقبال المنهج</div>
+              <div style="font-size:0.9rem;color:var(--ink-soft);max-width:380px;margin:0 auto;line-height:1.6;">تم تصفير بيانات المسار السابقة بنجاح. يمكنك الآن إضافة الوحدات والدروس والتمارين التفاعلية من لوحة التحكم لتظهر فوراً هنا.</div>
+            </div>`;
           return;
         }
 
@@ -199,13 +204,7 @@
           const prevUnit = unitIdx === 0 ? null : sortedUnits[unitIdx - 1];
           let prevUnitMastered = true;
           if (prevUnit && prevUnit.lessons && prevUnit.lessons.length > 0) {
-            if (prevUnit.lessons.length === 1) {
-              // وحدة بدرس واحد: يجب إكمال المحطة الأخيرة (تحدي الإتقان _c)
-              const lastStationId = `${prevUnit.lessons[0].id}_c`;
-              prevUnitMastered = (activeLessonProgress[lastStationId] || {}).status === 'completed';
-            } else {
-              prevUnitMastered = prevUnit.lessons.every(l => (activeLessonProgress[String(l.id)] || {}).status === 'completed');
-            }
+            prevUnitMastered = prevUnit.lessons.every(l => (activeLessonProgress[String(l.id)] || {}).status === 'completed');
           }
 
           const rawBadge = String(unit.badge || 'ⲁ').trim();
@@ -257,76 +256,32 @@
             });
           });
 
-          // 2. الدروس والمحطات التعليمية
-          if (unitLessons.length === 1) {
-            const baseLesson = unitLessons[0];
-            const baseId = String(baseLesson.id);
-            const pracId = `${baseLesson.id}_p`;
-            const chalId = `${baseLesson.id}_c`;
-
-            // المحطة 1: درس الشرح والتأسيس
+          // 2. الدروس والمحطات التعليمية (1:1 لكل درس مضاف فعلياً في الوحدة)
+          unitLessons.forEach((les, lesIdx) => {
+            const reqId = lesIdx === 0 ? null : String(unitLessons[lesIdx - 1].id);
             unitSteps.push({
               kind: 'lesson',
-              id: baseId,
-              title: baseLesson.title || unit.title,
-              requires: null
+              id: String(les.id),
+              title: les.title || unit.title,
+              requires: reqId
             });
 
-            // صناديق مخصصة بعد درس الشرح
-            unitCustomChests.filter(c => (String(c.after_lesson_id) === baseId || String(c.lesson_id) === baseId) && c.placement_type !== 'unit_start' && c.placement_type !== 'unit_end')
+            // صناديق مخصصة بعد هذا الدرس
+            unitCustomChests.filter(c => (String(c.after_lesson_id) === String(les.id) || String(c.lesson_id) === String(les.id)) && c.placement_type !== 'unit_start' && c.placement_type !== 'unit_end')
               .sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1))
               .forEach(c => {
                 unitSteps.push({
                   kind: 'chest',
                   chestId: String(c.id),
                   chestData: c,
-                  requires: baseId
+                  requires: String(les.id)
                 });
               });
+          });
 
-            // المحطة 2: محطة التطبيق والاستماع
-            unitSteps.push({
-              kind: 'practice',
-              id: pracId,
-              title: baseLesson.title || unit.title,
-              requires: baseId
-            });
-
-            // المحطة 3: محطة تحدي الإتقان
-            unitSteps.push({
-              kind: 'challenge',
-              id: chalId,
-              title: baseLesson.title || unit.title,
-              requires: pracId
-            });
-          } else {
-            // عندما تضم الوحدة عدة دروس مضافة من لوحة التحكم
-            unitLessons.forEach((les, lesIdx) => {
-              const reqId = lesIdx === 0 ? null : String(unitLessons[lesIdx - 1].id);
-              unitSteps.push({
-                kind: 'lesson',
-                id: String(les.id),
-                title: les.title || unit.title,
-                requires: reqId
-              });
-
-              // صناديق مخصصة بعد هذا الدرس
-              unitCustomChests.filter(c => (String(c.after_lesson_id) === String(les.id) || String(c.lesson_id) === String(les.id)) && c.placement_type !== 'unit_start' && c.placement_type !== 'unit_end')
-                .sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1))
-                .forEach(c => {
-                  unitSteps.push({
-                    kind: 'chest',
-                    chestId: String(c.id),
-                    chestData: c,
-                    requires: String(les.id)
-                  });
-                });
-            });
-          }
-
-          const lastStepId = unitLessons.length === 1 
-            ? `${unitLessons[0].id}_c` 
-            : String(unitLessons[unitLessons.length - 1].id);
+          const lastStepId = unitLessons.length > 0 
+            ? String(unitLessons[unitLessons.length - 1].id) 
+            : null;
 
           // 3. صناديق نهاية الوحدة (unit_end)
           unitCustomChests.filter(c => c.placement_type === 'unit_end').sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1)).forEach(c => {
@@ -793,7 +748,7 @@
       window.renderSkillMap = renderSkillMap;
 
       window.resetLearningPathUI = function() {
-        activeLessonProgress = { '1': { status: 'in_progress', score: 0 } };
+        activeLessonProgress = {};
         selectedLesson = null;
         selectedNextLessonId = null;
         currentActiveChestId = null;
@@ -1411,30 +1366,30 @@
 
               <!-- شريط أدوات السبورة: زر التكبير ومؤشر سمك القلم -->
               <div class="trace-toolbar-row">
-                <button type="button" id="btn-trace-expand" class="trace-expand-btn" aria-label="تكبير السبورة" title="تكبير السبورة (ملء الشاشة)">
-                  <svg class="icon-expand" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-                  </svg>
-                  <svg class="icon-collapse" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
-                    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/>
-                  </svg>
-                </button>
-                <div class="trace-stroke-control" style="display:flex;align-items:center;justify-content:space-between;background:#EFE6D5;padding:7px 14px;border-radius:28px;border:1.5px solid #DFD2BD;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <span id="trace-stroke-preview" class="trace-stroke-preview" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#2e7d32;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.25);transition:width 0.1s ease, height 0.1s ease;"></span>
-                    <span id="trace-stroke-val" class="trace-stroke-val" style="min-width:32px;font-weight:800;color:var(--madder, #6F1737);font-size:.85rem;text-align:center;">12px</span>
-                  </div>
-                  <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" style="flex:1;max-width:130px;accent-color:var(--madder, #6F1737);cursor:pointer;margin:0 10px;" title="تحكم في سمك خط الكتابة">
-                  <span class="trace-stroke-label" style="display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;font-weight:800;color:#5A4A3E;white-space:nowrap;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="trace-stroke-control">
+                  <span class="trace-stroke-label">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                       <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
                       <path d="M2 2l7.586 7.586"></path>
                       <circle cx="11" cy="11" r="2"></circle>
                     </svg>
-                    سُمْك القلم:
+                    سُمْك القلم
                   </span>
+                  <input type="range" id="trace-stroke-slider" min="6" max="32" value="12" step="2" class="trace-stroke-slider" title="تحكم في سمك خط الكتابة">
+                  <div class="trace-stroke-val-box">
+                    <span id="trace-stroke-val" class="trace-stroke-val">12px</span>
+                    <span id="trace-stroke-preview" class="trace-stroke-preview"></span>
+                  </div>
                 </div>
+                <button type="button" id="btn-trace-expand" class="trace-expand-btn" aria-label="تكبير السبورة" title="تكبير السبورة (ملء الشاشة)">
+                  <svg class="icon-expand" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                  </svg>
+                  <svg class="icon-collapse" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/>
+                  </svg>
+                </button>
               </div>
 
               <div class="trace-canvas-wrapper" style="position:relative;width:100%;max-width:340px;height:310px;margin:0 auto;background:#FFFDF8;border-radius:24px;border:2px solid #D6C8B2;box-shadow:0 8px 24px rgba(0,0,0,0.05);overflow:hidden;touch-action:none;">
