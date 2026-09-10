@@ -6646,7 +6646,7 @@
 
           <div class="hero-progress-wrapper">
             <div class="hero-progress-labels">
-              <span id="home-progress-count">ليفيل 1 من 21</span>
+              <span id="home-progress-count">الدرس 1 من 21</span>
               <span class="hero-progress-pct-badge" id="home-progress-pct">0%</span>
             </div>
             <div class="hero-progress-bar">
@@ -9423,7 +9423,7 @@
           const displayFillPct = totalStepsCount > 0 ? Math.min(100, Math.max(0, pct)) : 0;
 
           const countEl = document.getElementById('home-progress-count');
-          if (countEl) countEl.textContent = `ليفيل ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`;
+          if (countEl) countEl.textContent = `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`;
 
           const pctEl = document.getElementById('home-progress-pct');
           if (pctEl) pctEl.textContent = `${pct}%`;
@@ -9439,7 +9439,7 @@
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),
               xpRewardText: `+${activeStep.xpReward} XP عند الإتمام`,
-              progressCount: `ليفيل ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`,
+              progressCount: `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`,
               progressPct: `${pct}%`,
               fillWidth: `${displayFillPct}%`
             }));
