@@ -18,11 +18,74 @@
   <!-- Typography Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+Coptic&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'girges';
+      src: url('girges.woff') format('woff'),
+           url('assets/fonts/girges.woff') format('woff'),
+           url('../girges.woff') format('woff'),
+           url('../assets/fonts/girges.woff') format('woff'),
+           url('/girges.woff') format('woff');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
+    }
+    @font-face {
+      font-family: 'girges';
+      src: url('girges.woff') format('woff'),
+           url('assets/fonts/girges.woff') format('woff'),
+           url('../girges.woff') format('woff'),
+           url('../assets/fonts/girges.woff') format('woff'),
+           url('/girges.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
+    }
+    @font-face {
+      font-family: 'girges';
+      src: url('girges.woff') format('woff'),
+           url('assets/fonts/girges.woff') format('woff'),
+           url('../girges.woff') format('woff'),
+           url('../assets/fonts/girges.woff') format('woff'),
+           url('/girges.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
+    }
+    @font-face {
+      font-family: 'Coptic Girges';
+      src: url('girges.woff') format('woff'),
+           url('assets/fonts/girges.woff') format('woff'),
+           url('../girges.woff') format('woff'),
+           url('../assets/fonts/girges.woff') format('woff'),
+           url('/girges.woff') format('woff');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
+    }
+    @font-face {
+      font-family: 'Noto Sans Coptic';
+      src: url('girges.woff') format('woff'),
+           url('assets/fonts/girges.woff') format('woff'),
+           url('../girges.woff') format('woff'),
+           url('../assets/fonts/girges.woff') format('woff'),
+           url('/girges.woff') format('woff');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
+    }
+  </style>
 
   <!-- Admin Modular CSS Styles -->
-  <link rel="stylesheet" href="css/variables.css?v=3.0.0">
-  <link rel="stylesheet" href="css/admin.css?v=3.2.0">
+  <link rel="stylesheet" href="css/variables.css?v=3.2.5">
+  <link rel="stylesheet" href="css/admin.css?v=3.2.5">
 
   <!-- External Vendor Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1505,8 +1568,8 @@
 </div>
 
   <!-- Admin Logic Modules -->
-  <script src="js/admin.js?v=3.1.0"></script>
-  <script src="js/curriculum-admin.js?v=3.2.1"></script>
+  <script src="js/admin.js?v=3.2.5"></script>
+  <script src="js/curriculum-admin.js?v=3.2.5"></script>
   <script src="../js/pwa-register.js?v=3.0.0" defer></script>
   <script>
     function togglePassVisibility(inputId, btn) {

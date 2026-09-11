@@ -104,7 +104,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Tajawal:wght@400;500;700&family=Noto+Sans+Coptic&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap"
     rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -133,6 +133,7 @@
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'girges';
@@ -141,6 +142,7 @@
       font-weight: normal;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'girges';
@@ -149,6 +151,7 @@
       font-weight: bold;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
 
     @font-face {
@@ -158,6 +161,7 @@
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'Coptic Girges';
@@ -166,6 +170,7 @@
       font-weight: normal;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'Coptic Girges';
@@ -174,6 +179,7 @@
       font-weight: bold;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
 
     @font-face {
@@ -183,6 +189,7 @@
       font-weight: 100 900;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'Noto Sans Coptic';
@@ -191,6 +198,7 @@
       font-weight: normal;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
       font-family: 'Noto Sans Coptic';
@@ -199,6 +207,7 @@
       font-weight: bold;
       font-style: normal;
       font-display: swap;
+      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
 
     :root {
@@ -8010,7 +8019,7 @@
     /* ============ DATA (تتحمّل من قاعدة البيانات عند فتح الموقع مع بيانات احتياطية كاملة) ============ */
     const DEFAULT_ALPHABET = [
       { glyph: 'Ⲁⲁ', name: 'ألفا', translit: 'أَ', sound: 'ألف مفتوحة (أَ)', num: '١', audio: 'assets/sounds/1alfa.mp3' },
-      { glyph: 'Ⲃⲃ', name: 'فيدا (بيتا)', translit: 'ڤ / ب', sound: 'ڤ (V) إذا جاء بعده متحرك، أو ب (B) في باقي الحالات', num: '٢', audio: 'assets/sounds/2veta.mp3' },
+      { glyph: 'Ⲃⲃ', name: 'ڤيتا (بيتا)', translit: 'ڤ / ب', sound: 'ڤ (V) إذا جاء بعده متحرك، أو ب (B) في باقي الحالات', num: '٢', audio: 'assets/sounds/2veta.mp3' },
       { glyph: 'Ⲅⲅ', name: 'غاما', translit: 'جـ / ن / غ', sound: 'جـ معطشة قبل المتحرك للكسر، ن قبل الحلقيات، غ في باقي الحالات', num: '٣', audio: 'assets/sounds/3ghamma.mp3' },
       { glyph: 'Ⲇⲇ', name: 'دلدا (دلتا)', translit: 'د / ذ', sound: 'د في الأعلام والكلمات القبطية، وذ في الكلمات اليونانية', num: '٤', audio: 'assets/sounds/4delta.mp3' },
       { glyph: 'Ⲉⲉ', name: 'إي', translit: 'إ (E)', sound: 'إي خفيفة (فتحة مائلة للكسر)', num: '٥', audio: 'assets/sounds/5ei.mp3' },
@@ -10742,7 +10751,7 @@
 
         let html = '';
         let foundFirstCurrent = false;
-        const waveOffsets = [0, 72, -68, 68, -72, 0];
+        const getWaveOffset = (stepIdx) => (stepIdx === 0 ? 0 : ((stepIdx % 2 === 1) ? 70 : -70));
         const stepGap = 135;
         const startY = 60;
         const cx = 170;
@@ -10917,7 +10926,7 @@
 
           const points = [];
           for (let i = 0; i < totalSteps; i++) {
-            const x = cx + waveOffsets[i % waveOffsets.length];
+            const x = cx + getWaveOffset(i);
             const y = startY + i * stepGap;
             points.push({ x, y });
           }
@@ -12015,7 +12024,7 @@
         } else if (ch.type === 'match') {
           const pairs = ch.pairs || [
             { left: 'Ⲁ ⲁ', right: 'ألفا' },
-            { left: 'Ⲃ ⲃ', right: 'فيدا' },
+            { left: 'Ⲃ ⲃ', right: 'ڤيتا (بيتا)' },
             { left: 'Ⲉ ⲉ', right: 'إي' },
             { left: 'Ⲇ ⲇ', right: 'دلدا' }
           ];

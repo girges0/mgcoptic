@@ -21,7 +21,7 @@
   // Coptic letter name mapping (Arabic -> Unicode Coptic Glyph)
   const COPTIC_NAME_TO_GLYPH = {
     'الفا': 'Ⲁ', 'ألفا': 'Ⲁ', 'الفا الكبير': 'Ⲁ', 'ألفا الكبير': 'Ⲁ', 'الفا الصغير': 'ⲁ', 'ألفا الصغير': 'ⲁ',
-    'فيدا': 'Ⲃ', 'بيتا': 'Ⲃ', 'فيدا الصغير': 'ⲃ', 'فيدا الكبير': 'Ⲃ',
+    'ڤيتا': 'Ⲃ', 'بيتا': 'Ⲃ', 'فيدا': 'Ⲃ', 'ڤيتا (بيتا)': 'Ⲃ', 'ڤيتا الصغير': 'ⲃ', 'ڤيتا الكبير': 'Ⲃ', 'بيتا الصغير': 'ⲃ', 'بيتا الكبير': 'Ⲃ', 'فيدا الصغير': 'ⲃ', 'فيدا الكبير': 'Ⲃ',
     'غاما': 'Ⲅ', 'غما': 'Ⲅ',
     'دلدا': 'Ⲇ', 'دلتا': 'Ⲇ',
     'اي': 'Ⲉ', 'إي': 'Ⲉ', 'إيه': 'Ⲉ',
@@ -85,8 +85,8 @@
           strokeColor: '#2e6b3e',
           guideColor: 'rgba(111, 23, 55, 0.22)',
           guideOutlineColor: 'rgba(111, 23, 55, 0.45)',
-          passThreshold: 65,
-          minCoverageThreshold: 35,
+          passThreshold: 85,
+          minCoverageThreshold: 80,
           showGuideDots: false,
           soundEnabled: true,
           onSuccess: null,
@@ -1080,49 +1080,25 @@
        ========================================================================== */
 
     /**
-     * خوارزمية ذكية ومتكيفة لحساب دقة الرسم تتناسب مع جميع أحجام الفرشاة وجميع أشكال الحروف
-     * @param {Array} userPoints نقاط رسمة الطالب
+     * حساب دقة الكتابة بشكل متوازن وذكي
+     * يجمع بين: التغطية (Coverage)، الدقة (Precision)، وفحص الشطط (Outlier Detection)
+     * 
+     * @param {Array} userPoints جميع النقاط التي رسمها المستخدم
      * @param {Array} guidePoints نقاط مسار الحرف
      * @param {Object} boundingBox أبعاد الحرف
-     * @returns {Object} { score, coverage, precision, lengthRatio, passed, isComplete, reason }
+     * @returns {Object} { score, coverage, precision, lengthRatio, passed }
      */
     calculateTracingScore(userPoints, guidePoints, boundingBox) {
       if (!userPoints || userPoints.length < 5) {
-        return { score: 0, coverage: 0, precision: 0, lengthRatio: 0, passed: false, isComplete: false, reason: 'الرسمة قصيرة جدًا' };
+        return { score: 0, coverage: 0, precision: 0, lengthRatio: 0, passed: false, reason: 'الرسمة قصيرة جدًا' };
       }
 
-      const bbWidth = (boundingBox && boundingBox.width) || this.displayWidth || 240;
-      const bbHeight = (boundingBox && boundingBox.height) || this.displayHeight || 240;
+      const bbWidth = (boundingBox && boundingBox.width) || this.displayWidth || 250;
+      const bbHeight = (boundingBox && boundingBox.height) || this.displayHeight || 250;
 
-      // 1) حساب سمك الفرشاة الفعلي ونصف قطر الحبر المستخدم من الطالب
-      let effectiveStrokeWidth = (this.options && this.options.strokeWidth) || 12;
-      if (this.userStrokes && this.userStrokes.length > 0) {
-        let sumW = 0, countW = 0;
-        for (const s of this.userStrokes) {
-          if (s.strokeWidth) {
-            sumW += s.strokeWidth;
-            countW++;
-          }
-        }
-        if (countW > 0) effectiveStrokeWidth = sumW / countW;
-      }
-      const brushRadius = Math.max(3, effectiveStrokeWidth / 2);
-
-      // 2) مقياس الحرف الحقيقي بناءً على أطول بعد هندسي (يناسب الحروف الطويلة كـ Ⲓ والعريضة كـ Ⲱ)
-      const charScale = Math.max(60, Math.min(260, Math.max(bbWidth, bbHeight)));
-
-      // 3) عتبة التغطية (Coverage Threshold):
-      // خطوط الحرف بالخط القبطي لها سمك طبيعي، والطالب يرسم عادة في المنتصف.
-      // لذلك نجمع نصف قطر حبر الفرشاة مع هامش سمك الحرف وهامش طبيعي لحركة اليد
-      const coverageThreshold = brushRadius + Math.max(14, charScale * 0.09);
-
-      // 4) عتبة دقة المسار (Precision Threshold):
-      // النقاط التي تعتبر داخل حدود الحرف، تتسع طردياً مع زيادة سمك الفرشاة
-      const precisionThreshold = brushRadius * 1.25 + Math.max(18, charScale * 0.11);
-
-      // 5) عتبة الشطط البعيد (Far Outlier Threshold):
-      // النقاط الخارجة كلياً عن الحرف ومحيطه
-      const farThreshold = precisionThreshold + Math.max(32, charScale * 0.20);
+      // العتبة (threshold) نسبية لحجم الحرف، مش رقم ثابت بالبيكسل
+      const diagonal = Math.sqrt(bbWidth ** 2 + bbHeight ** 2);
+      const threshold = Math.max(10, diagonal * 0.035); // قابلة للتعديل حسب مستوى الصعوبة
 
       function distToNearest(point, targetArray) {
         let min = Infinity;
@@ -1131,56 +1107,49 @@
           const d = Math.hypot(point.x - t.x, point.y - t.y);
           if (d < min) {
             min = d;
-            if (min <= 2) break; // تسريع الفحص
+            if (min <= 1) break;
           }
         }
         return min;
       }
 
-      // 6) نسبة تغطية مسار الحرف (Coverage)
+      // 1) Coverage: نسبة نقط الحرف اللي اتغطت فعلاً برسمة الطالب
       let coveredGuidePoints = 0;
-      for (let i = 0; i < guidePoints.length; i++) {
-        if (distToNearest(guidePoints[i], userPoints) <= coverageThreshold) {
-          coveredGuidePoints++;
-        }
+      for (const g of guidePoints) {
+        if (distToNearest(g, userPoints) <= threshold) coveredGuidePoints++;
       }
-      const rawCoverage = guidePoints.length > 0 ? (coveredGuidePoints / guidePoints.length) : 0;
+      const coverage = guidePoints.length > 0 ? coveredGuidePoints / guidePoints.length : 0;
 
-      // 7) دقة النقاط داخل الحرف وفحص الشطط (Precision & Far Outliers)
+      // 2) Precision: نسبة نقط رسمة الطالب اللي فعلاً قريبة من الحرف (ده اللي كان ناقص وسبب المشكلة)
       let precisePoints = 0;
-      let farOutliers = 0;
-      for (let i = 0; i < userPoints.length; i++) {
-        const d = distToNearest(userPoints[i], guidePoints);
-        if (d <= precisionThreshold) {
-          precisePoints++;
-        }
-        if (d > farThreshold) {
-          farOutliers++;
-        }
+      const outlierDistances = [];
+      for (const u of userPoints) {
+        const d = distToNearest(u, guidePoints);
+        outlierDistances.push(d);
+        if (d <= threshold) precisePoints++;
       }
-      const rawPrecision = userPoints.length > 0 ? (precisePoints / userPoints.length) : 0;
-      const farOutlierRatio = userPoints.length > 0 ? (farOutliers / userPoints.length) : 0;
+      const precision = userPoints.length > 0 ? precisePoints / userPoints.length : 0;
 
-      // إذا كانت معظم النقاط خارج الحرف تماماً (رسم عشوائي بعيد)، تفشل المحاولة فوراً
-      if (farOutlierRatio > 0.55) {
+      // 3) فحص الشطط: لو نسبة كبيرة من نقط الطالب بعيدة جدًا (أكتر من 3 أضعاف العتبة)، فشل فوري
+      const farOutliers = outlierDistances.filter(d => d > threshold * 3).length;
+      const outlierRatio = userPoints.length > 0 ? farOutliers / userPoints.length : 0;
+      if (outlierRatio > 0.3) {
         return {
           score: 0,
-          coverage: Math.round(rawCoverage * 100),
-          precision: Math.round(rawPrecision * 100),
+          coverage: Math.round(coverage * 100),
+          precision: Math.round(precision * 100),
           lengthRatio: 0,
           passed: false,
-          isComplete: false,
-          farOutlierRatio: farOutlierRatio,
-          reason: 'الرسمة خارج مسار الحرف'
+          reason: 'الرسمة بعيدة جدًا عن الحرف'
         };
       }
 
-      // 8) حساب طول الرسمة مقارنة بالأبعاد الهندسية للحرف
+      // 4) طول الرسمة: لازم يكون قريب من طول مسار الحرف الحقيقي (يمنع خربشة قصيرة في مكان واحد)
       function pathLength(points) {
         let len = 0;
         for (let i = 1; i < points.length; i++) {
           const d = Math.hypot(points[i].x - points[i-1].x, points[i].y - points[i-1].y);
-          if (d < 60) len += d; // منع قفزات الانتقال بين الحركات
+          if (d < 50) len += d; // منع القفزات البعيدة
         }
         return len;
       }
@@ -1198,36 +1167,19 @@
         userLength = pathLength(userPoints);
       }
 
-      // الحد الأدنى للطول المتوقع للحرف بناءً على أبعاده الهندسية (يناسب كل الحروف دون استثناء)
-      const minExpectedLength = Math.max(35, (bbWidth + bbHeight) * 0.38);
-      const lengthRatio = Math.min(1.0, userLength / minExpectedLength);
+      const guideLength = Math.max(1, pathLength(guidePoints));
+      const lengthRatio = Math.min(userLength / guideLength, 1);
 
-      // 9) تسوية النسب بمرونة تربوية عادلة:
-      // تغطية 50% من محيط الحرف تعني عملياً إتمام رسم مسار الحرف بالكامل
-      const normCoverage = Math.min(1.0, rawCoverage / 0.50);
-      const normPrecision = Math.min(1.0, rawPrecision / 0.65);
-
-      let finalScore = (normCoverage * 0.50 + normPrecision * 0.30 + lengthRatio * 0.20) * 100;
-
-      // خصم ناعم للشطط إن وجد بنسبة معتدلة
-      if (farOutlierRatio > 0.15) {
-        finalScore -= (farOutlierRatio - 0.15) * 35;
-      }
-      finalScore = Math.min(100, Math.max(0, Math.round(finalScore)));
-
-      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 65;
-      const minCoverage = (typeof this.options.minCoverageThreshold === 'number') ? (this.options.minCoverageThreshold / 100) : 0.30;
-      const isComplete = (rawCoverage >= minCoverage) && (lengthRatio >= 0.40);
-      const passed = (finalScore >= passThreshold) && isComplete && (farOutlierRatio < 0.50);
+      // النتيجة النهائية: لازم التغطية والدقة والطول كلهم كويسين مش بس واحد منهم
+      const finalScore = (coverage * 0.4 + precision * 0.4 + lengthRatio * 0.2) * 100;
+      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 85;
 
       return {
-        score: finalScore,
-        coverage: Math.round(rawCoverage * 100),
-        precision: Math.round(rawPrecision * 100),
+        score: Math.round(finalScore),
+        coverage: Math.round(coverage * 100),
+        precision: Math.round(precision * 100),
         lengthRatio: Math.round(lengthRatio * 100),
-        farOutlierRatio: farOutlierRatio,
-        passed: passed,
-        isComplete: isComplete
+        passed: finalScore >= passThreshold
       };
     }
 
@@ -1269,30 +1221,28 @@
           if (pt.y > maxY) maxY = pt.y;
         }
         this.boundingBox = {
-          minX, maxX, minY, maxY,
           width: Math.max(20, (maxX - minX) || 120),
           height: Math.max(20, (maxY - minY) || 120)
         };
       }
 
+      // الخطوة 3: Logging للتحقق من مطابقة النطاق الإحداثي
       console.log('--- Tracing Coordinates Diagnostic ---');
       console.log('First 5 guidePoints:', this.guidePoints.slice(0, 5));
       console.log('First 5 userPoints:', allUserPoints.slice(0, 5));
       console.log('BoundingBox:', this.boundingBox);
 
       const result = this.calculateTracingScore(allUserPoints, this.guidePoints, this.boundingBox);
-      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 65;
+      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 85;
 
       let message = '';
       if (!result.passed) {
         this._playSound('retry');
         if (result.reason) {
           message = `${result.reason} — حاول مرة أخرى بدقة أعلى`;
-        } else if (result.farOutlierRatio >= 0.50) {
-          message = 'الرسمة خارج مسار الحرف — حاول الرسم داخل الخط المظلل';
-        } else if (!result.isComplete || result.coverage < 30) {
-          message = `حاول تاني: يرجى إكمال كتابة الحرف كاملاً (التغطية: ${result.coverage}%)`;
-        } else if (result.precision < 50) {
+        } else if (result.coverage < 60) {
+          message = `حاول تاني: فوّت أجزاء من الحرف (التغطية: ${result.coverage}%)`;
+        } else if (result.precision < 60) {
           message = `حاول تاني: خرجت برة مسار الحرف كتير (الدقة: ${result.precision}%)`;
         } else {
           message = `حاول تاني: النتيجة ${result.score}% — المطلوب ${reqThreshold}% للنجاح`;
@@ -1325,7 +1275,7 @@
         lengthRatio: result.lengthRatio,
         passed: result.passed === true,
         reason: result.reason,
-        incomplete: !result.isComplete && (result.coverage < 35 || result.lengthRatio < 40),
+        incomplete: !result.passed,
         message: message
       };
     }

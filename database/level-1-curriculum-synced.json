@@ -44,8 +44,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: ألفا (Ⲁ ⲁ)\n• نطق الحرف بالعربي: ألف مفتوحة (أَ)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للفتح)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • الحرف الأول في الأبجدية القبطية. يُنطق دائماً ألفاً مفتوحة مشبعة مثل (أَ) في العربية أو (A) في كلمة (Father).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲗⲟⲩ\n  - القبطي المعرب (نطقها): «أَلو»\n  - المعنى بالعربية: ولد / طفل\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 437,
@@ -92,7 +91,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2943,
+                  "id": 4010,
                   "challenge_id": 439,
                   "text": "غ أو ج",
                   "is_correct": false,
@@ -100,7 +99,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2940,
+                  "id": 4016,
                   "challenge_id": 439,
                   "text": "د أو ذ",
                   "is_correct": false,
@@ -108,7 +107,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2941,
+                  "id": 4017,
                   "challenge_id": 439,
                   "text": "ف أو ب",
                   "is_correct": false,
@@ -116,7 +115,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2942,
+                  "id": 4018,
                   "challenge_id": 439,
                   "text": "ألف مفتوحة (أ)",
                   "is_correct": true,
@@ -140,7 +139,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2944,
+                  "id": 4002,
                   "challenge_id": 440,
                   "text": "ولد / طفل",
                   "is_correct": true,
@@ -148,7 +147,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2945,
+                  "id": 4003,
                   "challenge_id": 440,
                   "text": "شمس",
                   "is_correct": false,
@@ -156,7 +155,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2946,
+                  "id": 4004,
                   "challenge_id": 440,
                   "text": "بنت",
                   "is_correct": false,
@@ -164,7 +163,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2947,
+                  "id": 4005,
                   "challenge_id": 440,
                   "text": "مدرسة",
                   "is_correct": false,
@@ -198,7 +197,7 @@
         {
           "id": 94,
           "unit_id": 34,
-          "title": "حرف فيدا (Ⲃ ⲃ)",
+          "title": "حرف ڤيتا (بيتا) (Ⲃ ⲃ)",
           "xp_reward": 5,
           "order_index": 2,
           "practice_xp": 1,
@@ -208,17 +207,16 @@
               "id": 442,
               "lesson_id": 94,
               "type": "text_view",
-              "question": "نبذة عن حرف فيدا (Ⲃ ⲃ)",
+              "question": "نبذة عن حرف ڤيتا (بيتا) (Ⲃ ⲃ)",
               "coptic_display": "Ⲃ ⲃ",
-              "audio_text": "فيدا",
+              "audio_text": "ڤيتا او بيتا",
               "audio_url": "audio_coptic/2veta.mp3",
-              "correct_word": "• اسم الحرف: فيدا (بيتا) (Ⲃ ⲃ)\n• نطق الحرف بالعربي: ڤ (V) أو ب (B)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له نطقان (ڤ / ب))\n• قواعد وحالات النطق:\n  1. يُنطق (ڤ / V): إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).\n  2. يُنطق (ب / B): إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲃⲉⲣⲧ\n  - القبطي المعرب (نطقها): «فيرت»\n  - المعنى بالعربية: وردة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق",
+              "correct_word": null,
               "tiles": null,
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: فيدا (بيتا) (Ⲃ ⲃ)\n• نطق الحرف بالعربي: ڤ (V) أو ب (B)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له نطقان (ڤ / ب))\n• قواعد وحالات النطق:\n  1. يُنطق (ڤ / V): إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).\n  2. يُنطق (ب / B): إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲃⲉⲣⲧ\n  - القبطي المعرب (نطقها): «فيرت»\n  - المعنى بالعربية: وردة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 443,
@@ -226,7 +224,7 @@
               "type": "trace",
               "question": "تتبّع كتابة الحرف الكبير (كابيتال): Ⲃ واستمع لنطقه",
               "coptic_display": "Ⲃ",
-              "audio_text": "فيدا كابيتال",
+              "audio_text": "ڤيتا كابيتال",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -241,7 +239,7 @@
               "type": "trace",
               "question": "تتبّع كتابة الحرف الصغير (سمول): ⲃ واستمع لنطقه",
               "coptic_display": "ⲃ",
-              "audio_text": "فيدا سمول",
+              "audio_text": "ڤيتا سمول",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -256,7 +254,7 @@
               "type": "read_select",
               "question": "ما هو نطق الحرف Ⲃ بالعربية؟",
               "coptic_display": "Ⲃ",
-              "audio_text": "فيدا",
+              "audio_text": "ڤيتا",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -265,15 +263,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2948,
-                  "challenge_id": 445,
-                  "text": "د أو ذ",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2949,
+                  "id": 4022,
                   "challenge_id": 445,
                   "text": "ف أو ب",
                   "is_correct": true,
@@ -281,17 +271,25 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2950,
+                  "id": 4023,
                   "challenge_id": 445,
-                  "text": "أ",
+                  "text": "إي",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
-                  "id": 2951,
+                  "id": 4024,
                   "challenge_id": 445,
-                  "text": "إي",
+                  "text": "د أو ذ",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4025,
+                  "challenge_id": 445,
+                  "text": "أ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -302,9 +300,9 @@
               "id": 446,
               "lesson_id": 94,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲃⲉⲣⲧ؟ (المعرب: «فيرت»)",
+              "question": "ما معنى الكلمة القبطية: ⲃⲉⲣⲧ؟ (المعرب: «ڤيرت»)",
               "coptic_display": "ⲃⲉⲣⲧ",
-              "audio_text": "فيرت",
+              "audio_text": "ڤيرت",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -313,7 +311,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2953,
+                  "id": 4038,
                   "challenge_id": 446,
                   "text": "وردة",
                   "is_correct": true,
@@ -321,7 +319,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2954,
+                  "id": 4039,
                   "challenge_id": 446,
                   "text": "ماء",
                   "is_correct": false,
@@ -329,7 +327,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2952,
+                  "id": 4040,
                   "challenge_id": 446,
                   "text": "شجرة",
                   "is_correct": false,
@@ -337,7 +335,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2955,
+                  "id": 4041,
                   "challenge_id": 446,
                   "text": "نور",
                   "is_correct": false,
@@ -350,9 +348,9 @@
               "id": 447,
               "lesson_id": 94,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: وردة (المعرب: «فيرت»)",
+              "question": "رتب حروف الكلمة القبطية لتكوين: وردة (المعرب: «ڤيرت»)",
               "coptic_display": "ⲃⲉⲣⲧ",
-              "audio_text": "فيرت",
+              "audio_text": "ڤيرت",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": "ⲃⲉⲣⲧ",
               "tiles": [
@@ -385,13 +383,12 @@
               "coptic_display": "Ⲅ ⲅ",
               "audio_text": "غاما",
               "audio_url": "audio_coptic/3ghamma.mp3",
-              "correct_word": "• اسم الحرف: غاما (Ⲅ ⲅ)\n• نطق الحرف بالعربي: جـ معطشة أو ن أو غ\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له 3 أصوات (جـ / ن / غ))\n• قواعد وحالات النطق:\n  1. يُنطق (جـ معطشة): في الكلمات اليونانية إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).\n  2. يُنطق (ن): إذا جاء بعده أحد الحروف الحلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ).\n  3. يُنطق (غ): في الكلمات القبطية، وفي الكلمات اليونانية في باقي الحالات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲅⲅⲉⲗⲟⲥ\n  - القبطي المعرب (نطقها): «أنجيلوس»\n  - المعنى بالعربية: ملاك\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق",
+              "correct_word": null,
               "tiles": null,
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: غاما (Ⲅ ⲅ)\n• نطق الحرف بالعربي: جـ معطشة أو ن أو غ\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له 3 أصوات (جـ / ن / غ))\n• قواعد وحالات النطق:\n  1. يُنطق (جـ معطشة): في الكلمات اليونانية إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).\n  2. يُنطق (ن): إذا جاء بعده أحد الحروف الحلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ).\n  3. يُنطق (غ): في الكلمات القبطية، وفي الكلمات اليونانية في باقي الحالات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲅⲅⲉⲗⲟⲥ\n  - القبطي المعرب (نطقها): «أنجيلوس»\n  - المعنى بالعربية: ملاك\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 449,
@@ -438,7 +435,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2958,
+                  "id": 3998,
                   "challenge_id": 451,
                   "text": "ف أو ب",
                   "is_correct": false,
@@ -446,7 +443,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2959,
+                  "id": 3999,
                   "challenge_id": 451,
                   "text": "غ أو ج أو ن",
                   "is_correct": true,
@@ -454,7 +451,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2956,
+                  "id": 4000,
                   "challenge_id": 451,
                   "text": "٦",
                   "is_correct": false,
@@ -462,7 +459,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2957,
+                  "id": 4001,
                   "challenge_id": 451,
                   "text": "ز",
                   "is_correct": false,
@@ -486,7 +483,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2960,
+                  "id": 3990,
                   "challenge_id": 452,
                   "text": "قديس",
                   "is_correct": false,
@@ -494,7 +491,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2961,
+                  "id": 3991,
                   "challenge_id": 452,
                   "text": "ملاك",
                   "is_correct": true,
@@ -502,7 +499,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2962,
+                  "id": 3992,
                   "challenge_id": 452,
                   "text": "إنسان",
                   "is_correct": false,
@@ -510,7 +507,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2963,
+                  "id": 3993,
                   "challenge_id": 452,
                   "text": "نبي",
                   "is_correct": false,
@@ -566,8 +563,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: دلدا (دلتا) (Ⲇ ⲇ)\n• نطق الحرف بالعربي: د أو ذ\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له نطقان (د / ذ))\n• قواعد وحالات النطق:\n  1. يُنطق (د): في أسماء الأعلام والأشخاص والبلاد، وفي الكلمات القبطية الأصل.\n  2. يُنطق (ذ): في باقي الكلمات ذات الأصل اليوناني.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲇⲱⲣⲟⲛ\n  - القبطي المعرب (نطقها): «ذورون»\n  - المعنى بالعربية: عطية / هدية\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 455,
@@ -614,23 +610,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2964,
-                  "challenge_id": 457,
-                  "text": "د أو ذ",
-                  "is_correct": true,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2965,
-                  "challenge_id": 457,
-                  "text": "غ أو ج",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2966,
+                  "id": 4008,
                   "challenge_id": 457,
                   "text": "إي",
                   "is_correct": false,
@@ -638,7 +618,23 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2967,
+                  "id": 4006,
+                  "challenge_id": 457,
+                  "text": "د أو ذ",
+                  "is_correct": true,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4007,
+                  "challenge_id": 457,
+                  "text": "غ أو ج",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4009,
                   "challenge_id": 457,
                   "text": "ياء طويلة",
                   "is_correct": false,
@@ -662,7 +658,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2968,
+                  "id": 4013,
                   "challenge_id": 458,
                   "text": "عطية / هدية",
                   "is_correct": true,
@@ -670,7 +666,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2970,
+                  "id": 4019,
                   "challenge_id": 458,
                   "text": "صلاة",
                   "is_correct": false,
@@ -678,7 +674,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2971,
+                  "id": 4020,
                   "challenge_id": 458,
                   "text": "خبز",
                   "is_correct": false,
@@ -686,7 +682,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2969,
+                  "id": 4021,
                   "challenge_id": 458,
                   "text": "كتاب",
                   "is_correct": false,
@@ -740,8 +736,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: إي (Ⲉ ⲉ)\n• نطق الحرف بالعربي: إي خفيفة (E)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للكسر (خفيف))\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف متحرك للكسر يُنطق فتحة مائلة للكسر مثل حرف (E) في كلمة (pen) أو (bed).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲉⲛ\n  - القبطي المعرب (نطقها): «إن»\n  - المعنى بالعربية: قرد\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 461,
@@ -788,15 +783,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2973,
-                  "challenge_id": 463,
-                  "text": "ف أو ب",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2974,
+                  "id": 4027,
                   "challenge_id": 463,
                   "text": "إي خفيفة",
                   "is_correct": true,
@@ -804,7 +791,15 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2972,
+                  "id": 4026,
+                  "challenge_id": 463,
+                  "text": "ف أو ب",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4028,
                   "challenge_id": 463,
                   "text": "أ",
                   "is_correct": false,
@@ -812,7 +807,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2975,
+                  "id": 4029,
                   "challenge_id": 463,
                   "text": "د أو ذ",
                   "is_correct": false,
@@ -836,7 +831,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2976,
+                  "id": 4034,
                   "challenge_id": 464,
                   "text": "طائر",
                   "is_correct": false,
@@ -844,7 +839,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2977,
+                  "id": 4035,
                   "challenge_id": 464,
                   "text": "سمكة",
                   "is_correct": false,
@@ -852,7 +847,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2978,
+                  "id": 4036,
                   "challenge_id": 464,
                   "text": "قرد",
                   "is_correct": true,
@@ -860,7 +855,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2979,
+                  "id": 4037,
                   "challenge_id": 464,
                   "text": "أسد",
                   "is_correct": false,
@@ -915,7 +910,7 @@
                 },
                 {
                   "left": "Ⲃ ⲃ",
-                  "right": "فيدا (ف (V) أو ب (B))"
+                  "right": "ڤيتا (بيتا) (ف (V) أو ب (B))"
                 },
                 {
                   "left": "Ⲅ ⲅ",
@@ -945,7 +940,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3199,
+                  "id": 3994,
                   "challenge_id": 629,
                   "text": "Ⲅ ⲅ (غاما)",
                   "is_correct": false,
@@ -953,7 +948,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3198,
+                  "id": 3995,
                   "challenge_id": 629,
                   "text": "Ⲇ ⲇ (دلدا)",
                   "is_correct": false,
@@ -961,7 +956,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3196,
+                  "id": 3996,
                   "challenge_id": 629,
                   "text": "Ⲁ ⲁ (ألفا)",
                   "is_correct": true,
@@ -969,7 +964,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3197,
+                  "id": 3997,
                   "challenge_id": 629,
                   "text": "Ⲃ ⲃ (فيدا)",
                   "is_correct": false,
@@ -982,9 +977,9 @@
               "id": 630,
               "lesson_id": 125,
               "type": "select",
-              "question": "ما معنى الكلمة: ⲃⲉⲣⲧ؟ (المعرب: «فيرت»)",
+              "question": "ما معنى الكلمة: ⲃⲉⲣⲧ؟ (المعرب: «ڤيرت»)",
               "coptic_display": "ⲃⲉⲣⲧ",
-              "audio_text": "فيرت",
+              "audio_text": "ڤيرت",
               "audio_url": "audio_coptic/2veta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -993,7 +988,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3200,
+                  "id": 4030,
                   "challenge_id": 630,
                   "text": "نور",
                   "is_correct": false,
@@ -1001,7 +996,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3202,
+                  "id": 4031,
                   "challenge_id": 630,
                   "text": "شجرة",
                   "is_correct": false,
@@ -1009,7 +1004,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3203,
+                  "id": 4032,
                   "challenge_id": 630,
                   "text": "وردة",
                   "is_correct": true,
@@ -1017,7 +1012,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3201,
+                  "id": 4033,
                   "challenge_id": 630,
                   "text": "ماء",
                   "is_correct": false,
@@ -1059,7 +1054,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3205,
+                  "id": 4011,
                   "challenge_id": 632,
                   "text": "ز",
                   "is_correct": false,
@@ -1067,7 +1062,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3206,
+                  "id": 4012,
                   "challenge_id": 632,
                   "text": "ف أو ب",
                   "is_correct": false,
@@ -1075,7 +1070,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3204,
+                  "id": 4014,
                   "challenge_id": 632,
                   "text": "٦",
                   "is_correct": false,
@@ -1083,7 +1078,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3207,
+                  "id": 4015,
                   "challenge_id": 632,
                   "text": "غ أو ج أو ن",
                   "is_correct": true,
@@ -1126,8 +1121,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: سو (رقم ٦) (Ⲋ ⲋ)\n• نطق الحرف بالعربي: سو (الرقم 6)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • ليس حرفاً هجائياً أصيلاً بل رمز ورقم عددي يدل على الرقم ستة (٦). يوضع فوقه شرطة أفقية لتمييزه كرقم، ويُنطق \"سو\".\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲟⲟⲩ\n  - القبطي المعرب (نطقها): «سو»\n  - المعنى بالعربية: الرقم ستة (٦)\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 467,
@@ -1174,7 +1168,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2981,
+                  "id": 4062,
                   "challenge_id": 469,
                   "text": "ز",
                   "is_correct": false,
@@ -1182,7 +1176,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2980,
+                  "id": 4063,
                   "challenge_id": 469,
                   "text": "ث أو ت",
                   "is_correct": false,
@@ -1190,7 +1184,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2982,
+                  "id": 4064,
                   "challenge_id": 469,
                   "text": "ك",
                   "is_correct": false,
@@ -1198,7 +1192,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2983,
+                  "id": 4065,
                   "challenge_id": 469,
                   "text": "سو (الرقم 6)",
                   "is_correct": true,
@@ -1222,7 +1216,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2985,
+                  "id": 4043,
                   "challenge_id": 470,
                   "text": "الرقم سبعة",
                   "is_correct": false,
@@ -1230,7 +1224,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2984,
+                  "id": 4045,
                   "challenge_id": 470,
                   "text": "الرقم عشرة",
                   "is_correct": false,
@@ -1238,7 +1232,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2986,
+                  "id": 4047,
                   "challenge_id": 470,
                   "text": "الرقم خمسة",
                   "is_correct": false,
@@ -1246,7 +1240,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2987,
+                  "id": 4049,
                   "challenge_id": 470,
                   "text": "الرقم ستة (٦)",
                   "is_correct": true,
@@ -1299,8 +1293,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: زاتا (Ⲍ ⲍ)\n• نطق الحرف بالعربي: ز (Z)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف زين \"ز\" مثل حرف (Z) في الإنجليزية في جميع الكلمات والمواضع.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲧⲣⲁⲡⲉⲍⲁ\n  - القبطي المعرب (نطقها): «ترابيزا»\n  - المعنى بالعربية: مائدة / ترابيزة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 473,
@@ -1347,7 +1340,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2988,
+                  "id": 4078,
                   "challenge_id": 475,
                   "text": "ز",
                   "is_correct": true,
@@ -1355,7 +1348,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2989,
+                  "id": 4079,
                   "challenge_id": 475,
                   "text": "٦",
                   "is_correct": false,
@@ -1363,7 +1356,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2990,
+                  "id": 4080,
                   "challenge_id": 475,
                   "text": "ياء طويلة",
                   "is_correct": false,
@@ -1371,7 +1364,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2991,
+                  "id": 4081,
                   "challenge_id": 475,
                   "text": "ياء قصيرة",
                   "is_correct": false,
@@ -1395,7 +1388,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 2992,
+                  "id": 4082,
                   "challenge_id": 476,
                   "text": "نافذة",
                   "is_correct": false,
@@ -1403,7 +1396,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2995,
+                  "id": 4083,
                   "challenge_id": 476,
                   "text": "مائدة / ترابيزة",
                   "is_correct": true,
@@ -1411,7 +1404,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2994,
+                  "id": 4084,
                   "challenge_id": 476,
                   "text": "كرسي",
                   "is_correct": false,
@@ -1419,7 +1412,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2993,
+                  "id": 4085,
                   "challenge_id": 476,
                   "text": "باب",
                   "is_correct": false,
@@ -1475,8 +1468,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: هيتا (إيتا) (Ⲏ ⲏ)\n• نطق الحرف بالعربي: ياء طويلة ممدودة (ee)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للكسر (طويل ممدود))\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف متحرك للكسر يُنطق ياء طويلة مشبعة ممدودة مثل (ee) في كلمة (meet) أو (see).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲛⲍⲏⲃ\n  - القبطي المعرب (نطقها): «أنزيب»\n  - المعنى بالعربية: مدرسة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 479,
@@ -1523,23 +1515,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 2997,
-                  "challenge_id": 481,
-                  "text": "ث أو ت",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2998,
-                  "challenge_id": 481,
-                  "text": "ز",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 2999,
+                  "id": 4092,
                   "challenge_id": 481,
                   "text": "ياء طويلة ممدودة",
                   "is_correct": true,
@@ -1547,7 +1523,23 @@
                   "audio_url": null
                 },
                 {
-                  "id": 2996,
+                  "id": 4090,
+                  "challenge_id": 481,
+                  "text": "ث أو ت",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4091,
+                  "challenge_id": 481,
+                  "text": "ز",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4093,
                   "challenge_id": 481,
                   "text": "ل",
                   "is_correct": false,
@@ -1571,7 +1563,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3000,
+                  "id": 4086,
                   "challenge_id": 482,
                   "text": "طريق",
                   "is_correct": false,
@@ -1579,7 +1571,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3001,
+                  "id": 4087,
                   "challenge_id": 482,
                   "text": "بيت",
                   "is_correct": false,
@@ -1587,7 +1579,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3002,
+                  "id": 4088,
                   "challenge_id": 482,
                   "text": "كنيسة",
                   "is_correct": false,
@@ -1595,7 +1587,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3003,
+                  "id": 4089,
                   "challenge_id": 482,
                   "text": "مدرسة",
                   "is_correct": true,
@@ -1649,8 +1641,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: ثيتا (Ⲑ ⲑ)\n• نطق الحرف بالعربي: ث أو ت\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له نطقان (ث / ت))\n• قواعد وحالات النطق:\n  1. يُنطق (ت): إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ).\n  2. يُنطق (ث): في باقي الحالات الأخرى مثل حرف (Th) في الإنجليزية.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲙⲁⲱⲟⲩⲧ\n  - القبطي المعرب (نطقها): «ماووت»\n  - المعنى بالعربية: مشط\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 485,
@@ -1697,7 +1688,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3004,
+                  "id": 4058,
                   "challenge_id": 487,
                   "text": "ث أو ت",
                   "is_correct": true,
@@ -1705,7 +1696,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3005,
+                  "id": 4059,
                   "challenge_id": 487,
                   "text": "ياء طويلة",
                   "is_correct": false,
@@ -1713,7 +1704,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3007,
+                  "id": 4060,
                   "challenge_id": 487,
                   "text": "م",
                   "is_correct": false,
@@ -1721,7 +1712,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3006,
+                  "id": 4061,
                   "challenge_id": 487,
                   "text": "ياء قصيرة",
                   "is_correct": false,
@@ -1745,7 +1736,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3009,
+                  "id": 4070,
                   "challenge_id": 488,
                   "text": "ثوب",
                   "is_correct": false,
@@ -1753,7 +1744,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3010,
+                  "id": 4071,
                   "challenge_id": 488,
                   "text": "مشط",
                   "is_correct": true,
@@ -1761,7 +1752,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3011,
+                  "id": 4072,
                   "challenge_id": 488,
                   "text": "خاتم",
                   "is_correct": false,
@@ -1769,7 +1760,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3008,
+                  "id": 4073,
                   "challenge_id": 488,
                   "text": "مرآة",
                   "is_correct": false,
@@ -1824,8 +1815,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: إيوتا (Ⲓ ⲓ)\n• نطق الحرف بالعربي: ياء قصيرة خفيفة (i)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للكسر (قصير))\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف متحرك للكسر يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في كلمة (sit) أو (pin).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲱⲓⲛⲓ\n  - القبطي المعرب (نطقها): «أويني»\n  - المعنى بالعربية: صنارة / نور\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 491,
@@ -1872,7 +1862,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3012,
+                  "id": 4042,
                   "challenge_id": 493,
                   "text": "ياء قصيرة",
                   "is_correct": true,
@@ -1880,7 +1870,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3013,
+                  "id": 4044,
                   "challenge_id": 493,
                   "text": "ث أو ت",
                   "is_correct": false,
@@ -1888,7 +1878,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3014,
+                  "id": 4046,
                   "challenge_id": 493,
                   "text": "ك",
                   "is_correct": false,
@@ -1896,7 +1886,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3015,
+                  "id": 4048,
                   "challenge_id": 493,
                   "text": "ن",
                   "is_correct": false,
@@ -1920,7 +1910,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3016,
+                  "id": 4050,
                   "challenge_id": 494,
                   "text": "بحر",
                   "is_correct": false,
@@ -1928,7 +1918,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3017,
+                  "id": 4052,
                   "challenge_id": 494,
                   "text": "قارب",
                   "is_correct": false,
@@ -1936,7 +1926,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3018,
+                  "id": 4053,
                   "challenge_id": 494,
                   "text": "شبكة",
                   "is_correct": false,
@@ -1944,7 +1934,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3019,
+                  "id": 4054,
                   "challenge_id": 494,
                   "text": "صنارة / نور",
                   "is_correct": true,
@@ -2031,7 +2021,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3210,
+                  "id": 4066,
                   "challenge_id": 634,
                   "text": "Ⲑ ⲑ (ثيتا)",
                   "is_correct": false,
@@ -2039,7 +2029,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3211,
+                  "id": 4067,
                   "challenge_id": 634,
                   "text": "Ⲋ ⲋ (سو (رقم ٦))",
                   "is_correct": true,
@@ -2047,7 +2037,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3209,
+                  "id": 4068,
                   "challenge_id": 634,
                   "text": "Ⲍ ⲍ (زاتا)",
                   "is_correct": false,
@@ -2055,7 +2045,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3208,
+                  "id": 4069,
                   "challenge_id": 634,
                   "text": "Ⲏ ⲏ (هيتا)",
                   "is_correct": false,
@@ -2079,7 +2069,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3213,
+                  "id": 4074,
                   "challenge_id": 635,
                   "text": "كرسي",
                   "is_correct": false,
@@ -2087,7 +2077,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3214,
+                  "id": 4075,
                   "challenge_id": 635,
                   "text": "مائدة / ترابيزة",
                   "is_correct": true,
@@ -2095,7 +2085,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3215,
+                  "id": 4076,
                   "challenge_id": 635,
                   "text": "باب",
                   "is_correct": false,
@@ -2103,7 +2093,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3212,
+                  "id": 4077,
                   "challenge_id": 635,
                   "text": "نافذة",
                   "is_correct": false,
@@ -2147,15 +2137,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3216,
-                  "challenge_id": 637,
-                  "text": "ز",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3217,
+                  "id": 4055,
                   "challenge_id": 637,
                   "text": "ياء طويلة ممدودة",
                   "is_correct": true,
@@ -2163,7 +2145,15 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3218,
+                  "id": 4051,
+                  "challenge_id": 637,
+                  "text": "ز",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4056,
                   "challenge_id": 637,
                   "text": "ث أو ت",
                   "is_correct": false,
@@ -2171,7 +2161,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3219,
+                  "id": 4057,
                   "challenge_id": 637,
                   "text": "ل",
                   "is_correct": false,
@@ -2214,8 +2204,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: كابا (Ⲕ ⲕ)\n• نطق الحرف بالعربي: ك (K)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف كاف \"ك\" في جميع المواضع والكلمات دون استثناء.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲉⲕⲕⲗⲏⲥⲓⲁ\n  - القبطي المعرب (نطقها): «إككليسيا»\n  - المعنى بالعربية: كنيسة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 497,
@@ -2262,7 +2251,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3023,
+                  "id": 4094,
                   "challenge_id": 499,
                   "text": "ك",
                   "is_correct": true,
@@ -2270,7 +2259,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3020,
+                  "id": 4095,
                   "challenge_id": 499,
                   "text": "كـ+س",
                   "is_correct": false,
@@ -2278,7 +2267,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3021,
+                  "id": 4096,
                   "challenge_id": 499,
                   "text": "م",
                   "is_correct": false,
@@ -2286,7 +2275,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3022,
+                  "id": 4097,
                   "challenge_id": 499,
                   "text": "ل",
                   "is_correct": false,
@@ -2310,7 +2299,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3024,
+                  "id": 4098,
                   "challenge_id": 500,
                   "text": "هيكل",
                   "is_correct": false,
@@ -2318,7 +2307,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3026,
+                  "id": 4099,
                   "challenge_id": 500,
                   "text": "كنيسة",
                   "is_correct": true,
@@ -2326,7 +2315,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3027,
+                  "id": 4100,
                   "challenge_id": 500,
                   "text": "مذبح",
                   "is_correct": false,
@@ -2334,7 +2323,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3025,
+                  "id": 4101,
                   "challenge_id": 500,
                   "text": "دير",
                   "is_correct": false,
@@ -2391,8 +2380,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: لابدا (لافلا) (Ⲗ ⲗ)\n• نطق الحرف بالعربي: ل (L)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف لام \"ل\" مثل حرف (L) في الإنجليزية.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲗⲁⲙⲡⲁⲥ\n  - القبطي المعرب (نطقها): «لامباس»\n  - المعنى بالعربية: مصباح / قنديل\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 503,
@@ -2439,7 +2427,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3029,
+                  "id": 4130,
                   "challenge_id": 505,
                   "text": "ب مشددة",
                   "is_correct": false,
@@ -2447,7 +2435,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3030,
+                  "id": 4131,
                   "challenge_id": 505,
                   "text": "ل",
                   "is_correct": true,
@@ -2455,7 +2443,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3031,
+                  "id": 4132,
                   "challenge_id": 505,
                   "text": "ن",
                   "is_correct": false,
@@ -2463,7 +2451,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3028,
+                  "id": 4133,
                   "challenge_id": 505,
                   "text": "ك",
                   "is_correct": false,
@@ -2487,7 +2475,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3033,
+                  "id": 4126,
                   "challenge_id": 506,
                   "text": "نار",
                   "is_correct": false,
@@ -2495,7 +2483,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3034,
+                  "id": 4127,
                   "challenge_id": 506,
                   "text": "مصباح / قنديل",
                   "is_correct": true,
@@ -2503,7 +2491,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3035,
+                  "id": 4128,
                   "challenge_id": 506,
                   "text": "شمس",
                   "is_correct": false,
@@ -2511,7 +2499,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3032,
+                  "id": 4129,
                   "challenge_id": 506,
                   "text": "زيت",
                   "is_correct": false,
@@ -2566,8 +2554,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: مي (Ⲙ ⲙ)\n• نطق الحرف بالعربي: م (M)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف ميم \"م\" في جميع المواضع والكلمات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲙⲟⲗϧ\n  - القبطي المعرب (نطقها): «مولخ»\n  - المعنى بالعربية: شمعة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 509,
@@ -2614,7 +2601,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3036,
+                  "id": 4138,
                   "challenge_id": 511,
                   "text": "ر",
                   "is_correct": false,
@@ -2622,7 +2609,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3037,
+                  "id": 4139,
                   "challenge_id": 511,
                   "text": "ن",
                   "is_correct": false,
@@ -2630,7 +2617,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3038,
+                  "id": 4140,
                   "challenge_id": 511,
                   "text": "ل",
                   "is_correct": false,
@@ -2638,7 +2625,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3039,
+                  "id": 4141,
                   "challenge_id": 511,
                   "text": "م",
                   "is_correct": true,
@@ -2662,7 +2649,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3040,
+                  "id": 4142,
                   "challenge_id": 512,
                   "text": "شمعة",
                   "is_correct": true,
@@ -2670,7 +2657,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3041,
+                  "id": 4143,
                   "challenge_id": 512,
                   "text": "بخور",
                   "is_correct": false,
@@ -2678,7 +2665,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3042,
+                  "id": 4144,
                   "challenge_id": 512,
                   "text": "صليب",
                   "is_correct": false,
@@ -2686,7 +2673,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3043,
+                  "id": 4145,
                   "challenge_id": 512,
                   "text": "كأس",
                   "is_correct": false,
@@ -2739,8 +2726,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: ني (Ⲛ ⲛ)\n• نطق الحرف بالعربي: ن (N)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف نون \"ن\" في جميع المواضع والكلمات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲛⲟⲩϯ\n  - القبطي المعرب (نطقها): «نوتي»\n  - المعنى بالعربية: الله\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 515,
@@ -2787,7 +2773,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3047,
+                  "id": 4102,
                   "challenge_id": 517,
                   "text": "س",
                   "is_correct": false,
@@ -2795,7 +2781,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3044,
+                  "id": 4103,
                   "challenge_id": 517,
                   "text": "ن",
                   "is_correct": true,
@@ -2803,7 +2789,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3045,
+                  "id": 4104,
                   "challenge_id": 517,
                   "text": "م",
                   "is_correct": false,
@@ -2811,7 +2797,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3046,
+                  "id": 4105,
                   "challenge_id": 517,
                   "text": "كـ+س",
                   "is_correct": false,
@@ -2835,7 +2821,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3048,
+                  "id": 4118,
                   "challenge_id": 518,
                   "text": "السماء",
                   "is_correct": false,
@@ -2843,7 +2829,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3050,
+                  "id": 4119,
                   "challenge_id": 518,
                   "text": "الله",
                   "is_correct": true,
@@ -2851,7 +2837,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3051,
+                  "id": 4120,
                   "challenge_id": 518,
                   "text": "النور",
                   "is_correct": false,
@@ -2859,7 +2845,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3049,
+                  "id": 4121,
                   "challenge_id": 518,
                   "text": "الحق",
                   "is_correct": false,
@@ -2912,8 +2898,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: كسي (Ⲝ ⲝ)\n• نطق الحرف بالعربي: كـ + س (X)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مركب يُنطق كاف وسين معاً (كـ + س = X) في مقطع صوتي واحد.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲟⲩⲁⲗⲓⲝ\n  - القبطي المعرب (نطقها): «أواليكس»\n  - المعنى بالعربية: ستارة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 521,
@@ -2960,7 +2945,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3053,
+                  "id": 4106,
                   "challenge_id": 523,
                   "text": "كـ + س",
                   "is_correct": true,
@@ -2968,7 +2953,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3054,
+                  "id": 4107,
                   "challenge_id": 523,
                   "text": "ك",
                   "is_correct": false,
@@ -2976,7 +2961,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3055,
+                  "id": 4108,
                   "challenge_id": 523,
                   "text": "ن",
                   "is_correct": false,
@@ -2984,7 +2969,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3052,
+                  "id": 4109,
                   "challenge_id": 523,
                   "text": "ت",
                   "is_correct": false,
@@ -3008,7 +2993,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3057,
+                  "id": 4114,
                   "challenge_id": 524,
                   "text": "حائط",
                   "is_correct": false,
@@ -3016,7 +3001,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3058,
+                  "id": 4115,
                   "challenge_id": 524,
                   "text": "مائدة",
                   "is_correct": false,
@@ -3024,7 +3009,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3059,
+                  "id": 4116,
                   "challenge_id": 524,
                   "text": "ستارة",
                   "is_correct": true,
@@ -3032,7 +3017,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3056,
+                  "id": 4117,
                   "challenge_id": 524,
                   "text": "سقف",
                   "is_correct": false,
@@ -3121,7 +3106,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3221,
+                  "id": 4110,
                   "challenge_id": 639,
                   "text": "Ⲕ ⲕ (كابا)",
                   "is_correct": true,
@@ -3129,7 +3114,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3222,
+                  "id": 4111,
                   "challenge_id": 639,
                   "text": "Ⲗ ⲗ (لابدا)",
                   "is_correct": false,
@@ -3137,7 +3122,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3220,
+                  "id": 4112,
                   "challenge_id": 639,
                   "text": "Ⲙ ⲙ (مي)",
                   "is_correct": false,
@@ -3145,7 +3130,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3223,
+                  "id": 4113,
                   "challenge_id": 639,
                   "text": "Ⲛ ⲛ (ني)",
                   "is_correct": false,
@@ -3169,7 +3154,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3224,
+                  "id": 4134,
                   "challenge_id": 640,
                   "text": "شمس",
                   "is_correct": false,
@@ -3177,7 +3162,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3225,
+                  "id": 4135,
                   "challenge_id": 640,
                   "text": "زيت",
                   "is_correct": false,
@@ -3185,7 +3170,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3226,
+                  "id": 4136,
                   "challenge_id": 640,
                   "text": "نار",
                   "is_correct": false,
@@ -3193,7 +3178,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3227,
+                  "id": 4137,
                   "challenge_id": 640,
                   "text": "مصباح / قنديل",
                   "is_correct": true,
@@ -3239,7 +3224,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3228,
+                  "id": 4122,
                   "challenge_id": 642,
                   "text": "ر",
                   "is_correct": false,
@@ -3247,7 +3232,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3229,
+                  "id": 4123,
                   "challenge_id": 642,
                   "text": "ن",
                   "is_correct": false,
@@ -3255,7 +3240,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3231,
+                  "id": 4124,
                   "challenge_id": 642,
                   "text": "م",
                   "is_correct": true,
@@ -3263,7 +3248,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3230,
+                  "id": 4125,
                   "challenge_id": 642,
                   "text": "ل",
                   "is_correct": false,
@@ -3306,8 +3291,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: أُو (قصيرة) (Ⲟ ⲟ)\n• نطق الحرف بالعربي: واو قصيرة مضمومة (O)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للضم (قصير))\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف (O) في كلمة (not) أو (hot).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲓⲟⲩ\n  - القبطي المعرب (نطقها): «سيو»\n  - المعنى بالعربية: نجم\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 527,
@@ -3354,7 +3338,15 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3060,
+                  "id": 4173,
+                  "challenge_id": 529,
+                  "text": "واو قصيرة مضمومة",
+                  "is_correct": true,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4170,
                   "challenge_id": 529,
                   "text": "واو طويلة",
                   "is_correct": false,
@@ -3362,7 +3354,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3061,
+                  "id": 4171,
                   "challenge_id": 529,
                   "text": "ر",
                   "is_correct": false,
@@ -3370,18 +3362,10 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3062,
+                  "id": 4172,
                   "challenge_id": 529,
                   "text": "ب ثقيلة",
                   "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3063,
-                  "challenge_id": 529,
-                  "text": "واو قصيرة مضمومة",
-                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -3402,7 +3386,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3064,
+                  "id": 4154,
                   "challenge_id": 530,
                   "text": "سماء",
                   "is_correct": false,
@@ -3410,7 +3394,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3065,
+                  "id": 4155,
                   "challenge_id": 530,
                   "text": "سحاب",
                   "is_correct": false,
@@ -3418,7 +3402,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3066,
+                  "id": 4156,
                   "challenge_id": 530,
                   "text": "قمر",
                   "is_correct": false,
@@ -3426,7 +3410,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3067,
+                  "id": 4157,
                   "challenge_id": 530,
                   "text": "نجم",
                   "is_correct": true,
@@ -3479,8 +3463,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: بي (Ⲡ ⲡ)\n• نطق الحرف بالعربي: ب ثقيلة مشددة (P)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق باء شديدة تخرج بحبس الهواء ثم إطلاقه بقوة مثل حرف (P) في الإنجليزية.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲡⲉ\n  - القبطي المعرب (نطقها): «بي»\n  - المعنى بالعربية: سماء\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 533,
@@ -3527,7 +3510,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3071,
+                  "id": 4158,
                   "challenge_id": 535,
                   "text": "ب ثقيلة مشددة",
                   "is_correct": true,
@@ -3535,7 +3518,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3068,
+                  "id": 4159,
                   "challenge_id": 535,
                   "text": "واو قصيرة",
                   "is_correct": false,
@@ -3543,7 +3526,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3069,
+                  "id": 4160,
                   "challenge_id": 535,
                   "text": "س",
                   "is_correct": false,
@@ -3551,7 +3534,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3070,
+                  "id": 4161,
                   "challenge_id": 535,
                   "text": "ت",
                   "is_correct": false,
@@ -3575,7 +3558,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3072,
+                  "id": 4162,
                   "challenge_id": 536,
                   "text": "سماء",
                   "is_correct": true,
@@ -3583,7 +3566,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3074,
+                  "id": 4163,
                   "challenge_id": 536,
                   "text": "ماء",
                   "is_correct": false,
@@ -3591,7 +3574,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3075,
+                  "id": 4164,
                   "challenge_id": 536,
                   "text": "أرض",
                   "is_correct": false,
@@ -3599,7 +3582,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3073,
+                  "id": 4165,
                   "challenge_id": 536,
                   "text": "نار",
                   "is_correct": false,
@@ -3650,8 +3633,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: رو (Ⲣ ⲣ)\n• نطق الحرف بالعربي: ر (R)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف راء \"ر\" في جميع المواضع والكلمات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲣⲱⲙⲓ\n  - القبطي المعرب (نطقها): «رومي»\n  - المعنى بالعربية: إنسان\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 539,
@@ -3698,7 +3680,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3077,
+                  "id": 4182,
                   "challenge_id": 541,
                   "text": "ب مشددة",
                   "is_correct": false,
@@ -3706,7 +3688,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3078,
+                  "id": 4183,
                   "challenge_id": 541,
                   "text": "س",
                   "is_correct": false,
@@ -3714,7 +3696,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3079,
+                  "id": 4184,
                   "challenge_id": 541,
                   "text": "خ",
                   "is_correct": false,
@@ -3722,7 +3704,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3076,
+                  "id": 4185,
                   "challenge_id": 541,
                   "text": "ر",
                   "is_correct": true,
@@ -3746,7 +3728,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3081,
+                  "id": 4166,
                   "challenge_id": 542,
                   "text": "حيوان",
                   "is_correct": false,
@@ -3754,7 +3736,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3082,
+                  "id": 4167,
                   "challenge_id": 542,
                   "text": "ملاك",
                   "is_correct": false,
@@ -3762,7 +3744,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3083,
+                  "id": 4168,
                   "challenge_id": 542,
                   "text": "إنسان",
                   "is_correct": true,
@@ -3770,7 +3752,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3080,
+                  "id": 4169,
                   "challenge_id": 542,
                   "text": "شجر",
                   "is_correct": false,
@@ -3823,8 +3805,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: سيما (Ⲥ ⲥ)\n• نطق الحرف بالعربي: س (S)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف سين \"س\" في جميع المواضع.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲱ\n  - القبطي المعرب (نطقها): «سو»\n  - المعنى بالعربية: يشرب\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 545,
@@ -3871,7 +3852,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3084,
+                  "id": 4146,
                   "challenge_id": 547,
                   "text": "ت",
                   "is_correct": false,
@@ -3879,7 +3860,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3085,
+                  "id": 4147,
                   "challenge_id": 547,
                   "text": "ف",
                   "is_correct": false,
@@ -3887,7 +3868,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3086,
+                  "id": 4148,
                   "challenge_id": 547,
                   "text": "ر",
                   "is_correct": false,
@@ -3895,7 +3876,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3087,
+                  "id": 4149,
                   "challenge_id": 547,
                   "text": "س",
                   "is_correct": true,
@@ -3919,7 +3900,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3088,
+                  "id": 4150,
                   "challenge_id": 548,
                   "text": "يمشي",
                   "is_correct": false,
@@ -3927,7 +3908,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3089,
+                  "id": 4151,
                   "challenge_id": 548,
                   "text": "يشرب",
                   "is_correct": true,
@@ -3935,7 +3916,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3090,
+                  "id": 4152,
                   "challenge_id": 548,
                   "text": "يأكل",
                   "is_correct": false,
@@ -3943,7 +3924,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3091,
+                  "id": 4153,
                   "challenge_id": 548,
                   "text": "ينام",
                   "is_correct": false,
@@ -3994,8 +3975,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: تاف (Ⲧ ⲧ)\n• نطق الحرف بالعربي: ت (T)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف تاء \"ت\" في جميع المواضع والكلمات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲧⲱⲟⲩ\n  - القبطي المعرب (نطقها): «توو»\n  - المعنى بالعربية: جبل\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 551,
@@ -4042,7 +4022,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3095,
+                  "id": 4174,
                   "challenge_id": 553,
                   "text": "ي/و",
                   "is_correct": false,
@@ -4050,7 +4030,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3092,
+                  "id": 4175,
                   "challenge_id": 553,
                   "text": "ش",
                   "is_correct": false,
@@ -4058,7 +4038,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3093,
+                  "id": 4176,
                   "challenge_id": 553,
                   "text": "ت",
                   "is_correct": true,
@@ -4066,7 +4046,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3094,
+                  "id": 4177,
                   "challenge_id": 553,
                   "text": "س",
                   "is_correct": false,
@@ -4090,7 +4070,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3096,
+                  "id": 4178,
                   "challenge_id": 554,
                   "text": "جبل",
                   "is_correct": true,
@@ -4098,7 +4078,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3098,
+                  "id": 4179,
                   "challenge_id": 554,
                   "text": "نهر",
                   "is_correct": false,
@@ -4106,7 +4086,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3099,
+                  "id": 4180,
                   "challenge_id": 554,
                   "text": "صحراء",
                   "is_correct": false,
@@ -4114,7 +4094,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3097,
+                  "id": 4181,
                   "challenge_id": 554,
                   "text": "وادي",
                   "is_correct": false,
@@ -4201,7 +4181,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3232,
+                  "id": 4186,
                   "challenge_id": 644,
                   "text": "Ⲥ ⲥ (سيما)",
                   "is_correct": false,
@@ -4209,7 +4189,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3233,
+                  "id": 4187,
                   "challenge_id": 644,
                   "text": "Ⲣ ⲣ (رو)",
                   "is_correct": false,
@@ -4217,7 +4197,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3234,
+                  "id": 4188,
                   "challenge_id": 644,
                   "text": "Ⲡ ⲡ (بي)",
                   "is_correct": false,
@@ -4225,7 +4205,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3235,
+                  "id": 4189,
                   "challenge_id": 644,
                   "text": "Ⲟ ⲟ (أُو (قصيرة))",
                   "is_correct": true,
@@ -4249,7 +4229,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3239,
+                  "id": 4194,
                   "challenge_id": 645,
                   "text": "نار",
                   "is_correct": false,
@@ -4257,7 +4237,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3236,
+                  "id": 4195,
                   "challenge_id": 645,
                   "text": "ماء",
                   "is_correct": false,
@@ -4265,7 +4245,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3237,
+                  "id": 4196,
                   "challenge_id": 645,
                   "text": "سماء",
                   "is_correct": true,
@@ -4273,7 +4253,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3238,
+                  "id": 4197,
                   "challenge_id": 645,
                   "text": "أرض",
                   "is_correct": false,
@@ -4317,7 +4297,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3240,
+                  "id": 4190,
                   "challenge_id": 647,
                   "text": "خ",
                   "is_correct": false,
@@ -4325,7 +4305,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3241,
+                  "id": 4191,
                   "challenge_id": 647,
                   "text": "ر",
                   "is_correct": true,
@@ -4333,7 +4313,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3242,
+                  "id": 4192,
                   "challenge_id": 647,
                   "text": "ب مشددة",
                   "is_correct": false,
@@ -4341,7 +4321,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3243,
+                  "id": 4193,
                   "challenge_id": 647,
                   "text": "س",
                   "is_correct": false,
@@ -4384,8 +4364,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: إبسيلون (Ⲩ ⲩ)\n• نطق الحرف بالعربي: ڤ (V) أو و أو ي\n• تصنيف الحرف: نعم، حرف متحرك (متحرك (متعدد الحالات))\n• عدد حالات النطق: له أكثر من نطق (له 3 حالات نطق (ڤ / و / ي))\n• قواعد وحالات النطق:\n  1. يُنطق (ڤ / V): إذا سبقه حرف Ⲁ (ألفا) أو Ⲉ (إي) مثل المقطعين (ⲀⲨ / ⲈⲨ).\n  2. يُنطق (و ممدودة): إذا سبقه حرف Ⲟ (أو قصيرة) في المقطع (ⲞⲨ).\n  3. يُنطق (ي): في باقي الحالات إذا لم يسبقه (Ⲁ أو Ⲉ أو Ⲟ).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲩⲓⲟⲥ\n  - القبطي المعرب (نطقها): «إيوس»\n  - المعنى بالعربية: ابن\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 557,
@@ -4432,7 +4411,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3101,
+                  "id": 4242,
                   "challenge_id": 559,
                   "text": "ف",
                   "is_correct": false,
@@ -4440,7 +4419,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3102,
+                  "id": 4243,
                   "challenge_id": 559,
                   "text": "بـ+س",
                   "is_correct": false,
@@ -4448,7 +4427,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3103,
+                  "id": 4244,
                   "challenge_id": 559,
                   "text": "خ أو ك",
                   "is_correct": false,
@@ -4456,7 +4435,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3100,
+                  "id": 4245,
                   "challenge_id": 559,
                   "text": "ي أو ڤ أو و",
                   "is_correct": true,
@@ -4480,7 +4459,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3105,
+                  "id": 4198,
                   "challenge_id": 560,
                   "text": "ابن",
                   "is_correct": true,
@@ -4488,7 +4467,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3106,
+                  "id": 4199,
                   "challenge_id": 560,
                   "text": "أب",
                   "is_correct": false,
@@ -4496,7 +4475,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3107,
+                  "id": 4200,
                   "challenge_id": 560,
                   "text": "أم",
                   "is_correct": false,
@@ -4504,7 +4483,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3104,
+                  "id": 4201,
                   "challenge_id": 560,
                   "text": "أخ",
                   "is_correct": false,
@@ -4557,8 +4536,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: في (Ⲫ ⲫ)\n• نطق الحرف بالعربي: ف (F)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • يُنطق دائماً حرف فاء \"ف\" مثل حرف (F) في الإنجليزية.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲫⲟⲟⲩ\n  - القبطي المعرب (نطقها): «إفهو»\n  - المعنى بالعربية: اليوم / النهار\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 563,
@@ -4605,7 +4583,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3108,
+                  "id": 4234,
                   "challenge_id": 565,
                   "text": "خ أو ك",
                   "is_correct": false,
@@ -4613,7 +4591,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3109,
+                  "id": 4235,
                   "challenge_id": 565,
                   "text": "واو طويلة",
                   "is_correct": false,
@@ -4621,7 +4599,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3110,
+                  "id": 4236,
                   "challenge_id": 565,
                   "text": "ي/و",
                   "is_correct": false,
@@ -4629,7 +4607,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3111,
+                  "id": 4237,
                   "challenge_id": 565,
                   "text": "ف",
                   "is_correct": true,
@@ -4653,7 +4631,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3112,
+                  "id": 4226,
                   "challenge_id": 566,
                   "text": "الليل",
                   "is_correct": false,
@@ -4661,7 +4639,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3113,
+                  "id": 4227,
                   "challenge_id": 566,
                   "text": "غداً",
                   "is_correct": false,
@@ -4669,7 +4647,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3114,
+                  "id": 4228,
                   "challenge_id": 566,
                   "text": "أمس",
                   "is_correct": false,
@@ -4677,7 +4655,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3115,
+                  "id": 4229,
                   "challenge_id": 566,
                   "text": "اليوم / النهار",
                   "is_correct": true,
@@ -4730,8 +4708,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: خي (كي) (Ⲭ ⲭ)\n• نطق الحرف بالعربي: ك أو ش أو خ\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له 3 أصوات (ك / ش / خ))\n• قواعد وحالات النطق:\n  1. يُنطق (ك): في الكلمات ذات الأصل القبطي.\n  2. يُنطق (ش): في الكلمات ذات الأصل اليوناني إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).\n  3. يُنطق (خ): في الكلمات ذات الأصل اليوناني في باقي الحالات (إذا لم يأتِ بعده كسر).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲭⲣⲓⲥⲧⲟⲥ\n  - القبطي المعرب (نطقها): «خريستوس»\n  - المعنى بالعربية: المسيح\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 569,
@@ -4778,7 +4755,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3119,
+                  "id": 4222,
                   "challenge_id": 571,
                   "text": "خ أو ك أو ش",
                   "is_correct": true,
@@ -4786,7 +4763,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3116,
+                  "id": 4223,
                   "challenge_id": 571,
                   "text": "ف",
                   "is_correct": false,
@@ -4794,7 +4771,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3117,
+                  "id": 4224,
                   "challenge_id": 571,
                   "text": "بـ+س",
                   "is_correct": false,
@@ -4802,7 +4779,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3118,
+                  "id": 4225,
                   "challenge_id": 571,
                   "text": "هـ",
                   "is_correct": false,
@@ -4826,7 +4803,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3122,
+                  "id": 4238,
                   "challenge_id": 572,
                   "text": "الملك",
                   "is_correct": false,
@@ -4834,7 +4811,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3123,
+                  "id": 4239,
                   "challenge_id": 572,
                   "text": "المخلص",
                   "is_correct": false,
@@ -4842,7 +4819,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3120,
+                  "id": 4240,
                   "challenge_id": 572,
                   "text": "المعلم",
                   "is_correct": false,
@@ -4850,7 +4827,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3121,
+                  "id": 4241,
                   "challenge_id": 572,
                   "text": "المسيح",
                   "is_correct": true,
@@ -4906,8 +4883,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: إبسي (Ⲯ ⲯ)\n• نطق الحرف بالعربي: بـ + س (Ps)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مركب يُنطق باء خفيفة وسين معاً (بـ + س = Ps) في مقطع صوتي واحد.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲯⲁⲗⲙⲟⲥ\n  - القبطي المعرب (نطقها): «بصالموس»\n  - المعنى بالعربية: مزمور\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 575,
@@ -4954,23 +4930,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3125,
-                  "challenge_id": 577,
-                  "text": "خ أو ك",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3126,
-                  "challenge_id": 577,
-                  "text": "واو طويلة",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3124,
+                  "id": 4232,
                   "challenge_id": 577,
                   "text": "بـ + س",
                   "is_correct": true,
@@ -4978,7 +4938,23 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3127,
+                  "id": 4230,
+                  "challenge_id": 577,
+                  "text": "خ أو ك",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4231,
+                  "challenge_id": 577,
+                  "text": "واو طويلة",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4233,
                   "challenge_id": 577,
                   "text": "ج",
                   "is_correct": false,
@@ -5002,7 +4978,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3128,
+                  "id": 4214,
                   "challenge_id": 578,
                   "text": "ترنيمة",
                   "is_correct": false,
@@ -5010,7 +4986,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3129,
+                  "id": 4215,
                   "challenge_id": 578,
                   "text": "إنجيل",
                   "is_correct": false,
@@ -5018,7 +4994,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3130,
+                  "id": 4216,
                   "challenge_id": 578,
                   "text": "صلاة",
                   "is_correct": false,
@@ -5026,7 +5002,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3131,
+                  "id": 4217,
                   "challenge_id": 578,
                   "text": "مزمور",
                   "is_correct": true,
@@ -5081,8 +5057,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: أوميغا (أو طويلة) (Ⲱ ⲱ)\n• نطق الحرف بالعربي: واو طويلة ممدودة (Ō)\n• تصنيف الحرف: نعم، حرف متحرك (متحرك للضم (طويل))\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • آخر الحروف المأخوذة من الأبجدية اليونانية. حرف متحرك للضم يُنطق واواً طويلة مفتوحة مشبعة ممدودة (Ō).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲱⲛϧ\n  - القبطي المعرب (نطقها): «أونخ»\n  - المعنى بالعربية: حياة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 581,
@@ -5129,7 +5104,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3135,
+                  "id": 4246,
                   "challenge_id": 583,
                   "text": "ش",
                   "is_correct": false,
@@ -5137,7 +5112,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3132,
+                  "id": 4247,
                   "challenge_id": 583,
                   "text": "بـ+س",
                   "is_correct": false,
@@ -5145,15 +5120,15 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3133,
+                  "id": 4248,
                   "challenge_id": 583,
-                  "text": "واو طويلة ممدودة",
+                  "text": "واو طويلة ممدودة (Ō)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
-                  "id": 3134,
+                  "id": 4249,
                   "challenge_id": 583,
                   "text": "ف",
                   "is_correct": false,
@@ -5177,7 +5152,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3136,
+                  "id": 4210,
                   "challenge_id": 584,
                   "text": "فرح",
                   "is_correct": false,
@@ -5185,7 +5160,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3137,
+                  "id": 4211,
                   "challenge_id": 584,
                   "text": "سلام",
                   "is_correct": false,
@@ -5193,7 +5168,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3139,
+                  "id": 4212,
                   "challenge_id": 584,
                   "text": "حياة",
                   "is_correct": true,
@@ -5201,7 +5176,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3138,
+                  "id": 4213,
                   "challenge_id": 584,
                   "text": "موت",
                   "is_correct": false,
@@ -5287,7 +5262,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3245,
+                  "id": 4206,
                   "challenge_id": 649,
                   "text": "Ⲫ ⲫ (في)",
                   "is_correct": false,
@@ -5295,7 +5270,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3246,
+                  "id": 4207,
                   "challenge_id": 649,
                   "text": "Ⲭ ⲭ (خي)",
                   "is_correct": false,
@@ -5303,7 +5278,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3247,
+                  "id": 4208,
                   "challenge_id": 649,
                   "text": "Ⲯ ⲯ (إبسي)",
                   "is_correct": false,
@@ -5311,7 +5286,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3244,
+                  "id": 4209,
                   "challenge_id": 649,
                   "text": "Ⲩ ⲩ (إبسيلون)",
                   "is_correct": true,
@@ -5335,7 +5310,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3250,
+                  "id": 4202,
                   "challenge_id": 650,
                   "text": "اليوم / النهار",
                   "is_correct": true,
@@ -5343,7 +5318,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3248,
+                  "id": 4203,
                   "challenge_id": 650,
                   "text": "غداً",
                   "is_correct": false,
@@ -5351,7 +5326,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3249,
+                  "id": 4204,
                   "challenge_id": 650,
                   "text": "أمس",
                   "is_correct": false,
@@ -5359,7 +5334,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3251,
+                  "id": 4205,
                   "challenge_id": 650,
                   "text": "الليل",
                   "is_correct": false,
@@ -5402,7 +5377,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3252,
+                  "id": 4218,
                   "challenge_id": 652,
                   "text": "هـ",
                   "is_correct": false,
@@ -5410,7 +5385,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3253,
+                  "id": 4219,
                   "challenge_id": 652,
                   "text": "بـ+س",
                   "is_correct": false,
@@ -5418,7 +5393,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3254,
+                  "id": 4220,
                   "challenge_id": 652,
                   "text": "ف",
                   "is_correct": false,
@@ -5426,7 +5401,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3255,
+                  "id": 4221,
                   "challenge_id": 652,
                   "text": "خ أو ك أو ش",
                   "is_correct": true,
@@ -5469,8 +5444,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: شاي (Ϣ ϣ)\n• نطق الحرف بالعربي: ش (Sh)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم، يُنطق دائماً حرف شين \"ش\".\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϣⲏⲣⲓ\n  - القبطي المعرب (نطقها): «شيري»\n  - المعنى بالعربية: ابن / صبي\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 587,
@@ -5517,7 +5491,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3140,
+                  "id": 4258,
                   "challenge_id": 589,
                   "text": "ش",
                   "is_correct": true,
@@ -5525,7 +5499,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3142,
+                  "id": 4259,
                   "challenge_id": 589,
                   "text": "ف",
                   "is_correct": false,
@@ -5533,7 +5507,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3143,
+                  "id": 4260,
                   "challenge_id": 589,
                   "text": "خ",
                   "is_correct": false,
@@ -5541,7 +5515,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3141,
+                  "id": 4261,
                   "challenge_id": 589,
                   "text": "هـ",
                   "is_correct": false,
@@ -5565,7 +5539,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3146,
+                  "id": 4266,
                   "challenge_id": 590,
                   "text": "بنت",
                   "is_correct": false,
@@ -5573,7 +5547,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3147,
+                  "id": 4267,
                   "challenge_id": 590,
                   "text": "رجل",
                   "is_correct": false,
@@ -5581,7 +5555,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3145,
+                  "id": 4268,
                   "challenge_id": 590,
                   "text": "شيخ",
                   "is_correct": false,
@@ -5589,7 +5563,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3144,
+                  "id": 4269,
                   "challenge_id": 590,
                   "text": "ابن / صبي",
                   "is_correct": true,
@@ -5642,8 +5616,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: فاي (Ϥ ϥ)\n• نطق الحرف بالعربي: ف (F)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف فاء \"ف\".\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϥⲱⲓ\n  - القبطي المعرب (نطقها): «فوي»\n  - المعنى بالعربية: شعر (شعر الرأس)\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 593,
@@ -5690,7 +5663,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3149,
+                  "id": 4262,
                   "challenge_id": 595,
                   "text": "ش",
                   "is_correct": false,
@@ -5698,7 +5671,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3150,
+                  "id": 4263,
                   "challenge_id": 595,
                   "text": "ف",
                   "is_correct": true,
@@ -5706,7 +5679,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3148,
+                  "id": 4264,
                   "challenge_id": 595,
                   "text": "خ",
                   "is_correct": false,
@@ -5714,7 +5687,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3151,
+                  "id": 4265,
                   "challenge_id": 595,
                   "text": "ج",
                   "is_correct": false,
@@ -5738,7 +5711,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3152,
+                  "id": 4278,
                   "challenge_id": 596,
                   "text": "عين",
                   "is_correct": false,
@@ -5746,7 +5719,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3153,
+                  "id": 4279,
                   "challenge_id": 596,
                   "text": "قدم",
                   "is_correct": false,
@@ -5754,7 +5727,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3154,
+                  "id": 4280,
                   "challenge_id": 596,
                   "text": "شعر (شعر الرأس)",
                   "is_correct": true,
@@ -5762,7 +5735,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3155,
+                  "id": 4281,
                   "challenge_id": 596,
                   "text": "يد",
                   "is_correct": false,
@@ -5814,8 +5787,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: خاي (Ϧ ϧ)\n• نطق الحرف بالعربي: خ (Kh)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف خاء \"خ\".\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: Ϧⲏⲧ\n  - القبطي المعرب (نطقها): «خيت»\n  - المعنى بالعربية: قلب\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 599,
@@ -5862,7 +5834,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3159,
+                  "id": 4250,
                   "challenge_id": 601,
                   "text": "ف",
                   "is_correct": false,
@@ -5870,7 +5842,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3156,
+                  "id": 4251,
                   "challenge_id": 601,
                   "text": "هـ",
                   "is_correct": false,
@@ -5878,7 +5850,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3157,
+                  "id": 4252,
                   "challenge_id": 601,
                   "text": "تش",
                   "is_correct": false,
@@ -5886,7 +5858,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3158,
+                  "id": 4253,
                   "challenge_id": 601,
                   "text": "خ",
                   "is_correct": true,
@@ -5910,7 +5882,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3160,
+                  "id": 4294,
                   "challenge_id": 602,
                   "text": "روح",
                   "is_correct": false,
@@ -5918,7 +5890,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3161,
+                  "id": 4295,
                   "challenge_id": 602,
                   "text": "جسد",
                   "is_correct": false,
@@ -5926,7 +5898,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3163,
+                  "id": 4296,
                   "challenge_id": 602,
                   "text": "قلب",
                   "is_correct": true,
@@ -5934,7 +5906,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3162,
+                  "id": 4297,
                   "challenge_id": 602,
                   "text": "عقل",
                   "is_correct": false,
@@ -5986,8 +5958,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: هوري (Ϩ ϩ)\n• نطق الحرف بالعربي: هـ (H)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف هاء \"هـ\".\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϩⲱⲃ\n  - القبطي المعرب (نطقها): «هوب»\n  - المعنى بالعربية: عمل / شيء\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 605,
@@ -6034,7 +6005,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3164,
+                  "id": 4270,
                   "challenge_id": 607,
                   "text": "ج",
                   "is_correct": false,
@@ -6042,7 +6013,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3166,
+                  "id": 4271,
                   "challenge_id": 607,
                   "text": "تـ+ي",
                   "is_correct": false,
@@ -6050,7 +6021,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3167,
+                  "id": 4272,
                   "challenge_id": 607,
                   "text": "خ",
                   "is_correct": false,
@@ -6058,7 +6029,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3165,
+                  "id": 4273,
                   "challenge_id": 607,
                   "text": "هـ",
                   "is_correct": true,
@@ -6082,7 +6053,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3170,
+                  "id": 4282,
                   "challenge_id": 608,
                   "text": "راحة",
                   "is_correct": false,
@@ -6090,7 +6061,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3171,
+                  "id": 4283,
                   "challenge_id": 608,
                   "text": "عمل / شيء",
                   "is_correct": true,
@@ -6098,7 +6069,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3169,
+                  "id": 4284,
                   "challenge_id": 608,
                   "text": "كلام",
                   "is_correct": false,
@@ -6106,7 +6077,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3168,
+                  "id": 4285,
                   "challenge_id": 608,
                   "text": "فكر",
                   "is_correct": false,
@@ -6158,8 +6129,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: جانجا (Ϫ ϫ)\n• نطق الحرف بالعربي: جـ معطشة أو جـ غير معطشة\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له أكثر من نطق (له نطقان (جـ معطشة / جـ))\n• قواعد وحالات النطق:\n  1. يُنطق (جـ معطشة): إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).\n  2. يُنطق (جـ غير معطشة): مثل الجيم المصرية في باقي الحالات.\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϫⲱ\n  - القبطي المعرب (نطقها): «جو»\n  - المعنى بالعربية: رأس / يقول\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 611,
@@ -6206,7 +6176,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3173,
+                  "id": 4254,
                   "challenge_id": 613,
                   "text": "تش",
                   "is_correct": false,
@@ -6214,7 +6184,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3174,
+                  "id": 4255,
                   "challenge_id": 613,
                   "text": "هـ",
                   "is_correct": false,
@@ -6222,7 +6192,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3172,
+                  "id": 4256,
                   "challenge_id": 613,
                   "text": "تـ+ي",
                   "is_correct": false,
@@ -6230,7 +6200,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3175,
+                  "id": 4257,
                   "challenge_id": 613,
                   "text": "ج (معطشة أو غير معطشة)",
                   "is_correct": true,
@@ -6254,7 +6224,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3176,
+                  "id": 4274,
                   "challenge_id": 614,
                   "text": "عين",
                   "is_correct": false,
@@ -6262,7 +6232,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3177,
+                  "id": 4275,
                   "challenge_id": 614,
                   "text": "رأس / يقول",
                   "is_correct": true,
@@ -6270,7 +6240,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3178,
+                  "id": 4276,
                   "challenge_id": 614,
                   "text": "قدم",
                   "is_correct": false,
@@ -6278,7 +6248,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3179,
+                  "id": 4277,
                   "challenge_id": 614,
                   "text": "لسان",
                   "is_correct": false,
@@ -6363,7 +6333,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3256,
+                  "id": 4290,
                   "challenge_id": 654,
                   "text": "Ϧ ϧ (خاي)",
                   "is_correct": false,
@@ -6371,7 +6341,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3257,
+                  "id": 4291,
                   "challenge_id": 654,
                   "text": "Ϥ ϥ (فاي)",
                   "is_correct": false,
@@ -6379,7 +6349,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3258,
+                  "id": 4292,
                   "challenge_id": 654,
                   "text": "Ϣ ϣ (شاي)",
                   "is_correct": true,
@@ -6387,7 +6357,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3259,
+                  "id": 4293,
                   "challenge_id": 654,
                   "text": "Ϩ ϩ (هوري)",
                   "is_correct": false,
@@ -6411,7 +6381,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3261,
+                  "id": 4298,
                   "challenge_id": 655,
                   "text": "عين",
                   "is_correct": false,
@@ -6419,7 +6389,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3263,
+                  "id": 4299,
                   "challenge_id": 655,
                   "text": "يد",
                   "is_correct": false,
@@ -6427,7 +6397,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3260,
+                  "id": 4300,
                   "challenge_id": 655,
                   "text": "شعر (شعر الرأس)",
                   "is_correct": true,
@@ -6435,7 +6405,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3262,
+                  "id": 4301,
                   "challenge_id": 655,
                   "text": "قدم",
                   "is_correct": false,
@@ -6477,7 +6447,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3264,
+                  "id": 4286,
                   "challenge_id": 657,
                   "text": "خ",
                   "is_correct": true,
@@ -6485,7 +6455,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3265,
+                  "id": 4287,
                   "challenge_id": 657,
                   "text": "ف",
                   "is_correct": false,
@@ -6493,7 +6463,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3266,
+                  "id": 4288,
                   "challenge_id": 657,
                   "text": "هـ",
                   "is_correct": false,
@@ -6501,7 +6471,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3267,
+                  "id": 4289,
                   "challenge_id": 657,
                   "text": "تش",
                   "is_correct": false,
@@ -6544,8 +6514,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: تشيما (Ϭ ϭ)\n• نطق الحرف بالعربي: تش (Tsh)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • حرف مصري ديموطيقي أصيل، يُنطق دائماً تاء وشين معاً (تش) مثل (Ch) في كلمة (church).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϭⲟⲓⲥ\n  - القبطي المعرب (نطقها): «تشويس»\n  - المعنى بالعربية: رب / سيد\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 617,
@@ -6592,23 +6561,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3183,
-                  "challenge_id": 619,
-                  "text": "ج",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3180,
-                  "challenge_id": 619,
-                  "text": "ش",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3181,
+                  "id": 4308,
                   "challenge_id": 619,
                   "text": "تش",
                   "is_correct": true,
@@ -6616,7 +6569,23 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3182,
+                  "id": 4306,
+                  "challenge_id": 619,
+                  "text": "ج",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4307,
+                  "challenge_id": 619,
+                  "text": "ش",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4309,
                   "challenge_id": 619,
                   "text": "تـ+ي",
                   "is_correct": false,
@@ -6640,7 +6609,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3184,
+                  "id": 4302,
                   "challenge_id": 620,
                   "text": "رب / سيد",
                   "is_correct": true,
@@ -6648,7 +6617,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3185,
+                  "id": 4303,
                   "challenge_id": 620,
                   "text": "عبد",
                   "is_correct": false,
@@ -6656,7 +6625,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3187,
+                  "id": 4304,
                   "challenge_id": 620,
                   "text": "ملك",
                   "is_correct": false,
@@ -6664,7 +6633,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3186,
+                  "id": 4305,
                   "challenge_id": 620,
                   "text": "خادم",
                   "is_correct": false,
@@ -6717,8 +6686,7 @@
               "pairs": null,
               "is_correct": true,
               "order_index": 1,
-              "options": [],
-              "explanation": "• اسم الحرف: تي (Ϯ ϯ)\n• نطق الحرف بالعربي: تـ + ي (Ti)\n• تصنيف الحرف: حرف ساكن (ليس من الحروف المتحركة)\n• عدد حالات النطق: له نطق واحد ثابت\n• قواعد وحالات النطق:\n  • الحرف الثاني والثلاثون، آخر حروف الأبجدية القبطية. مقطع صوتي ديموطيقي مركب يُنطق تاء متبوعة بكسرة ياء (تـ + ي = Ti).\n────────────────────\n• نبذة عن الكلمة التطبيقية على الحرف:\n  - الكلمة بالقبطية: ϯⲙⲓ\n  - القبطي المعرب (نطقها): «تيمي»\n  - المعنى بالعربية: قرية / بلدة\n  - النطق السماعي: اضغط على زر استماع الكلمة في التطبيق"
+              "options": []
             },
             {
               "id": 623,
@@ -6765,7 +6733,15 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3188,
+                  "id": 4317,
+                  "challenge_id": 625,
+                  "text": "تـ + ي",
+                  "is_correct": true,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4314,
                   "challenge_id": 625,
                   "text": "تش",
                   "is_correct": false,
@@ -6773,7 +6749,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3190,
+                  "id": 4315,
                   "challenge_id": 625,
                   "text": "هـ",
                   "is_correct": false,
@@ -6781,18 +6757,10 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3191,
+                  "id": 4316,
                   "challenge_id": 625,
                   "text": "خ",
                   "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3189,
-                  "challenge_id": 625,
-                  "text": "تـ + ي",
-                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -6813,7 +6781,7 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3194,
+                  "id": 4318,
                   "challenge_id": 626,
                   "text": "الباطل",
                   "is_correct": false,
@@ -6821,7 +6789,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3195,
+                  "id": 4319,
                   "challenge_id": 626,
                   "text": "الحق / العدل",
                   "is_correct": true,
@@ -6829,7 +6797,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3193,
+                  "id": 4320,
                   "challenge_id": 626,
                   "text": "السلام",
                   "is_correct": false,
@@ -6837,7 +6805,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3192,
+                  "id": 4321,
                   "challenge_id": 626,
                   "text": "النعمة",
                   "is_correct": false,
@@ -6916,7 +6884,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3268,
+                  "id": 4338,
                   "challenge_id": 659,
                   "text": "Ϯ ϯ (تي)",
                   "is_correct": false,
@@ -6924,7 +6892,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3269,
+                  "id": 4339,
                   "challenge_id": 659,
                   "text": "Ϭ ϭ (تشيما)",
                   "is_correct": true,
@@ -6948,7 +6916,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3272,
+                  "id": 4334,
                   "challenge_id": 660,
                   "text": "السلام",
                   "is_correct": false,
@@ -6956,7 +6924,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3270,
+                  "id": 4335,
                   "challenge_id": 660,
                   "text": "الباطل",
                   "is_correct": false,
@@ -6964,7 +6932,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3271,
+                  "id": 4336,
                   "challenge_id": 660,
                   "text": "الحق / العدل",
                   "is_correct": true,
@@ -6972,7 +6940,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3273,
+                  "id": 4337,
                   "challenge_id": 660,
                   "text": "النعمة",
                   "is_correct": false,
@@ -7016,7 +6984,15 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 3274,
+                  "id": 4313,
+                  "challenge_id": 662,
+                  "text": "تش",
+                  "is_correct": true,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4310,
                   "challenge_id": 662,
                   "text": "ش",
                   "is_correct": false,
@@ -7024,7 +7000,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3275,
+                  "id": 4311,
                   "challenge_id": 662,
                   "text": "تـ+ي",
                   "is_correct": false,
@@ -7032,18 +7008,10 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3276,
+                  "id": 4312,
                   "challenge_id": 662,
                   "text": "ج",
                   "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 3277,
-                  "challenge_id": 662,
-                  "text": "تش",
-                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -7107,7 +7075,7 @@
               "order_index": 2,
               "options": [
                 {
-                  "id": 3278,
+                  "id": 4326,
                   "challenge_id": 664,
                   "text": "Ⲁ ⲁ (ألفا)",
                   "is_correct": true,
@@ -7115,7 +7083,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3279,
+                  "id": 4327,
                   "challenge_id": 664,
                   "text": "Ⲃ ⲃ (فيدا)",
                   "is_correct": false,
@@ -7123,7 +7091,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3280,
+                  "id": 4328,
                   "challenge_id": 664,
                   "text": "Ⲅ ⲅ (غاما)",
                   "is_correct": false,
@@ -7131,7 +7099,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3281,
+                  "id": 4329,
                   "challenge_id": 664,
                   "text": "Ⲇ ⲇ (دلدا)",
                   "is_correct": false,
@@ -7155,7 +7123,7 @@
               "order_index": 3,
               "options": [
                 {
-                  "id": 3283,
+                  "id": 4322,
                   "challenge_id": 665,
                   "text": "السماء",
                   "is_correct": false,
@@ -7163,7 +7131,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3285,
+                  "id": 4323,
                   "challenge_id": 665,
                   "text": "الكنيسة",
                   "is_correct": false,
@@ -7171,7 +7139,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3282,
+                  "id": 4324,
                   "challenge_id": 665,
                   "text": "الله",
                   "is_correct": true,
@@ -7179,7 +7147,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3284,
+                  "id": 4325,
                   "challenge_id": 665,
                   "text": "الملاك",
                   "is_correct": false,
@@ -7203,7 +7171,7 @@
               "order_index": 4,
               "options": [
                 {
-                  "id": 3286,
+                  "id": 4330,
                   "challenge_id": 666,
                   "text": "٣٢ حرفاً",
                   "is_correct": true,
@@ -7211,7 +7179,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3287,
+                  "id": 4331,
                   "challenge_id": 666,
                   "text": "٢٨ حرفاً",
                   "is_correct": false,
@@ -7219,7 +7187,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3288,
+                  "id": 4332,
                   "challenge_id": 666,
                   "text": "٢٦ حرفاً",
                   "is_correct": false,
@@ -7227,7 +7195,7 @@
                   "audio_url": null
                 },
                 {
-                  "id": 3289,
+                  "id": 4333,
                   "challenge_id": 666,
                   "text": "٣٠ حرفاً",
                   "is_correct": false,

@@ -25,7 +25,7 @@
       soundFile: 'audio_coptic/1alfa.mp3'
     },
     {
-      id: 2, upper: 'Ⲃ', lower: 'ⲃ', pair: 'Ⲃ ⲃ', name: 'فيدا (بيتا)',
+      id: 2, upper: 'Ⲃ', lower: 'ⲃ', pair: 'Ⲃ ⲃ', name: 'ڤيتا (بيتا)',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
       pronunciation: 'ڤ (V) أو ب (B)',
@@ -35,7 +35,7 @@
         'يُنطق <strong>(ڤ / V)</strong>: إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).',
         'يُنطق <strong>(ب / B)</strong>: إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.'
       ],
-      word: { coptic: 'ⲃⲉⲣⲧ', phoneticAr: 'فيرت', meaning: 'وردة' },
+      word: { coptic: 'ⲃⲉⲣⲧ', phoneticAr: 'ڤيرت', meaning: 'وردة' },
       soundFile: 'audio_coptic/2veta.mp3'
     },
     {
@@ -727,7 +727,7 @@
     // 3. إزالة أي أقواس تحتوي على حروف إنجليزية لاتينية، مثل (E) أو (ee) أو (X) أو (Tsh)
     str = str.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').trim();
 
-    // 4. إذا كان النص يحتوي على اسم الحرف ونطقه بين قوسين عربيين مثل: 'فيدا (ف أو ب)'
+    // 4. إذا كان النص يحتوي على اسم الحرف ونطقه بين قوسين عربيين مثل: 'ڤيتا (ڤ أو ب)' أو 'فيدا (ف أو ب)'
     const parenMatch = str.match(/\(([^)]+)\)$/);
     if (parenMatch) {
       const insideParen = parenMatch[1].trim();

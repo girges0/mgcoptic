@@ -154,7 +154,7 @@
 
         let html = '';
         let foundFirstCurrent = false;
-        const waveOffsets = [0, 72, -68, 68, -72, 0];
+        const getWaveOffset = (stepIdx) => (stepIdx === 0 ? 0 : ((stepIdx % 2 === 1) ? 70 : -70));
         const stepGap = 135;
         const startY = 60;
         const cx = 170;
@@ -329,7 +329,7 @@
 
           const points = [];
           for (let i = 0; i < totalSteps; i++) {
-            const x = cx + waveOffsets[i % waveOffsets.length];
+            const x = cx + getWaveOffset(i);
             const y = startY + i * stepGap;
             points.push({ x, y });
           }
@@ -1350,7 +1350,7 @@
         } else if (ch.type === 'match') {
           const pairs = ch.pairs || [
             { left: 'Ⲁ ⲁ', right: 'ألفا' },
-            { left: 'Ⲃ ⲃ', right: 'فيدا' },
+            { left: 'Ⲃ ⲃ', right: 'ڤيتا (بيتا)' },
             { left: 'Ⲉ ⲉ', right: 'إي' },
             { left: 'Ⲇ ⲇ', right: 'دلدا' }
           ];

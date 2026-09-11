@@ -29,7 +29,7 @@ const letters = [
   {
     sort_order: 2,
     glyph: 'Ⲃⲃ',
-    name: 'فيدا (بيتا)',
+    name: 'ڤيتا (بيتا)',
     translit: 'ڤ / ب',
     sound: 'ڤ (V) إذا جاء بعده متحرك، أو ب (B) في باقي الحالات',
     num: '٢',

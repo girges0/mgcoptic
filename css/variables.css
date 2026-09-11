@@ -53,7 +53,7 @@
   --radius-full: 9999px;
 
   /* Typography Families */
-  --font-display: 'Cairo', 'girges', 'Coptic Girges', 'Tajawal', sans-serif;
-  --font-body: 'Tajawal', 'girges', 'Coptic Girges', 'Cairo', sans-serif;
+  --font-display: 'girges', 'Coptic Girges', 'Cairo', 'Tajawal', sans-serif;
+  --font-body: 'girges', 'Coptic Girges', 'Tajawal', 'Cairo', sans-serif;
   --font-coptic: 'girges', 'Coptic Girges', 'Noto Sans Coptic', sans-serif;
 }

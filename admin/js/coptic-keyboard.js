@@ -47,7 +47,7 @@
     { upper: 'Ⲭ', lower: 'ⲭ', name: 'خي' },
     { upper: 'Ⲥ', lower: 'ⲥ', name: 'سيما' },
     { upper: 'Ⲫ', lower: 'ⲫ', name: 'في' },
-    { upper: 'Ⲃ', lower: 'ⲃ', name: 'فيدا' },
+    { upper: 'Ⲃ', lower: 'ⲃ', name: 'ڤيتا (بيتا)' },
     { upper: 'Ⲛ', lower: 'ⲛ', name: 'ني' },
     { upper: 'Ⲙ', lower: 'ⲙ', name: 'مي' },
     { upper: 'Ⲋ', lower: 'ⲋ', name: 'سو' }
