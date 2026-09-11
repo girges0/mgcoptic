@@ -1724,7 +1724,7 @@
             fontUrl: 'assets/fonts/girges.woff',
             text: cleanText,
             passThreshold: 80,
-            minCoverageThreshold: 60,
+            minCoverageThreshold: 80,
             onStrokeEnd: (count) => {
               if (btnCheck && count > 0) btnCheck.disabled = false;
             },
@@ -1777,7 +1777,7 @@
                   toast: true,
                   position: 'top',
                   icon: 'info',
-                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 70%`,
+                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 80%`,
                   showConfirmButton: false,
                   timer: 2500
                 });
@@ -2023,9 +2023,9 @@
               badge.style.color = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#c2410c' : '#a13030');
               badge.style.borderColor = evalRes.passed ? '#2e6b3e' : (evalRes.incomplete ? '#ea580c' : '#a13030');
             }
-            isCorrect = evalRes.passed || ch._tracePassed === true;
+            isCorrect = (evalRes.passed === true);
           } else {
-            isCorrect = ch._tracePassed === true;
+            isCorrect = (ch._tracePassed === true);
           }
         }
 

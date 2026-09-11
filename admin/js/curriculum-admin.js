@@ -416,32 +416,45 @@ const CurriculumAdminSystem = (function(){
       _currentPlayingAudio = null;
     };
 
-    const isAudioUrl = cleanPrimary && (
+    let candidates = [];
+    if(typeof resolveAudioCandidates === 'function'){
+      try { candidates = resolveAudioCandidates(cleanPrimary); } catch(e){}
+      if((!candidates || candidates.length === 0) && fallbackText){
+        try { candidates = resolveAudioCandidates(fallbackText); } catch(e){}
+      }
+    }
+
+    const hasMappedAudio = (typeof LOCAL_AUDIO_MAP !== 'undefined' && (
+      LOCAL_AUDIO_MAP[cleanPrimary] ||
+      LOCAL_AUDIO_MAP[cleanPrimary.toLowerCase()] ||
+      (fallbackText && (LOCAL_AUDIO_MAP[fallbackText] || LOCAL_AUDIO_MAP[fallbackText.toLowerCase()]))
+    ));
+
+    const isAudioUrl = Boolean(
+      hasMappedAudio ||
+      (candidates && candidates.length > 0) ||
       cleanPrimary.startsWith('http://') ||
       cleanPrimary.startsWith('https://') ||
       cleanPrimary.startsWith('data:audio') ||
       cleanPrimary.startsWith('audio/') ||
+      cleanPrimary.startsWith('audio_coptic/') ||
+      cleanPrimary.startsWith('assets/sounds/') ||
       /\.(mp3|wav|ogg|m4a|aac|webm)(\?|$)/i.test(cleanPrimary) ||
       /drive\.google\.com|dropbox\.com|1drv\.ms|docs\.google\.com|supabase\.co/i.test(cleanPrimary)
     );
 
     if(isAudioUrl){
       setButtonPlaying();
-      toast('جارٍ تشغيل التسجيل الصوتي...');
 
-      // 1. استخراج الروابط البديلة (Google Drive، Dropbox، Supabase، روابط مباشرة)
-      let candidates = [];
-      if(typeof resolveAudioCandidates === 'function'){
-        try { candidates = resolveAudioCandidates(cleanPrimary); } catch(e){}
-      }
       if(!candidates || candidates.length === 0){
         candidates = [cleanPrimary];
       }
 
-      // 2. تجربة تشغيل المرشحات بالتتابع
+      // 2. تجربة تشغيل المرشحات بالتتابع (الأولوية القصوى للملفات المحلية دون أي تأخير)
       let playedOk = false;
       for(let i = 0; i < candidates.length; i++){
         const candidateUrl = candidates[i];
+        if(!candidateUrl) continue;
         try {
           const success = await new Promise((resolve) => {
             const audio = new Audio();
@@ -451,12 +464,15 @@ const CurriculumAdminSystem = (function(){
             const handleSuccess = () => {
               if(!settled){
                 settled = true;
+                if(_currentAudioTimeout) clearTimeout(_currentAudioTimeout);
                 resolve(true);
               }
             };
             const handleFail = () => {
               if(!settled){
                 settled = true;
+                if(_currentAudioTimeout) clearTimeout(_currentAudioTimeout);
+                try { audio.pause(); audio.src = ''; } catch(e){}
                 resolve(false);
               }
             };
@@ -481,12 +497,11 @@ const CurriculumAdminSystem = (function(){
                   handleSuccess();
                 }
               }
-            }, 4500);
+            }, 1200);
           });
 
           if(success){
             playedOk = true;
-            toast('تم تشغيل التسجيل الصوتي بنجاح ✓');
             break;
           }
         } catch(err){
@@ -497,11 +512,10 @@ const CurriculumAdminSystem = (function(){
       // 3. في حال فشل الروابط، نلجأ للنطق الصوتي الآلي البديل إن وجد نص
       if(!playedOk){
         if(fallbackText){
-          toast('تعذر تشغيل الملف من الرابط (غير متوفر أو تالف) — تم النطق الآلي البديل', true);
           PreviewSound.speakArabic(fallbackText, () => resetButton());
         } else {
           resetButton();
-          toast('تعذر تشغيل الملف الصوتي — تأكد من صحة الرابط أو ارفع ملف صوت جديد', true);
+          toast('تعذر تشغيل الملف الصوتي — تأكد من وجود الملف محلياً أو صحة الرابط', true);
         }
       }
     } else if(cleanPrimary || fallbackText){
@@ -6334,7 +6348,7 @@ const CurriculumAdminSystem = (function(){
           fontUrl: 'assets/fonts/girges.woff',
           text: cleanTraceText,
           passThreshold: 80,
-          minCoverageThreshold: 35,
+          minCoverageThreshold: 80,
           onSuccess: (score) => {
             if(badgeEl && scoreEl){
               scoreEl.textContent = score;
@@ -6396,7 +6410,7 @@ const CurriculumAdminSystem = (function(){
               if(res.incomplete){
                 toast(res.message || `يرجى إكمال كتابة الحرف كاملاً (${res.coveragePercent}%)`, true);
               } else if(!res.passed){
-                toast(`الدقة ${res.finalScore}% — حاول البقاء داخل المسار لتصل إلى 65%`, true);
+                toast(`الدقة ${res.finalScore}% — حاول البقاء داخل المسار لتصل إلى 80%`, true);
               } else {
                 previewState.isTracePassed = true;
                 previewState.isAnswered = true;

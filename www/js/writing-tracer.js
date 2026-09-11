@@ -1240,10 +1240,10 @@
         this._playSound('retry');
         if (result.reason) {
           message = `${result.reason} — حاول مرة أخرى بدقة أعلى`;
-        } else if (result.coverage < 60) {
-          message = `حاول تاني: فوّت أجزاء من الحرف (التغطية: ${result.coverage}%)`;
-        } else if (result.precision < 60) {
-          message = `حاول تاني: خرجت برة مسار الحرف كتير (الدقة: ${result.precision}%)`;
+        } else if (result.coverage < reqThreshold) {
+          message = `حاول تاني: فوّت أجزاء من الحرف (التغطية: ${result.coverage}% — المطلوب ${reqThreshold}%)`;
+        } else if (result.precision < reqThreshold) {
+          message = `حاول تاني: خرجت برة مسار الحرف كتير (الدقة: ${result.precision}% — المطلوب ${reqThreshold}%)`;
         } else {
           message = `حاول تاني: النتيجة ${result.score}% — المطلوب ${reqThreshold}% للنجاح`;
         }

@@ -252,7 +252,62 @@ class SoundEffects {
     const raw = String(input).trim();
     if(!raw) return [];
 
-    // 1. Google Drive (file/d/ID/view, open?id=ID, uc?id=ID, docs.google.com/...)
+    const audioMap = (typeof LOCAL_AUDIO_MAP !== 'undefined') ? LOCAL_AUDIO_MAP : {
+      '1': '1alfa.mp3', 'alfa': '1alfa.mp3', '1alfa': '1alfa.mp3', 'ألفا': '1alfa.mp3', 'الفا': '1alfa.mp3', 'Ⲁ': '1alfa.mp3', 'ⲁ': '1alfa.mp3',
+      '2': '2veta.mp3', 'veta': '2veta.mp3', '2veta': '2veta.mp3', 'vida': '2veta.mp3', 'فيدا': '2veta.mp3', 'بيتا': '2veta.mp3', 'ڤيتا': '2veta.mp3', 'ڤيتا (بيتا)': '2veta.mp3', 'Ⲃ': '2veta.mp3', 'ⲃ': '2veta.mp3',
+      '3': '3ghamma.mp3', 'ghamma': '3ghamma.mp3', '3ghamma': '3ghamma.mp3', 'غاما': '3ghamma.mp3', 'غما': '3ghamma.mp3', 'Ⲅ': '3ghamma.mp3', 'ⲅ': '3ghamma.mp3',
+      '4': '4delta.mp3', 'delta': '4delta.mp3', '4delta': '4delta.mp3', 'دلدا': '4delta.mp3', 'دلتا': '4delta.mp3', 'Ⲇ': '4delta.mp3', 'ⲇ': '4delta.mp3',
+      '5': '5ei.mp3', 'ei': '5ei.mp3', '5ei': '5ei.mp3', 'إي': '5ei.mp3', 'اي': '5ei.mp3', 'Ⲉ': '5ei.mp3', 'ⲉ': '5ei.mp3',
+      '6': '6sow.mp3', 'sow': '6sow.mp3', '6sow': '6sow.mp3', 'سو': '6sow.mp3', 'Ⲋ': '6sow.mp3', 'ⲋ': '6sow.mp3',
+      '7': '7zeta.mp3', 'zeta': '7zeta.mp3', '7zeta': '7zeta.mp3', 'زيتا': '7zeta.mp3', 'زاتا': '7zeta.mp3', 'Ⲍ': '7zeta.mp3', 'ⲍ': '7zeta.mp3',
+      '8': '8eta.mp3', 'eta': '8eta.mp3', '8eta': '8eta.mp3', 'إيتا': '8eta.mp3', 'ايتا': '8eta.mp3', 'هيتا': '8eta.mp3', 'Ⲏ': '8eta.mp3', 'ⲏ': '8eta.mp3',
+      '9': '9seta.mp3', 'seta': '9seta.mp3', '9seta': '9seta.mp3', 'ثيتا': '9seta.mp3', 'سيتا': '9seta.mp3', 'Ⲑ': '9seta.mp3', 'ⲑ': '9seta.mp3',
+      '10': '10yota.mp3', 'yota': '10yota.mp3', '10yota': '10yota.mp3', 'يوطا': '10yota.mp3', 'يوتا': '10yota.mp3', 'إيوتا': '10yota.mp3', 'Ⲓ': '10yota.mp3', 'ⲓ': '10yota.mp3',
+      '11': '11kapa.mp3', 'kapa': '11kapa.mp3', '11kapa': '11kapa.mp3', 'كابا': '11kapa.mp3', 'كبا': '11kapa.mp3', 'Ⲕ': '11kapa.mp3', 'ⲕ': '11kapa.mp3',
+      '12': '12lavla.mp3', 'lavla': '12lavla.mp3', '12lavla': '12lavla.mp3', 'لافلا': '12lavla.mp3', 'لولا': '12lavla.mp3', 'لابدا': '12lavla.mp3', 'Ⲗ': '12lavla.mp3', 'ⲗ': '12lavla.mp3',
+      '13': '13mi.mp3', 'mi': '13mi.mp3', '13mi': '13mi.mp3', 'مي': '13mi.mp3', 'Ⲙ': '13mi.mp3', 'ⲙ': '13mi.mp3',
+      '14': '14ni.mp3', 'ni': '14ni.mp3', '14ni': '14ni.mp3', 'ني': '14ni.mp3', 'Ⲛ': '14ni.mp3', 'ⲛ': '14ni.mp3',
+      '15': '15axsy.mp3', 'axsy': '15axsy.mp3', '15axsy': '15axsy.mp3', 'إكسي': '15axsy.mp3', 'اكسي': '15axsy.mp3', 'كسي': '15axsy.mp3', 'Ⲝ': '15axsy.mp3', 'ⲝ': '15axsy.mp3',
+      '16': '16oo.mp3', '16oo': '16oo.mp3', 'أو القصيرة': '16oo.mp3', 'او': '16oo.mp3', 'Ⲟ': '16oo.mp3', 'ⲟ': '16oo.mp3',
+      '17': '17pee.mp3', 'pee': '17pee.mp3', '17pee': '17pee.mp3', 'بي': '17pee.mp3', 'Ⲡ': '17pee.mp3', 'ⲡ': '17pee.mp3',
+      '18': '18roo.mp3', 'roo': '18roo.mp3', '18roo': '18roo.mp3', 'رو': '18roo.mp3', 'Ⲣ': '18roo.mp3', 'ⲣ': '18roo.mp3',
+      '19': '19sema.mp3', 'sema': '19sema.mp3', '19sema': '19sema.mp3', 'سيما': '19sema.mp3', 'Ⲥ': '19sema.mp3', 'ⲥ': '19sema.mp3',
+      '20': '20tav.mp3', 'tav': '20tav.mp3', '20tav': '20tav.mp3', 'تاف': '20tav.mp3', 'Ⲧ': '20tav.mp3', 'ⲧ': '20tav.mp3',
+      '21': '21epselon.mp3', 'epselon': '21epselon.mp3', '21epselon': '21epselon.mp3', 'إبسيلون': '21epselon.mp3', 'ابسلون': '21epselon.mp3', 'Ⲩ': '21epselon.mp3', 'ⲩ': '21epselon.mp3',
+      '22': '22fi.mp3', 'fi': '22fi.mp3', '22fi': '22fi.mp3', 'في': '22fi.mp3', 'Ⲫ': '22fi.mp3', 'ⲫ': '22fi.mp3',
+      '23': '23ki.mp3', 'ki': '23ki.mp3', '23ki': '23ki.mp3', 'خي': '23ki.mp3', 'كي': '23ki.mp3', 'Ⲭ': '23ki.mp3', 'ⲭ': '23ki.mp3',
+      '24': '24psi.mp3', 'psi': '24psi.mp3', '24psi': '24psi.mp3', 'إبسي': '24psi.mp3', 'بسي': '24psi.mp3', 'Ⲯ': '24psi.mp3', 'ⲯ': '24psi.mp3',
+      '25': '25oo.mp3', '25oo': '25oo.mp3', 'أوميغا': '25oo.mp3', 'اوميجا': '25oo.mp3', 'أو الطويلة': '25oo.mp3', 'Ⲱ': '25oo.mp3', 'ⲱ': '25oo.mp3',
+      '26': '26shay.mp3', 'shay': '26shay.mp3', '26shay': '26shay.mp3', 'شاي': '26shay.mp3', 'Ϣ': '26shay.mp3', 'ϣ': '26shay.mp3',
+      '27': '27fay.mp3', 'fay': '27fay.mp3', '27fay': '27fay.mp3', 'فاي': '27fay.mp3', 'Ϥ': '27fay.mp3', 'ϥ': '27fay.mp3',
+      '28': '28khay.mp3', 'khay': '28khay.mp3', '28khay': '28khay.mp3', 'خاي': '28khay.mp3', 'Ϧ': '28khay.mp3', 'ϧ': '28khay.mp3',
+      '29': '29hory.mp3', 'hory': '29hory.mp3', '29hory': '29hory.mp3', 'هوري': '29hory.mp3', 'Ϩ': '29hory.mp3', 'ϩ': '29hory.mp3',
+      '30': '30ganga.mp3', 'ganga': '30ganga.mp3', '30ganga': '30ganga.mp3', 'جانجا': '30ganga.mp3', 'Ϫ': '30ganga.mp3', 'ϫ': '30ganga.mp3',
+      '31': '31chema.mp3', 'chema': '31chema.mp3', '31chema': '31chema.mp3', 'تشيما': '31chema.mp3', 'Ϭ': '31chema.mp3', 'ϭ': '31chema.mp3',
+      '32': '32tee.mp3', 'tee': '32tee.mp3', '32tee': '32tee.mp3', 'تي': '32tee.mp3', 'Ϯ': '32tee.mp3', 'ϯ': '32tee.mp3',
+      'chest': 'chest.mp3', 'correct': 'correct.mp3', 'victory': 'victory.mp3', 'wrong': 'wrong.mp3'
+    };
+
+    const rawClean = raw.toLowerCase().replace(/\.mp3$/i, '');
+    const mapped = audioMap[raw] || audioMap[rawClean];
+    const filename = mapped || raw.split('/').pop().split('\\').pop();
+
+    // 1. الأولوية القصوى للملفات الصوتية المحلية المباشرة
+    if(mapped || /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(raw)){
+      return Array.from(new Set([
+        `audio_coptic/${filename}`,
+        `assets/sounds/${filename}`,
+        `../audio_coptic/${filename}`,
+        `../assets/sounds/${filename}`,
+        `/${filename}`,
+        `/${raw}`,
+        raw,
+        `../${raw}`,
+        `audio/${filename}`
+      ]));
+    }
+
+    // 2. Google Drive
     const gdMatch = raw.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]*&)*id=)|docs\.google\.com\/file\/d\/)([a-zA-Z0-9_-]{20,})/i);
     if(gdMatch && gdMatch[1]){
       const id = gdMatch[1];
@@ -266,27 +321,25 @@ class SoundEffects {
       ];
     }
 
-    // 2. Dropbox (dl=0 -> raw=1 or dl=1)
+    // 3. Dropbox
     if(/dropbox\.com/i.test(raw)){
       let u = raw.replace(/\?dl=0/i, '').replace(/&dl=0/i, '');
       u = u.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
       return [u, raw.includes('?') ? `${raw}&raw=1` : `${raw}?raw=1`, raw];
     }
 
-    // 3. Local relative audio files
-    if(!/^https?:\/\/|^data:audio/i.test(raw) && /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(raw)){
-      const filename = raw.split('/').pop().split('\\').pop();
-      return Array.from(new Set([
-        raw,
-        `audio_coptic/${filename}`,
-        `assets/sounds/${filename}`,
-        `../audio_coptic/${filename}`,
-        `../assets/sounds/${filename}`,
-        `./${raw}`
-      ]));
+    // 4. ملفات أخرى أو روابط كاملة
+    if(/^https?:\/\/|^data:audio/i.test(raw)){
+      return [raw];
     }
 
-    return [raw];
+    return [
+      `audio_coptic/${filename}`,
+      `assets/sounds/${filename}`,
+      `../audio_coptic/${filename}`,
+      `../assets/sounds/${filename}`,
+      raw
+    ];
   }
 
   async playAudio(urlOrText){
@@ -334,7 +387,7 @@ class SoundEffects {
       const candidateUrl = candidates[i];
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 7000);
+        const timeoutId = setTimeout(() => controller.abort(), 1200);
         const resp = await fetch(candidateUrl, { signal: controller.signal });
         clearTimeout(timeoutId);
 
@@ -391,7 +444,7 @@ class SoundEffects {
             done = true;
             resolve(false);
           }
-        }, 3500);
+        }, 1200);
       });
 
       if(ok) return true;
@@ -403,7 +456,7 @@ class SoundEffects {
   async playChallengeAudio(audioUrl, audioText) {
     this.unlock();
     const cleanUrl = String(audioUrl || '').trim();
-    if (cleanUrl && (cleanUrl.startsWith('http') || cleanUrl.startsWith('data:') || cleanUrl.includes('.'))) {
+    if (cleanUrl) {
       try {
         const ok = await this.playAudio(cleanUrl);
         if (ok) return true;
@@ -411,6 +464,10 @@ class SoundEffects {
     }
     const textToSpeak = String(audioText || '').trim();
     if (textToSpeak) {
+      try {
+        const ok = await this.playAudio(textToSpeak);
+        if (ok) return true;
+      } catch(e){}
       return this.speakArabic(textToSpeak);
     }
     return false;

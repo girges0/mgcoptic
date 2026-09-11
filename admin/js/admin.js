@@ -23,14 +23,71 @@ function escapeHtml(str) {
 }
 window.escapeHtml = escapeHtml;
 
-/* ============ دالة معالجة روابط الصوت (Google Drive / Dropbox / OneDrive / Supabase / Direct) ============ */
+/* ============ خريطة الأصوات المحلية للحروف القبطية والمؤثرات (تشغيل فوري دون تأخير أو تحميل) ============ */
+const LOCAL_AUDIO_MAP = {
+  '1': '1alfa.mp3', 'alfa': '1alfa.mp3', '1alfa': '1alfa.mp3', 'ألفا': '1alfa.mp3', 'الفا': '1alfa.mp3', 'Ⲁ': '1alfa.mp3', 'ⲁ': '1alfa.mp3',
+  '2': '2veta.mp3', 'veta': '2veta.mp3', '2veta': '2veta.mp3', 'vida': '2veta.mp3', 'فيدا': '2veta.mp3', 'بيتا': '2veta.mp3', 'ڤيتا': '2veta.mp3', 'ڤيتا (بيتا)': '2veta.mp3', 'Ⲃ': '2veta.mp3', 'ⲃ': '2veta.mp3',
+  '3': '3ghamma.mp3', 'ghamma': '3ghamma.mp3', '3ghamma': '3ghamma.mp3', 'غاما': '3ghamma.mp3', 'غما': '3ghamma.mp3', 'Ⲅ': '3ghamma.mp3', 'ⲅ': '3ghamma.mp3',
+  '4': '4delta.mp3', 'delta': '4delta.mp3', '4delta': '4delta.mp3', 'دلدا': '4delta.mp3', 'دلتا': '4delta.mp3', 'Ⲇ': '4delta.mp3', 'ⲇ': '4delta.mp3',
+  '5': '5ei.mp3', 'ei': '5ei.mp3', '5ei': '5ei.mp3', 'إي': '5ei.mp3', 'اي': '5ei.mp3', 'Ⲉ': '5ei.mp3', 'ⲉ': '5ei.mp3',
+  '6': '6sow.mp3', 'sow': '6sow.mp3', '6sow': '6sow.mp3', 'سو': '6sow.mp3', 'Ⲋ': '6sow.mp3', 'ⲋ': '6sow.mp3',
+  '7': '7zeta.mp3', 'zeta': '7zeta.mp3', '7zeta': '7zeta.mp3', 'زيتا': '7zeta.mp3', 'زاتا': '7zeta.mp3', 'Ⲍ': '7zeta.mp3', 'ⲍ': '7zeta.mp3',
+  '8': '8eta.mp3', 'eta': '8eta.mp3', '8eta': '8eta.mp3', 'إيتا': '8eta.mp3', 'ايتا': '8eta.mp3', 'هيتا': '8eta.mp3', 'Ⲏ': '8eta.mp3', 'ⲏ': '8eta.mp3',
+  '9': '9seta.mp3', 'seta': '9seta.mp3', '9seta': '9seta.mp3', 'ثيتا': '9seta.mp3', 'سيتا': '9seta.mp3', 'Ⲑ': '9seta.mp3', 'ⲑ': '9seta.mp3',
+  '10': '10yota.mp3', 'yota': '10yota.mp3', '10yota': '10yota.mp3', 'يوطا': '10yota.mp3', 'يوتا': '10yota.mp3', 'إيوتا': '10yota.mp3', 'Ⲓ': '10yota.mp3', 'ⲓ': '10yota.mp3',
+  '11': '11kapa.mp3', 'kapa': '11kapa.mp3', '11kapa': '11kapa.mp3', 'كابا': '11kapa.mp3', 'كبا': '11kapa.mp3', 'Ⲕ': '11kapa.mp3', 'ⲕ': '11kapa.mp3',
+  '12': '12lavla.mp3', 'lavla': '12lavla.mp3', '12lavla': '12lavla.mp3', 'لافلا': '12lavla.mp3', 'لولا': '12lavla.mp3', 'لابدا': '12lavla.mp3', 'Ⲗ': '12lavla.mp3', 'ⲗ': '12lavla.mp3',
+  '13': '13mi.mp3', 'mi': '13mi.mp3', '13mi': '13mi.mp3', 'مي': '13mi.mp3', 'Ⲙ': '13mi.mp3', 'ⲙ': '13mi.mp3',
+  '14': '14ni.mp3', 'ni': '14ni.mp3', '14ni': '14ni.mp3', 'ني': '14ni.mp3', 'Ⲛ': '14ni.mp3', 'ⲛ': '14ni.mp3',
+  '15': '15axsy.mp3', 'axsy': '15axsy.mp3', '15axsy': '15axsy.mp3', 'إكسي': '15axsy.mp3', 'اكسي': '15axsy.mp3', 'كسي': '15axsy.mp3', 'Ⲝ': '15axsy.mp3', 'ⲝ': '15axsy.mp3',
+  '16': '16oo.mp3', '16oo': '16oo.mp3', 'أو القصيرة': '16oo.mp3', 'او': '16oo.mp3', 'Ⲟ': '16oo.mp3', 'ⲟ': '16oo.mp3',
+  '17': '17pee.mp3', 'pee': '17pee.mp3', '17pee': '17pee.mp3', 'بي': '17pee.mp3', 'Ⲡ': '17pee.mp3', 'ⲡ': '17pee.mp3',
+  '18': '18roo.mp3', 'roo': '18roo.mp3', '18roo': '18roo.mp3', 'رو': '18roo.mp3', 'Ⲣ': '18roo.mp3', 'ⲣ': '18roo.mp3',
+  '19': '19sema.mp3', 'sema': '19sema.mp3', '19sema': '19sema.mp3', 'سيما': '19sema.mp3', 'Ⲥ': '19sema.mp3', 'ⲥ': '19sema.mp3',
+  '20': '20tav.mp3', 'tav': '20tav.mp3', '20tav': '20tav.mp3', 'تاف': '20tav.mp3', 'Ⲧ': '20tav.mp3', 'ⲧ': '20tav.mp3',
+  '21': '21epselon.mp3', 'epselon': '21epselon.mp3', '21epselon': '21epselon.mp3', 'إبسيلون': '21epselon.mp3', 'ابسلون': '21epselon.mp3', 'Ⲩ': '21epselon.mp3', 'ⲩ': '21epselon.mp3',
+  '22': '22fi.mp3', 'fi': '22fi.mp3', '22fi': '22fi.mp3', 'في': '22fi.mp3', 'Ⲫ': '22fi.mp3', 'ⲫ': '22fi.mp3',
+  '23': '23ki.mp3', 'ki': '23ki.mp3', '23ki': '23ki.mp3', 'خي': '23ki.mp3', 'كي': '23ki.mp3', 'Ⲭ': '23ki.mp3', 'ⲭ': '23ki.mp3',
+  '24': '24psi.mp3', 'psi': '24psi.mp3', '24psi': '24psi.mp3', 'إبسي': '24psi.mp3', 'بسي': '24psi.mp3', 'Ⲯ': '24psi.mp3', 'ⲯ': '24psi.mp3',
+  '25': '25oo.mp3', '25oo': '25oo.mp3', 'أوميغا': '25oo.mp3', 'اوميجا': '25oo.mp3', 'أو الطويلة': '25oo.mp3', 'Ⲱ': '25oo.mp3', 'ⲱ': '25oo.mp3',
+  '26': '26shay.mp3', 'shay': '26shay.mp3', '26shay': '26shay.mp3', 'شاي': '26shay.mp3', 'Ϣ': '26shay.mp3', 'ϣ': '26shay.mp3',
+  '27': '27fay.mp3', 'fay': '27fay.mp3', '27fay': '27fay.mp3', 'فاي': '27fay.mp3', 'Ϥ': '27fay.mp3', 'ϥ': '27fay.mp3',
+  '28': '28khay.mp3', 'khay': '28khay.mp3', '28khay': '28khay.mp3', 'خاي': '28khay.mp3', 'Ϧ': '28khay.mp3', 'ϧ': '28khay.mp3',
+  '29': '29hory.mp3', 'hory': '29hory.mp3', '29hory': '29hory.mp3', 'هوري': '29hory.mp3', 'Ϩ': '29hory.mp3', 'ϩ': '29hory.mp3',
+  '30': '30ganga.mp3', 'ganga': '30ganga.mp3', '30ganga': '30ganga.mp3', 'جانجا': '30ganga.mp3', 'Ϫ': '30ganga.mp3', 'ϫ': '30ganga.mp3',
+  '31': '31chema.mp3', 'chema': '31chema.mp3', '31chema': '31chema.mp3', 'تشيما': '31chema.mp3', 'Ϭ': '31chema.mp3', 'ϭ': '31chema.mp3',
+  '32': '32tee.mp3', 'tee': '32tee.mp3', '32tee': '32tee.mp3', 'تي': '32tee.mp3', 'Ϯ': '32tee.mp3', 'ϯ': '32tee.mp3',
+  'chest': 'chest.mp3', 'correct': 'correct.mp3', 'victory': 'victory.mp3', 'wrong': 'wrong.mp3'
+};
+
+/* ============ دالة معالجة روابط الصوت مع الأولوية القصوى للملفات المحلية ============ */
 function resolveAudioCandidates(input){
   if(!input) return [];
-  const url = String(input).trim();
-  if(!url) return [];
+  const raw = String(input).trim();
+  if(!raw) return [];
 
-  // Google Drive: استخراج معرف الملف وتوليد جميع مسارات البث المباشر الممكنة
-  const gdMatch = url.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]*&)*id=)|docs\.google\.com\/file\/d\/)([a-zA-Z0-9_-]{20,})/i);
+  // 1. إذا كان المدخل اسماً أو رمزاً للحرف القبطي أو ملفاً معروفاً محلياً
+  const rawClean = raw.toLowerCase().replace(/\.mp3$/i, '');
+  const mapped = LOCAL_AUDIO_MAP[raw] || LOCAL_AUDIO_MAP[rawClean];
+  const filename = mapped || raw.split('/').pop().split('\\').pop();
+
+  // 2. إذا كان ملفاً صوتياً (أو تم تعيينه محلياً)، توليد جميع المسارات المحلية المباشرة أولاً
+  if(mapped || /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(raw)){
+    return Array.from(new Set([
+      `audio_coptic/${filename}`,
+      `assets/sounds/${filename}`,
+      `../audio_coptic/${filename}`,
+      `../assets/sounds/${filename}`,
+      `/${filename}`,
+      `/${raw}`,
+      raw,
+      `../${raw}`,
+      `audio/${filename}`
+    ]));
+  }
+
+  // 3. Google Drive
+  const gdMatch = raw.match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]*&)*id=)|docs\.google\.com\/file\/d\/)([a-zA-Z0-9_-]{20,})/i);
   if(gdMatch && gdMatch[1]){
     const id = gdMatch[1];
     return [
@@ -38,38 +95,38 @@ function resolveAudioCandidates(input){
       `https://drive.usercontent.google.com/download?id=${id}&export=download&authuser=0`,
       `https://lh3.googleusercontent.com/d/${id}`,
       `https://drive.google.com/uc?id=${id}&export=download`,
-      url
+      raw
     ];
   }
 
-  // Dropbox: تحويل رابط المعاينة إلى رابط مباشر
-  if(/dropbox\.com/i.test(url)){
-    let direct = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace(/[?&]dl=[01]/i, '').replace(/[?&]raw=1/i, '');
+  // 4. Dropbox
+  if(/dropbox\.com/i.test(raw)){
+    let direct = raw.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace(/[?&]dl=[01]/i, '').replace(/[?&]raw=1/i, '');
     direct += (direct.includes('?') ? '&' : '?') + 'raw=1';
-    return [direct, url];
+    return [direct, raw];
   }
 
-  // OneDrive
-  if(/1drv\.ms|onedrive\.live\.com/i.test(url)){
-    let direct = url;
+  // 5. OneDrive
+  if(/1drv\.ms|onedrive\.live\.com/i.test(raw)){
+    let direct = raw;
     if(!direct.includes('download=1')){
       direct += (direct.includes('?') ? '&' : '?') + 'download=1';
     }
-    return [direct, url];
+    return [direct, raw];
   }
 
-  // روابط كاملة مباشرة (مثل Supabase Storage أو CDN أو سيرفر صوتي) أو Data URI
-  if(/^https?:\/\/|^data:audio/i.test(url)){
-    return [url];
+  // 6. روابط كاملة مباشرة (مثل Supabase Storage أو Data URI)
+  if(/^https?:\/\/|^data:audio/i.test(raw)){
+    return [raw];
   }
 
-  // مسارات صوتية محلية مباشرة
-  if(url.startsWith('assets/') || url.startsWith('audio_coptic/') || url.startsWith('audio/')){
-    return ['../' + url, url, 'audio/' + url];
-  }
-
-  // ملف صوت محلي داخل assets/sounds/
-  return ['../assets/sounds/' + url, 'assets/sounds/' + url, 'audio/' + url, url];
+  return [
+    `audio_coptic/${filename}`,
+    `assets/sounds/${filename}`,
+    `../audio_coptic/${filename}`,
+    `../assets/sounds/${filename}`,
+    raw
+  ];
 }
 
 function resolveAudioUrl(input){
@@ -90,6 +147,100 @@ function stopDashboardAudio(){
     currentDashboardPlayBtn.style.color = 'var(--ok)';
     currentDashboardPlayBtn.style.borderColor = 'var(--ok)';
     currentDashboardPlayBtn = null;
+  }
+}
+
+async function playDashboardAudioWithCandidates(rawUrl, playBtn, fallbackText = ''){
+  const clean = String(rawUrl || '').trim();
+  const fallback = String(fallbackText || '').trim();
+
+  if(!clean && !fallback){
+    toast('لا يوجد رابط صوتي أو نص لتشغيله', true);
+    return;
+  }
+
+  if(currentDashboardPlayBtn === playBtn && currentDashboardAudio){
+    stopDashboardAudio();
+    return;
+  }
+
+  stopDashboardAudio();
+
+  playBtn.innerHTML = DASH_ICONS.stop + ' إيقاف';
+  playBtn.style.color = 'var(--madder)';
+  playBtn.style.borderColor = 'var(--madder)';
+  currentDashboardPlayBtn = playBtn;
+
+  let candidates = resolveAudioCandidates(clean);
+  if((!candidates || candidates.length === 0) && fallback){
+    candidates = resolveAudioCandidates(fallback);
+  }
+  if(!candidates || candidates.length === 0){
+    candidates = [clean || fallback];
+  }
+
+  let played = false;
+  for(const cand of candidates){
+    if(!cand) continue;
+    try {
+      const ok = await new Promise((resolve) => {
+        const audio = new Audio();
+        currentDashboardAudio = audio;
+        let settled = false;
+
+        const onPlaying = () => {
+          if(!settled){
+            settled = true;
+            resolve(true);
+          }
+        };
+        const onFail = () => {
+          if(!settled){
+            settled = true;
+            try { audio.pause(); audio.src = ''; } catch(e){}
+            resolve(false);
+          }
+        };
+
+        audio.addEventListener('playing', onPlaying, { once: true });
+        audio.addEventListener('error', onFail, { once: true });
+        audio.addEventListener('ended', () => {
+          stopDashboardAudio();
+        }, { once: true });
+
+        audio.src = cand;
+        const p = audio.play();
+        if(p !== undefined){
+          p.then(onPlaying).catch(onFail);
+        }
+
+        setTimeout(() => {
+          if(!settled){
+            if(audio.paused && audio.readyState < 2){
+              onFail();
+            } else {
+              onPlaying();
+            }
+          }
+        }, 1200);
+      });
+
+      if(ok){
+        played = true;
+        break;
+      }
+    } catch(e){}
+  }
+
+  if(!played){
+    stopDashboardAudio();
+    if(fallback && 'speechSynthesis' in window){
+      const u = new SpeechSynthesisUtterance(fallback);
+      u.lang = 'ar-SA';
+      window.speechSynthesis.speak(u);
+    } else {
+      toast('تعذّر تشغيل الملف — تأكد من وجود الملف محلياً أو صحة الرابط', true);
+    }
   }
 }
 
@@ -619,33 +770,8 @@ function wireLetterAudioUpload(tr){
   if(playBtn){
     playBtn.addEventListener('click', ()=>{
       const rawUrl = textInput.value.trim();
-      if(!rawUrl){ toast('لا يوجد رابط صوتي لتشغيله', true); return; }
-
-      if(currentDashboardPlayBtn === playBtn && currentDashboardAudio){
-        stopDashboardAudio();
-        return;
-      }
-
-      stopDashboardAudio();
-      const resolved = resolveAudioUrl(rawUrl);
-      playBtn.innerHTML = DASH_ICONS.stop + ' إيقاف';
-      playBtn.style.color = 'var(--madder)';
-      playBtn.style.borderColor = 'var(--madder)';
-      currentDashboardPlayBtn = playBtn;
-
-      const audio = new Audio(resolved);
-      currentDashboardAudio = audio;
-
-      audio.addEventListener('ended', stopDashboardAudio);
-      audio.play().catch(err=>{
-        stopDashboardAudio();
-        console.warn('Audio playback error:', err);
-        if(/drive\.google\.com/i.test(rawUrl)){
-          toast('تعذّر تشغيل الرابط — تأكد أن مشاركة ملف Google Drive مضبوطة على: "أي شخص لديه الرابط (Anyone with the link)"', true);
-        } else {
-          toast('تعذّر تشغيل الملف — تأكد من صحة الرابط أو الملف', true);
-        }
-      });
+      const fallbackName = tr.querySelector('.f-name')?.value || tr.querySelector('.f-glyph')?.value || '';
+      playDashboardAudioWithCandidates(rawUrl, playBtn, fallbackName);
     });
   }
 
@@ -765,33 +891,8 @@ function wireVocabAudioUpload(tr){
   if(playBtn){
     playBtn.addEventListener('click', ()=>{
       const rawUrl = textInput.value.trim();
-      if(!rawUrl){ toast('لا يوجد رابط صوتي لتشغيله', true); return; }
-
-      if(currentDashboardPlayBtn === playBtn && currentDashboardAudio){
-        stopDashboardAudio();
-        return;
-      }
-
-      stopDashboardAudio();
-      const resolved = resolveAudioUrl(rawUrl);
-      playBtn.innerHTML = DASH_ICONS.stop + ' إيقاف';
-      playBtn.style.color = 'var(--madder)';
-      playBtn.style.borderColor = 'var(--madder)';
-      currentDashboardPlayBtn = playBtn;
-
-      const audio = new Audio(resolved);
-      currentDashboardAudio = audio;
-
-      audio.addEventListener('ended', stopDashboardAudio);
-      audio.play().catch(err=>{
-        stopDashboardAudio();
-        console.warn('Audio playback error:', err);
-        if(/drive\.google\.com/i.test(rawUrl)){
-          toast('تعذّر تشغيل الرابط — تأكد أن مشاركة ملف Google Drive مضبوطة على: "أي شخص لديه الرابط (Anyone with the link)"', true);
-        } else {
-          toast('تعذّر تشغيل الملف — تأكد من صحة الرابط أو الملف', true);
-        }
-      });
+      const fallbackMeaning = tr.querySelector('.f-translit')?.value || tr.querySelector('.f-meaning')?.value || tr.querySelector('.f-coptic')?.value || '';
+      playDashboardAudioWithCandidates(rawUrl, playBtn, fallbackMeaning);
     });
   }
 
@@ -1990,7 +2091,7 @@ function previewWritingExercise(id, text, desc) {
     fontUrl: 'assets/fonts/girges.woff',
     text: cleanText,
     passThreshold: 80,
-    minCoverageThreshold: 35,
+    minCoverageThreshold: 80,
     onStrokeEnd: (strokeCount) => {
       // تفعيل زر «تحقق» السفلي بمجرد قيام المستخدم بالرسم
       if (checkBtn && strokeCount > 0) {
@@ -2068,7 +2169,7 @@ function previewWritingExercise(id, text, desc) {
       if (evalRes.incomplete) {
         toast(evalRes.message || `يرجى إكمال كتابة كامل الحرف (${evalRes.coveragePercent}%)`, true);
       } else if (!evalRes.passed) {
-        toast(`الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 70%`, true);
+        toast(`الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 80%`, true);
       } else {
         toast(`ممتاز! الدقة: ${evalRes.finalScore}% — تتبع متقن وناجح ✓`);
         if (checkBtn) {
