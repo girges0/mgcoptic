@@ -273,6 +273,19 @@ class SoundEffects {
       return [u, raw.includes('?') ? `${raw}&raw=1` : `${raw}?raw=1`, raw];
     }
 
+    // 3. Local relative audio files
+    if(!/^https?:\/\/|^data:audio/i.test(raw) && /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(raw)){
+      const filename = raw.split('/').pop().split('\\').pop();
+      return Array.from(new Set([
+        raw,
+        `audio_coptic/${filename}`,
+        `assets/sounds/${filename}`,
+        `../audio_coptic/${filename}`,
+        `../assets/sounds/${filename}`,
+        `./${raw}`
+      ]));
+    }
+
     return [raw];
   }
 
@@ -707,7 +720,7 @@ class GamificationService {
     return {
       max_hearts: 5,
       heart_cost_xp: 15,
-      default_challenge_xp: 10,
+      default_challenge_xp: 1,
       default_lesson_xp: 25,
       default_level_xp: 140
     };

@@ -21,8 +21,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+Coptic&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
   <!-- Admin Modular CSS Styles -->
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/variables.css?v=3.0.0">
+  <link rel="stylesheet" href="css/admin.css?v=3.0.0">
 
   <!-- External Vendor Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -31,15 +31,15 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
   <!-- Core Services Configuration -->
-  <script src="js/supabase.js"></script>
-  <script src="js/swal-theme.js"></script>
-  <script src="js/gamification-service.js"></script>
+  <script src="js/supabase.js?v=3.0.0"></script>
+  <script src="js/swal-theme.js?v=3.0.0"></script>
+  <script src="js/gamification-service.js?v=3.0.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/dist/opentype.min.js"></script>
-  <script src="js/writing-tracer.js?v=2.8"></script>
-  <link rel="stylesheet" href="css/coptic-keyboard.css">
-  <script src="js/coptic-keyboard.js"></script>
-  <link rel="stylesheet" href="css/preloader.css">
-  <script src="js/preloader.js"></script>
+  <script src="js/writing-tracer.js?v=3.0.0"></script>
+  <link rel="stylesheet" href="css/coptic-keyboard.css?v=3.0.0">
+  <script src="js/coptic-keyboard.js?v=3.0.0"></script>
+  <link rel="stylesheet" href="css/preloader.css?v=3.0.0">
+  <script src="js/preloader.js?v=3.0.0"></script>
 </head>
 <body>
 
@@ -348,10 +348,6 @@
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 <span>تصدير JSON</span>
               </button>
-              <button type="button" class="curriculum-btn" style="background:#FFF1F2; border:1.5px solid #FDA4AF; color:#BE123C; font-weight:700;" id="btn-reset-curriculum-all" onclick="CurriculumAdminSystem.resetAllCurriculumData()" title="تصفير جميع بيانات مسار التعلم وحذف الوحدات والتمارين القديمة">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                <span>تصفير مسار التعلم</span>
-              </button>
               <button type="button" class="curriculum-btn curriculum-btn-icon" id="btn-curriculum-undo" title="تراجع عن آخر خطوة (Ctrl+Z)" onclick="CurriculumAdminSystem.undo()" disabled>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
               </button>
@@ -363,22 +359,34 @@
         </div>
 
         <!-- ============ SUMMARY STATS BAR (PERSISTENT & DYNAMIC) ============ -->
-        <div class="curriculum-stats-grid" style="grid-template-columns:repeat(4,1fr) !important; margin-bottom:20px;">
-          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
-            <div class="curriculum-stat-val" id="stat-levels-count">0</div>
+        <div class="curriculum-stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)) !important; gap:12px; margin-bottom:20px;">
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
+            <div class="curriculum-stat-val" id="stat-levels-count">1</div>
             <div class="curriculum-stat-lbl" id="stat-levels-label">المستويات</div>
           </div>
-          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
-            <div class="curriculum-stat-val" id="stat-units-count">0</div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
+            <div class="curriculum-stat-val" id="stat-units-count">7</div>
             <div class="curriculum-stat-lbl">الوحدات</div>
           </div>
-          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
-            <div class="curriculum-stat-val" id="stat-lessons-count">0</div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
+            <div class="curriculum-stat-val" id="stat-lessons-count">40</div>
             <div class="curriculum-stat-lbl">الدروس</div>
           </div>
-          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 14px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
-            <div class="curriculum-stat-val" id="stat-challenges-count">0</div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFFFF;border:1px solid #E7DCC8;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(36,27,32,0.04);">
+            <div class="curriculum-stat-val" id="stat-challenges-count">232</div>
             <div class="curriculum-stat-lbl">التمارين</div>
+          </div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFFDF5;border:1px solid #F3E2B8;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(212,175,55,0.1);">
+            <div class="curriculum-stat-val" id="stat-chests-count" style="color:#D4AF37;">7</div>
+            <div class="curriculum-stat-lbl" style="color:#8C6A1A; font-weight:800;">صناديق الهدايا 🎁</div>
+          </div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F0F8FF;border:1px solid #BAE3FF;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(0,119,204,0.06);">
+            <div class="curriculum-stat-val" id="stat-curriculum-xp-count" style="color:#0077CC; font-size:1.35rem;">310 XP</div>
+            <div class="curriculum-stat-lbl" style="color:#00558A; font-weight:800;">إجمالي الـ XP ⚡</div>
+          </div>
+          <div class="curriculum-stat-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FFF5F5;border:1px solid #FFCDD2;border-radius:12px;padding:12px 10px;text-align:center;box-shadow:0 2px 8px rgba(225,29,72,0.06);">
+            <div class="curriculum-stat-val" id="stat-curriculum-hearts-count" style="color:#E11D48; font-size:1.35rem;">+9 ❤️</div>
+            <div class="curriculum-stat-lbl" style="color:#9F1239; font-weight:800;">قلوب المكافآت</div>
           </div>
         </div>
 
@@ -839,6 +847,40 @@
                     </div>
                   </div>
                   <input type="number" id="chest-input-hearts" value="1" min="0" max="10" step="1" oninput="CurriculumAdminSystem.updateChestModalPreview()" placeholder="عدد القلوب (0 لإلغاء القلوب)">
+                </div>
+
+                <!-- Badge Reward Section -->
+                <div class="curriculum-field" style="background:#FFFDF5; border:1px solid #F3E2B8; border-radius:10px; padding:12px; margin-bottom:0;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                    <label style="font-weight:800; color:#8C6A1A; margin:0; display:flex; align-items:center; gap:6px;">
+                      <span>🏆 وسام تكريم أو شارة تخرج خاصة:</span>
+                    </label>
+                    <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-weight:700; font-size:0.85rem; color:#4A0D24;">
+                      <input type="checkbox" id="chest-input-has-badge" onchange="CurriculumAdminSystem.onChestBadgeToggle(this.checked)">
+                      <span>تفعيل الوسام مع الصندوق</span>
+                    </label>
+                  </div>
+                  <div id="chest-badge-fields-wrap" style="display:none; margin-top:8px;">
+                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:8px;">
+                      <div>
+                        <label style="font-size:0.78rem;">عنوان الوسام *</label>
+                        <input type="text" id="chest-input-badge-title" placeholder="مثال: متقن الأبجدية القبطية" oninput="CurriculumAdminSystem.updateChestModalPreview()">
+                      </div>
+                      <div>
+                        <label style="font-size:0.78rem;">أيقونة الوسام</label>
+                        <select id="chest-input-badge-icon" onchange="CurriculumAdminSystem.updateChestModalPreview()">
+                          <option value="trophy">🏆 كأس التميز</option>
+                          <option value="crown">👑 تاج الإتقان</option>
+                          <option value="star">⭐ نجمة التفوق</option>
+                          <option value="gem">💎 جوهرة المعرفة</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label style="font-size:0.78rem;">وصف الوسام</label>
+                      <input type="text" id="chest-input-badge-desc" placeholder="مثال: أتممت المستوى الأول للأبجدية القبطية كاملاً (٣٢ حرفاً)" oninput="CurriculumAdminSystem.updateChestModalPreview()">
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1462,9 +1504,9 @@
 </div>
 
   <!-- Admin Logic Modules -->
-  <script src="js/admin.js"></script>
-  <script src="js/curriculum-admin.js"></script>
-  <script src="../js/pwa-register.js" defer></script>
+  <script src="js/admin.js?v=3.0.0"></script>
+  <script src="js/curriculum-admin.js?v=3.0.0"></script>
+  <script src="../js/pwa-register.js?v=3.0.0" defer></script>
   <script>
     function togglePassVisibility(inputId, btn) {
       const inp = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;

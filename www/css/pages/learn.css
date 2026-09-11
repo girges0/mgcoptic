@@ -413,17 +413,26 @@
     .modal-badge {
       width: 76px;
       height: 76px;
+      min-width: 76px;
+      min-height: 76px;
       border-radius: 50%;
       margin: 0 auto 16px;
       background: linear-gradient(135deg, var(--madder) 0%, var(--madder-dark) 100%);
-      color: var(--parchment-soft);
+      color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.2rem;
-      font-family: var(--font-coptic);
+      font-family: var(--font-coptic), 'girges', sans-serif !important;
+      font-weight: 800;
       box-shadow: 0 8px 24px rgba(107, 21, 48, 0.35);
-      border: 3px solid rgba(255,255,255,.3);
+      border: 3.5px solid rgba(255, 255, 255, 0.85);
+      overflow: hidden;
+      white-space: nowrap !important;
+      direction: ltr !important;
+      line-height: 1 !important;
+      box-sizing: border-box;
+      user-select: none;
+      text-align: center;
     }
     .modal-title {
       font-family: var(--font-display);
@@ -976,6 +985,8 @@
       color: var(--madder);
       line-height: 1.08;
       display: block;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
       filter: drop-shadow(0 3px 8px rgba(107, 21, 48, 0.22));
     }
     .audio-icon-btn, .audio-play-btn {
@@ -1502,7 +1513,7 @@
     }
 
     /* تمرين ترتيب الحروف */
-    .write-area { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+    .write-area { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; }
     .tiles-dropzone {
       width: 100%;
       min-height: 58px;
@@ -1510,6 +1521,9 @@
       border: 2px dashed rgba(168, 130, 58, 0.45);
       border-radius: 16px;
       display: flex;
+      flex-direction: row !important;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
       flex-wrap: wrap;
       gap: 8px;
       padding: 8px 14px;
@@ -1519,16 +1533,20 @@
     }
     .tiles-pool {
       display: flex;
+      flex-direction: row !important;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
+      width: 100%;
     }
     .word-tile {
       background: var(--parchment-card);
       border: 2px solid rgba(168, 130, 58, 0.35);
       border-radius: 12px;
       padding: 9px 16px;
-      font-family: var(--font-display);
+      font-family: var(--font-coptic), var(--font-display);
       font-size: 1.2rem;
       font-weight: 900;
       color: var(--ink);

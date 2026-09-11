@@ -360,6 +360,7 @@ textarea.coptic:focus {
   justify-content: center;
 }
 
+.coptic-input,
 .fill-blank-input,
 .listen-write-input {
   width: 100%;
@@ -372,6 +373,8 @@ textarea.coptic:focus {
   font-weight: 800;
   color: #6B1530;
   text-align: center;
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
   outline: none;
   box-shadow: 0 4px 15px rgba(36, 27, 18, 0.06);
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);

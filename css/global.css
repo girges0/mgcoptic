@@ -151,9 +151,14 @@
     .unit-banner-badge span,
     .key-coptic,
     .trace-target-title,
+    .cell-coptic-val,
+    .letter-glyph-val,
+    .word-tile,
     [lang="cop"],
     [data-coptic] {
       font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
     }
 
     a {

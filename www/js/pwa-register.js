@@ -44,8 +44,18 @@
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!refreshing) {
         refreshing = true;
-        // Optionally refresh or keep seamless
-        console.log('[PWA] Controller changed to new version.');
+        console.log('[PWA] Controller changed to new version. Refreshing page...');
+        window.location.reload();
+      }
+    });
+
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'CACHE_CLEARED') {
+        console.log('[PWA] Cache cleared by SW:', event.data.version);
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       }
     });
   }

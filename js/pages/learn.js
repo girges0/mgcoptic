@@ -283,22 +283,45 @@
             ? String(unitLessons[unitLessons.length - 1].id) 
             : null;
 
-          // 3. صناديق نهاية الوحدة (unit_end)
-          unitCustomChests.filter(c => c.placement_type === 'unit_end').sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1)).forEach(c => {
+          // 3. صندوق نهاية الوحدة (صندوق الهدايا والكنز التلقائي في نهاية كل وحدة بدلاً من الكأس)
+          let endChests = unitCustomChests.filter(c => c.placement_type === 'unit_end');
+
+          // إذا لم يوجد صندوق نهاية مسجل في البيانات لهذه الوحدة، نبحث في المنهج المتزامن أو ننشئه تلقائياً
+          if (endChests.length === 0) {
+            const canonicalChests = (typeof DEFAULT_CURRICULUM !== 'undefined' && Array.isArray(DEFAULT_CURRICULUM?.chests))
+              ? DEFAULT_CURRICULUM.chests
+              : ((typeof window !== 'undefined' && window.DEFAULT_CURRICULUM && Array.isArray(window.DEFAULT_CURRICULUM.chests)) ? window.DEFAULT_CURRICULUM.chests : []);
+
+            const isLastUnit = (unitIdx === sortedUnits.length - 1);
+            let matchedChest = canonicalChests.find(c => String(c.unit_id) === String(unit.id) || String(c.id) === `chest_unit_${unit.order_index || (unitIdx + 1)}`);
+
+            if (!matchedChest) {
+              matchedChest = {
+                id: `chest_unit_${unit.order_index || (unitIdx + 1)}`,
+                unit_id: unit.id,
+                title: isLastUnit ? '🏆 صندوق التخرج والاحتفال الختامي للمستوى الأول' : `🎁 صندوق كنز ${unit.title}`,
+                description: isLastUnit ? 'تهانينا! لقد أتقنت جميع الـ 32 حرفاً القبطية بنجاح باهر!' : `مكافأة إتمام دروس ومراجعة ${unit.title}`,
+                placement_type: 'unit_end',
+                after_lesson_id: lastStepId,
+                xp_mode: 'fixed',
+                xp_min: isLastUnit ? 50 : 10,
+                xp_max: isLastUnit ? 50 : 10,
+                hearts: isLastUnit ? 3 : 1,
+                has_badge: isLastUnit,
+                badge_title: isLastUnit ? 'متقن الأبجدية القبطية' : '',
+                badge_icon: isLastUnit ? 'trophy' : 'gift'
+              };
+            }
+            endChests = [ matchedChest ];
+          }
+
+          endChests.forEach(c => {
             unitSteps.push({
               kind: 'chest',
               chestId: String(c.id),
               chestData: c,
               requires: lastStepId
             });
-          });
-
-          // 4. كأس إتقان الوحدة
-          unitSteps.push({
-            kind: 'trophy',
-            unitId: unit.id,
-            requires: lastStepId,
-            title: unit.title
           });
 
           const totalSteps = unitSteps.length;
@@ -385,29 +408,6 @@
               return;
             }
 
-            if (step.kind === 'trophy') {
-              const reqStepId = step.requires;
-              const isMastered = reqStepId 
-                ? ((activeLessonProgress[reqStepId] || {}).status === 'completed')
-                : unitLessons.every(l => (activeLessonProgress[String(l.id)] || {}).status === 'completed');
-              html += `
-                <div class="path-step-node-pos" style="left:${pt.x}px; top:${pt.y}px;">
-                  <div class="node-wrapper">
-                    <button type="button" 
-                            class="lesson-node-btn ${isMastered ? 'completed' : 'locked'}"
-                            data-type="trophy"
-                            data-unit-id="${unit.id}"
-                            data-mastered="${isMastered}"
-                            title="كأس تميز وإتقان الوحدة">
-                      <svg class="trophy-glyph" viewBox="0 0 24 24" fill="${isMastered ? '#F59E0B' : '#706354'}">
-                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              `;
-              return;
-            }
 
             const progressInfo = activeLessonProgress[step.id] || { status: 'locked' };
             const isCompleted = progressInfo.status === 'completed';
@@ -816,11 +816,32 @@
 
         const isAlreadyDone = (activeLessonProgress && activeLessonProgress[String(lessonCopy.id)] && activeLessonProgress[String(lessonCopy.id)].status === 'completed');
         if (modalBadge) {
-          const rawB = String(foundUnit.badge || 'Ⲁ').trim();
-          if (rawB.startsWith('data:image/') || rawB.startsWith('http://') || rawB.startsWith('https://') || /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(rawB)) {
-            modalBadge.innerHTML = `<img src="${rawB}" alt="شارة" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" />`;
+          let badgeText = '';
+          const copticMatches = (lessonCopy.title || '').match(/[\u2C80-\u2CFF\u0370-\u03FF]+/g);
+          if (copticMatches && copticMatches.length > 0) {
+            badgeText = copticMatches[0];
+          } else if (lessonCopy.challenges && lessonCopy.challenges[0] && lessonCopy.challenges[0].coptic_display) {
+            badgeText = lessonCopy.challenges[0].coptic_display;
+          }
+
+          if (!badgeText) {
+            badgeText = String(foundUnit.badge || 'Ⲁ').trim();
+          }
+
+          if (badgeText.startsWith('data:image/') || badgeText.startsWith('http://') || badgeText.startsWith('https://') || /\.(png|jpg|jpeg|gif|svg|webp)$/i.test(badgeText)) {
+            modalBadge.innerHTML = `<img src="${badgeText}" alt="شارة" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" />`;
+          } else if (isPractice || (lessonCopy.title || '').includes('مراجعة')) {
+            modalBadge.innerHTML = `
+              <svg viewBox="0 0 24 24" width="34" height="34" fill="#FFD700" stroke="#FFF7D6" stroke-width="1.2" style="filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3));">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            `;
           } else {
-            modalBadge.textContent = rawB;
+            let fontSize = '2.35rem';
+            if (badgeText.length > 5) fontSize = '0.95rem';
+            else if (badgeText.length > 3) fontSize = '1.15rem';
+            else if (badgeText.length > 1) fontSize = '1.35rem';
+            modalBadge.innerHTML = `<span class="coptic-big-glyph" style="font-size:${fontSize};font-weight:900;line-height:1;white-space:nowrap;display:flex;align-items:center;justify-content:center;direction:ltr;unicode-bidi:isolate;color:#FFFFFF;">${escapeHtml(badgeText)}</span>`;
           }
         }
         if (modalTitle) modalTitle.textContent = lessonCopy.title;
@@ -1085,43 +1106,32 @@
             ` : ''}
           `;
         } else if (ch.type === 'text_view') {
-          html += `
-            <div class="question-heading">${escapeHtml(ch.question || 'شرح وقراءة (تأمّل وتعلّم)')}</div>
-            ${ch.image_url ? `
-              <div class="challenge-image-container">
-                <div class="challenge-image-card" onclick="window.openImageZoomModal ? window.openImageZoomModal('${(ch.image_url || '').replace(/'/g, "\\'")}', '${(ch.question || '').replace(/'/g, "\\'")}') : null" title="انقر لتكبير الصورة">
-                  <img src="${escapeHtml(ch.image_url)}" alt="صورة توضيحية" class="challenge-image-tag" loading="lazy" />
-                  <div class="challenge-image-zoom-badge">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                    <span>تكبير الصورة</span>
-                  </div>
+          if (typeof window.renderLetterOverviewCardHtml === 'function') {
+            html += window.renderLetterOverviewCardHtml(ch);
+          } else {
+            html += `
+              <div class="question-heading">${escapeHtml(ch.question || 'شرح وقراءة (تأمّل وتعلّم)')}</div>
+              ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
+                <div class="coptic-letter-display">
+                  ${ch.coptic_display ? `<span class="coptic-big-glyph">${escapeHtml(ch.coptic_display)}</span>` : ''}
+                  ${(ch.audio_text || ch.audio_url) ? `
+                    <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this) : null">
+                      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                      </svg>
+                    </button>
+                  ` : ''}
                 </div>
-              </div>
-            ` : ''}
-            ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
-              <div class="coptic-letter-display">
-                ${ch.coptic_display ? `<span class="coptic-big-glyph">${escapeHtml(ch.coptic_display)}</span>` : ''}
-                ${(ch.audio_text || ch.audio_url) ? `
-                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this)">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                    </svg>
-                  </button>
-                ` : ''}
-              </div>
-            ` : ''}
-            ${ch.explanation ? `
-              <div class="challenge-text-view-card" style="background:linear-gradient(180deg, #FFFCF5 0%, #FAF4E8 100%); border:2px solid #E2D3BE; border-radius:18px; padding:22px 24px; margin:18px auto 0; max-width:580px; text-align:right; color:#3A271B; font-size:1.12rem; line-height:1.85; font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,0.05); white-space:pre-line; position:relative;">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#6F1737; font-weight:800; font-size:0.95rem; border-bottom:1px dashed #DCCDB7; padding-bottom:8px;">
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                  <span>شرح وتوضيح تعليمي</span>
+              ` : ''}
+              ${(ch.explanation || ch.correct_word) ? `
+                <div class="challenge-text-view-card" style="background:linear-gradient(180deg, #FFFCF5 0%, #FAF4E8 100%); border:2px solid #E2D3BE; border-radius:18px; padding:20px 22px; margin:16px auto 0; max-width:580px; text-align:right; color:#3A271B; font-size:1.08rem; line-height:1.85; font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,0.05); white-space:pre-line;">
+                  <div>${escapeHtml(ch.explanation || ch.correct_word)}</div>
                 </div>
-                <div>${escapeHtml(ch.explanation)}</div>
-              </div>
-            ` : ''}
-          `;
+              ` : ''}
+            `;
+          }
         } else if (ch.type === 'listen_write') {
           html += `
             <div class="question-heading">${ch.question || 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية'}</div>
@@ -1212,11 +1222,16 @@
               ` : ''}
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => `
-                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
-                  ${opt.text}
-                </div>
-              `).join('')}
+              ${(ch.options || []).map((opt, i) => {
+                const optText = (typeof window.formatPronunciationOption === 'function') 
+                  ? window.formatPronunciationOption(opt.text) 
+                  : (opt.text ? opt.text.replace(/^.*?ينطق:\s*/, '').replace(/^[^(]*\(([^)]+)\).*$/, '$1') : '');
+                return `
+                  <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                    ${escapeHtml(optText || opt.text)}
+                  </div>
+                `;
+              }).join('')}
             </div>
           `;
         } else if (ch.type === 'select') {
@@ -1246,6 +1261,12 @@
                   </button>
                 ` : ''}
               </div>
+              ${(ch.audio_text && ch.coptic_display && ch.audio_text !== ch.coptic_display && !ch.audio_text.startsWith('http')) ? `
+                <div class="coptic-phonetic-badge" style="display:flex; justify-content:center; align-items:center; gap:6px; margin:2px auto 14px; background:#FFFBF2; border:1.5px solid #E8D9C0; color:#6F1737; font-weight:800; font-size:1.08rem; padding:5px 18px; border-radius:24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); max-width:fit-content;">
+                  <span style="color:#8C6D3B; font-size:0.85rem; font-weight:700;">القبطي المعرب:</span>
+                  <span style="font-size:1.15rem; color:#6F1737;">«${escapeHtml(ch.audio_text)}»</span>
+                </div>
+              ` : ''}
             ` : ''}
             <div class="options-grid">
               ${(ch.options || []).map((opt, i) => `
@@ -1280,29 +1301,48 @@
           const tiles = ch.tiles || (ch.correct_word ? ch.correct_word.split('') : ['ك', 'س']);
           const shuffled = [...tiles].sort(() => Math.random() - 0.5);
 
+          // استخراج معنى الكلمة بالعربي والقبطي المعرب
+          let wordInfo = { meaning: '', phonetic: ch.audio_text || '' };
+          if (typeof window.extractWordMeaningAndPhonetic === 'function') {
+            wordInfo = window.extractWordMeaningAndPhonetic(ch);
+          } else if (ch.question) {
+            const m = ch.question.match(/(?:لتكوين|الكلمة|الكلمة القبطية):\s*([^(«[]+)/);
+            if (m && m[1]) wordInfo.meaning = m[1].trim();
+            const mPhon = ch.question.match(/«([^»]+)»/);
+            if (mPhon && mPhon[1]) wordInfo.phonetic = mPhon[1].trim();
+          }
+          if (!wordInfo.meaning) wordInfo.meaning = 'الكلمة المطلوبة';
+
           html += `
-            <div class="question-heading">${ch.question}</div>
-            ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
-              <div class="coptic-letter-display">
-                ${ch.coptic_display ? `<span class="coptic-big-glyph">${ch.coptic_display}</span>` : ''}
-                ${(ch.audio_text || ch.audio_url) ? `
-                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this)">
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="question-heading">${escapeHtml(ch.question || 'رتّب حروف الكلمة القبطية')}</div>
+            <div class="write-target-card" style="background:linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%); border:2px solid #E6D7C3; border-radius:20px; padding:18px 24px; margin:12px auto 16px; max-width:480px; text-align:center; box-shadow:0 6px 18px rgba(74, 13, 36, 0.05);">
+              <div style="font-size:0.82rem; font-weight:800; color:#8D725C; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.2px;">المعنى بالعربية:</div>
+              <div style="font-size:2rem; font-weight:900; color:#3A2315; line-height:1.25; margin-bottom:8px;">${escapeHtml(wordInfo.meaning)}</div>
+              ${wordInfo.phonetic ? `
+                <div style="display:inline-flex; align-items:center; gap:6px; background:#FAF4E8; border:1.5px solid #ECDDC5; padding:4px 16px; border-radius:20px; color:#6F1737; font-weight:800; font-size:1rem; margin-bottom:10px;">
+                  <span style="color:#8D725C; font-size:0.82rem;">القبطي المعرب:</span>
+                  <span>« ${escapeHtml(wordInfo.phonetic)} »</span>
+                </div>
+              ` : ''}
+              ${(ch.audio_url || wordInfo.phonetic) ? `
+                <div style="margin-top:2px;">
+                  <button type="button" class="audio-icon-btn listen-pulse" style="width:50px; height:50px; border-radius:50%; margin:0 auto;" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${wordInfo.phonetic || ch.audio_text || ''}', this) : null">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
                     </svg>
                   </button>
-                ` : ''}
+                </div>
+              ` : ''}
+            </div>
+            <div class="write-area" style="direction:ltr !important;">
+              <div class="tiles-dropzone" id="tiles-dropzone" style="direction:ltr !important; flex-direction:row !important;">
+                <span style="color:var(--ink-soft);font-size:.92rem;direction:rtl;" id="dropzone-placeholder">اضغط على الحروف لترتيبها هنا</span>
               </div>
-            ` : ''}
-            <div class="write-area">
-              <div class="tiles-dropzone" id="tiles-dropzone">
-                <span style="color:var(--ink-soft);font-size:.92rem;" id="dropzone-placeholder">اضغط على الحروف لترتيبها هنا</span>
-              </div>
-              <div class="tiles-pool" id="tiles-pool">
+              <div class="tiles-pool" id="tiles-pool" style="direction:ltr !important; flex-direction:row !important;">
                 ${shuffled.map((t) => `
-                  <button type="button" class="word-tile" onclick="pickWordTile(this, '${t}')">${t}</button>
+                  <button type="button" class="word-tile" style="direction:ltr !important;" onclick="pickWordTile(this, '${t}')">${t}</button>
                 `).join('')}
               </div>
             </div>
@@ -1538,29 +1578,18 @@
       }
 
       // ==========================================
-      // إدارة وضع ملء الشاشة وتدوير السبورة (Trace Fullscreen & Landscape Auto-Expand)
+      // إدارة وضع ملء الشاشة للسبورة (Trace Fullscreen)
       // ==========================================
-      let traceExpandedManually = false;
-      let traceExpandedByRotation = false;
       let traceOrientationMql = null;
       let traceOrientationHandler = null;
 
-      window.setTraceFullscreenMode = function(expanded, source = 'manual') {
+      window.setTraceFullscreenMode = function(expanded) {
         const card = document.querySelector('.trace-interactive-card');
         const overlay = document.getElementById('challenge-runner-overlay');
         const expandBtn = document.getElementById('btn-trace-expand');
         if (!card) return;
 
         if (expanded) {
-          if (source === 'manual') {
-            traceExpandedManually = true;
-            traceExpandedByRotation = false;
-          } else if (source === 'rotation') {
-            if (!traceExpandedManually) {
-              traceExpandedByRotation = true;
-            }
-          }
-
           card.classList.add('is-expanded');
           if (overlay) overlay.classList.add('trace-fullscreen-active');
           if (expandBtn) {
@@ -1573,9 +1602,6 @@
             if (colIcon) colIcon.style.display = 'block';
           }
         } else {
-          traceExpandedManually = false;
-          traceExpandedByRotation = false;
-
           card.classList.remove('is-expanded');
           if (overlay) overlay.classList.remove('trace-fullscreen-active');
           if (expandBtn) {
@@ -1589,6 +1615,7 @@
           }
         }
 
+        // تحديث أبعاد الكانفاس وإعادة رسمه مع الحفاظ الكامل على ضربات القلم
         requestAnimationFrame(() => {
           if (window.activeRunnerTracer) {
             window.activeRunnerTracer.resize();
@@ -1607,18 +1634,12 @@
 
         try {
           traceOrientationMql = window.matchMedia('(orientation: landscape)');
-          traceOrientationHandler = function(e) {
-            const card = document.querySelector('.trace-interactive-card');
-            const overlay = document.getElementById('challenge-runner-overlay');
-            if (!card || !overlay || overlay.style.display === 'none') return;
-
-            const isLandscape = !!e.matches;
-            if (isLandscape) {
-              window.setTraceFullscreenMode(true, 'rotation');
-            } else {
-              if (traceExpandedByRotation && !traceExpandedManually) {
-                window.setTraceFullscreenMode(false, 'rotation');
-              }
+          traceOrientationHandler = function() {
+            // عند تدوير الشاشة أو تغيير الأبعاد، نقوم فقط بإعادة ضبط أبعاد لوحة الرسم دون تفعيل ملء الشاشة تلقائياً
+            if (window.activeRunnerTracer) {
+              requestAnimationFrame(() => {
+                window.activeRunnerTracer.resize();
+              });
             }
           };
 
@@ -1626,10 +1647,6 @@
             traceOrientationMql.addEventListener('change', traceOrientationHandler);
           } else if (traceOrientationMql.addListener) {
             traceOrientationMql.addListener(traceOrientationHandler);
-          }
-
-          if (traceOrientationMql.matches) {
-            window.setTraceFullscreenMode(true, 'rotation');
           }
         } catch (err) {
           console.warn('Trace orientation listener setup warning:', err);
@@ -1648,12 +1665,20 @@
         }
         traceOrientationMql = null;
         traceOrientationHandler = null;
-        traceExpandedManually = false;
-        traceExpandedByRotation = false;
         const overlay = document.getElementById('challenge-runner-overlay');
         if (overlay) overlay.classList.remove('trace-fullscreen-active');
         const card = document.querySelector('.trace-interactive-card');
         if (card) card.classList.remove('is-expanded');
+        const expandBtn = document.getElementById('btn-trace-expand');
+        if (expandBtn) {
+          expandBtn.classList.remove('is-active');
+          expandBtn.setAttribute('aria-label', 'تكبير السبورة');
+          expandBtn.setAttribute('title', 'تكبير السبورة (ملء الشاشة)');
+          const expIcon = expandBtn.querySelector('.icon-expand');
+          const colIcon = expandBtn.querySelector('.icon-collapse');
+          if (expIcon) expIcon.style.display = 'block';
+          if (colIcon) colIcon.style.display = 'none';
+        }
       }
 
       async function initTraceChallenge(ch) {
@@ -1698,8 +1723,8 @@
             canvasId: canvasEl,
             fontUrl: 'assets/fonts/girges.woff',
             text: cleanText,
-            passThreshold: 85,
-            minCoverageThreshold: 80,
+            passThreshold: 70,
+            minCoverageThreshold: 60,
             onStrokeEnd: (count) => {
               if (btnCheck && count > 0) btnCheck.disabled = false;
             },
@@ -1752,7 +1777,7 @@
                   toast: true,
                   position: 'top',
                   icon: 'info',
-                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 85%`,
+                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 70%`,
                   showConfirmButton: false,
                   timer: 2500
                 });
@@ -1775,17 +1800,19 @@
           btnExpand.onclick = () => {
             const card = document.querySelector('.trace-interactive-card');
             const isExp = card && card.classList.contains('is-expanded');
-            window.setTraceFullscreenMode(!isExp, 'manual');
+            window.setTraceFullscreenMode(!isExp);
           };
         }
 
         const btnCollapse = document.getElementById('btn-trace-collapse');
         if (btnCollapse) {
           btnCollapse.onclick = () => {
-            window.setTraceFullscreenMode(false, 'manual');
+            window.setTraceFullscreenMode(false);
           };
         }
 
+        // التأكد من أن السبورة تبدأ دائماً في الوضع العادي (غير ملء الشاشة) ولا تتسع إلا بضغط زر التكبير
+        window.setTraceFullscreenMode(false);
         setupTraceOrientationListener();
 
         const strokeSlider = document.getElementById('trace-stroke-slider');
@@ -1866,14 +1893,29 @@
         const placedTile = document.createElement('button');
         placedTile.type = 'button';
         placedTile.className = 'word-tile';
+        placedTile.style.direction = 'ltr';
+        placedTile.style.unicodeBidi = 'isolate';
         placedTile.textContent = letter;
         placedTile.onclick = function() {
           if (runnerState !== 'answering') return;
           if (game.sound) game.sound.playClick();
+          const childTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
+          const domIdx = childTiles.indexOf(placedTile);
           placedTile.remove();
           btn.style.visibility = 'visible';
-          const idx = wordTilesBuilt.lastIndexOf(letter);
-          if (idx !== -1) wordTilesBuilt.splice(idx, 1);
+          if (domIdx !== -1) {
+            wordTilesBuilt.splice(domIdx, 1);
+          } else {
+            const idx = wordTilesBuilt.lastIndexOf(letter);
+            if (idx !== -1) wordTilesBuilt.splice(idx, 1);
+          }
+          if (wordTilesBuilt.length === 0 && !document.getElementById('dropzone-placeholder')) {
+            const ph = document.createElement('span');
+            ph.id = 'dropzone-placeholder';
+            ph.style.cssText = 'color:var(--ink-soft);font-size:.92rem;direction:rtl;';
+            ph.textContent = 'اضغط على الحروف لترتيبها هنا';
+            dropzone.appendChild(ph);
+          }
           const btnCheck = document.getElementById('btn-check-action');
           if (btnCheck) btnCheck.disabled = wordTilesBuilt.length === 0;
         };
@@ -2011,9 +2053,9 @@
 
         if (isCorrect) {
           correctAnswersCount++;
-          const rawChallengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null) ? ch.xp_reward : (ch.xp !== undefined && ch.xp !== null ? ch.xp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 10));
+          const rawChallengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null) ? ch.xp_reward : (ch.xp !== undefined && ch.xp !== null ? ch.xp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 1));
           const parsedChallengeXp = parseInt(rawChallengeXp, 10);
-          const challengeXp = (!isNaN(parsedChallengeXp) && parsedChallengeXp >= 0) ? parsedChallengeXp : 0;
+          const challengeXp = (!isNaN(parsedChallengeXp) && parsedChallengeXp >= 0) ? parsedChallengeXp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 1);
 
           // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو إذا كانت النقاط 0
           if (!isReplayingLesson && challengeXp > 0) {

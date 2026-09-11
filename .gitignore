@@ -16,3 +16,9 @@ node_modules/
 *service-account*.json
 .env*
 supabase/.temp/
+
+# Excluded by user request
+level-1-curriculum-32-letters-final.md
+مراجع/
+مراجع
+*مراجع*

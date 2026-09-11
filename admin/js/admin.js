@@ -1973,7 +1973,7 @@ function previewWritingExercise(id, text, desc) {
     canvasId: canvas,
     fontUrl: 'assets/fonts/girges.woff',
     text: cleanText,
-    passThreshold: 85,
+    passThreshold: 70,
     minCoverageThreshold: 80,
     onStrokeEnd: (strokeCount) => {
       // تفعيل زر «تحقق» السفلي بمجرد قيام المستخدم بالرسم
@@ -2052,7 +2052,7 @@ function previewWritingExercise(id, text, desc) {
       if (evalRes.incomplete) {
         toast(evalRes.message || `يرجى إكمال كتابة كامل الحرف (${evalRes.coveragePercent}%)`, true);
       } else if (!evalRes.passed) {
-        toast(`الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 85%`, true);
+        toast(`الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 70%`, true);
       } else {
         toast(`ممتاز! الدقة: ${evalRes.finalScore}% — تتبع متقن وناجح ✓`);
         if (checkBtn) {

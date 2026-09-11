@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v1.0.8';
+const CACHE_NAME = 'mgcoptic-v2.0.0-curriculum-sync';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -51,7 +51,13 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()).then(() => {
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({ type: 'CACHE_CLEARED', version: CACHE_NAME });
+        });
+      });
+    })
   );
 });
 
