@@ -11900,7 +11900,7 @@
               ${(ch.options || []).map((opt, i) => {
                 const optText = (typeof window.formatPronunciationOption === 'function') 
                   ? window.formatPronunciationOption(opt.text) 
-                  : (opt.text ? opt.text.replace(/^.*?ينطق:\s*/, '').replace(/^[^(]*\(([^)]+)\).*$/, '$1') : '');
+                  : (opt.text ? opt.text.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').replace(/[A-Za-zŌō]/g, '').trim() : '');
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
                     ${escapeHtml(optText || opt.text)}

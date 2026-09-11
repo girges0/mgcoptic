@@ -6030,9 +6030,13 @@ const CurriculumAdminSystem = (function(){
               } else if(previewState.selectedAnswerIndex === idx){
                 cls += ' selected';
               }
+              const isPronQ = challenge.type === 'read_select' || (challenge.question && challenge.question.includes('نطق'));
+              const optDisplayText = isPronQ && typeof window.formatPronunciationOption === 'function'
+                ? window.formatPronunciationOption(opt.text)
+                : opt.text;
               return `
                 <div class="${cls}" onclick="CurriculumAdminSystem.selectPreviewAnswer(${idx})">
-                  <span>${escapeHtml(opt.text)}</span>
+                  <span>${escapeHtml(optDisplayText)}</span>
                 </div>
               `;
             }).join('')}

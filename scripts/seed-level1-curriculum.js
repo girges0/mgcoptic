@@ -80,14 +80,14 @@ const LETTERS_DATA = [
     wordPhoneticAr: 'ذورون',
     wordMeaning: 'عطية / هدية',
     wrongMeanings: ['صلاة', 'خبز', 'كتاب'],
-    wrongLetterPron: ['غاما (غ أو ج)', 'إي (E)', 'هيتا (ياء طويلة)']
+    wrongLetterPron: ['غاما (غ أو ج)', 'إي (إي)', 'هيتا (ياء طويلة)']
   },
   {
     unitIndex: 1,
     letterUpper: 'Ⲉ',
     letterLower: 'ⲉ',
     nameAr: 'إي',
-    pronunciationAr: 'إي خفيفة (E)',
+    pronunciationAr: 'إي خفيفة',
     soundFile: 'audio_coptic/5ei.mp3',
     info: 'الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).',
     wordCoptic: 'ⲉⲛ',
@@ -131,7 +131,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲏ',
     letterLower: 'ⲏ',
     nameAr: 'هيتا',
-    pronunciationAr: 'ياء طويلة ممدودة (ee)',
+    pronunciationAr: 'ياء طويلة ممدودة',
     soundFile: 'audio_coptic/8eta.mp3',
     info: 'الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.',
     wordCoptic: 'ⲁⲛⲍⲏⲃ',
@@ -159,7 +159,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲓ',
     letterLower: 'ⲓ',
     nameAr: 'إيوتا',
-    pronunciationAr: 'ياء قصيرة (i)',
+    pronunciationAr: 'ياء قصيرة',
     soundFile: 'audio_coptic/10yota.mp3',
     info: 'الحرف العاشر. حرف متحرك يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في الإنجليزية.',
     wordCoptic: 'ⲱⲓⲛⲓ',
@@ -231,7 +231,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲝ',
     letterLower: 'ⲝ',
     nameAr: 'كسي',
-    pronunciationAr: 'كـ + س (X)',
+    pronunciationAr: 'كـ + س',
     soundFile: 'audio_coptic/15axsy.mp3',
     info: 'الحرف الخامس عشر. حرف مركب يُنطق كاف وسين معاً (كـ + س = X) في صوت واحد.',
     wordCoptic: 'ⲟⲩⲁⲗⲓⲝ',
@@ -247,7 +247,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲟ',
     letterLower: 'ⲟ',
     nameAr: 'أُو (قصيرة)',
-    pronunciationAr: 'واو قصيرة مضمومة (O)',
+    pronunciationAr: 'واو قصيرة مضمومة',
     soundFile: 'audio_coptic/16oo.mp3',
     info: 'الحرف السادس عشر. حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة.',
     wordCoptic: 'ⲥⲓⲟⲩ',
@@ -261,7 +261,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲡ',
     letterLower: 'ⲡ',
     nameAr: 'بي',
-    pronunciationAr: 'ب ثقيلة مشددة (P)',
+    pronunciationAr: 'ب ثقيلة مشددة',
     soundFile: 'audio_coptic/17pee.mp3',
     info: 'الحرف السابع عشر. يُنطق "ب" شديدة مشددة مثل حرف (P) في اللغة الإنجليزية.',
     wordCoptic: 'ⲡⲉ',
@@ -361,7 +361,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲯ',
     letterLower: 'ⲯ',
     nameAr: 'إبسي',
-    pronunciationAr: 'بـ + س (Ps)',
+    pronunciationAr: 'بـ + س',
     soundFile: 'audio_coptic/24psi.mp3',
     info: 'الحرف الرابع والعشرون. حرف مركب يُنطق باء وسين معاً في صوت واحد (بـ + س = Ps).',
     wordCoptic: 'ⲯⲁⲗⲙⲟⲥ',
@@ -375,7 +375,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲱ',
     letterLower: 'ⲱ',
     nameAr: 'أوميغا (أو طويلة)',
-    pronunciationAr: 'واو طويلة ممدودة (Ō)',
+    pronunciationAr: 'واو طويلة ممدودة',
     soundFile: 'audio_coptic/25oo.mp3',
     info: 'الحرف الخامس والعشرون. آخر الحروف المأخوذة من اليونانية. يُنطق واواً طويلة ومفتوحة (Ō).',
     wordCoptic: 'ⲱⲛϧ',
@@ -463,7 +463,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ϭ',
     letterLower: 'ϭ',
     nameAr: 'تشيما',
-    pronunciationAr: 'تش (Tsh)',
+    pronunciationAr: 'تش',
     soundFile: 'audio_coptic/31chema.mp3',
     info: 'الحرف الحادي والثلاثون. الحرف السادس من الحروف المصرية الديموطيقية، يُنطق تاء وشين معاً (تش) دائماً.',
     wordCoptic: 'ϭⲟⲓⲥ',
@@ -477,7 +477,7 @@ const LETTERS_DATA = [
     letterUpper: 'Ϯ',
     letterLower: 'ϯ',
     nameAr: 'تي',
-    pronunciationAr: 'تـ + ي (Ti)',
+    pronunciationAr: 'تـ + ي',
     soundFile: 'audio_coptic/32tee.mp3',
     info: 'الحرف الثاني والثلاثون والأخير في الأبجدية القبطية. مقطع صوتي مركب ينطق تاء وياء معاً (تـ + ي = Ti).',
     wordCoptic: 'ϯⲙⲏⲓ',
@@ -647,11 +647,16 @@ async function seed() {
     function cleanOptText(txt) {
       if (!txt) return '';
       let s = String(txt).trim();
-      if (s.includes('ينطق:')) return s.split('ينطق:')[1].trim();
-      if (s.includes('—')) return s.split('—')[1].trim();
+      if (s.includes('ينطق:')) return s.split('ينطق:')[1].replace(/\s*\([^)]*\)/g, '').replace(/[a-zA-Z]/g, '').trim();
+      if (s.includes('—')) return s.split('—')[1].replace(/\s*\([^)]*\)/g, '').replace(/[a-zA-Z]/g, '').trim();
       const pIdx = s.indexOf('(');
-      if (pIdx > 0 && s.endsWith(')')) return s.substring(pIdx + 1, s.length - 1).trim();
-      return s;
+      if (pIdx > 0 && s.endsWith(')')) {
+        const inside = s.substring(pIdx + 1, s.length - 1).trim();
+        if (/[\u0600-\u06FF]/.test(inside) && !/[a-zA-Z]/.test(inside)) {
+          return inside;
+        }
+      }
+      return s.replace(/\s*\([a-zA-Z\s+-]+\)/g, '').replace(/[a-zA-Z]/g, '').trim();
     }
 
     const optPron = [

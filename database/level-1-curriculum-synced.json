@@ -632,7 +632,7 @@
                 {
                   "id": 2966,
                   "challenge_id": 457,
-                  "text": "E",
+                  "text": "إي",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -798,7 +798,7 @@
                 {
                   "id": 2974,
                   "challenge_id": 463,
-                  "text": "إي خفيفة (E)",
+                  "text": "إي خفيفة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -1541,7 +1541,7 @@
                 {
                   "id": 2999,
                   "challenge_id": 481,
-                  "text": "ياء طويلة ممدودة (ee)",
+                  "text": "ياء طويلة ممدودة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -1874,7 +1874,7 @@
                 {
                   "id": 3012,
                   "challenge_id": 493,
-                  "text": "ياء قصيرة (i)",
+                  "text": "ياء قصيرة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -2157,7 +2157,7 @@
                 {
                   "id": 3217,
                   "challenge_id": 637,
-                  "text": "ياء طويلة ممدودة (ee)",
+                  "text": "ياء طويلة ممدودة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -2962,7 +2962,7 @@
                 {
                   "id": 3053,
                   "challenge_id": 523,
-                  "text": "كـ + س (X)",
+                  "text": "كـ + س",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -3380,7 +3380,7 @@
                 {
                   "id": 3063,
                   "challenge_id": 529,
-                  "text": "واو قصيرة مضمومة (O)",
+                  "text": "واو قصيرة مضمومة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -3529,7 +3529,7 @@
                 {
                   "id": 3071,
                   "challenge_id": 535,
-                  "text": "ب ثقيلة مشددة (P)",
+                  "text": "ب ثقيلة مشددة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -4972,7 +4972,7 @@
                 {
                   "id": 3124,
                   "challenge_id": 577,
-                  "text": "بـ + س (Ps)",
+                  "text": "بـ + س",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -5147,7 +5147,7 @@
                 {
                   "id": 3133,
                   "challenge_id": 583,
-                  "text": "واو طويلة ممدودة (Ō)",
+                  "text": "واو طويلة ممدودة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -6610,7 +6610,7 @@
                 {
                   "id": 3181,
                   "challenge_id": 619,
-                  "text": "تش (Tsh)",
+                  "text": "تش",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -6791,7 +6791,7 @@
                 {
                   "id": 3189,
                   "challenge_id": 625,
-                  "text": "تـ + ي (Ti)",
+                  "text": "تـ + ي",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -7042,7 +7042,7 @@
                 {
                   "id": 3277,
                   "challenge_id": 662,
-                  "text": "تش (Tsh)",
+                  "text": "تش",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null

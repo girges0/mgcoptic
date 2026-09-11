@@ -698,21 +698,52 @@
     `;
   }
 
-  // تنظيف خيارات نطق الحرف لعرض النطق فقط (الحروف والأصوات العربية) بدون اسم الحرف
+  // تنظيف خيارات نطق الحرف لضمان عرض النطق باللغة العربية الخالصة 100% بدون أي حروف إنجليزية وبدون اسم الحرف
   function formatPronunciationOption(text) {
     if (!text) return '';
     let str = String(text).trim();
+
+    // 1. تحويل الرموز اللاتينية المفردة مباشرة إلى مقابلها العربي
+    const englishToArMap = {
+      'E': 'إي', 'e': 'إي',
+      'ee': 'ياء ممدودة', 'i': 'ياء قصيرة',
+      'X': 'كـ + س', 'x': 'كـ + س',
+      'O': 'واو مضمومة', 'o': 'واو مضمومة',
+      'Ō': 'واو ممدودة', 'ō': 'واو ممدودة',
+      'P': 'ب مشددة', 'p': 'ب مشددة',
+      'Ps': 'بـ + س', 'ps': 'بـ + س',
+      'Tsh': 'تش', 'tsh': 'تش',
+      'Ti': 'تـ + ي', 'ti': 'تـ + ي'
+    };
+    if (englishToArMap[str]) return englishToArMap[str];
+
+    // 2. إذا كان النص يحتوي على 'ينطق:' أو '—'
     if (str.includes('ينطق:')) {
-      return str.split('ينطق:')[1].trim();
+      str = str.split('ينطق:')[1].trim();
+    } else if (str.includes('—')) {
+      str = str.split('—')[1].trim();
     }
-    if (str.includes('—')) {
-      return str.split('—')[1].trim();
+
+    // 3. إزالة أي أقواس تحتوي على حروف إنجليزية لاتينية، مثل (E) أو (ee) أو (X) أو (Tsh)
+    str = str.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').trim();
+
+    // 4. إذا كان النص يحتوي على اسم الحرف ونطقه بين قوسين عربيين مثل: 'فيدا (ف أو ب)'
+    const parenMatch = str.match(/\(([^)]+)\)$/);
+    if (parenMatch) {
+      const insideParen = parenMatch[1].trim();
+      if (/[\u0600-\u06FF]/.test(insideParen) && !/[a-zA-Z]/.test(insideParen)) {
+        const beforeParen = str.substring(0, parenMatch.index).trim();
+        // إذا كان ما قبل القوسين هو اسم حرف وليس وصفاً للنطق
+        if (beforeParen && !beforeParen.includes('أو') && !beforeParen.includes('مفتوحة') && !beforeParen.includes('ممدودة') && !beforeParen.includes('قصيرة') && !beforeParen.includes('مضمومة') && !beforeParen.includes('مشددة')) {
+          str = insideParen;
+        }
+      }
     }
-    const parenIdx = str.indexOf('(');
-    if (parenIdx > 0 && str.endsWith(')')) {
-      return str.substring(parenIdx + 1, str.length - 1).trim();
-    }
-    return str;
+
+    // 5. إزالة أي أحرف إنجليزية متبقية لضمان أن كل الإجابات بالعربي 100%
+    str = str.replace(/[A-Za-zŌō]/g, '').trim();
+
+    return str || text;
   }
 
   // استخراج معنى الكلمة بالعربي والقبطي المعرب لتمارين كتابة وترتيب الكلمة
