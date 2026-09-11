@@ -361,27 +361,38 @@ window.addEventListener('hashchange', () => {
 });
 
 async function loadAll(){
-  const tasks = [loadLetters(), loadVocabulary(), loadGrammar(), loadArticles(), loadQuizzes()];
+  const tasks = [];
+  if(document.querySelector('#table-letters tbody')) tasks.push(loadLetters());
+  if(document.querySelector('#table-vocabulary tbody')) tasks.push(loadVocabulary());
+  if(document.querySelector('#table-grammar tbody')) tasks.push(loadGrammar());
+  if(document.querySelector('#table-articles tbody')) tasks.push(loadArticles());
+  if(document.querySelector('#table-quizzes tbody')) tasks.push(loadQuizzes());
   if(typeof loadCurriculumFromSupabase === 'function') tasks.push(loadCurriculumFromSupabase());
   else if(typeof window.loadCurriculumFromSupabase === 'function') tasks.push(window.loadCurriculumFromSupabase());
   if(typeof loadUsers === 'function' && window.currentAdminRole === 'super_admin') tasks.push(loadUsers());
   if(typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') tasks.push(loadNotificationsAdmin());
-  await Promise.all(tasks);
+  await Promise.allSettled(tasks);
   refreshStats();
 }
 async function refreshStats(){
-  const [l,v,g,a,q] = await Promise.all([
-    sb.from('letters').select('*',{count:'exact',head:true}),
-    sb.from('vocabulary').select('*',{count:'exact',head:true}),
-    sb.from('grammar_sections').select('*',{count:'exact',head:true}),
-    sb.from('articles').select('*',{count:'exact',head:true}),
-    sb.from('quiz_questions').select('*',{count:'exact',head:true}),
-  ]);
-  const stats = [
-    ['المقالات', a.count], ['الحروف', l.count], ['المفردات', v.count], ['أقسام القواعد', g.count], ['أسئلة الاختبار', q.count]
-  ];
-  document.getElementById('stats-row').innerHTML = stats.map(([lbl,num])=>
-    `<div class="stat-card"><div class="num">${num ?? '—'}</div><div class="lbl">${lbl}</div></div>`).join('');
+  const statsRow = document.getElementById('stats-row');
+  if(!statsRow) return;
+  try {
+    const [l,v,g,a,q] = await Promise.all([
+      sb.from('letters').select('*',{count:'exact',head:true}),
+      sb.from('vocabulary').select('*',{count:'exact',head:true}),
+      sb.from('grammar_sections').select('*',{count:'exact',head:true}),
+      sb.from('articles').select('*',{count:'exact',head:true}),
+      sb.from('quiz_questions').select('*',{count:'exact',head:true}),
+    ]);
+    const stats = [
+      ['المقالات', a.count], ['الحروف', l.count], ['المفردات', v.count], ['أقسام القواعد', g.count], ['أسئلة الاختبار', q.count]
+    ];
+    statsRow.innerHTML = stats.map(([lbl,num])=>
+      `<div class="stat-card"><div class="num">${num ?? '—'}</div><div class="lbl">${lbl}</div></div>`).join('');
+  } catch(err) {
+    console.warn('refreshStats error:', err);
+  }
 }
 
 /* ============ ضغط وتحسين الصور تلقائياً قبل الرفع لتسريع الرفع ومنع فشل الصور الكبيرة ============ */
@@ -1978,8 +1989,8 @@ function previewWritingExercise(id, text, desc) {
     canvasId: canvas,
     fontUrl: 'assets/fonts/girges.woff',
     text: cleanText,
-    passThreshold: 70,
-    minCoverageThreshold: 80,
+    passThreshold: 65,
+    minCoverageThreshold: 35,
     onStrokeEnd: (strokeCount) => {
       // تفعيل زر «تحقق» السفلي بمجرد قيام المستخدم بالرسم
       if (checkBtn && strokeCount > 0) {

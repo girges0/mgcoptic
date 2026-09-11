@@ -12423,8 +12423,8 @@
           canvasId: canvasEl,
           fontUrl: 'assets/fonts/girges.woff',
           text: cleanText,
-          passThreshold: 70,
-          minCoverageThreshold: 60,
+          passThreshold: 65,
+          minCoverageThreshold: 35,
           onStrokeEnd: (count) => {
             // Allow manual submission whenever user has drawn strokes
             if (btnCheck && count > 0) {
@@ -12505,7 +12505,7 @@
                   toast: true,
                   position: 'top',
                   icon: 'info',
-                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 70%`,
+                  title: `الدقة: ${evalRes.finalScore}% — حاول الرسم بدقة أكبر داخل المسار لتصل إلى 65%`,
                   showConfirmButton: false,
                   timer: 2500
                 });

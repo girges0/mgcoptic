@@ -85,8 +85,8 @@
           strokeColor: '#2e6b3e',
           guideColor: 'rgba(111, 23, 55, 0.22)',
           guideOutlineColor: 'rgba(111, 23, 55, 0.45)',
-          passThreshold: 70,
-          minCoverageThreshold: 60,
+          passThreshold: 65,
+          minCoverageThreshold: 35,
           showGuideDots: false,
           soundEnabled: true,
           onSuccess: null,
@@ -1094,7 +1094,7 @@
       const bbWidth = (boundingBox && boundingBox.width) || this.displayWidth || 240;
       const bbHeight = (boundingBox && boundingBox.height) || this.displayHeight || 240;
 
-      // 1) حساب سمك الفرشاة الفعلي المستخدم من الطالب
+      // 1) حساب سمك الفرشاة الفعلي ونصف قطر الحبر المستخدم من الطالب
       let effectiveStrokeWidth = (this.options && this.options.strokeWidth) || 12;
       if (this.userStrokes && this.userStrokes.length > 0) {
         let sumW = 0, countW = 0;
@@ -1108,18 +1108,21 @@
       }
       const brushRadius = Math.max(3, effectiveStrokeWidth / 2);
 
-      // 2) حساب مقياس الحرف الهندسي المتوازن (Geometric Scale) لجميع الحروف (طويلة، عريضة، صغيرة)
-      const charScale = Math.max(70, Math.sqrt(bbWidth * bbHeight));
+      // 2) مقياس الحرف الحقيقي بناءً على أطول بعد هندسي (يناسب الحروف الطويلة كـ Ⲓ والعريضة كـ Ⲱ)
+      const charScale = Math.max(60, Math.min(260, Math.max(bbWidth, bbHeight)));
 
-      // 3) عتبة التغطية المتكيفة طرديًا مع سمك الفرشاة وحجم الحرف
-      // حبر الفرشاة يغطي مساحة دائرية بنصف قطر brushRadius مع هامش طبيعي لسمك خطوط الحرف
-      const coverageThreshold = Math.max(18, brushRadius * 1.25 + charScale * 0.065 + 6);
+      // 3) عتبة التغطية (Coverage Threshold):
+      // خطوط الحرف بالخط القبطي لها سمك طبيعي، والطالب يرسم عادة في المنتصف.
+      // لذلك نجمع نصف قطر حبر الفرشاة مع هامش سمك الحرف وهامش طبيعي لحركة اليد
+      const coverageThreshold = brushRadius + Math.max(14, charScale * 0.09);
 
-      // 4) عتبة الدقة المتكيفة مع الفرشاة (تمنع معاقبة من يرسم في منتصف خط الحرف العريض)
-      const precisionThreshold = Math.max(22, brushRadius * 1.45 + charScale * 0.08 + 8);
+      // 4) عتبة دقة المسار (Precision Threshold):
+      // النقاط التي تعتبر داخل حدود الحرف، تتسع طردياً مع زيادة سمك الفرشاة
+      const precisionThreshold = brushRadius * 1.25 + Math.max(18, charScale * 0.11);
 
-      // 5) عتبة الشطط الأقصى (للخطوط الخارجة تماماً عن الحرف)
-      const farThreshold = Math.max(45, precisionThreshold * 2.0 + 15);
+      // 5) عتبة الشطط البعيد (Far Outlier Threshold):
+      // النقاط الخارجة كلياً عن الحرف ومحيطه
+      const farThreshold = precisionThreshold + Math.max(32, charScale * 0.20);
 
       function distToNearest(point, targetArray) {
         let min = Infinity;
@@ -1158,7 +1161,8 @@
       const rawPrecision = userPoints.length > 0 ? (precisePoints / userPoints.length) : 0;
       const farOutlierRatio = userPoints.length > 0 ? (farOutliers / userPoints.length) : 0;
 
-      if (farOutlierRatio > 0.35) {
+      // إذا كانت معظم النقاط خارج الحرف تماماً (رسم عشوائي بعيد)، تفشل المحاولة فوراً
+      if (farOutlierRatio > 0.55) {
         return {
           score: 0,
           coverage: Math.round(rawCoverage * 100),
@@ -1166,16 +1170,17 @@
           lengthRatio: 0,
           passed: false,
           isComplete: false,
-          reason: 'الرسمة بعيدة جدًا عن مسار الحرف'
+          farOutlierRatio: farOutlierRatio,
+          reason: 'الرسمة خارج مسار الحرف'
         };
       }
 
-      // 8) طول الرسمة مقارنة بالهيكل العظمي للحرف
+      // 8) حساب طول الرسمة مقارنة بالأبعاد الهندسية للحرف
       function pathLength(points) {
         let len = 0;
         for (let i = 1; i < points.length; i++) {
           const d = Math.hypot(points[i].x - points[i-1].x, points[i].y - points[i-1].y);
-          if (d < 50) len += d; // منع القفزات البعيدة
+          if (d < 60) len += d; // منع قفزات الانتقال بين الحركات
         }
         return len;
       }
@@ -1193,29 +1198,34 @@
         userLength = pathLength(userPoints);
       }
 
-      const guideLength = Math.max(1, pathLength(guidePoints));
-      // محيط خط الحرف مغلق من الجهتين (Double-wall perimeter)، لذلك الهيكل الأحادي للرسمة يعادل حوالي 30% من المحيط الكلي
-      const expectedMinLength = Math.max(30, guideLength * 0.28);
-      const lengthRatio = Math.min(1.0, userLength / expectedMinLength);
+      // الحد الأدنى للطول المتوقع للحرف بناءً على أبعاده الهندسية (يناسب كل الحروف دون استثناء)
+      const minExpectedLength = Math.max(35, (bbWidth + bbHeight) * 0.38);
+      const lengthRatio = Math.min(1.0, userLength / minExpectedLength);
 
-      // 9) تسوية النسب بمرونة تربوية عادلة
-      const normCoverage = Math.min(1.0, rawCoverage / 0.68);
-      const normPrecision = Math.min(1.0, rawPrecision / 0.72);
+      // 9) تسوية النسب بمرونة تربوية عادلة:
+      // تغطية 50% من محيط الحرف تعني عملياً إتمام رسم مسار الحرف بالكامل
+      const normCoverage = Math.min(1.0, rawCoverage / 0.50);
+      const normPrecision = Math.min(1.0, rawPrecision / 0.65);
 
-      const finalScore = Math.min(100, Math.round(
-        (normCoverage * 0.60 + normPrecision * 0.25 + lengthRatio * 0.15) * 100
-      ));
+      let finalScore = (normCoverage * 0.50 + normPrecision * 0.30 + lengthRatio * 0.20) * 100;
 
-      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 70;
-      const minCoverage = (typeof this.options.minCoverageThreshold === 'number') ? (this.options.minCoverageThreshold / 100) : 0.45;
+      // خصم ناعم للشطط إن وجد بنسبة معتدلة
+      if (farOutlierRatio > 0.15) {
+        finalScore -= (farOutlierRatio - 0.15) * 35;
+      }
+      finalScore = Math.min(100, Math.max(0, Math.round(finalScore)));
+
+      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 65;
+      const minCoverage = (typeof this.options.minCoverageThreshold === 'number') ? (this.options.minCoverageThreshold / 100) : 0.30;
       const isComplete = (rawCoverage >= minCoverage) && (lengthRatio >= 0.40);
-      const passed = (finalScore >= passThreshold) && isComplete;
+      const passed = (finalScore >= passThreshold) && isComplete && (farOutlierRatio < 0.50);
 
       return {
         score: finalScore,
         coverage: Math.round(rawCoverage * 100),
         precision: Math.round(rawPrecision * 100),
         lengthRatio: Math.round(lengthRatio * 100),
+        farOutlierRatio: farOutlierRatio,
         passed: passed,
         isComplete: isComplete
       };
@@ -1271,16 +1281,18 @@
       console.log('BoundingBox:', this.boundingBox);
 
       const result = this.calculateTracingScore(allUserPoints, this.guidePoints, this.boundingBox);
-      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 70;
+      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 65;
 
       let message = '';
       if (!result.passed) {
         this._playSound('retry');
         if (result.reason) {
           message = `${result.reason} — حاول مرة أخرى بدقة أعلى`;
-        } else if (!result.isComplete || result.coverage < 45) {
+        } else if (result.farOutlierRatio >= 0.50) {
+          message = 'الرسمة خارج مسار الحرف — حاول الرسم داخل الخط المظلل';
+        } else if (!result.isComplete || result.coverage < 30) {
           message = `حاول تاني: يرجى إكمال كتابة الحرف كاملاً (التغطية: ${result.coverage}%)`;
-        } else if (result.precision < 60) {
+        } else if (result.precision < 50) {
           message = `حاول تاني: خرجت برة مسار الحرف كتير (الدقة: ${result.precision}%)`;
         } else {
           message = `حاول تاني: النتيجة ${result.score}% — المطلوب ${reqThreshold}% للنجاح`;
@@ -1313,10 +1325,11 @@
         lengthRatio: result.lengthRatio,
         passed: result.passed === true,
         reason: result.reason,
-        incomplete: !result.isComplete && (result.coverage < 45 || result.lengthRatio < 45),
+        incomplete: !result.isComplete && (result.coverage < 35 || result.lengthRatio < 40),
         message: message
       };
     }
+
 
     /* ==========================================================================
        FEEDBACK, ANIMATIONS & AUDIO

@@ -6289,8 +6289,8 @@ const CurriculumAdminSystem = (function(){
           canvasId: canvasEl,
           fontUrl: 'assets/fonts/girges.woff',
           text: cleanTraceText,
-          passThreshold: 70,
-          minCoverageThreshold: 60,
+          passThreshold: 65,
+          minCoverageThreshold: 35,
           onSuccess: (score) => {
             if(badgeEl && scoreEl){
               scoreEl.textContent = score;
@@ -6352,7 +6352,7 @@ const CurriculumAdminSystem = (function(){
               if(res.incomplete){
                 toast(res.message || `يرجى إكمال كتابة الحرف كاملاً (${res.coveragePercent}%)`, true);
               } else if(!res.passed){
-                toast(`الدقة ${res.finalScore}% — حاول البقاء داخل المسار لتصل إلى 70%`, true);
+                toast(`الدقة ${res.finalScore}% — حاول البقاء داخل المسار لتصل إلى 65%`, true);
               } else {
                 previewState.isTracePassed = true;
                 previewState.isAnswered = true;
