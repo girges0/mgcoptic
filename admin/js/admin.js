@@ -1989,7 +1989,7 @@ function previewWritingExercise(id, text, desc) {
     canvasId: canvas,
     fontUrl: 'assets/fonts/girges.woff',
     text: cleanText,
-    passThreshold: 65,
+    passThreshold: 80,
     minCoverageThreshold: 35,
     onStrokeEnd: (strokeCount) => {
       // تفعيل زر «تحقق» السفلي بمجرد قيام المستخدم بالرسم

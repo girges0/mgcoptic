@@ -1723,7 +1723,7 @@
             canvasId: canvasEl,
             fontUrl: 'assets/fonts/girges.woff',
             text: cleanText,
-            passThreshold: 70,
+            passThreshold: 80,
             minCoverageThreshold: 60,
             onStrokeEnd: (count) => {
               if (btnCheck && count > 0) btnCheck.disabled = false;

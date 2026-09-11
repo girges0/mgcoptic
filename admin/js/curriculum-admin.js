@@ -6333,7 +6333,7 @@ const CurriculumAdminSystem = (function(){
           canvasId: canvasEl,
           fontUrl: 'assets/fonts/girges.woff',
           text: cleanTraceText,
-          passThreshold: 65,
+          passThreshold: 80,
           minCoverageThreshold: 35,
           onSuccess: (score) => {
             if(badgeEl && scoreEl){

@@ -68,7 +68,7 @@
      * @param {string} [options.strokeColor='#2e6b3e'] User brush stroke color
      * @param {string} [options.guideColor='rgba(111, 23, 55, 0.22)'] Guide background fill
      * @param {string} [options.guideOutlineColor='rgba(111, 23, 55, 0.45)'] Guide outline
-     * @param {number} [options.passThreshold=70] Passing score threshold (0-100)
+     * @param {number} [options.passThreshold=80] Passing score threshold (0-100)
      * @param {number} [options.minCoverageThreshold=60] Minimum coverage required
      * @param {boolean} [options.showGuideDots=true] Whether to show numbered start dots
      * @param {boolean} [options.soundEnabled=true] Play audio chime on success / retry
@@ -85,7 +85,7 @@
           strokeColor: '#2e6b3e',
           guideColor: 'rgba(111, 23, 55, 0.22)',
           guideOutlineColor: 'rgba(111, 23, 55, 0.45)',
-          passThreshold: 85,
+          passThreshold: 80,
           minCoverageThreshold: 80,
           showGuideDots: false,
           soundEnabled: true,
@@ -1172,7 +1172,7 @@
 
       // النتيجة النهائية: لازم التغطية والدقة والطول كلهم كويسين مش بس واحد منهم
       const finalScore = (coverage * 0.4 + precision * 0.4 + lengthRatio * 0.2) * 100;
-      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 85;
+      const passThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 80;
 
       return {
         score: Math.round(finalScore),
@@ -1233,7 +1233,7 @@
       console.log('BoundingBox:', this.boundingBox);
 
       const result = this.calculateTracingScore(allUserPoints, this.guidePoints, this.boundingBox);
-      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 85;
+      const reqThreshold = (typeof this.options.passThreshold === 'number') ? this.options.passThreshold : 80;
 
       let message = '';
       if (!result.passed) {
