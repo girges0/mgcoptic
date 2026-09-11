@@ -1880,6 +1880,7 @@
   .coptic-letter-display .coptic-audio-circle-btn {
     width: 44px; height: 44px; min-width: 44px; margin-top: 14px;
     box-shadow: 0 3px 10px rgba(168, 130, 58, 0.22);
+  }
   /* Challenge Responsive Image Card */
   .challenge-image-container {
     width: 100%;
@@ -2975,4 +2976,333 @@
   color: #94A3B8;
   font-size: 0.82rem;
   font-weight: 600;
+}
+
+/* ==========================================================================
+   Coptic Letter & Word Overview Card Component (Interactive Flashcard & Runner)
+   ========================================================================== */
+.coptic-overview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 12px auto 20px;
+  width: 100%;
+  box-sizing: border-box;
+  direction: rtl;
+}
+.letter-overview-card {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+  border: 2px solid #E6D7C3;
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 20px rgba(74, 13, 36, 0.06);
+  position: relative;
+  box-sizing: border-box;
+}
+.letter-overview-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1.5px dashed #E8DAC6;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.letter-glyph-box {
+  min-width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #FFF9F0 0%, #F5ECE0 100%);
+  border: 2px solid #D6C3A5;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+  flex-shrink: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+.letter-glyph-val {
+  font-size: 2.5rem;
+  color: #6F1737;
+  line-height: 1;
+  font-weight: 800;
+  font-family: 'coptic_font', 'girges', 'Segoe UI Historic', 'Noto Sans Coptic', sans-serif;
+  direction: ltr;
+}
+.letter-meta-col {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.letter-meta-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.letter-name-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #3A2315;
+}
+.coptic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-vowel {
+  background: linear-gradient(135deg, #E65100 0%, #F57C00 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(230, 81, 0, 0.25);
+}
+.badge-consonant {
+  background: linear-gradient(135deg, #0F4C81 0%, #1976D2 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(15, 76, 129, 0.25);
+}
+.badge-symbol {
+  background: linear-gradient(135deg, #6A1B9A 0%, #8E24AA 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(106, 27, 154, 0.25);
+}
+.badge-compound {
+  background: linear-gradient(135deg, #00695C 0%, #00897B 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 105, 92, 0.25);
+}
+.badge-demotic {
+  background: linear-gradient(135deg, #795548 0%, #A1887F 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(121, 85, 72, 0.25);
+}
+.badge-multi {
+  background: linear-gradient(135deg, #880E4F 0%, #AD1457 100%);
+  color: #FFE082;
+  border: 1px solid #FFE082;
+  box-shadow: 0 2px 8px rgba(136, 14, 79, 0.25);
+}
+.letter-pron-preview {
+  font-size: 0.96rem;
+  color: #5D4037;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.letter-pron-val {
+  color: #8E1B3A;
+  font-weight: 900;
+  background: #FDF4E6;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid #ECD4B6;
+}
+.letter-audio-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.btn-listen-letter {
+  background: linear-gradient(135deg, #6F1737 0%, #8A1E45 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(111, 23, 55, 0.25);
+  transition: all 0.2s ease;
+}
+.btn-listen-letter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(111, 23, 55, 0.35);
+}
+.btn-listen-letter:active {
+  transform: translateY(1px);
+}
+.letter-rules-box {
+  background: #FBF8F2;
+  border: 1px solid #EBDDC9;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+.letter-rules-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #6F1737;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.letter-rules-list {
+  margin: 0;
+  padding-right: 22px;
+  list-style-type: decimal;
+  color: #3E2C22;
+  font-size: 0.96rem;
+  line-height: 1.75;
+  font-weight: 600;
+}
+.letter-rules-list.single-rule {
+  list-style-type: none;
+  padding-right: 4px;
+}
+.letter-rules-list li {
+  margin-bottom: 4px;
+}
+.letter-rules-list li strong {
+  color: #8E1B3A;
+}
+.word-overview-card {
+  background: linear-gradient(180deg, #FFFDF8 0%, #FBF6EC 100%);
+  border: 2px solid #E4D2B8;
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+.word-card-title {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #5D371E;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1.5px solid #ECDDC5;
+  padding-bottom: 8px;
+}
+.word-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+.word-grid-cell {
+  background: #FFFFFF;
+  border: 1.5px solid #EBDDC9;
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.cell-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #8D725C;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+.cell-coptic-val {
+  font-size: 1.8rem;
+  color: #6F1737;
+  font-weight: 800;
+  font-family: 'coptic_font', 'girges', 'Segoe UI Historic', 'Noto Sans Coptic', sans-serif;
+  line-height: 1.2;
+  direction: ltr;
+}
+.cell-phonetic-val {
+  font-size: 1.22rem;
+  color: #A3284B;
+  font-weight: 900;
+}
+.cell-meaning-val {
+  font-size: 1.05rem;
+  color: #2D1B12;
+  font-weight: 800;
+}
+.btn-listen-word {
+  background: #FAF3E6;
+  border: 1.5px solid #C4A052;
+  color: #6F1737;
+  padding: 8px 12px;
+  border-radius: 30px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(196, 160, 82, 0.18);
+  transition: all 0.2s ease;
+}
+.btn-listen-word:hover {
+  background: #C4A052;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+.btn-listen-word:active {
+  transform: translateY(1px);
+}
+
+/* Overview Editor Specific Styles in Dashboard */
+.tv-editor-box {
+  background: #FFFFFF;
+  border: 1.5px solid #E6D7C3;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+.tv-editor-header {
+  font-weight: 800;
+  color: #6F1737;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed #ECD4B6;
+  padding-bottom: 8px;
+}
+.tv-rule-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.tv-rule-num {
+  font-weight: 800;
+  color: #6F1737;
+  min-width: 24px;
+  text-align: center;
+}
+.tv-rule-input {
+  flex: 1;
+  border: 1.5px solid #D9C9B4;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+.tv-live-preview-container {
+  background: #FDFBF7;
+  border: 2px dashed #C4A052;
+  border-radius: 16px;
+  padding: 14px;
+  margin-top: 14px;
 }

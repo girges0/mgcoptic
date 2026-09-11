@@ -8009,38 +8009,38 @@
 
     /* ============ DATA (تتحمّل من قاعدة البيانات عند فتح الموقع مع بيانات احتياطية كاملة) ============ */
     const DEFAULT_ALPHABET = [
-      { glyph: 'Ⲁⲁ', name: 'ألفا', translit: 'أَ', sound: 'كألف مفتوحة، مثل الألف في «باب»', num: '١', audio: 'alfa.mp3' },
-      { glyph: 'Ⲃⲃ', name: 'فيدا', translit: 'ڤ', sound: 'صوت بين الباء والفاء', num: '٢', audio: null },
-      { glyph: 'Ⲅⲅ', name: 'غاما', translit: 'غ', sound: 'كالجيم الفصيحة، وتميل للغين قبل بعض الحروف', num: '٣', audio: null },
-      { glyph: 'Ⲇⲇ', name: 'دلدا', translit: 'د', sound: 'كالدال', num: '٤', audio: null },
-      { glyph: 'Ⲉⲉ', name: 'إي', translit: 'إ', sound: 'حركة قصيرة، كالفتحة الخفيفة', num: '٥', audio: null },
-      { glyph: 'Ⲋⲋ', name: 'سو', translit: '—', sound: 'حرف رقمي فقط (قيمته ٦)، نادرًا ما يُستخدم في الكتابة', num: '٦', audio: null },
-      { glyph: 'Ⲍⲍ', name: 'زاتا', translit: 'ز', sound: 'كالزاي', num: '٧', audio: null },
-      { glyph: 'Ⲏⲏ', name: 'هيتا', translit: 'يه', sound: 'حركة ممدودة، مثل «يه» الممدودة', num: '٨', audio: null },
-      { glyph: 'Ⲑⲑ', name: 'ثيتا', translit: 'ث', sound: 'كالثاء', num: '٩', audio: null },
-      { glyph: 'Ⲓⲓ', name: 'إيوتا', translit: 'ي', sound: 'كالياء', num: '١٠', audio: null },
-      { glyph: 'Ⲕⲕ', name: 'كابا', translit: 'ك', sound: 'كالكاف', num: '٢٠', audio: null },
-      { glyph: 'Ⲗⲗ', name: 'لابدا', translit: 'ل', sound: 'كاللام', num: '٣٠', audio: null },
-      { glyph: 'Ⲙⲙ', name: 'مي', translit: 'م', sound: 'كالميم', num: '٤٠', audio: null },
-      { glyph: 'Ⲛⲛ', name: 'ني', translit: 'ن', sound: 'كالنون', num: '٥٠', audio: null },
-      { glyph: 'Ⲝⲝ', name: 'كسي', translit: 'كس', sound: 'مثل «كس»', num: '٦٠', audio: null },
-      { glyph: 'Ⲟⲟ', name: 'أو', translit: 'ُأ', sound: 'حركة قصيرة كالضمة', num: '٧٠', audio: null },
-      { glyph: 'Ⲡⲡ', name: 'بي', translit: 'ب', sound: 'كالباء', num: '٨٠', audio: null },
-      { glyph: 'Ⲣⲣ', name: 'رو', translit: 'ر', sound: 'كالراء', num: '١٠٠', audio: null },
-      { glyph: 'Ⲥⲥ', name: 'سيما', translit: 'س', sound: 'كالسين', num: '٢٠٠', audio: null },
-      { glyph: 'Ⲧⲧ', name: 'تاف', translit: 'ت', sound: 'كالتاء', num: '٣٠٠', audio: null },
-      { glyph: 'Ⲩⲩ', name: 'إبسيلون', translit: 'و', sound: 'كالواو، أو كحركة مدّية ممدودة حسب الموضع', num: '٤٠٠', audio: null },
-      { glyph: 'Ⲫⲫ', name: 'في', translit: 'ف', sound: 'فاء مفخّمة', num: '٥٠٠', audio: null },
-      { glyph: 'Ⲭⲭ', name: 'خي', translit: 'خ', sound: 'كالخاء', num: '٦٠٠', audio: null },
-      { glyph: 'Ⲯⲯ', name: 'إبسي', translit: 'بس', sound: 'مثل «بس»', num: '٧٠٠', audio: null },
-      { glyph: 'Ⲱⲱ', name: 'أوميغا', translit: 'أو', sound: 'حركة ممدودة مثل «أوو»', num: '٨٠٠', audio: null },
-      { glyph: 'Ϣϣ', name: 'شاي', translit: 'ش', sound: 'كالشين', num: '٩٠٠', audio: null },
-      { glyph: 'Ϥϥ', name: 'فاي', translit: 'ف', sound: 'فاء خفيفة', num: '-', audio: null },
-      { glyph: 'Ϧϧ', name: 'خاي', translit: 'خ', sound: 'خاء حلقية أعمق من «خي»', num: '-', audio: null },
-      { glyph: 'Ϩϩ', name: 'هوري', translit: 'ه', sound: 'كالهاء', num: '-', audio: null },
-      { glyph: 'Ϫϫ', name: 'جانجا', translit: 'ج', sound: 'كالجيم المصرية أو «دج»', num: '-', audio: null },
-      { glyph: 'Ϭϭ', name: 'تشيما', translit: 'تش', sound: 'مثل «تش»', num: '-', audio: null },
-      { glyph: 'Ϯϯ', name: 'تي', translit: 'تي', sound: 'مقطع مركّب «تي»', num: '-', audio: null }
+      { glyph: 'Ⲁⲁ', name: 'ألفا', translit: 'أَ', sound: 'ألف مفتوحة (أَ)', num: '١', audio: 'assets/sounds/1alfa.mp3' },
+      { glyph: 'Ⲃⲃ', name: 'فيدا (بيتا)', translit: 'ڤ / ب', sound: 'ڤ (V) إذا جاء بعده متحرك، أو ب (B) في باقي الحالات', num: '٢', audio: 'assets/sounds/2veta.mp3' },
+      { glyph: 'Ⲅⲅ', name: 'غاما', translit: 'جـ / ن / غ', sound: 'جـ معطشة قبل المتحرك للكسر، ن قبل الحلقيات، غ في باقي الحالات', num: '٣', audio: 'assets/sounds/3ghamma.mp3' },
+      { glyph: 'Ⲇⲇ', name: 'دلدا (دلتا)', translit: 'د / ذ', sound: 'د في الأعلام والكلمات القبطية، وذ في الكلمات اليونانية', num: '٤', audio: 'assets/sounds/4delta.mp3' },
+      { glyph: 'Ⲉⲉ', name: 'إي', translit: 'إ (E)', sound: 'إي خفيفة (فتحة مائلة للكسر)', num: '٥', audio: 'assets/sounds/5ei.mp3' },
+      { glyph: 'Ⲋⲋ', name: 'سو (رقم ٦)', translit: '٦', sound: 'حرف رقمي فقط (قيمته ٦)', num: '٦', audio: 'assets/sounds/6sow.mp3' },
+      { glyph: 'Ⲍⲍ', name: 'زاتا', translit: 'ز (Z)', sound: 'كالزاي دائماً', num: '٧', audio: 'assets/sounds/7zeta.mp3' },
+      { glyph: 'Ⲏⲏ', name: 'هيتا (إيتا)', translit: 'ي (ee)', sound: 'ياء طويلة ممدودة مشبعة', num: '٨', audio: 'assets/sounds/8eta.mp3' },
+      { glyph: 'Ⲑⲑ', name: 'ثيتا', translit: 'ث / ت', sound: 'ث دائماً، وتُنطق ت إذا سبقها س أو ش', num: '٩', audio: 'assets/sounds/9seta.mp3' },
+      { glyph: 'Ⲓⲓ', name: 'إيوتا (يوتا)', translit: 'ي (i)', sound: 'ياء قصيرة خفيفة', num: '١٠', audio: 'assets/sounds/10yota.mp3' },
+      { glyph: 'Ⲕⲕ', name: 'كابا', translit: 'ك (K)', sound: 'كالكاف دائماً', num: '٢٠', audio: 'assets/sounds/11kapa.mp3' },
+      { glyph: 'Ⲗⲗ', name: 'لابدا (لافلا)', translit: 'ل (L)', sound: 'كاللام دائماً', num: '٣٠', audio: 'assets/sounds/12lavla.mp3' },
+      { glyph: 'Ⲙⲙ', name: 'مي', translit: 'م (M)', sound: 'كالميم دائماً', num: '٤٠', audio: 'assets/sounds/13mi.mp3' },
+      { glyph: 'Ⲛⲛ', name: 'ني', translit: 'ن (N)', sound: 'كالنون دائماً', num: '٥٠', audio: 'assets/sounds/14ni.mp3' },
+      { glyph: 'Ⲝⲝ', name: 'كسي', translit: 'كس (X)', sound: 'مقطع مركب: كـ + س', num: '٦٠', audio: 'assets/sounds/15axsy.mp3' },
+      { glyph: 'Ⲟⲟ', name: 'أو (قصيرة)', translit: 'ُأ (O)', sound: 'واو قصيرة مضمومة', num: '٧٠', audio: 'assets/sounds/16oo.mp3' },
+      { glyph: 'Ⲡⲡ', name: 'بي', translit: 'ب (P)', sound: 'باء ثقيلة مشددة', num: '٨٠', audio: 'assets/sounds/17pee.mp3' },
+      { glyph: 'Ⲣⲣ', name: 'رو', translit: 'ر (R)', sound: 'كالراء مفخمة', num: '١٠٠', audio: 'assets/sounds/18roo.mp3' },
+      { glyph: 'Ⲥⲥ', name: 'سيما', translit: 'س (S)', sound: 'كالسين، وتُنطق ز في كلمات يونانية محددة', num: '٢٠٠', audio: 'assets/sounds/19sema.mp3' },
+      { glyph: 'Ⲧⲧ', name: 'تاف', translit: 'ت (T)', sound: 'كالتاء، وتُنطق د بعد النون في الكلمات اليونانية', num: '٣٠٠', audio: 'assets/sounds/20tav.mp3' },
+      { glyph: 'Ⲩⲩ', name: 'إبسيلون', translit: 'ڤ / و / ي', sound: 'ڤ بعد A/E، أو و بعد O، أو ي في باقي الحالات', num: '٤٠٠', audio: 'assets/sounds/21epselon.mp3' },
+      { glyph: 'Ⲫⲫ', name: 'في', translit: 'ف (F)', sound: 'كالفاء دائماً', num: '٥٠٠', audio: 'assets/sounds/22fi.mp3' },
+      { glyph: 'Ⲭⲭ', name: 'خي (كي)', translit: 'ك / ش / خ', sound: 'ك في الكلمات القبطية، وش أو خ في الكلمات اليونانية', num: '٦٠٠', audio: 'assets/sounds/23ki.mp3' },
+      { glyph: 'Ⲯⲯ', name: 'إبسي', translit: 'بس (Ps)', sound: 'مقطع مركب: بـ + س', num: '٧٠٠', audio: 'assets/sounds/24psi.mp3' },
+      { glyph: 'Ⲱⲱ', name: 'أوميغا (أو طويلة)', translit: 'أُو (Ō)', sound: 'واو طويلة ممدودة مفتوحة', num: '٨٠٠', audio: 'assets/sounds/25oo.mp3' },
+      { glyph: 'Ϣϣ', name: 'شاي', translit: 'ش (Sh)', sound: 'كالشين دائماً (حرف مصري ديموطيقي)', num: '٩٠٠', audio: 'assets/sounds/26shay.mp3' },
+      { glyph: 'Ϥϥ', name: 'فاي', translit: 'ف (F)', sound: 'كالفاء دائماً (حرف مصري ديموطيقي)', num: '—', audio: 'assets/sounds/27fay.mp3' },
+      { glyph: 'Ϧϧ', name: 'خاي', translit: 'خ (Kh)', sound: 'كالخاء دائماً (حرف مصري ديموطيقي)', num: '—', audio: 'assets/sounds/28khay.mp3' },
+      { glyph: 'Ϩϩ', name: 'هوري', translit: 'هـ (H)', sound: 'كالهاء دائماً (حرف مصري ديموطيقي)', num: '—', audio: 'assets/sounds/29hory.mp3' },
+      { glyph: 'Ϫϫ', name: 'جانجا', translit: 'جـ / ج', sound: 'جـ معطشة قبل متحرك الكسر، أو ج غير معطشة في باقي الحالات', num: '—', audio: 'assets/sounds/30ganga.mp3' },
+      { glyph: 'Ϭϭ', name: 'تشيما', translit: 'تش (Tsh)', sound: 'كصوت «تش» دائماً (حرف مصري ديموطيقي)', num: '—', audio: 'assets/sounds/31chema.mp3' },
+      { glyph: 'Ϯϯ', name: 'تي', translit: 'تي (Ti)', sound: 'مقطع مركب: تـ + ي (حرف مصري ديموطيقي)', num: '—', audio: 'assets/sounds/32tee.mp3' }
     ];
 
     let alphabetData = [...DEFAULT_ALPHABET];
@@ -9199,8 +9199,13 @@
         return url;
       }
 
-      // ملف صوت محلي داخل مجلد audio/
-      return 'audio/' + url;
+      // مسارات صوتية محلية مباشرة
+      if (url.startsWith('assets/') || url.startsWith('audio_coptic/') || url.startsWith('audio/')) {
+        return url;
+      }
+
+      // ملف صوت محلي داخل assets/sounds/
+      return 'assets/sounds/' + url;
     }
 
     let _activePlayingAudio = null;

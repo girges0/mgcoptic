@@ -45,14 +45,14 @@ const LETTERS_DATA = [
     letterUpper: 'Ⲃ',
     letterLower: 'ⲃ',
     nameAr: 'فيدا',
-    pronunciationAr: 'ف (V) أو ب (B)',
+    pronunciationAr: 'ف أو ب',
     soundFile: 'audio_coptic/2veta.mp3',
     info: 'الحرف الثاني. يُنطق "ف" إذا جاء بعده حرف متحرك، ويُنطق "ب" إذا لم يأتِ بعده متحرك أو في نهاية الكلمة.',
     wordCoptic: 'ⲃⲉⲣⲧ',
     wordPhoneticAr: 'فيرت',
     wordMeaning: 'وردة',
     wrongMeanings: ['شجرة', 'ماء', 'نور'],
-    wrongLetterPron: ['ألفا (أ)', 'دلدا (د أو ذ)', 'إي (E)']
+    wrongLetterPron: ['ألفا (أ)', 'دلدا (د أو ذ)', 'إي (إي)']
   },
   {
     unitIndex: 1,

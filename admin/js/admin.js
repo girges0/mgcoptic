@@ -63,8 +63,13 @@ function resolveAudioCandidates(input){
     return [url];
   }
 
-  // ملف صوت محلي داخل مجلد audio/
-  return ['audio/' + url, url];
+  // مسارات صوتية محلية مباشرة
+  if(url.startsWith('assets/') || url.startsWith('audio_coptic/') || url.startsWith('audio/')){
+    return ['../' + url, url, 'audio/' + url];
+  }
+
+  // ملف صوت محلي داخل assets/sounds/
+  return ['../assets/sounds/' + url, 'assets/sounds/' + url, 'audio/' + url, url];
 }
 
 function resolveAudioUrl(input){

@@ -494,37 +494,115 @@
 
   // توليد HTML الكامل للنبذة الشاملة
   function renderLetterOverviewCardHtml(ch) {
-    const item = findLetterCatalogItem(ch);
+    let item = null;
 
-    // إذا وجدنا الحرف في الفهرس المكتمل
+    // 1. التحقق من وجود بيانات مخصصة محفوظة من الداش بورد
+    if (ch && ch.overview_data && typeof ch.overview_data === 'object' && (ch.overview_data.name || ch.overview_data.word)) {
+      item = ch.overview_data;
+    } else if (ch && ch.explanation && typeof ch.explanation === 'string' && ch.explanation.trim().startsWith('{')) {
+      try {
+        const parsed = JSON.parse(ch.explanation);
+        if (parsed && (parsed.name || parsed.word)) {
+          item = parsed;
+        }
+      } catch (e) {}
+    }
+
+    // 2. إذا لم تكن معدلة يدوياً، استخدام الفهرس المعتمد للحرف
+    if (!item) {
+      item = findLetterCatalogItem(ch);
+    }
+
+    // إذا وجدنا الحرف في الفهرس أو البيانات المخصصة
     if (item) {
-      const title = ch.question || `نبذة عن حرف ${item.name} (${item.pair})`;
+      const title = ch.question || item.title || `نبذة عن حرف ${item.name} (${item.pair || item.upper || ''})`;
+      const pair = item.pair || `${item.upper || ''} ${item.lower || ''}`.trim();
+      const badgeClass = item.badgeClass || (item.isVowel ? 'badge-vowel' : 'badge-consonant');
+      const typeBadge = item.letterTypeBadge || (item.isVowel ? 'حرف متحرك' : 'حرف ساكن');
+      const hasMulti = item.hasMultiple || (item.multipleCountText ? true : false);
+      const multiText = item.multipleCountText || '';
+      const pron = item.pronunciation || '';
+      const soundFile = item.soundFile || ch.audio_url || '';
+      const rulesTitle = item.rulesTitle || (hasMulti ? 'حالات وقواعد نطق الحرف بالتفصيل:' : 'قاعدة نطق الحرف:');
+      const rules = Array.isArray(item.rules) ? item.rules : (item.rules ? [item.rules] : []);
+      const wordTitle = item.wordTitle || 'نبذة عن الكلمة التطبيقية على الحرف';
+      const wordObj = item.word || {};
+      const copticWord = wordObj.coptic || '';
+      const phoneticAr = wordObj.phoneticAr || '';
+      const meaning = wordObj.meaning || '';
+
+      // قراءة الألوان المخصصة مع قيم افتراضية متناسقة
+      const colors = item.colors || {};
+      const titleStyle = colors.titleColor ? `style="color:${colors.titleColor} !important;"` : '';
+      
+      const letterCardStyles = [];
+      if (colors.cardBg) letterCardStyles.push(`background:${colors.cardBg} !important;`);
+      if (colors.cardBorder) letterCardStyles.push(`border-color:${colors.cardBorder} !important;`);
+      const letterCardAttr = letterCardStyles.length ? `style="${letterCardStyles.join(' ')}"` : '';
+
+      const glyphBoxStyles = [];
+      if (colors.glyphBg) glyphBoxStyles.push(`background:${colors.glyphBg} !important;`);
+      if (colors.glyphBorder) glyphBoxStyles.push(`border-color:${colors.glyphBorder} !important;`);
+      const glyphBoxAttr = glyphBoxStyles.length ? `style="${glyphBoxStyles.join(' ')}"` : '';
+
+      const glyphValAttr = colors.glyphColor ? `style="color:${colors.glyphColor} !important;"` : '';
+
+      const pronValStyles = [];
+      if (colors.pronColor) pronValStyles.push(`color:${colors.pronColor} !important;`);
+      if (colors.pronBg) pronValStyles.push(`background:${colors.pronBg} !important;`);
+      if (colors.pronBorder) pronValStyles.push(`border-color:${colors.pronBorder} !important;`);
+      const pronValAttr = pronValStyles.length ? `style="${pronValStyles.join(' ')}"` : '';
+
+      const rulesBoxStyles = [];
+      if (colors.rulesBg) rulesBoxStyles.push(`background:${colors.rulesBg} !important;`);
+      if (colors.rulesBorder) rulesBoxStyles.push(`border-color:${colors.rulesBorder} !important;`);
+      const rulesBoxAttr = rulesBoxStyles.length ? `style="${rulesBoxStyles.join(' ')}"` : '';
+
+      const rulesTitleAttr = colors.rulesTitleColor ? `style="color:${colors.rulesTitleColor} !important;"` : '';
+      const rulesTextAttr = colors.rulesTextColor ? `style="color:${colors.rulesTextColor} !important;"` : '';
+
+      const wordCardStyles = [];
+      if (colors.wordCardBg) wordCardStyles.push(`background:${colors.wordCardBg} !important;`);
+      if (colors.wordCardBorder) wordCardStyles.push(`border-color:${colors.wordCardBorder} !important;`);
+      const wordCardAttr = wordCardStyles.length ? `style="${wordCardStyles.join(' ')}"` : '';
+
+      const wordTitleAttr = colors.wordTitleColor ? `style="color:${colors.wordTitleColor} !important;"` : '';
+
+      const wordCellStyles = [];
+      if (colors.wordCellBg) wordCellStyles.push(`background:${colors.wordCellBg} !important;`);
+      if (colors.wordCellBorder) wordCellStyles.push(`border-color:${colors.wordCellBorder} !important;`);
+      const wordCellAttr = wordCellStyles.length ? `style="${wordCellStyles.join(' ')}"` : '';
+
+      const wordCopticAttr = colors.wordCopticColor ? `style="color:${colors.wordCopticColor} !important;"` : '';
+      const wordPhoneticAttr = colors.wordPhoneticColor ? `style="color:${colors.wordPhoneticColor} !important;"` : '';
+      const wordMeaningAttr = colors.wordMeaningColor ? `style="color:${colors.wordMeaningColor} !important;"` : '';
+
       return `
-        <div class="question-heading">${escapeHtml(title)}</div>
+        <div class="question-heading" ${titleStyle}>${escapeHtml(title)}</div>
         
         <div class="coptic-overview-wrap">
           
           <!-- بطاقة النبذة عن الحرف -->
-          <div class="letter-overview-card">
+          <div class="letter-overview-card" ${letterCardAttr}>
             <div class="letter-overview-header">
-              <div class="letter-glyph-box">
-                <span class="letter-glyph-val">${item.pair}</span>
+              <div class="letter-glyph-box" ${glyphBoxAttr}>
+                <span class="letter-glyph-val" ${glyphValAttr}>${escapeHtml(pair)}</span>
               </div>
 
               <div class="letter-meta-col">
                 <div class="letter-meta-top">
-                  <span class="letter-name-title">حرف ${item.name}</span>
-                  <span class="coptic-badge ${item.badgeClass}">${item.letterTypeBadge}</span>
-                  ${item.hasMultiple ? `<span class="coptic-badge badge-multi">${item.multipleCountText}</span>` : ''}
+                  <span class="letter-name-title">حرف ${escapeHtml(item.name)}</span>
+                  <span class="coptic-badge ${badgeClass}">${escapeHtml(typeBadge)}</span>
+                  ${hasMulti && multiText ? `<span class="coptic-badge badge-multi">${escapeHtml(multiText)}</span>` : ''}
                 </div>
                 <div class="letter-pron-preview">
                   <span>النطق بالعربي:</span>
-                  <span class="letter-pron-val">« ${item.pronunciation} »</span>
+                  <span class="letter-pron-val" ${pronValAttr}>« ${escapeHtml(pron)} »</span>
                 </div>
               </div>
 
               <div class="letter-audio-action">
-                <button type="button" class="btn-listen-letter" aria-label="استمع لنطق الحرف" title="استمع لنطق الحرف" onclick="window.playChallengeAudio ? window.playChallengeAudio('${item.soundFile}', '${item.name}', this) : (window.Sound && window.Sound.playChallengeAudio ? window.Sound.playChallengeAudio('${item.soundFile}', '${item.name}') : null)">
+                <button type="button" class="btn-listen-letter" aria-label="استمع لنطق الحرف" title="استمع لنطق الحرف" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('${soundFile}', '${item.name}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('${soundFile}', '${item.name}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio('${soundFile}', '${item.name}'); }">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
@@ -535,43 +613,43 @@
               </div>
             </div>
 
-            <div class="letter-rules-box">
-              <div class="letter-rules-title">
+            <div class="letter-rules-box" ${rulesBoxAttr}>
+              <div class="letter-rules-title" ${rulesTitleAttr}>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                <span>${item.hasMultiple ? 'حالات وقواعد نطق الحرف بالتفصيل:' : 'قاعدة نطق الحرف:'}</span>
+                <span>${escapeHtml(rulesTitle)}</span>
               </div>
-              <ol class="letter-rules-list ${item.rules.length === 1 ? 'single-rule' : ''}">
-                ${item.rules.map(r => `<li>${r}</li>`).join('')}
+              <ol class="letter-rules-list ${rules.length <= 1 ? 'single-rule' : ''}" ${rulesTextAttr}>
+                ${rules.map(r => `<li>${r}</li>`).join('')}
               </ol>
             </div>
           </div>
 
           <!-- بطاقة النبذة عن الكلمة التطبيقية -->
-          <div class="word-overview-card">
-            <div class="word-card-title">
+          <div class="word-overview-card" ${wordCardAttr}>
+            <div class="word-card-title" ${wordTitleAttr}>
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              <span>نبذة عن الكلمة التطبيقية على الحرف</span>
+              <span>${escapeHtml(wordTitle)}</span>
             </div>
 
             <div class="word-card-grid">
-              <div class="word-grid-cell">
+              <div class="word-grid-cell" ${wordCellAttr}>
                 <span class="cell-label">الكلمة بالقبطية</span>
-                <span class="cell-coptic-val">${item.word.coptic}</span>
+                <span class="cell-coptic-val" ${wordCopticAttr}>${escapeHtml(copticWord)}</span>
               </div>
 
-              <div class="word-grid-cell">
+              <div class="word-grid-cell" ${wordCellAttr}>
                 <span class="cell-label">القبطي المعرب (النطق)</span>
-                <span class="cell-phonetic-val">« ${item.word.phoneticAr} »</span>
+                <span class="cell-phonetic-val" ${wordPhoneticAttr}>« ${escapeHtml(phoneticAr)} »</span>
               </div>
 
-              <div class="word-grid-cell">
+              <div class="word-grid-cell" ${wordCellAttr}>
                 <span class="cell-label">المعنى بالعربية</span>
-                <span class="cell-meaning-val">${item.word.meaning}</span>
+                <span class="cell-meaning-val" ${wordMeaningAttr}>${escapeHtml(meaning)}</span>
               </div>
 
-              <div class="word-grid-cell">
+              <div class="word-grid-cell" ${wordCellAttr}>
                 <span class="cell-label">النطق السماعي</span>
-                <button type="button" class="btn-listen-word" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="window.playChallengeAudio ? window.playChallengeAudio('', '${item.word.phoneticAr}', this) : (window.Sound && window.Sound.playChallengeAudio ? window.Sound.playChallengeAudio('', '${item.word.phoneticAr}') : null)">
+                <button type="button" class="btn-listen-word" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('', '${phoneticAr}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('', '${phoneticAr}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio('', '${phoneticAr}'); }">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                   <span>استمع للكلمة</span>
                 </button>

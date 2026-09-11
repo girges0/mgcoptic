@@ -275,7 +275,7 @@
                 {
                   "id": 2949,
                   "challenge_id": 445,
-                  "text": "ف (V) أو ب (B)",
+                  "text": "ف أو ب",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -291,7 +291,7 @@
                 {
                   "id": 2951,
                   "challenge_id": 445,
-                  "text": "E",
+                  "text": "إي",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null

@@ -2075,7 +2075,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (2949, 445, 'فيدا — ينطق: ف (V) أو ب (B)', TRUE)
+    VALUES (2949, 445, 'ف أو ب', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2703,7 +2703,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (2951, 445, 'إي (E)', FALSE)
+    VALUES (2951, 445, 'إي', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)

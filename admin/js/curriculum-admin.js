@@ -1,3 +1,10 @@
+window.playChallengeAudio = function(url, text, btn){
+  if(window.CurriculumAdminSystem && typeof window.CurriculumAdminSystem.playAudioSnippet === 'function'){
+    window.CurriculumAdminSystem.playAudioSnippet(url, text, btn);
+  } else {
+    try { const a = new Audio(url); a.play(); } catch(e){}
+  }
+};
 const CurriculumAdminSystem = (function(){
   const DEFAULT_SEEDED_CURRICULUM = {"levels":[{"id":5,"title":"المستوى الأول: الأبجدية القبطية الكاملة","description":"تعلّم قراءة وكتابة ونطق الـ ٣٢ حرفاً القبطية وتكوين الكلمات خطوة بخطوة","order_index":1}],"level":{"id":5,"title":"المستوى الأول: الأبجدية القبطية الكاملة","description":"تعلّم قراءة وكتابة ونطق الـ ٣٢ حرفاً القبطية وتكوين الكلمات خطوة بخطوة","order_index":1},"units":[{"id":34,"level_id":5,"title":"الوحدة ١: الحروف الأولى (Ⲁ – Ⲉ)","badge":"Ⲁ-Ⲉ","description":"تعلّم كتابة ونطق أول 5 حروف في الأبجدية القبطية","order_index":1,"lessons":[{"id":93,"unit_id":34,"title":"حرف ألفا (Ⲁ ⲁ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":436,"lesson_id":93,"type":"text_view","question":"نبذة عن حرف ألفا (Ⲁ ⲁ)","coptic_display":"Ⲁ ⲁ","audio_text":"ألفا","audio_url":"audio_coptic/1alfa.mp3","correct_word":"• اسم الحرف: ألفا\n• نطق الحرف بالعربي: ألف مفتوحة (أ)\n• قواعد النطق: الحرف الأول في الأبجدية القبطية. يُنطق دائماً مثل حرف الألف المفتوحة في العربية أو (A) في الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲗⲟⲩ\n  - القبطي المعرب (نطقها): «أَلو»\n  - المعنى بالعربية: ولد / طفل\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":437,"lesson_id":93,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲁ واستمع لنطقه","coptic_display":"Ⲁ","audio_text":"ألفا كابيتال","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":438,"lesson_id":93,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲁ واستمع لنطقه","coptic_display":"ⲁ","audio_text":"ألفا سمول","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":439,"lesson_id":93,"type":"read_select","question":"ما هو نطق الحرف Ⲁ بالعربية؟","coptic_display":"Ⲁ","audio_text":"ألفا","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2943,"challenge_id":439,"text":"غاما (غ أو ج)","is_correct":false,"image_url":null,"audio_url":null},{"id":2940,"challenge_id":439,"text":"دلدا (د أو ذ)","is_correct":false,"image_url":null,"audio_url":null},{"id":2941,"challenge_id":439,"text":"فيدا (ف أو ب)","is_correct":false,"image_url":null,"audio_url":null},{"id":2942,"challenge_id":439,"text":"ألفا — ينطق: ألف مفتوحة (أ)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":440,"lesson_id":93,"type":"select","question":"ما معنى الكلمة القبطية: ⲁⲗⲟⲩ؟ (المعرب: «أَلو»)","coptic_display":"ⲁⲗⲟⲩ","audio_text":"أَلو","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2944,"challenge_id":440,"text":"ولد / طفل","is_correct":true,"image_url":null,"audio_url":null},{"id":2945,"challenge_id":440,"text":"شمس","is_correct":false,"image_url":null,"audio_url":null},{"id":2946,"challenge_id":440,"text":"بنت","is_correct":false,"image_url":null,"audio_url":null},{"id":2947,"challenge_id":440,"text":"مدرسة","is_correct":false,"image_url":null,"audio_url":null}]},{"id":441,"lesson_id":93,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: ولد / طفل (المعرب: «أَلو»)","coptic_display":"ⲁⲗⲟⲩ","audio_text":"أَلو","audio_url":"audio_coptic/1alfa.mp3","correct_word":"ⲁⲗⲟⲩ","tiles":["ⲁ","ⲗ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":94,"unit_id":34,"title":"حرف فيدا (Ⲃ ⲃ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":442,"lesson_id":94,"type":"text_view","question":"نبذة عن حرف فيدا (Ⲃ ⲃ)","coptic_display":"Ⲃ ⲃ","audio_text":"فيدا","audio_url":"audio_coptic/2veta.mp3","correct_word":"• اسم الحرف: فيدا\n• نطق الحرف بالعربي: ف (V) أو ب (B)\n• قواعد النطق: الحرف الثاني. يُنطق \"ف\" إذا جاء بعده حرف متحرك، ويُنطق \"ب\" إذا لم يأتِ بعده متحرك أو في نهاية الكلمة.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲃⲉⲣⲧ\n  - القبطي المعرب (نطقها): «فيرت»\n  - المعنى بالعربية: وردة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":443,"lesson_id":94,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲃ واستمع لنطقه","coptic_display":"Ⲃ","audio_text":"فيدا كابيتال","audio_url":"audio_coptic/2veta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":444,"lesson_id":94,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲃ واستمع لنطقه","coptic_display":"ⲃ","audio_text":"فيدا سمول","audio_url":"audio_coptic/2veta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":445,"lesson_id":94,"type":"read_select","question":"ما هو نطق الحرف Ⲃ بالعربية؟","coptic_display":"Ⲃ","audio_text":"فيدا","audio_url":"audio_coptic/2veta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2948,"challenge_id":445,"text":"دلدا (د أو ذ)","is_correct":false,"image_url":null,"audio_url":null},{"id":2949,"challenge_id":445,"text":"فيدا — ينطق: ف (V) أو ب (B)","is_correct":true,"image_url":null,"audio_url":null},{"id":2950,"challenge_id":445,"text":"ألفا (أ)","is_correct":false,"image_url":null,"audio_url":null},{"id":2951,"challenge_id":445,"text":"إي (E)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":446,"lesson_id":94,"type":"select","question":"ما معنى الكلمة القبطية: ⲃⲉⲣⲧ؟ (المعرب: «فيرت»)","coptic_display":"ⲃⲉⲣⲧ","audio_text":"فيرت","audio_url":"audio_coptic/2veta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2953,"challenge_id":446,"text":"وردة","is_correct":true,"image_url":null,"audio_url":null},{"id":2954,"challenge_id":446,"text":"ماء","is_correct":false,"image_url":null,"audio_url":null},{"id":2952,"challenge_id":446,"text":"شجرة","is_correct":false,"image_url":null,"audio_url":null},{"id":2955,"challenge_id":446,"text":"نور","is_correct":false,"image_url":null,"audio_url":null}]},{"id":447,"lesson_id":94,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: وردة (المعرب: «فيرت»)","coptic_display":"ⲃⲉⲣⲧ","audio_text":"فيرت","audio_url":"audio_coptic/2veta.mp3","correct_word":"ⲃⲉⲣⲧ","tiles":["ⲃ","ⲉ","ⲣ","ⲧ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":95,"unit_id":34,"title":"حرف غاما (Ⲅ ⲅ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":448,"lesson_id":95,"type":"text_view","question":"نبذة عن حرف غاما (Ⲅ ⲅ)","coptic_display":"Ⲅ ⲅ","audio_text":"غاما","audio_url":"audio_coptic/3ghamma.mp3","correct_word":"• اسم الحرف: غاما\n• نطق الحرف بالعربي: غ أو ج أو ن\n• قواعد النطق: الحرف الثالث. ينطق \"غ\" في الكلمات القبطية، و\"ن\" قبل الحلقيات، و\"ج\" معطشة قبل المتحرك للكسر في اليونانية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲅⲅⲉⲗⲟⲥ\n  - القبطي المعرب (نطقها): «أنجيلوس»\n  - المعنى بالعربية: ملاك\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":449,"lesson_id":95,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲅ واستمع لنطقه","coptic_display":"Ⲅ","audio_text":"غاما كابيتال","audio_url":"audio_coptic/3ghamma.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":450,"lesson_id":95,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲅ واستمع لنطقه","coptic_display":"ⲅ","audio_text":"غاما سمول","audio_url":"audio_coptic/3ghamma.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":451,"lesson_id":95,"type":"read_select","question":"ما هو نطق الحرف Ⲅ بالعربية؟","coptic_display":"Ⲅ","audio_text":"غاما","audio_url":"audio_coptic/3ghamma.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2958,"challenge_id":451,"text":"فيدا (ف أو ب)","is_correct":false,"image_url":null,"audio_url":null},{"id":2959,"challenge_id":451,"text":"غاما — ينطق: غ أو ج أو ن","is_correct":true,"image_url":null,"audio_url":null},{"id":2956,"challenge_id":451,"text":"سو (٦)","is_correct":false,"image_url":null,"audio_url":null},{"id":2957,"challenge_id":451,"text":"زاتا (ز)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":452,"lesson_id":95,"type":"select","question":"ما معنى الكلمة القبطية: ⲁⲅⲅⲉⲗⲟⲥ؟ (المعرب: «أنجيلوس»)","coptic_display":"ⲁⲅⲅⲉⲗⲟⲥ","audio_text":"أنجيلوس","audio_url":"audio_coptic/3ghamma.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2960,"challenge_id":452,"text":"قديس","is_correct":false,"image_url":null,"audio_url":null},{"id":2961,"challenge_id":452,"text":"ملاك","is_correct":true,"image_url":null,"audio_url":null},{"id":2962,"challenge_id":452,"text":"إنسان","is_correct":false,"image_url":null,"audio_url":null},{"id":2963,"challenge_id":452,"text":"نبي","is_correct":false,"image_url":null,"audio_url":null}]},{"id":453,"lesson_id":95,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: ملاك (المعرب: «أنجيلوس»)","coptic_display":"ⲁⲅⲅⲉⲗⲟⲥ","audio_text":"أنجيلوس","audio_url":"audio_coptic/3ghamma.mp3","correct_word":"ⲁⲅⲅⲉⲗⲟⲥ","tiles":["ⲁ","ⲅ","ⲅ","ⲉ","ⲗ","ⲟ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":96,"unit_id":34,"title":"حرف دلدا (Ⲇ ⲇ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":454,"lesson_id":96,"type":"text_view","question":"نبذة عن حرف دلدا (Ⲇ ⲇ)","coptic_display":"Ⲇ ⲇ","audio_text":"دلدا","audio_url":"audio_coptic/4delta.mp3","correct_word":"• اسم الحرف: دلدا\n• نطق الحرف بالعربي: د أو ذ\n• قواعد النطق: الحرف الرابع. يُنطق \"د\" في أسماء الأعلام والكلمات القبطية، و\"ذ\" في الكلمات اليونانية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲇⲱⲣⲟⲛ\n  - القبطي المعرب (نطقها): «ذورون»\n  - المعنى بالعربية: عطية / هدية\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":455,"lesson_id":96,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲇ واستمع لنطقه","coptic_display":"Ⲇ","audio_text":"دلدا كابيتال","audio_url":"audio_coptic/4delta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":456,"lesson_id":96,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲇ واستمع لنطقه","coptic_display":"ⲇ","audio_text":"دلدا سمول","audio_url":"audio_coptic/4delta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":457,"lesson_id":96,"type":"read_select","question":"ما هو نطق الحرف Ⲇ بالعربية؟","coptic_display":"Ⲇ","audio_text":"دلدا","audio_url":"audio_coptic/4delta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2964,"challenge_id":457,"text":"دلدا — ينطق: د أو ذ","is_correct":true,"image_url":null,"audio_url":null},{"id":2965,"challenge_id":457,"text":"غاما (غ أو ج)","is_correct":false,"image_url":null,"audio_url":null},{"id":2966,"challenge_id":457,"text":"إي (E)","is_correct":false,"image_url":null,"audio_url":null},{"id":2967,"challenge_id":457,"text":"هيتا (ياء طويلة)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":458,"lesson_id":96,"type":"select","question":"ما معنى الكلمة القبطية: ⲇⲱⲣⲟⲛ؟ (المعرب: «ذورون»)","coptic_display":"ⲇⲱⲣⲟⲛ","audio_text":"ذورون","audio_url":"audio_coptic/4delta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2968,"challenge_id":458,"text":"عطية / هدية","is_correct":true,"image_url":null,"audio_url":null},{"id":2970,"challenge_id":458,"text":"صلاة","is_correct":false,"image_url":null,"audio_url":null},{"id":2971,"challenge_id":458,"text":"خبز","is_correct":false,"image_url":null,"audio_url":null},{"id":2969,"challenge_id":458,"text":"كتاب","is_correct":false,"image_url":null,"audio_url":null}]},{"id":459,"lesson_id":96,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: عطية / هدية (المعرب: «ذورون»)","coptic_display":"ⲇⲱⲣⲟⲛ","audio_text":"ذورون","audio_url":"audio_coptic/4delta.mp3","correct_word":"ⲇⲱⲣⲟⲛ","tiles":["ⲇ","ⲱ","ⲣ","ⲟ","ⲛ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":97,"unit_id":34,"title":"حرف إي (Ⲉ ⲉ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":460,"lesson_id":97,"type":"text_view","question":"نبذة عن حرف إي (Ⲉ ⲉ)","coptic_display":"Ⲉ ⲉ","audio_text":"إي","audio_url":"audio_coptic/5ei.mp3","correct_word":"• اسم الحرف: إي\n• نطق الحرف بالعربي: إي خفيفة (E)\n• قواعد النطق: الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲉⲛ\n  - القبطي المعرب (نطقها): «إن»\n  - المعنى بالعربية: قرد\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":461,"lesson_id":97,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲉ واستمع لنطقه","coptic_display":"Ⲉ","audio_text":"إي كابيتال","audio_url":"audio_coptic/5ei.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":462,"lesson_id":97,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲉ واستمع لنطقه","coptic_display":"ⲉ","audio_text":"إي سمول","audio_url":"audio_coptic/5ei.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":463,"lesson_id":97,"type":"read_select","question":"ما هو نطق الحرف Ⲉ بالعربية؟","coptic_display":"Ⲉ","audio_text":"إي","audio_url":"audio_coptic/5ei.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2973,"challenge_id":463,"text":"فيدا (ف أو ب)","is_correct":false,"image_url":null,"audio_url":null},{"id":2974,"challenge_id":463,"text":"إي — ينطق: إي خفيفة (E)","is_correct":true,"image_url":null,"audio_url":null},{"id":2972,"challenge_id":463,"text":"ألفا (أ)","is_correct":false,"image_url":null,"audio_url":null},{"id":2975,"challenge_id":463,"text":"دلدا (د أو ذ)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":464,"lesson_id":97,"type":"select","question":"ما معنى الكلمة القبطية: ⲉⲛ؟ (المعرب: «إن»)","coptic_display":"ⲉⲛ","audio_text":"إن","audio_url":"audio_coptic/5ei.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2976,"challenge_id":464,"text":"طائر","is_correct":false,"image_url":null,"audio_url":null},{"id":2977,"challenge_id":464,"text":"سمكة","is_correct":false,"image_url":null,"audio_url":null},{"id":2978,"challenge_id":464,"text":"قرد","is_correct":true,"image_url":null,"audio_url":null},{"id":2979,"challenge_id":464,"text":"أسد","is_correct":false,"image_url":null,"audio_url":null}]},{"id":465,"lesson_id":97,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: قرد (المعرب: «إن»)","coptic_display":"ⲉⲛ","audio_text":"إن","audio_url":"audio_coptic/5ei.mp3","correct_word":"ⲉⲛ","tiles":["ⲉ","ⲛ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":125,"unit_id":34,"title":"🔄 مراجعة الوحدة 1","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":628,"lesson_id":125,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲁ ⲁ","right":"ألفا (ألف مفتوحة (أ))"},{"left":"Ⲃ ⲃ","right":"فيدا (ف (V) أو ب (B))"},{"left":"Ⲅ ⲅ","right":"غاما (غ أو ج أو ن)"},{"left":"Ⲇ ⲇ","right":"دلدا (د أو ذ)"}],"is_correct":true,"order_index":1,"options":[]},{"id":629,"lesson_id":125,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"ألفا","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3199,"challenge_id":629,"text":"Ⲅ ⲅ (غاما)","is_correct":false,"image_url":null,"audio_url":null},{"id":3198,"challenge_id":629,"text":"Ⲇ ⲇ (دلدا)","is_correct":false,"image_url":null,"audio_url":null},{"id":3196,"challenge_id":629,"text":"Ⲁ ⲁ (ألفا)","is_correct":true,"image_url":null,"audio_url":null},{"id":3197,"challenge_id":629,"text":"Ⲃ ⲃ (فيدا)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":630,"lesson_id":125,"type":"select","question":"ما معنى الكلمة: ⲃⲉⲣⲧ؟ (المعرب: «فيرت»)","coptic_display":"ⲃⲉⲣⲧ","audio_text":"فيرت","audio_url":"audio_coptic/2veta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3200,"challenge_id":630,"text":"نور","is_correct":false,"image_url":null,"audio_url":null},{"id":3202,"challenge_id":630,"text":"شجرة","is_correct":false,"image_url":null,"audio_url":null},{"id":3203,"challenge_id":630,"text":"وردة","is_correct":true,"image_url":null,"audio_url":null},{"id":3201,"challenge_id":630,"text":"ماء","is_correct":false,"image_url":null,"audio_url":null}]},{"id":631,"lesson_id":125,"type":"write","question":"رتب حروف الكلمة: قرد (المعرب: «إن»)","coptic_display":"ⲉⲛ","audio_text":"إن","audio_url":"audio_coptic/5ei.mp3","correct_word":"ⲉⲛ","tiles":["ⲉ","ⲛ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":632,"lesson_id":125,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ⲅ؟","coptic_display":"Ⲅ","audio_text":"غاما","audio_url":"audio_coptic/3ghamma.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3205,"challenge_id":632,"text":"زاتا (ز)","is_correct":false,"image_url":null,"audio_url":null},{"id":3206,"challenge_id":632,"text":"فيدا (ف أو ب)","is_correct":false,"image_url":null,"audio_url":null},{"id":3204,"challenge_id":632,"text":"سو (٦)","is_correct":false,"image_url":null,"audio_url":null},{"id":3207,"challenge_id":632,"text":"غاما (غ أو ج أو ن)","is_correct":true,"image_url":null,"audio_url":null}]}]}]},{"id":35,"level_id":5,"title":"الوحدة ٢: الحروف من (Ⲋ – Ⲓ)","badge":"Ⲋ-Ⲓ","description":"تعلّم الرمز العددي سو والحروف من زاتا إلى إيوتا","order_index":2,"lessons":[{"id":98,"unit_id":35,"title":"حرف سو (رقم ٦) (Ⲋ ⲋ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":466,"lesson_id":98,"type":"text_view","question":"نبذة عن حرف سو (رقم ٦) (Ⲋ ⲋ)","coptic_display":"Ⲋ ⲋ","audio_text":"سو (رقم ٦)","audio_url":"audio_coptic/6sow.mp3","correct_word":"• اسم الحرف: سو (رقم ٦)\n• نطق الحرف بالعربي: سو (الرقم 6)\n• قواعد النطق: رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق \"سو\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲟⲟⲩ\n  - القبطي المعرب (نطقها): «سو»\n  - المعنى بالعربية: الرقم ستة (٦)\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":467,"lesson_id":98,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲋ واستمع لنطقه","coptic_display":"Ⲋ","audio_text":"سو (رقم ٦) كابيتال","audio_url":"audio_coptic/6sow.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":468,"lesson_id":98,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲋ واستمع لنطقه","coptic_display":"ⲋ","audio_text":"سو (رقم ٦) سمول","audio_url":"audio_coptic/6sow.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":469,"lesson_id":98,"type":"read_select","question":"ما هو نطق الحرف Ⲋ بالعربية؟","coptic_display":"Ⲋ","audio_text":"سو (رقم ٦)","audio_url":"audio_coptic/6sow.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2981,"challenge_id":469,"text":"زاتا (ز)","is_correct":false,"image_url":null,"audio_url":null},{"id":2980,"challenge_id":469,"text":"ثيتا (ث أو ت)","is_correct":false,"image_url":null,"audio_url":null},{"id":2982,"challenge_id":469,"text":"كابا (ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":2983,"challenge_id":469,"text":"سو (رقم ٦) — ينطق: سو (الرقم 6)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":470,"lesson_id":98,"type":"select","question":"ما معنى الكلمة القبطية: ⲥⲟⲟⲩ؟ (المعرب: «سو»)","coptic_display":"ⲥⲟⲟⲩ","audio_text":"سو","audio_url":"audio_coptic/6sow.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2985,"challenge_id":470,"text":"الرقم سبعة","is_correct":false,"image_url":null,"audio_url":null},{"id":2984,"challenge_id":470,"text":"الرقم عشرة","is_correct":false,"image_url":null,"audio_url":null},{"id":2986,"challenge_id":470,"text":"الرقم خمسة","is_correct":false,"image_url":null,"audio_url":null},{"id":2987,"challenge_id":470,"text":"الرقم ستة (٦)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":471,"lesson_id":98,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: الرقم ستة (٦) (المعرب: «سو»)","coptic_display":"ⲥⲟⲟⲩ","audio_text":"سو","audio_url":"audio_coptic/6sow.mp3","correct_word":"ⲥⲟⲟⲩ","tiles":["ⲥ","ⲟ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":99,"unit_id":35,"title":"حرف زاتا (Ⲍ ⲍ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":472,"lesson_id":99,"type":"text_view","question":"نبذة عن حرف زاتا (Ⲍ ⲍ)","coptic_display":"Ⲍ ⲍ","audio_text":"زاتا","audio_url":"audio_coptic/7zeta.mp3","correct_word":"• اسم الحرف: زاتا\n• نطق الحرف بالعربي: ز\n• قواعد النطق: الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف \"ز\" مثل حرف (Z) في الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲧⲣⲁⲡⲉⲍⲁ\n  - القبطي المعرب (نطقها): «ترابيزا»\n  - المعنى بالعربية: مائدة / ترابيزة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":473,"lesson_id":99,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲍ واستمع لنطقه","coptic_display":"Ⲍ","audio_text":"زاتا كابيتال","audio_url":"audio_coptic/7zeta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":474,"lesson_id":99,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲍ واستمع لنطقه","coptic_display":"ⲍ","audio_text":"زاتا سمول","audio_url":"audio_coptic/7zeta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":475,"lesson_id":99,"type":"read_select","question":"ما هو نطق الحرف Ⲍ بالعربية؟","coptic_display":"Ⲍ","audio_text":"زاتا","audio_url":"audio_coptic/7zeta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2988,"challenge_id":475,"text":"زاتا — ينطق: ز","is_correct":true,"image_url":null,"audio_url":null},{"id":2989,"challenge_id":475,"text":"سو (٦)","is_correct":false,"image_url":null,"audio_url":null},{"id":2990,"challenge_id":475,"text":"هيتا (ياء طويلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":2991,"challenge_id":475,"text":"إيوتا (ياء قصيرة)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":476,"lesson_id":99,"type":"select","question":"ما معنى الكلمة القبطية: ⲧⲣⲁⲡⲉⲍⲁ؟ (المعرب: «ترابيزا»)","coptic_display":"ⲧⲣⲁⲡⲉⲍⲁ","audio_text":"ترابيزا","audio_url":"audio_coptic/7zeta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":2992,"challenge_id":476,"text":"نافذة","is_correct":false,"image_url":null,"audio_url":null},{"id":2995,"challenge_id":476,"text":"مائدة / ترابيزة","is_correct":true,"image_url":null,"audio_url":null},{"id":2994,"challenge_id":476,"text":"كرسي","is_correct":false,"image_url":null,"audio_url":null},{"id":2993,"challenge_id":476,"text":"باب","is_correct":false,"image_url":null,"audio_url":null}]},{"id":477,"lesson_id":99,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: مائدة / ترابيزة (المعرب: «ترابيزا»)","coptic_display":"ⲧⲣⲁⲡⲉⲍⲁ","audio_text":"ترابيزا","audio_url":"audio_coptic/7zeta.mp3","correct_word":"ⲧⲣⲁⲡⲉⲍⲁ","tiles":["ⲧ","ⲣ","ⲁ","ⲡ","ⲉ","ⲍ","ⲁ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":100,"unit_id":35,"title":"حرف هيتا (Ⲏ ⲏ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":478,"lesson_id":100,"type":"text_view","question":"نبذة عن حرف هيتا (Ⲏ ⲏ)","coptic_display":"Ⲏ ⲏ","audio_text":"هيتا","audio_url":"audio_coptic/8eta.mp3","correct_word":"• اسم الحرف: هيتا\n• نطق الحرف بالعربي: ياء طويلة ممدودة (ee)\n• قواعد النطق: الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲛⲍⲏⲃ\n  - القبطي المعرب (نطقها): «أنزيب»\n  - المعنى بالعربية: مدرسة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":479,"lesson_id":100,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲏ واستمع لنطقه","coptic_display":"Ⲏ","audio_text":"هيتا كابيتال","audio_url":"audio_coptic/8eta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":480,"lesson_id":100,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲏ واستمع لنطقه","coptic_display":"ⲏ","audio_text":"هيتا سمول","audio_url":"audio_coptic/8eta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":481,"lesson_id":100,"type":"read_select","question":"ما هو نطق الحرف Ⲏ بالعربية؟","coptic_display":"Ⲏ","audio_text":"هيتا","audio_url":"audio_coptic/8eta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":2997,"challenge_id":481,"text":"ثيتا (ث أو ت)","is_correct":false,"image_url":null,"audio_url":null},{"id":2998,"challenge_id":481,"text":"زاتا (ز)","is_correct":false,"image_url":null,"audio_url":null},{"id":2999,"challenge_id":481,"text":"هيتا — ينطق: ياء طويلة ممدودة (ee)","is_correct":true,"image_url":null,"audio_url":null},{"id":2996,"challenge_id":481,"text":"لابدا (ل)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":482,"lesson_id":100,"type":"select","question":"ما معنى الكلمة القبطية: ⲁⲛⲍⲏⲃ؟ (المعرب: «أنزيب»)","coptic_display":"ⲁⲛⲍⲏⲃ","audio_text":"أنزيب","audio_url":"audio_coptic/8eta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3000,"challenge_id":482,"text":"طريق","is_correct":false,"image_url":null,"audio_url":null},{"id":3001,"challenge_id":482,"text":"بيت","is_correct":false,"image_url":null,"audio_url":null},{"id":3002,"challenge_id":482,"text":"كنيسة","is_correct":false,"image_url":null,"audio_url":null},{"id":3003,"challenge_id":482,"text":"مدرسة","is_correct":true,"image_url":null,"audio_url":null}]},{"id":483,"lesson_id":100,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: مدرسة (المعرب: «أنزيب»)","coptic_display":"ⲁⲛⲍⲏⲃ","audio_text":"أنزيب","audio_url":"audio_coptic/8eta.mp3","correct_word":"ⲁⲛⲍⲏⲃ","tiles":["ⲁ","ⲛ","ⲍ","ⲏ","ⲃ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":101,"unit_id":35,"title":"حرف ثيتا (Ⲑ ⲑ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":484,"lesson_id":101,"type":"text_view","question":"نبذة عن حرف ثيتا (Ⲑ ⲑ)","coptic_display":"Ⲑ ⲑ","audio_text":"ثيتا","audio_url":"audio_coptic/9seta.mp3","correct_word":"• اسم الحرف: ثيتا\n• نطق الحرف بالعربي: ث أو ت\n• قواعد النطق: الحرف التاسع. يُنطق \"ث\" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق \"ت\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲙⲁⲱⲟⲩⲧ\n  - القبطي المعرب (نطقها): «ماووت»\n  - المعنى بالعربية: مشط\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":485,"lesson_id":101,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲑ واستمع لنطقه","coptic_display":"Ⲑ","audio_text":"ثيتا كابيتال","audio_url":"audio_coptic/9seta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":486,"lesson_id":101,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲑ واستمع لنطقه","coptic_display":"ⲑ","audio_text":"ثيتا سمول","audio_url":"audio_coptic/9seta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":487,"lesson_id":101,"type":"read_select","question":"ما هو نطق الحرف Ⲑ بالعربية؟","coptic_display":"Ⲑ","audio_text":"ثيتا","audio_url":"audio_coptic/9seta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3004,"challenge_id":487,"text":"ثيتا — ينطق: ث أو ت","is_correct":true,"image_url":null,"audio_url":null},{"id":3005,"challenge_id":487,"text":"هيتا (ياء طويلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3007,"challenge_id":487,"text":"مي (م)","is_correct":false,"image_url":null,"audio_url":null},{"id":3006,"challenge_id":487,"text":"إيوتا (ياء قصيرة)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":488,"lesson_id":101,"type":"select","question":"ما معنى الكلمة القبطية: ⲙⲁⲱⲟⲩⲧ؟ (المعرب: «ماووت»)","coptic_display":"ⲙⲁⲱⲟⲩⲧ","audio_text":"ماووت","audio_url":"audio_coptic/9seta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3009,"challenge_id":488,"text":"ثوب","is_correct":false,"image_url":null,"audio_url":null},{"id":3010,"challenge_id":488,"text":"مشط","is_correct":true,"image_url":null,"audio_url":null},{"id":3011,"challenge_id":488,"text":"خاتم","is_correct":false,"image_url":null,"audio_url":null},{"id":3008,"challenge_id":488,"text":"مرآة","is_correct":false,"image_url":null,"audio_url":null}]},{"id":489,"lesson_id":101,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: مشط (المعرب: «ماووت»)","coptic_display":"ⲙⲁⲱⲟⲩⲧ","audio_text":"ماووت","audio_url":"audio_coptic/9seta.mp3","correct_word":"ⲙⲁⲱⲟⲩⲧ","tiles":["ⲙ","ⲁ","ⲱ","ⲟ","ⲩ","ⲧ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":102,"unit_id":35,"title":"حرف إيوتا (Ⲓ ⲓ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":490,"lesson_id":102,"type":"text_view","question":"نبذة عن حرف إيوتا (Ⲓ ⲓ)","coptic_display":"Ⲓ ⲓ","audio_text":"إيوتا","audio_url":"audio_coptic/10yota.mp3","correct_word":"• اسم الحرف: إيوتا\n• نطق الحرف بالعربي: ياء قصيرة (i)\n• قواعد النطق: الحرف العاشر. حرف متحرك يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲱⲓⲛⲓ\n  - القبطي المعرب (نطقها): «أويني»\n  - المعنى بالعربية: صنارة / نور\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":491,"lesson_id":102,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲓ واستمع لنطقه","coptic_display":"Ⲓ","audio_text":"إيوتا كابيتال","audio_url":"audio_coptic/10yota.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":492,"lesson_id":102,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲓ واستمع لنطقه","coptic_display":"ⲓ","audio_text":"إيوتا سمول","audio_url":"audio_coptic/10yota.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":493,"lesson_id":102,"type":"read_select","question":"ما هو نطق الحرف Ⲓ بالعربية؟","coptic_display":"Ⲓ","audio_text":"إيوتا","audio_url":"audio_coptic/10yota.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3012,"challenge_id":493,"text":"إيوتا — ينطق: ياء قصيرة (i)","is_correct":true,"image_url":null,"audio_url":null},{"id":3013,"challenge_id":493,"text":"ثيتا (ث أو ت)","is_correct":false,"image_url":null,"audio_url":null},{"id":3014,"challenge_id":493,"text":"كابا (ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":3015,"challenge_id":493,"text":"ني (ن)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":494,"lesson_id":102,"type":"select","question":"ما معنى الكلمة القبطية: ⲱⲓⲛⲓ؟ (المعرب: «أويني»)","coptic_display":"ⲱⲓⲛⲓ","audio_text":"أويني","audio_url":"audio_coptic/10yota.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3016,"challenge_id":494,"text":"بحر","is_correct":false,"image_url":null,"audio_url":null},{"id":3017,"challenge_id":494,"text":"قارب","is_correct":false,"image_url":null,"audio_url":null},{"id":3018,"challenge_id":494,"text":"شبكة","is_correct":false,"image_url":null,"audio_url":null},{"id":3019,"challenge_id":494,"text":"صنارة / نور","is_correct":true,"image_url":null,"audio_url":null}]},{"id":495,"lesson_id":102,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: صنارة / نور (المعرب: «أويني»)","coptic_display":"ⲱⲓⲛⲓ","audio_text":"أويني","audio_url":"audio_coptic/10yota.mp3","correct_word":"ⲱⲓⲛⲓ","tiles":["ⲱ","ⲓ","ⲛ","ⲓ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":126,"unit_id":35,"title":"🔄 مراجعة الوحدة 2","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":633,"lesson_id":126,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲋ ⲋ","right":"سو (رقم ٦) (سو (الرقم 6))"},{"left":"Ⲍ ⲍ","right":"زاتا (ز)"},{"left":"Ⲏ ⲏ","right":"هيتا (ياء طويلة ممدودة (ee))"},{"left":"Ⲑ ⲑ","right":"ثيتا (ث أو ت)"}],"is_correct":true,"order_index":1,"options":[]},{"id":634,"lesson_id":126,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"سو (رقم ٦)","audio_url":"audio_coptic/6sow.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3210,"challenge_id":634,"text":"Ⲑ ⲑ (ثيتا)","is_correct":false,"image_url":null,"audio_url":null},{"id":3211,"challenge_id":634,"text":"Ⲋ ⲋ (سو (رقم ٦))","is_correct":true,"image_url":null,"audio_url":null},{"id":3209,"challenge_id":634,"text":"Ⲍ ⲍ (زاتا)","is_correct":false,"image_url":null,"audio_url":null},{"id":3208,"challenge_id":634,"text":"Ⲏ ⲏ (هيتا)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":635,"lesson_id":126,"type":"select","question":"ما معنى الكلمة: ⲧⲣⲁⲡⲉⲍⲁ؟ (المعرب: «ترابيزا»)","coptic_display":"ⲧⲣⲁⲡⲉⲍⲁ","audio_text":"ترابيزا","audio_url":"audio_coptic/7zeta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3213,"challenge_id":635,"text":"كرسي","is_correct":false,"image_url":null,"audio_url":null},{"id":3214,"challenge_id":635,"text":"مائدة / ترابيزة","is_correct":true,"image_url":null,"audio_url":null},{"id":3215,"challenge_id":635,"text":"باب","is_correct":false,"image_url":null,"audio_url":null},{"id":3212,"challenge_id":635,"text":"نافذة","is_correct":false,"image_url":null,"audio_url":null}]},{"id":636,"lesson_id":126,"type":"write","question":"رتب حروف الكلمة: صنارة / نور (المعرب: «أويني»)","coptic_display":"ⲱⲓⲛⲓ","audio_text":"أويني","audio_url":"audio_coptic/10yota.mp3","correct_word":"ⲱⲓⲛⲓ","tiles":["ⲱ","ⲓ","ⲛ","ⲓ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":637,"lesson_id":126,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ⲏ؟","coptic_display":"Ⲏ","audio_text":"هيتا","audio_url":"audio_coptic/8eta.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3216,"challenge_id":637,"text":"زاتا (ز)","is_correct":false,"image_url":null,"audio_url":null},{"id":3217,"challenge_id":637,"text":"هيتا (ياء طويلة ممدودة (ee))","is_correct":true,"image_url":null,"audio_url":null},{"id":3218,"challenge_id":637,"text":"ثيتا (ث أو ت)","is_correct":false,"image_url":null,"audio_url":null},{"id":3219,"challenge_id":637,"text":"لابدا (ل)","is_correct":false,"image_url":null,"audio_url":null}]}]}]},{"id":36,"level_id":5,"title":"الوحدة ٣: الحروف من (Ⲕ – Ⲝ)","badge":"Ⲕ-Ⲝ","description":"تعلّم الحروف من كابا إلى كسي مع كلمات كنسية شهيرة","order_index":3,"lessons":[{"id":103,"unit_id":36,"title":"حرف كابا (Ⲕ ⲕ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":496,"lesson_id":103,"type":"text_view","question":"نبذة عن حرف كابا (Ⲕ ⲕ)","coptic_display":"Ⲕ ⲕ","audio_text":"كابا","audio_url":"audio_coptic/11kapa.mp3","correct_word":"• اسم الحرف: كابا\n• نطق الحرف بالعربي: ك\n• قواعد النطق: الحرف الحادي عشر في الأبجدية القبطية. يُنطق \"ك\" دائماً في جميع المواضع.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲉⲕⲕⲗⲏⲥⲓⲁ\n  - القبطي المعرب (نطقها): «إككليسيا»\n  - المعنى بالعربية: كنيسة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":497,"lesson_id":103,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲕ واستمع لنطقه","coptic_display":"Ⲕ","audio_text":"كابا كابيتال","audio_url":"audio_coptic/11kapa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":498,"lesson_id":103,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲕ واستمع لنطقه","coptic_display":"ⲕ","audio_text":"كابا سمول","audio_url":"audio_coptic/11kapa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":499,"lesson_id":103,"type":"read_select","question":"ما هو نطق الحرف Ⲕ بالعربية؟","coptic_display":"Ⲕ","audio_text":"كابا","audio_url":"audio_coptic/11kapa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3023,"challenge_id":499,"text":"كابا — ينطق: ك","is_correct":true,"image_url":null,"audio_url":null},{"id":3020,"challenge_id":499,"text":"كسي (كـ+س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3021,"challenge_id":499,"text":"مي (م)","is_correct":false,"image_url":null,"audio_url":null},{"id":3022,"challenge_id":499,"text":"لابدا (ل)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":500,"lesson_id":103,"type":"select","question":"ما معنى الكلمة القبطية: ⲉⲕⲕⲗⲏⲥⲓⲁ؟ (المعرب: «إككليسيا»)","coptic_display":"ⲉⲕⲕⲗⲏⲥⲓⲁ","audio_text":"إككليسيا","audio_url":"audio_coptic/11kapa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3024,"challenge_id":500,"text":"هيكل","is_correct":false,"image_url":null,"audio_url":null},{"id":3026,"challenge_id":500,"text":"كنيسة","is_correct":true,"image_url":null,"audio_url":null},{"id":3027,"challenge_id":500,"text":"مذبح","is_correct":false,"image_url":null,"audio_url":null},{"id":3025,"challenge_id":500,"text":"دير","is_correct":false,"image_url":null,"audio_url":null}]},{"id":501,"lesson_id":103,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: كنيسة (المعرب: «إككليسيا»)","coptic_display":"ⲉⲕⲕⲗⲏⲥⲓⲁ","audio_text":"إككليسيا","audio_url":"audio_coptic/11kapa.mp3","correct_word":"ⲉⲕⲕⲗⲏⲥⲓⲁ","tiles":["ⲉ","ⲕ","ⲕ","ⲗ","ⲏ","ⲥ","ⲓ","ⲁ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":104,"unit_id":36,"title":"حرف لابدا (Ⲗ ⲗ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":502,"lesson_id":104,"type":"text_view","question":"نبذة عن حرف لابدا (Ⲗ ⲗ)","coptic_display":"Ⲗ ⲗ","audio_text":"لابدا","audio_url":"audio_coptic/12lavla.mp3","correct_word":"• اسم الحرف: لابدا\n• نطق الحرف بالعربي: ل\n• قواعد النطق: الحرف الثاني عشر. يُنطق \"ل\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲗⲁⲙⲡⲁⲥ\n  - القبطي المعرب (نطقها): «لامباس»\n  - المعنى بالعربية: مصباح / قنديل\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":503,"lesson_id":104,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲗ واستمع لنطقه","coptic_display":"Ⲗ","audio_text":"لابدا كابيتال","audio_url":"audio_coptic/12lavla.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":504,"lesson_id":104,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲗ واستمع لنطقه","coptic_display":"ⲗ","audio_text":"لابدا سمول","audio_url":"audio_coptic/12lavla.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":505,"lesson_id":104,"type":"read_select","question":"ما هو نطق الحرف Ⲗ بالعربية؟","coptic_display":"Ⲗ","audio_text":"لابدا","audio_url":"audio_coptic/12lavla.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3029,"challenge_id":505,"text":"بي (ب مشددة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3030,"challenge_id":505,"text":"لابدا — ينطق: ل","is_correct":true,"image_url":null,"audio_url":null},{"id":3031,"challenge_id":505,"text":"ني (ن)","is_correct":false,"image_url":null,"audio_url":null},{"id":3028,"challenge_id":505,"text":"كابا (ك)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":506,"lesson_id":104,"type":"select","question":"ما معنى الكلمة القبطية: ⲗⲁⲙⲡⲁⲥ؟ (المعرب: «لامباس»)","coptic_display":"ⲗⲁⲙⲡⲁⲥ","audio_text":"لامباس","audio_url":"audio_coptic/12lavla.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3033,"challenge_id":506,"text":"نار","is_correct":false,"image_url":null,"audio_url":null},{"id":3034,"challenge_id":506,"text":"مصباح / قنديل","is_correct":true,"image_url":null,"audio_url":null},{"id":3035,"challenge_id":506,"text":"شمس","is_correct":false,"image_url":null,"audio_url":null},{"id":3032,"challenge_id":506,"text":"زيت","is_correct":false,"image_url":null,"audio_url":null}]},{"id":507,"lesson_id":104,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: مصباح / قنديل (المعرب: «لامباس»)","coptic_display":"ⲗⲁⲙⲡⲁⲥ","audio_text":"لامباس","audio_url":"audio_coptic/12lavla.mp3","correct_word":"ⲗⲁⲙⲡⲁⲥ","tiles":["ⲗ","ⲁ","ⲙ","ⲡ","ⲁ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":105,"unit_id":36,"title":"حرف مي (Ⲙ ⲙ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":508,"lesson_id":105,"type":"text_view","question":"نبذة عن حرف مي (Ⲙ ⲙ)","coptic_display":"Ⲙ ⲙ","audio_text":"مي","audio_url":"audio_coptic/13mi.mp3","correct_word":"• اسم الحرف: مي\n• نطق الحرف بالعربي: م\n• قواعد النطق: الحرف الثالث عشر. يُنطق حرف \"م\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲙⲟⲗϧ\n  - القبطي المعرب (نطقها): «مولخ»\n  - المعنى بالعربية: شمعة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":509,"lesson_id":105,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲙ واستمع لنطقه","coptic_display":"Ⲙ","audio_text":"مي كابيتال","audio_url":"audio_coptic/13mi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":510,"lesson_id":105,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲙ واستمع لنطقه","coptic_display":"ⲙ","audio_text":"مي سمول","audio_url":"audio_coptic/13mi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":511,"lesson_id":105,"type":"read_select","question":"ما هو نطق الحرف Ⲙ بالعربية؟","coptic_display":"Ⲙ","audio_text":"مي","audio_url":"audio_coptic/13mi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3036,"challenge_id":511,"text":"رو (ر)","is_correct":false,"image_url":null,"audio_url":null},{"id":3037,"challenge_id":511,"text":"ني (ن)","is_correct":false,"image_url":null,"audio_url":null},{"id":3038,"challenge_id":511,"text":"لابدا (ل)","is_correct":false,"image_url":null,"audio_url":null},{"id":3039,"challenge_id":511,"text":"مي — ينطق: م","is_correct":true,"image_url":null,"audio_url":null}]},{"id":512,"lesson_id":105,"type":"select","question":"ما معنى الكلمة القبطية: ⲙⲟⲗϧ؟ (المعرب: «مولخ»)","coptic_display":"ⲙⲟⲗϧ","audio_text":"مولخ","audio_url":"audio_coptic/13mi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3040,"challenge_id":512,"text":"شمعة","is_correct":true,"image_url":null,"audio_url":null},{"id":3041,"challenge_id":512,"text":"بخور","is_correct":false,"image_url":null,"audio_url":null},{"id":3042,"challenge_id":512,"text":"صليب","is_correct":false,"image_url":null,"audio_url":null},{"id":3043,"challenge_id":512,"text":"كأس","is_correct":false,"image_url":null,"audio_url":null}]},{"id":513,"lesson_id":105,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: شمعة (المعرب: «مولخ»)","coptic_display":"ⲙⲟⲗϧ","audio_text":"مولخ","audio_url":"audio_coptic/13mi.mp3","correct_word":"ⲙⲟⲗϧ","tiles":["ⲙ","ⲟ","ⲗ","ϧ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":106,"unit_id":36,"title":"حرف ني (Ⲛ ⲛ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":514,"lesson_id":106,"type":"text_view","question":"نبذة عن حرف ني (Ⲛ ⲛ)","coptic_display":"Ⲛ ⲛ","audio_text":"ني","audio_url":"audio_coptic/14ni.mp3","correct_word":"• اسم الحرف: ني\n• نطق الحرف بالعربي: ن\n• قواعد النطق: الحرف الرابع عشر. يُنطق حرف \"ن\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲛⲟⲩϯ\n  - القبطي المعرب (نطقها): «نوتي»\n  - المعنى بالعربية: الله\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":515,"lesson_id":106,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲛ واستمع لنطقه","coptic_display":"Ⲛ","audio_text":"ني كابيتال","audio_url":"audio_coptic/14ni.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":516,"lesson_id":106,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲛ واستمع لنطقه","coptic_display":"ⲛ","audio_text":"ني سمول","audio_url":"audio_coptic/14ni.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":517,"lesson_id":106,"type":"read_select","question":"ما هو نطق الحرف Ⲛ بالعربية؟","coptic_display":"Ⲛ","audio_text":"ني","audio_url":"audio_coptic/14ni.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3047,"challenge_id":517,"text":"سيما (س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3044,"challenge_id":517,"text":"ني — ينطق: ن","is_correct":true,"image_url":null,"audio_url":null},{"id":3045,"challenge_id":517,"text":"مي (م)","is_correct":false,"image_url":null,"audio_url":null},{"id":3046,"challenge_id":517,"text":"كسي (كـ+س)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":518,"lesson_id":106,"type":"select","question":"ما معنى الكلمة القبطية: ⲛⲟⲩϯ؟ (المعرب: «نوتي»)","coptic_display":"ⲛⲟⲩϯ","audio_text":"نوتي","audio_url":"audio_coptic/14ni.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3048,"challenge_id":518,"text":"السماء","is_correct":false,"image_url":null,"audio_url":null},{"id":3050,"challenge_id":518,"text":"الله","is_correct":true,"image_url":null,"audio_url":null},{"id":3051,"challenge_id":518,"text":"النور","is_correct":false,"image_url":null,"audio_url":null},{"id":3049,"challenge_id":518,"text":"الحق","is_correct":false,"image_url":null,"audio_url":null}]},{"id":519,"lesson_id":106,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: الله (المعرب: «نوتي»)","coptic_display":"ⲛⲟⲩϯ","audio_text":"نوتي","audio_url":"audio_coptic/14ni.mp3","correct_word":"ⲛⲟⲩϯ","tiles":["ⲛ","ⲟ","ⲩ","ϯ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":107,"unit_id":36,"title":"حرف كسي (Ⲝ ⲝ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":520,"lesson_id":107,"type":"text_view","question":"نبذة عن حرف كسي (Ⲝ ⲝ)","coptic_display":"Ⲝ ⲝ","audio_text":"كسي","audio_url":"audio_coptic/15axsy.mp3","correct_word":"• اسم الحرف: كسي\n• نطق الحرف بالعربي: كـ + س (X)\n• قواعد النطق: الحرف الخامس عشر. حرف مركب يُنطق كاف وسين معاً (كـ + س = X) في صوت واحد.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲟⲩⲁⲗⲓⲝ\n  - القبطي المعرب (نطقها): «أواليكس»\n  - المعنى بالعربية: ستارة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":521,"lesson_id":107,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲝ واستمع لنطقه","coptic_display":"Ⲝ","audio_text":"كسي كابيتال","audio_url":"audio_coptic/15axsy.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":522,"lesson_id":107,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲝ واستمع لنطقه","coptic_display":"ⲝ","audio_text":"كسي سمول","audio_url":"audio_coptic/15axsy.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":523,"lesson_id":107,"type":"read_select","question":"ما هو نطق الحرف Ⲝ بالعربية؟","coptic_display":"Ⲝ","audio_text":"كسي","audio_url":"audio_coptic/15axsy.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3053,"challenge_id":523,"text":"كسي — ينطق: كـ + س (X)","is_correct":true,"image_url":null,"audio_url":null},{"id":3054,"challenge_id":523,"text":"كابا (ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":3055,"challenge_id":523,"text":"ني (ن)","is_correct":false,"image_url":null,"audio_url":null},{"id":3052,"challenge_id":523,"text":"تاف (ت)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":524,"lesson_id":107,"type":"select","question":"ما معنى الكلمة القبطية: ⲟⲩⲁⲗⲓⲝ؟ (المعرب: «أواليكس»)","coptic_display":"ⲟⲩⲁⲗⲓⲝ","audio_text":"أواليكس","audio_url":"audio_coptic/15axsy.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3057,"challenge_id":524,"text":"حائط","is_correct":false,"image_url":null,"audio_url":null},{"id":3058,"challenge_id":524,"text":"مائدة","is_correct":false,"image_url":null,"audio_url":null},{"id":3059,"challenge_id":524,"text":"ستارة","is_correct":true,"image_url":null,"audio_url":null},{"id":3056,"challenge_id":524,"text":"سقف","is_correct":false,"image_url":null,"audio_url":null}]},{"id":525,"lesson_id":107,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: ستارة (المعرب: «أواليكس»)","coptic_display":"ⲟⲩⲁⲗⲓⲝ","audio_text":"أواليكس","audio_url":"audio_coptic/15axsy.mp3","correct_word":"ⲟⲩⲁⲗⲓⲝ","tiles":["ⲟ","ⲩ","ⲁ","ⲗ","ⲓ","ⲝ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":127,"unit_id":36,"title":"🔄 مراجعة الوحدة 3","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":638,"lesson_id":127,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"Ⲗ ⲗ","right":"لابدا (ل)"},{"left":"Ⲙ ⲙ","right":"مي (م)"},{"left":"Ⲛ ⲛ","right":"ني (ن)"}],"is_correct":true,"order_index":1,"options":[]},{"id":639,"lesson_id":127,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"كابا","audio_url":"audio_coptic/11kapa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3221,"challenge_id":639,"text":"Ⲕ ⲕ (كابا)","is_correct":true,"image_url":null,"audio_url":null},{"id":3222,"challenge_id":639,"text":"Ⲗ ⲗ (لابدا)","is_correct":false,"image_url":null,"audio_url":null},{"id":3220,"challenge_id":639,"text":"Ⲙ ⲙ (مي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3223,"challenge_id":639,"text":"Ⲛ ⲛ (ني)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":640,"lesson_id":127,"type":"select","question":"ما معنى الكلمة: ⲗⲁⲙⲡⲁⲥ؟ (المعرب: «لامباس»)","coptic_display":"ⲗⲁⲙⲡⲁⲥ","audio_text":"لامباس","audio_url":"audio_coptic/12lavla.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3224,"challenge_id":640,"text":"شمس","is_correct":false,"image_url":null,"audio_url":null},{"id":3225,"challenge_id":640,"text":"زيت","is_correct":false,"image_url":null,"audio_url":null},{"id":3226,"challenge_id":640,"text":"نار","is_correct":false,"image_url":null,"audio_url":null},{"id":3227,"challenge_id":640,"text":"مصباح / قنديل","is_correct":true,"image_url":null,"audio_url":null}]},{"id":641,"lesson_id":127,"type":"write","question":"رتب حروف الكلمة: ستارة (المعرب: «أواليكس»)","coptic_display":"ⲟⲩⲁⲗⲓⲝ","audio_text":"أواليكس","audio_url":"audio_coptic/15axsy.mp3","correct_word":"ⲟⲩⲁⲗⲓⲝ","tiles":["ⲟ","ⲩ","ⲁ","ⲗ","ⲓ","ⲝ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":642,"lesson_id":127,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ⲙ؟","coptic_display":"Ⲙ","audio_text":"مي","audio_url":"audio_coptic/13mi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3228,"challenge_id":642,"text":"رو (ر)","is_correct":false,"image_url":null,"audio_url":null},{"id":3229,"challenge_id":642,"text":"ني (ن)","is_correct":false,"image_url":null,"audio_url":null},{"id":3231,"challenge_id":642,"text":"مي (م)","is_correct":true,"image_url":null,"audio_url":null},{"id":3230,"challenge_id":642,"text":"لابدا (ل)","is_correct":false,"image_url":null,"audio_url":null}]}]}]},{"id":37,"level_id":5,"title":"الوحدة ٤: الحروف من (Ⲟ – Ⲧ)","badge":"Ⲟ-Ⲧ","description":"تعلّم الحروف من أُو قصيرة إلى تاف","order_index":4,"lessons":[{"id":108,"unit_id":37,"title":"حرف أُو (قصيرة) (Ⲟ ⲟ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":526,"lesson_id":108,"type":"text_view","question":"نبذة عن حرف أُو (قصيرة) (Ⲟ ⲟ)","coptic_display":"Ⲟ ⲟ","audio_text":"أُو (قصيرة)","audio_url":"audio_coptic/16oo.mp3","correct_word":"• اسم الحرف: أُو (قصيرة)\n• نطق الحرف بالعربي: واو قصيرة مضمومة (O)\n• قواعد النطق: الحرف السادس عشر. حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲓⲟⲩ\n  - القبطي المعرب (نطقها): «سيو»\n  - المعنى بالعربية: نجم\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":527,"lesson_id":108,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲟ واستمع لنطقه","coptic_display":"Ⲟ","audio_text":"أُو (قصيرة) كابيتال","audio_url":"audio_coptic/16oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":528,"lesson_id":108,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲟ واستمع لنطقه","coptic_display":"ⲟ","audio_text":"أُو (قصيرة) سمول","audio_url":"audio_coptic/16oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":529,"lesson_id":108,"type":"read_select","question":"ما هو نطق الحرف Ⲟ بالعربية؟","coptic_display":"Ⲟ","audio_text":"أُو (قصيرة)","audio_url":"audio_coptic/16oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3060,"challenge_id":529,"text":"أوميغا (واو طويلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3061,"challenge_id":529,"text":"رو (ر)","is_correct":false,"image_url":null,"audio_url":null},{"id":3062,"challenge_id":529,"text":"بي (ب ثقيلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3063,"challenge_id":529,"text":"أُو (قصيرة) — ينطق: واو قصيرة مضمومة (O)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":530,"lesson_id":108,"type":"select","question":"ما معنى الكلمة القبطية: ⲥⲓⲟⲩ؟ (المعرب: «سيو»)","coptic_display":"ⲥⲓⲟⲩ","audio_text":"سيو","audio_url":"audio_coptic/16oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3064,"challenge_id":530,"text":"سماء","is_correct":false,"image_url":null,"audio_url":null},{"id":3065,"challenge_id":530,"text":"سحاب","is_correct":false,"image_url":null,"audio_url":null},{"id":3066,"challenge_id":530,"text":"قمر","is_correct":false,"image_url":null,"audio_url":null},{"id":3067,"challenge_id":530,"text":"نجم","is_correct":true,"image_url":null,"audio_url":null}]},{"id":531,"lesson_id":108,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: نجم (المعرب: «سيو»)","coptic_display":"ⲥⲓⲟⲩ","audio_text":"سيو","audio_url":"audio_coptic/16oo.mp3","correct_word":"ⲥⲓⲟⲩ","tiles":["ⲥ","ⲓ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":109,"unit_id":37,"title":"حرف بي (Ⲡ ⲡ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":532,"lesson_id":109,"type":"text_view","question":"نبذة عن حرف بي (Ⲡ ⲡ)","coptic_display":"Ⲡ ⲡ","audio_text":"بي","audio_url":"audio_coptic/17pee.mp3","correct_word":"• اسم الحرف: بي\n• نطق الحرف بالعربي: ب ثقيلة مشددة (P)\n• قواعد النطق: الحرف السابع عشر. يُنطق \"ب\" شديدة مشددة مثل حرف (P) في اللغة الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲡⲉ\n  - القبطي المعرب (نطقها): «بي»\n  - المعنى بالعربية: سماء\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":533,"lesson_id":109,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲡ واستمع لنطقه","coptic_display":"Ⲡ","audio_text":"بي كابيتال","audio_url":"audio_coptic/17pee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":534,"lesson_id":109,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲡ واستمع لنطقه","coptic_display":"ⲡ","audio_text":"بي سمول","audio_url":"audio_coptic/17pee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":535,"lesson_id":109,"type":"read_select","question":"ما هو نطق الحرف Ⲡ بالعربية؟","coptic_display":"Ⲡ","audio_text":"بي","audio_url":"audio_coptic/17pee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3071,"challenge_id":535,"text":"بي — ينطق: ب ثقيلة مشددة (P)","is_correct":true,"image_url":null,"audio_url":null},{"id":3068,"challenge_id":535,"text":"أُو (واو قصيرة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3069,"challenge_id":535,"text":"سيما (س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3070,"challenge_id":535,"text":"تاف (ت)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":536,"lesson_id":109,"type":"select","question":"ما معنى الكلمة القبطية: ⲡⲉ؟ (المعرب: «بي»)","coptic_display":"ⲡⲉ","audio_text":"بي","audio_url":"audio_coptic/17pee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3072,"challenge_id":536,"text":"سماء","is_correct":true,"image_url":null,"audio_url":null},{"id":3074,"challenge_id":536,"text":"ماء","is_correct":false,"image_url":null,"audio_url":null},{"id":3075,"challenge_id":536,"text":"أرض","is_correct":false,"image_url":null,"audio_url":null},{"id":3073,"challenge_id":536,"text":"نار","is_correct":false,"image_url":null,"audio_url":null}]},{"id":537,"lesson_id":109,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: سماء (المعرب: «بي»)","coptic_display":"ⲡⲉ","audio_text":"بي","audio_url":"audio_coptic/17pee.mp3","correct_word":"ⲡⲉ","tiles":["ⲡ","ⲉ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":110,"unit_id":37,"title":"حرف رو (Ⲣ ⲣ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":538,"lesson_id":110,"type":"text_view","question":"نبذة عن حرف رو (Ⲣ ⲣ)","coptic_display":"Ⲣ ⲣ","audio_text":"رو","audio_url":"audio_coptic/18roo.mp3","correct_word":"• اسم الحرف: رو\n• نطق الحرف بالعربي: ر\n• قواعد النطق: الحرف الثامن عشر. يُنطق حرف \"ر\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲣⲱⲙⲓ\n  - القبطي المعرب (نطقها): «رومي»\n  - المعنى بالعربية: إنسان\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":539,"lesson_id":110,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲣ واستمع لنطقه","coptic_display":"Ⲣ","audio_text":"رو كابيتال","audio_url":"audio_coptic/18roo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":540,"lesson_id":110,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲣ واستمع لنطقه","coptic_display":"ⲣ","audio_text":"رو سمول","audio_url":"audio_coptic/18roo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":541,"lesson_id":110,"type":"read_select","question":"ما هو نطق الحرف Ⲣ بالعربية؟","coptic_display":"Ⲣ","audio_text":"رو","audio_url":"audio_coptic/18roo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3077,"challenge_id":541,"text":"بي (ب مشددة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3078,"challenge_id":541,"text":"سيما (س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3079,"challenge_id":541,"text":"خي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3076,"challenge_id":541,"text":"رو — ينطق: ر","is_correct":true,"image_url":null,"audio_url":null}]},{"id":542,"lesson_id":110,"type":"select","question":"ما معنى الكلمة القبطية: ⲣⲱⲙⲓ؟ (المعرب: «رومي»)","coptic_display":"ⲣⲱⲙⲓ","audio_text":"رومي","audio_url":"audio_coptic/18roo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3081,"challenge_id":542,"text":"حيوان","is_correct":false,"image_url":null,"audio_url":null},{"id":3082,"challenge_id":542,"text":"ملاك","is_correct":false,"image_url":null,"audio_url":null},{"id":3083,"challenge_id":542,"text":"إنسان","is_correct":true,"image_url":null,"audio_url":null},{"id":3080,"challenge_id":542,"text":"شجر","is_correct":false,"image_url":null,"audio_url":null}]},{"id":543,"lesson_id":110,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: إنسان (المعرب: «رومي»)","coptic_display":"ⲣⲱⲙⲓ","audio_text":"رومي","audio_url":"audio_coptic/18roo.mp3","correct_word":"ⲣⲱⲙⲓ","tiles":["ⲣ","ⲱ","ⲙ","ⲓ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":111,"unit_id":37,"title":"حرف سيما (Ⲥ ⲥ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":544,"lesson_id":111,"type":"text_view","question":"نبذة عن حرف سيما (Ⲥ ⲥ)","coptic_display":"Ⲥ ⲥ","audio_text":"سيما","audio_url":"audio_coptic/19sema.mp3","correct_word":"• اسم الحرف: سيما\n• نطق الحرف بالعربي: س\n• قواعد النطق: الحرف التاسع عشر. يُنطق حرف \"س\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲱ\n  - القبطي المعرب (نطقها): «سو»\n  - المعنى بالعربية: يشرب\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":545,"lesson_id":111,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲥ واستمع لنطقه","coptic_display":"Ⲥ","audio_text":"سيما كابيتال","audio_url":"audio_coptic/19sema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":546,"lesson_id":111,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲥ واستمع لنطقه","coptic_display":"ⲥ","audio_text":"سيما سمول","audio_url":"audio_coptic/19sema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":547,"lesson_id":111,"type":"read_select","question":"ما هو نطق الحرف Ⲥ بالعربية؟","coptic_display":"Ⲥ","audio_text":"سيما","audio_url":"audio_coptic/19sema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3084,"challenge_id":547,"text":"تاف (ت)","is_correct":false,"image_url":null,"audio_url":null},{"id":3085,"challenge_id":547,"text":"في (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3086,"challenge_id":547,"text":"رو (ر)","is_correct":false,"image_url":null,"audio_url":null},{"id":3087,"challenge_id":547,"text":"سيما — ينطق: س","is_correct":true,"image_url":null,"audio_url":null}]},{"id":548,"lesson_id":111,"type":"select","question":"ما معنى الكلمة القبطية: ⲥⲱ؟ (المعرب: «سو»)","coptic_display":"ⲥⲱ","audio_text":"سو","audio_url":"audio_coptic/19sema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3088,"challenge_id":548,"text":"يمشي","is_correct":false,"image_url":null,"audio_url":null},{"id":3089,"challenge_id":548,"text":"يشرب","is_correct":true,"image_url":null,"audio_url":null},{"id":3090,"challenge_id":548,"text":"يأكل","is_correct":false,"image_url":null,"audio_url":null},{"id":3091,"challenge_id":548,"text":"ينام","is_correct":false,"image_url":null,"audio_url":null}]},{"id":549,"lesson_id":111,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: يشرب (المعرب: «سو»)","coptic_display":"ⲥⲱ","audio_text":"سو","audio_url":"audio_coptic/19sema.mp3","correct_word":"ⲥⲱ","tiles":["ⲥ","ⲱ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":112,"unit_id":37,"title":"حرف تاف (Ⲧ ⲧ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":550,"lesson_id":112,"type":"text_view","question":"نبذة عن حرف تاف (Ⲧ ⲧ)","coptic_display":"Ⲧ ⲧ","audio_text":"تاف","audio_url":"audio_coptic/20tav.mp3","correct_word":"• اسم الحرف: تاف\n• نطق الحرف بالعربي: ت\n• قواعد النطق: الحرف العشرون في الأبجدية القبطية. يُنطق حرف \"ت\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲧⲱⲟⲩ\n  - القبطي المعرب (نطقها): «توو»\n  - المعنى بالعربية: جبل\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":551,"lesson_id":112,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲧ واستمع لنطقه","coptic_display":"Ⲧ","audio_text":"تاف كابيتال","audio_url":"audio_coptic/20tav.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":552,"lesson_id":112,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲧ واستمع لنطقه","coptic_display":"ⲧ","audio_text":"تاف سمول","audio_url":"audio_coptic/20tav.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":553,"lesson_id":112,"type":"read_select","question":"ما هو نطق الحرف Ⲧ بالعربية؟","coptic_display":"Ⲧ","audio_text":"تاف","audio_url":"audio_coptic/20tav.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3095,"challenge_id":553,"text":"إبسيلون (ي/و)","is_correct":false,"image_url":null,"audio_url":null},{"id":3092,"challenge_id":553,"text":"شاي (ش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3093,"challenge_id":553,"text":"تاف — ينطق: ت","is_correct":true,"image_url":null,"audio_url":null},{"id":3094,"challenge_id":553,"text":"سيما (س)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":554,"lesson_id":112,"type":"select","question":"ما معنى الكلمة القبطية: ⲧⲱⲟⲩ؟ (المعرب: «توو»)","coptic_display":"ⲧⲱⲟⲩ","audio_text":"توو","audio_url":"audio_coptic/20tav.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3096,"challenge_id":554,"text":"جبل","is_correct":true,"image_url":null,"audio_url":null},{"id":3098,"challenge_id":554,"text":"نهر","is_correct":false,"image_url":null,"audio_url":null},{"id":3099,"challenge_id":554,"text":"صحراء","is_correct":false,"image_url":null,"audio_url":null},{"id":3097,"challenge_id":554,"text":"وادي","is_correct":false,"image_url":null,"audio_url":null}]},{"id":555,"lesson_id":112,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: جبل (المعرب: «توو»)","coptic_display":"ⲧⲱⲟⲩ","audio_text":"توو","audio_url":"audio_coptic/20tav.mp3","correct_word":"ⲧⲱⲟⲩ","tiles":["ⲧ","ⲱ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":128,"unit_id":37,"title":"🔄 مراجعة الوحدة 4","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":643,"lesson_id":128,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲟ ⲟ","right":"أُو (قصيرة) (واو قصيرة مضمومة (O))"},{"left":"Ⲡ ⲡ","right":"بي (ب ثقيلة مشددة (P))"},{"left":"Ⲣ ⲣ","right":"رو (ر)"},{"left":"Ⲥ ⲥ","right":"سيما (س)"}],"is_correct":true,"order_index":1,"options":[]},{"id":644,"lesson_id":128,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"أُو (قصيرة)","audio_url":"audio_coptic/16oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3232,"challenge_id":644,"text":"Ⲥ ⲥ (سيما)","is_correct":false,"image_url":null,"audio_url":null},{"id":3233,"challenge_id":644,"text":"Ⲣ ⲣ (رو)","is_correct":false,"image_url":null,"audio_url":null},{"id":3234,"challenge_id":644,"text":"Ⲡ ⲡ (بي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3235,"challenge_id":644,"text":"Ⲟ ⲟ (أُو (قصيرة))","is_correct":true,"image_url":null,"audio_url":null}]},{"id":645,"lesson_id":128,"type":"select","question":"ما معنى الكلمة: ⲡⲉ؟ (المعرب: «بي»)","coptic_display":"ⲡⲉ","audio_text":"بي","audio_url":"audio_coptic/17pee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3239,"challenge_id":645,"text":"نار","is_correct":false,"image_url":null,"audio_url":null},{"id":3236,"challenge_id":645,"text":"ماء","is_correct":false,"image_url":null,"audio_url":null},{"id":3237,"challenge_id":645,"text":"سماء","is_correct":true,"image_url":null,"audio_url":null},{"id":3238,"challenge_id":645,"text":"أرض","is_correct":false,"image_url":null,"audio_url":null}]},{"id":646,"lesson_id":128,"type":"write","question":"رتب حروف الكلمة: جبل (المعرب: «توو»)","coptic_display":"ⲧⲱⲟⲩ","audio_text":"توو","audio_url":"audio_coptic/20tav.mp3","correct_word":"ⲧⲱⲟⲩ","tiles":["ⲧ","ⲱ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":647,"lesson_id":128,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ⲣ؟","coptic_display":"Ⲣ","audio_text":"رو","audio_url":"audio_coptic/18roo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3240,"challenge_id":647,"text":"خي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3241,"challenge_id":647,"text":"رو (ر)","is_correct":true,"image_url":null,"audio_url":null},{"id":3242,"challenge_id":647,"text":"بي (ب مشددة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3243,"challenge_id":647,"text":"سيما (س)","is_correct":false,"image_url":null,"audio_url":null}]}]}]},{"id":38,"level_id":5,"title":"الوحدة ٥: الحروف من (Ⲩ – Ⲱ)","badge":"Ⲩ-Ⲱ","description":"تعلّم الحروف من إبسيلون إلى أوميغا خاتمة الحروف اليونانية","order_index":5,"lessons":[{"id":113,"unit_id":38,"title":"حرف إبسيلون (Ⲩ ⲩ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":556,"lesson_id":113,"type":"text_view","question":"نبذة عن حرف إبسيلون (Ⲩ ⲩ)","coptic_display":"Ⲩ ⲩ","audio_text":"إبسيلون","audio_url":"audio_coptic/21epselon.mp3","correct_word":"• اسم الحرف: إبسيلون\n• نطق الحرف بالعربي: ي أو ڤ أو و\n• قواعد النطق: الحرف الحادي والعشرون. حرف متحرك ينطق \"ڤ\" بعد Ⲁ أو Ⲉ، وينطق \"و\" طويلة بعد Ⲟ (ⲟⲩ)، وينطق \"ي\" في الحالات الأخرى.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲩⲓⲟⲥ\n  - القبطي المعرب (نطقها): «إيوس»\n  - المعنى بالعربية: ابن\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":557,"lesson_id":113,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲩ واستمع لنطقه","coptic_display":"Ⲩ","audio_text":"إبسيلون كابيتال","audio_url":"audio_coptic/21epselon.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":558,"lesson_id":113,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲩ واستمع لنطقه","coptic_display":"ⲩ","audio_text":"إبسيلون سمول","audio_url":"audio_coptic/21epselon.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":559,"lesson_id":113,"type":"read_select","question":"ما هو نطق الحرف Ⲩ بالعربية؟","coptic_display":"Ⲩ","audio_text":"إبسيلون","audio_url":"audio_coptic/21epselon.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3101,"challenge_id":559,"text":"في (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3102,"challenge_id":559,"text":"إبسي (بـ+س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3103,"challenge_id":559,"text":"خي (خ أو ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":3100,"challenge_id":559,"text":"إبسيلون — ينطق: ي أو ڤ أو و","is_correct":true,"image_url":null,"audio_url":null}]},{"id":560,"lesson_id":113,"type":"select","question":"ما معنى الكلمة القبطية: ⲩⲓⲟⲥ؟ (المعرب: «إيوس»)","coptic_display":"ⲩⲓⲟⲥ","audio_text":"إيوس","audio_url":"audio_coptic/21epselon.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3105,"challenge_id":560,"text":"ابن","is_correct":true,"image_url":null,"audio_url":null},{"id":3106,"challenge_id":560,"text":"أب","is_correct":false,"image_url":null,"audio_url":null},{"id":3107,"challenge_id":560,"text":"أم","is_correct":false,"image_url":null,"audio_url":null},{"id":3104,"challenge_id":560,"text":"أخ","is_correct":false,"image_url":null,"audio_url":null}]},{"id":561,"lesson_id":113,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: ابن (المعرب: «إيوس»)","coptic_display":"ⲩⲓⲟⲥ","audio_text":"إيوس","audio_url":"audio_coptic/21epselon.mp3","correct_word":"ⲩⲓⲟⲥ","tiles":["ⲩ","ⲓ","ⲟ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":114,"unit_id":38,"title":"حرف في (Ⲫ ⲫ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":562,"lesson_id":114,"type":"text_view","question":"نبذة عن حرف في (Ⲫ ⲫ)","coptic_display":"Ⲫ ⲫ","audio_text":"في","audio_url":"audio_coptic/22fi.mp3","correct_word":"• اسم الحرف: في\n• نطق الحرف بالعربي: ف\n• قواعد النطق: الحرف الثاني والعشرون. يُنطق حرف \"ف\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲫⲟⲟⲩ\n  - القبطي المعرب (نطقها): «إفهو»\n  - المعنى بالعربية: اليوم / النهار\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":563,"lesson_id":114,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲫ واستمع لنطقه","coptic_display":"Ⲫ","audio_text":"في كابيتال","audio_url":"audio_coptic/22fi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":564,"lesson_id":114,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲫ واستمع لنطقه","coptic_display":"ⲫ","audio_text":"في سمول","audio_url":"audio_coptic/22fi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":565,"lesson_id":114,"type":"read_select","question":"ما هو نطق الحرف Ⲫ بالعربية؟","coptic_display":"Ⲫ","audio_text":"في","audio_url":"audio_coptic/22fi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3108,"challenge_id":565,"text":"خي (خ أو ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":3109,"challenge_id":565,"text":"أوميغا (واو طويلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3110,"challenge_id":565,"text":"إبسيلون (ي/و)","is_correct":false,"image_url":null,"audio_url":null},{"id":3111,"challenge_id":565,"text":"في — ينطق: ف","is_correct":true,"image_url":null,"audio_url":null}]},{"id":566,"lesson_id":114,"type":"select","question":"ما معنى الكلمة القبطية: ⲫⲟⲟⲩ؟ (المعرب: «إفهو»)","coptic_display":"ⲫⲟⲟⲩ","audio_text":"إفهو","audio_url":"audio_coptic/22fi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3112,"challenge_id":566,"text":"الليل","is_correct":false,"image_url":null,"audio_url":null},{"id":3113,"challenge_id":566,"text":"غداً","is_correct":false,"image_url":null,"audio_url":null},{"id":3114,"challenge_id":566,"text":"أمس","is_correct":false,"image_url":null,"audio_url":null},{"id":3115,"challenge_id":566,"text":"اليوم / النهار","is_correct":true,"image_url":null,"audio_url":null}]},{"id":567,"lesson_id":114,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: اليوم / النهار (المعرب: «إفهو»)","coptic_display":"ⲫⲟⲟⲩ","audio_text":"إفهو","audio_url":"audio_coptic/22fi.mp3","correct_word":"ⲫⲟⲟⲩ","tiles":["ⲫ","ⲟ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":115,"unit_id":38,"title":"حرف خي (Ⲭ ⲭ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":568,"lesson_id":115,"type":"text_view","question":"نبذة عن حرف خي (Ⲭ ⲭ)","coptic_display":"Ⲭ ⲭ","audio_text":"خي","audio_url":"audio_coptic/23ki.mp3","correct_word":"• اسم الحرف: خي\n• نطق الحرف بالعربي: خ أو ك أو ش\n• قواعد النطق: الحرف الثالث والعشرون. يُنطق \"ك\" في الكلمات القبطية، ويُنطق \"خ\" أو \"ش\" في الكلمات ذات الأصل اليوناني.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲭⲣⲓⲥⲧⲟⲥ\n  - القبطي المعرب (نطقها): «خريستوس»\n  - المعنى بالعربية: المسيح\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":569,"lesson_id":115,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲭ واستمع لنطقه","coptic_display":"Ⲭ","audio_text":"خي كابيتال","audio_url":"audio_coptic/23ki.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":570,"lesson_id":115,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲭ واستمع لنطقه","coptic_display":"ⲭ","audio_text":"خي سمول","audio_url":"audio_coptic/23ki.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":571,"lesson_id":115,"type":"read_select","question":"ما هو نطق الحرف Ⲭ بالعربية؟","coptic_display":"Ⲭ","audio_text":"خي","audio_url":"audio_coptic/23ki.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3119,"challenge_id":571,"text":"خي — ينطق: خ أو ك أو ش","is_correct":true,"image_url":null,"audio_url":null},{"id":3116,"challenge_id":571,"text":"في (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3117,"challenge_id":571,"text":"إبسي (بـ+س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3118,"challenge_id":571,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":572,"lesson_id":115,"type":"select","question":"ما معنى الكلمة القبطية: ⲭⲣⲓⲥⲧⲟⲥ؟ (المعرب: «خريستوس»)","coptic_display":"ⲭⲣⲓⲥⲧⲟⲥ","audio_text":"خريستوس","audio_url":"audio_coptic/23ki.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3122,"challenge_id":572,"text":"الملك","is_correct":false,"image_url":null,"audio_url":null},{"id":3123,"challenge_id":572,"text":"المخلص","is_correct":false,"image_url":null,"audio_url":null},{"id":3120,"challenge_id":572,"text":"المعلم","is_correct":false,"image_url":null,"audio_url":null},{"id":3121,"challenge_id":572,"text":"المسيح","is_correct":true,"image_url":null,"audio_url":null}]},{"id":573,"lesson_id":115,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: المسيح (المعرب: «خريستوس»)","coptic_display":"ⲭⲣⲓⲥⲧⲟⲥ","audio_text":"خريستوس","audio_url":"audio_coptic/23ki.mp3","correct_word":"ⲭⲣⲓⲥⲧⲟⲥ","tiles":["ⲭ","ⲣ","ⲓ","ⲥ","ⲧ","ⲟ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":116,"unit_id":38,"title":"حرف إبسي (Ⲯ ⲯ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":574,"lesson_id":116,"type":"text_view","question":"نبذة عن حرف إبسي (Ⲯ ⲯ)","coptic_display":"Ⲯ ⲯ","audio_text":"إبسي","audio_url":"audio_coptic/24psi.mp3","correct_word":"• اسم الحرف: إبسي\n• نطق الحرف بالعربي: بـ + س (Ps)\n• قواعد النطق: الحرف الرابع والعشرون. حرف مركب يُنطق باء وسين معاً في صوت واحد (بـ + س = Ps).\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲯⲁⲗⲙⲟⲥ\n  - القبطي المعرب (نطقها): «بصالموس»\n  - المعنى بالعربية: مزمور\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":575,"lesson_id":116,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲯ واستمع لنطقه","coptic_display":"Ⲯ","audio_text":"إبسي كابيتال","audio_url":"audio_coptic/24psi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":576,"lesson_id":116,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲯ واستمع لنطقه","coptic_display":"ⲯ","audio_text":"إبسي سمول","audio_url":"audio_coptic/24psi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":577,"lesson_id":116,"type":"read_select","question":"ما هو نطق الحرف Ⲯ بالعربية؟","coptic_display":"Ⲯ","audio_text":"إبسي","audio_url":"audio_coptic/24psi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3125,"challenge_id":577,"text":"خي (خ أو ك)","is_correct":false,"image_url":null,"audio_url":null},{"id":3126,"challenge_id":577,"text":"أوميغا (واو طويلة)","is_correct":false,"image_url":null,"audio_url":null},{"id":3124,"challenge_id":577,"text":"إبسي — ينطق: بـ + س (Ps)","is_correct":true,"image_url":null,"audio_url":null},{"id":3127,"challenge_id":577,"text":"جانجا (ج)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":578,"lesson_id":116,"type":"select","question":"ما معنى الكلمة القبطية: ⲯⲁⲗⲙⲟⲥ؟ (المعرب: «بصالموس»)","coptic_display":"ⲯⲁⲗⲙⲟⲥ","audio_text":"بصالموس","audio_url":"audio_coptic/24psi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3128,"challenge_id":578,"text":"ترنيمة","is_correct":false,"image_url":null,"audio_url":null},{"id":3129,"challenge_id":578,"text":"إنجيل","is_correct":false,"image_url":null,"audio_url":null},{"id":3130,"challenge_id":578,"text":"صلاة","is_correct":false,"image_url":null,"audio_url":null},{"id":3131,"challenge_id":578,"text":"مزمور","is_correct":true,"image_url":null,"audio_url":null}]},{"id":579,"lesson_id":116,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: مزمور (المعرب: «بصالموس»)","coptic_display":"ⲯⲁⲗⲙⲟⲥ","audio_text":"بصالموس","audio_url":"audio_coptic/24psi.mp3","correct_word":"ⲯⲁⲗⲙⲟⲥ","tiles":["ⲯ","ⲁ","ⲗ","ⲙ","ⲟ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":117,"unit_id":38,"title":"حرف أوميغا (أو طويلة) (Ⲱ ⲱ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":580,"lesson_id":117,"type":"text_view","question":"نبذة عن حرف أوميغا (أو طويلة) (Ⲱ ⲱ)","coptic_display":"Ⲱ ⲱ","audio_text":"أوميغا (أو طويلة)","audio_url":"audio_coptic/25oo.mp3","correct_word":"• اسم الحرف: أوميغا (أو طويلة)\n• نطق الحرف بالعربي: واو طويلة ممدودة (Ō)\n• قواعد النطق: الحرف الخامس والعشرون. آخر الحروف المأخوذة من اليونانية. يُنطق واواً طويلة ومفتوحة (Ō).\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲱⲛϧ\n  - القبطي المعرب (نطقها): «أونخ»\n  - المعنى بالعربية: حياة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":581,"lesson_id":117,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ⲱ واستمع لنطقه","coptic_display":"Ⲱ","audio_text":"أوميغا (أو طويلة) كابيتال","audio_url":"audio_coptic/25oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":582,"lesson_id":117,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ⲱ واستمع لنطقه","coptic_display":"ⲱ","audio_text":"أوميغا (أو طويلة) سمول","audio_url":"audio_coptic/25oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":583,"lesson_id":117,"type":"read_select","question":"ما هو نطق الحرف Ⲱ بالعربية؟","coptic_display":"Ⲱ","audio_text":"أوميغا (أو طويلة)","audio_url":"audio_coptic/25oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3135,"challenge_id":583,"text":"شاي (ش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3132,"challenge_id":583,"text":"إبسي (بـ+س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3133,"challenge_id":583,"text":"أوميغا (أو طويلة) — ينطق: واو طويلة ممدودة (Ō)","is_correct":true,"image_url":null,"audio_url":null},{"id":3134,"challenge_id":583,"text":"فاي (ف)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":584,"lesson_id":117,"type":"select","question":"ما معنى الكلمة القبطية: ⲱⲛϧ؟ (المعرب: «أونخ»)","coptic_display":"ⲱⲛϧ","audio_text":"أونخ","audio_url":"audio_coptic/25oo.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3136,"challenge_id":584,"text":"فرح","is_correct":false,"image_url":null,"audio_url":null},{"id":3137,"challenge_id":584,"text":"سلام","is_correct":false,"image_url":null,"audio_url":null},{"id":3139,"challenge_id":584,"text":"حياة","is_correct":true,"image_url":null,"audio_url":null},{"id":3138,"challenge_id":584,"text":"موت","is_correct":false,"image_url":null,"audio_url":null}]},{"id":585,"lesson_id":117,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: حياة (المعرب: «أونخ»)","coptic_display":"ⲱⲛϧ","audio_text":"أونخ","audio_url":"audio_coptic/25oo.mp3","correct_word":"ⲱⲛϧ","tiles":["ⲱ","ⲛ","ϧ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":129,"unit_id":38,"title":"🔄 مراجعة الوحدة 5","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":648,"lesson_id":129,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲩ ⲩ","right":"إبسيلون (ي أو ڤ أو و)"},{"left":"Ⲫ ⲫ","right":"في (ف)"},{"left":"Ⲭ ⲭ","right":"خي (خ أو ك أو ش)"},{"left":"Ⲯ ⲯ","right":"إبسي (بـ + س (Ps))"}],"is_correct":true,"order_index":1,"options":[]},{"id":649,"lesson_id":129,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"إبسيلون","audio_url":"audio_coptic/21epselon.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3245,"challenge_id":649,"text":"Ⲫ ⲫ (في)","is_correct":false,"image_url":null,"audio_url":null},{"id":3246,"challenge_id":649,"text":"Ⲭ ⲭ (خي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3247,"challenge_id":649,"text":"Ⲯ ⲯ (إبسي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3244,"challenge_id":649,"text":"Ⲩ ⲩ (إبسيلون)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":650,"lesson_id":129,"type":"select","question":"ما معنى الكلمة: ⲫⲟⲟⲩ؟ (المعرب: «إفهو»)","coptic_display":"ⲫⲟⲟⲩ","audio_text":"إفهو","audio_url":"audio_coptic/22fi.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3250,"challenge_id":650,"text":"اليوم / النهار","is_correct":true,"image_url":null,"audio_url":null},{"id":3248,"challenge_id":650,"text":"غداً","is_correct":false,"image_url":null,"audio_url":null},{"id":3249,"challenge_id":650,"text":"أمس","is_correct":false,"image_url":null,"audio_url":null},{"id":3251,"challenge_id":650,"text":"الليل","is_correct":false,"image_url":null,"audio_url":null}]},{"id":651,"lesson_id":129,"type":"write","question":"رتب حروف الكلمة: حياة (المعرب: «أونخ»)","coptic_display":"ⲱⲛϧ","audio_text":"أونخ","audio_url":"audio_coptic/25oo.mp3","correct_word":"ⲱⲛϧ","tiles":["ⲱ","ⲛ","ϧ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":652,"lesson_id":129,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ⲭ؟","coptic_display":"Ⲭ","audio_text":"خي","audio_url":"audio_coptic/23ki.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3252,"challenge_id":652,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3253,"challenge_id":652,"text":"إبسي (بـ+س)","is_correct":false,"image_url":null,"audio_url":null},{"id":3254,"challenge_id":652,"text":"في (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3255,"challenge_id":652,"text":"خي (خ أو ك أو ش)","is_correct":true,"image_url":null,"audio_url":null}]}]}]},{"id":39,"level_id":5,"title":"الوحدة ٦: الحروف المصرية الأصيلة (Ϣ – Ϫ)","badge":"Ϣ-Ϫ","description":"الحروف الديموطيقية السبعة الخاصة باللغة المصرية القديمة","order_index":6,"lessons":[{"id":118,"unit_id":39,"title":"حرف شاي (Ϣ ϣ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":586,"lesson_id":118,"type":"text_view","question":"نبذة عن حرف شاي (Ϣ ϣ)","coptic_display":"Ϣ ϣ","audio_text":"شاي","audio_url":"audio_coptic/26shay.mp3","correct_word":"• اسم الحرف: شاي\n• نطق الحرف بالعربي: ش\n• قواعد النطق: الحرف السادس والعشرون. أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم. يُنطق حرف \"ش\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϣⲏⲣⲓ\n  - القبطي المعرب (نطقها): «شيري»\n  - المعنى بالعربية: ابن / صبي\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":587,"lesson_id":118,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϣ واستمع لنطقه","coptic_display":"Ϣ","audio_text":"شاي كابيتال","audio_url":"audio_coptic/26shay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":588,"lesson_id":118,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϣ واستمع لنطقه","coptic_display":"ϣ","audio_text":"شاي سمول","audio_url":"audio_coptic/26shay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":589,"lesson_id":118,"type":"read_select","question":"ما هو نطق الحرف Ϣ بالعربية؟","coptic_display":"Ϣ","audio_text":"شاي","audio_url":"audio_coptic/26shay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3140,"challenge_id":589,"text":"شاي — ينطق: ش","is_correct":true,"image_url":null,"audio_url":null},{"id":3142,"challenge_id":589,"text":"فاي (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3143,"challenge_id":589,"text":"خاي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3141,"challenge_id":589,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":590,"lesson_id":118,"type":"select","question":"ما معنى الكلمة القبطية: ϣⲏⲣⲓ؟ (المعرب: «شيري»)","coptic_display":"ϣⲏⲣⲓ","audio_text":"شيري","audio_url":"audio_coptic/26shay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3146,"challenge_id":590,"text":"بنت","is_correct":false,"image_url":null,"audio_url":null},{"id":3147,"challenge_id":590,"text":"رجل","is_correct":false,"image_url":null,"audio_url":null},{"id":3145,"challenge_id":590,"text":"شيخ","is_correct":false,"image_url":null,"audio_url":null},{"id":3144,"challenge_id":590,"text":"ابن / صبي","is_correct":true,"image_url":null,"audio_url":null}]},{"id":591,"lesson_id":118,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: ابن / صبي (المعرب: «شيري»)","coptic_display":"ϣⲏⲣⲓ","audio_text":"شيري","audio_url":"audio_coptic/26shay.mp3","correct_word":"ϣⲏⲣⲓ","tiles":["ϣ","ⲏ","ⲣ","ⲓ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":119,"unit_id":39,"title":"حرف فاي (Ϥ ϥ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":592,"lesson_id":119,"type":"text_view","question":"نبذة عن حرف فاي (Ϥ ϥ)","coptic_display":"Ϥ ϥ","audio_text":"فاي","audio_url":"audio_coptic/27fay.mp3","correct_word":"• اسم الحرف: فاي\n• نطق الحرف بالعربي: ف\n• قواعد النطق: الحرف السابع والعشرون. حرف مصري ديموطيقي أصيل يُنطق \"ف\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϥⲱⲓ\n  - القبطي المعرب (نطقها): «فوي»\n  - المعنى بالعربية: شعر (شعر الرأس)\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":593,"lesson_id":119,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϥ واستمع لنطقه","coptic_display":"Ϥ","audio_text":"فاي كابيتال","audio_url":"audio_coptic/27fay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":594,"lesson_id":119,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϥ واستمع لنطقه","coptic_display":"ϥ","audio_text":"فاي سمول","audio_url":"audio_coptic/27fay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":595,"lesson_id":119,"type":"read_select","question":"ما هو نطق الحرف Ϥ بالعربية؟","coptic_display":"Ϥ","audio_text":"فاي","audio_url":"audio_coptic/27fay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3149,"challenge_id":595,"text":"شاي (ش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3150,"challenge_id":595,"text":"فاي — ينطق: ف","is_correct":true,"image_url":null,"audio_url":null},{"id":3148,"challenge_id":595,"text":"خاي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3151,"challenge_id":595,"text":"جانجا (ج)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":596,"lesson_id":119,"type":"select","question":"ما معنى الكلمة القبطية: ϥⲱⲓ؟ (المعرب: «فوي»)","coptic_display":"ϥⲱⲓ","audio_text":"فوي","audio_url":"audio_coptic/27fay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3152,"challenge_id":596,"text":"عين","is_correct":false,"image_url":null,"audio_url":null},{"id":3153,"challenge_id":596,"text":"قدم","is_correct":false,"image_url":null,"audio_url":null},{"id":3154,"challenge_id":596,"text":"شعر (شعر الرأس)","is_correct":true,"image_url":null,"audio_url":null},{"id":3155,"challenge_id":596,"text":"يد","is_correct":false,"image_url":null,"audio_url":null}]},{"id":597,"lesson_id":119,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: شعر (شعر الرأس) (المعرب: «فوي»)","coptic_display":"ϥⲱⲓ","audio_text":"فوي","audio_url":"audio_coptic/27fay.mp3","correct_word":"ϥⲱⲓ","tiles":["ϥ","ⲱ","ⲓ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":120,"unit_id":39,"title":"حرف خاي (Ϧ ϧ)","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":598,"lesson_id":120,"type":"text_view","question":"نبذة عن حرف خاي (Ϧ ϧ)","coptic_display":"Ϧ ϧ","audio_text":"خاي","audio_url":"audio_coptic/28khay.mp3","correct_word":"• اسم الحرف: خاي\n• نطق الحرف بالعربي: خ\n• قواعد النطق: الحرف الثامن والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف \"خ\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϧⲏⲧ\n  - القبطي المعرب (نطقها): «خيت»\n  - المعنى بالعربية: قلب\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":599,"lesson_id":120,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϧ واستمع لنطقه","coptic_display":"Ϧ","audio_text":"خاي كابيتال","audio_url":"audio_coptic/28khay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":600,"lesson_id":120,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϧ واستمع لنطقه","coptic_display":"ϧ","audio_text":"خاي سمول","audio_url":"audio_coptic/28khay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":601,"lesson_id":120,"type":"read_select","question":"ما هو نطق الحرف Ϧ بالعربية؟","coptic_display":"Ϧ","audio_text":"خاي","audio_url":"audio_coptic/28khay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3159,"challenge_id":601,"text":"فاي (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3156,"challenge_id":601,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3157,"challenge_id":601,"text":"تشيما (تش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3158,"challenge_id":601,"text":"خاي — ينطق: خ","is_correct":true,"image_url":null,"audio_url":null}]},{"id":602,"lesson_id":120,"type":"select","question":"ما معنى الكلمة القبطية: ϧⲏⲧ؟ (المعرب: «خيت»)","coptic_display":"ϧⲏⲧ","audio_text":"خيت","audio_url":"audio_coptic/28khay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3160,"challenge_id":602,"text":"روح","is_correct":false,"image_url":null,"audio_url":null},{"id":3161,"challenge_id":602,"text":"جسد","is_correct":false,"image_url":null,"audio_url":null},{"id":3163,"challenge_id":602,"text":"قلب","is_correct":true,"image_url":null,"audio_url":null},{"id":3162,"challenge_id":602,"text":"عقل","is_correct":false,"image_url":null,"audio_url":null}]},{"id":603,"lesson_id":120,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: قلب (المعرب: «خيت»)","coptic_display":"ϧⲏⲧ","audio_text":"خيت","audio_url":"audio_coptic/28khay.mp3","correct_word":"ϧⲏⲧ","tiles":["ϧ","ⲏ","ⲧ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":121,"unit_id":39,"title":"حرف هوري (Ϩ ϩ)","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":604,"lesson_id":121,"type":"text_view","question":"نبذة عن حرف هوري (Ϩ ϩ)","coptic_display":"Ϩ ϩ","audio_text":"هوري","audio_url":"audio_coptic/29hory.mp3","correct_word":"• اسم الحرف: هوري\n• نطق الحرف بالعربي: هـ\n• قواعد النطق: الحرف التاسع والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف \"هـ\" دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϩⲱⲃ\n  - القبطي المعرب (نطقها): «هوب»\n  - المعنى بالعربية: عمل / شيء\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":605,"lesson_id":121,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϩ واستمع لنطقه","coptic_display":"Ϩ","audio_text":"هوري كابيتال","audio_url":"audio_coptic/29hory.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":606,"lesson_id":121,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϩ واستمع لنطقه","coptic_display":"ϩ","audio_text":"هوري سمول","audio_url":"audio_coptic/29hory.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":607,"lesson_id":121,"type":"read_select","question":"ما هو نطق الحرف Ϩ بالعربية؟","coptic_display":"Ϩ","audio_text":"هوري","audio_url":"audio_coptic/29hory.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3164,"challenge_id":607,"text":"جانجا (ج)","is_correct":false,"image_url":null,"audio_url":null},{"id":3166,"challenge_id":607,"text":"تي (تـ+ي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3167,"challenge_id":607,"text":"خاي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3165,"challenge_id":607,"text":"هوري — ينطق: هـ","is_correct":true,"image_url":null,"audio_url":null}]},{"id":608,"lesson_id":121,"type":"select","question":"ما معنى الكلمة القبطية: ϩⲱⲃ؟ (المعرب: «هوب»)","coptic_display":"ϩⲱⲃ","audio_text":"هوب","audio_url":"audio_coptic/29hory.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3170,"challenge_id":608,"text":"راحة","is_correct":false,"image_url":null,"audio_url":null},{"id":3171,"challenge_id":608,"text":"عمل / شيء","is_correct":true,"image_url":null,"audio_url":null},{"id":3169,"challenge_id":608,"text":"كلام","is_correct":false,"image_url":null,"audio_url":null},{"id":3168,"challenge_id":608,"text":"فكر","is_correct":false,"image_url":null,"audio_url":null}]},{"id":609,"lesson_id":121,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: عمل / شيء (المعرب: «هوب»)","coptic_display":"ϩⲱⲃ","audio_text":"هوب","audio_url":"audio_coptic/29hory.mp3","correct_word":"ϩⲱⲃ","tiles":["ϩ","ⲱ","ⲃ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":122,"unit_id":39,"title":"حرف جانجا (Ϫ ϫ)","xp_reward":5,"order_index":5,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":610,"lesson_id":122,"type":"text_view","question":"نبذة عن حرف جانجا (Ϫ ϫ)","coptic_display":"Ϫ ϫ","audio_text":"جانجا","audio_url":"audio_coptic/30ganga.mp3","correct_word":"• اسم الحرف: جانجا\n• نطق الحرف بالعربي: ج (معطشة أو غير معطشة)\n• قواعد النطق: الحرف الثلاثون. حرف مصري ديموطيقي أصيل. يُنطق \"ج\" معطشة قبل المتحرك للكسر، و\"ج\" غير معطشة في الحالات الأخرى.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϫⲱ\n  - القبطي المعرب (نطقها): «جو»\n  - المعنى بالعربية: رأس / يقول\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":611,"lesson_id":122,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϫ واستمع لنطقه","coptic_display":"Ϫ","audio_text":"جانجا كابيتال","audio_url":"audio_coptic/30ganga.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":612,"lesson_id":122,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϫ واستمع لنطقه","coptic_display":"ϫ","audio_text":"جانجا سمول","audio_url":"audio_coptic/30ganga.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":613,"lesson_id":122,"type":"read_select","question":"ما هو نطق الحرف Ϫ بالعربية؟","coptic_display":"Ϫ","audio_text":"جانجا","audio_url":"audio_coptic/30ganga.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3173,"challenge_id":613,"text":"تشيما (تش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3174,"challenge_id":613,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3172,"challenge_id":613,"text":"تي (تـ+ي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3175,"challenge_id":613,"text":"جانجا — ينطق: ج (معطشة أو غير معطشة)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":614,"lesson_id":122,"type":"select","question":"ما معنى الكلمة القبطية: ϫⲱ؟ (المعرب: «جو»)","coptic_display":"ϫⲱ","audio_text":"جو","audio_url":"audio_coptic/30ganga.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3176,"challenge_id":614,"text":"عين","is_correct":false,"image_url":null,"audio_url":null},{"id":3177,"challenge_id":614,"text":"رأس / يقول","is_correct":true,"image_url":null,"audio_url":null},{"id":3178,"challenge_id":614,"text":"قدم","is_correct":false,"image_url":null,"audio_url":null},{"id":3179,"challenge_id":614,"text":"لسان","is_correct":false,"image_url":null,"audio_url":null}]},{"id":615,"lesson_id":122,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: رأس / يقول (المعرب: «جو»)","coptic_display":"ϫⲱ","audio_text":"جو","audio_url":"audio_coptic/30ganga.mp3","correct_word":"ϫⲱ","tiles":["ϫ","ⲱ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":130,"unit_id":39,"title":"🔄 مراجعة الوحدة 6","xp_reward":5,"order_index":6,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":653,"lesson_id":130,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ϣ ϣ","right":"شاي (ش)"},{"left":"Ϥ ϥ","right":"فاي (ف)"},{"left":"Ϧ ϧ","right":"خاي (خ)"},{"left":"Ϩ ϩ","right":"هوري (هـ)"}],"is_correct":true,"order_index":1,"options":[]},{"id":654,"lesson_id":130,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"شاي","audio_url":"audio_coptic/26shay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3256,"challenge_id":654,"text":"Ϧ ϧ (خاي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3257,"challenge_id":654,"text":"Ϥ ϥ (فاي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3258,"challenge_id":654,"text":"Ϣ ϣ (شاي)","is_correct":true,"image_url":null,"audio_url":null},{"id":3259,"challenge_id":654,"text":"Ϩ ϩ (هوري)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":655,"lesson_id":130,"type":"select","question":"ما معنى الكلمة: ϥⲱⲓ؟ (المعرب: «فوي»)","coptic_display":"ϥⲱⲓ","audio_text":"فوي","audio_url":"audio_coptic/27fay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3261,"challenge_id":655,"text":"عين","is_correct":false,"image_url":null,"audio_url":null},{"id":3263,"challenge_id":655,"text":"يد","is_correct":false,"image_url":null,"audio_url":null},{"id":3260,"challenge_id":655,"text":"شعر (شعر الرأس)","is_correct":true,"image_url":null,"audio_url":null},{"id":3262,"challenge_id":655,"text":"قدم","is_correct":false,"image_url":null,"audio_url":null}]},{"id":656,"lesson_id":130,"type":"write","question":"رتب حروف الكلمة: رأس / يقول (المعرب: «جو»)","coptic_display":"ϫⲱ","audio_text":"جو","audio_url":"audio_coptic/30ganga.mp3","correct_word":"ϫⲱ","tiles":["ϫ","ⲱ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":657,"lesson_id":130,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ϧ؟","coptic_display":"Ϧ","audio_text":"خاي","audio_url":"audio_coptic/28khay.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3264,"challenge_id":657,"text":"خاي (خ)","is_correct":true,"image_url":null,"audio_url":null},{"id":3265,"challenge_id":657,"text":"فاي (ف)","is_correct":false,"image_url":null,"audio_url":null},{"id":3266,"challenge_id":657,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3267,"challenge_id":657,"text":"تشيما (تش)","is_correct":false,"image_url":null,"audio_url":null}]}]}]},{"id":40,"level_id":5,"title":"الوحدة ٧: الحروف الختامية والمراجعة الكبرى (Ϭ – Ϯ)","badge":"Ϭ-Ϯ","description":"ختام الأبجدية واختبار إتقان الـ 32 حرفاً القبطية بالكامل","order_index":7,"lessons":[{"id":123,"unit_id":40,"title":"حرف تشيما (Ϭ ϭ)","xp_reward":5,"order_index":1,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":616,"lesson_id":123,"type":"text_view","question":"نبذة عن حرف تشيما (Ϭ ϭ)","coptic_display":"Ϭ ϭ","audio_text":"تشيما","audio_url":"audio_coptic/31chema.mp3","correct_word":"• اسم الحرف: تشيما\n• نطق الحرف بالعربي: تش (Tsh)\n• قواعد النطق: الحرف الحادي والثلاثون. الحرف السادس من الحروف المصرية الديموطيقية، يُنطق تاء وشين معاً (تش) دائماً.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϭⲟⲓⲥ\n  - القبطي المعرب (نطقها): «تشويس»\n  - المعنى بالعربية: رب / سيد\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":617,"lesson_id":123,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϭ واستمع لنطقه","coptic_display":"Ϭ","audio_text":"تشيما كابيتال","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":618,"lesson_id":123,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϭ واستمع لنطقه","coptic_display":"ϭ","audio_text":"تشيما سمول","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":619,"lesson_id":123,"type":"read_select","question":"ما هو نطق الحرف Ϭ بالعربية؟","coptic_display":"Ϭ","audio_text":"تشيما","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3183,"challenge_id":619,"text":"جانجا (ج)","is_correct":false,"image_url":null,"audio_url":null},{"id":3180,"challenge_id":619,"text":"شاي (ش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3181,"challenge_id":619,"text":"تشيما — ينطق: تش (Tsh)","is_correct":true,"image_url":null,"audio_url":null},{"id":3182,"challenge_id":619,"text":"تي (تـ+ي)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":620,"lesson_id":123,"type":"select","question":"ما معنى الكلمة القبطية: ϭⲟⲓⲥ؟ (المعرب: «تشويس»)","coptic_display":"ϭⲟⲓⲥ","audio_text":"تشويس","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3184,"challenge_id":620,"text":"رب / سيد","is_correct":true,"image_url":null,"audio_url":null},{"id":3185,"challenge_id":620,"text":"عبد","is_correct":false,"image_url":null,"audio_url":null},{"id":3187,"challenge_id":620,"text":"ملك","is_correct":false,"image_url":null,"audio_url":null},{"id":3186,"challenge_id":620,"text":"خادم","is_correct":false,"image_url":null,"audio_url":null}]},{"id":621,"lesson_id":123,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: رب / سيد (المعرب: «تشويس»)","coptic_display":"ϭⲟⲓⲥ","audio_text":"تشويس","audio_url":"audio_coptic/31chema.mp3","correct_word":"ϭⲟⲓⲥ","tiles":["ϭ","ⲟ","ⲓ","ⲥ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":124,"unit_id":40,"title":"حرف تي (Ϯ ϯ)","xp_reward":5,"order_index":2,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":622,"lesson_id":124,"type":"text_view","question":"نبذة عن حرف تي (Ϯ ϯ)","coptic_display":"Ϯ ϯ","audio_text":"تي","audio_url":"audio_coptic/32tee.mp3","correct_word":"• اسم الحرف: تي\n• نطق الحرف بالعربي: تـ + ي (Ti)\n• قواعد النطق: الحرف الثاني والثلاثون والأخير في الأبجدية القبطية. مقطع صوتي مركب ينطق تاء وياء معاً (تـ + ي = Ti).\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ϯⲙⲏⲓ\n  - القبطي المعرب (نطقها): «تيمي»\n  - المعنى بالعربية: الحق / العدل\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)","tiles":null,"pairs":null,"is_correct":true,"order_index":1,"options":[]},{"id":623,"lesson_id":124,"type":"trace","question":"تتبّع كتابة الحرف الكبير (كابيتال): Ϯ واستمع لنطقه","coptic_display":"Ϯ","audio_text":"تي كابيتال","audio_url":"audio_coptic/32tee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[]},{"id":624,"lesson_id":124,"type":"trace","question":"تتبّع كتابة الحرف الصغير (سمول): ϯ واستمع لنطقه","coptic_display":"ϯ","audio_text":"تي سمول","audio_url":"audio_coptic/32tee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[]},{"id":625,"lesson_id":124,"type":"read_select","question":"ما هو نطق الحرف Ϯ بالعربية؟","coptic_display":"Ϯ","audio_text":"تي","audio_url":"audio_coptic/32tee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3188,"challenge_id":625,"text":"تشيما (تش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3190,"challenge_id":625,"text":"هوري (هـ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3191,"challenge_id":625,"text":"خاي (خ)","is_correct":false,"image_url":null,"audio_url":null},{"id":3189,"challenge_id":625,"text":"تي — ينطق: تـ + ي (Ti)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":626,"lesson_id":124,"type":"select","question":"ما معنى الكلمة القبطية: ϯⲙⲏⲓ؟ (المعرب: «تيمي»)","coptic_display":"ϯⲙⲏⲓ","audio_text":"تيمي","audio_url":"audio_coptic/32tee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3194,"challenge_id":626,"text":"الباطل","is_correct":false,"image_url":null,"audio_url":null},{"id":3195,"challenge_id":626,"text":"الحق / العدل","is_correct":true,"image_url":null,"audio_url":null},{"id":3193,"challenge_id":626,"text":"السلام","is_correct":false,"image_url":null,"audio_url":null},{"id":3192,"challenge_id":626,"text":"النعمة","is_correct":false,"image_url":null,"audio_url":null}]},{"id":627,"lesson_id":124,"type":"write","question":"رتب حروف الكلمة القبطية لتكوين: الحق / العدل (المعرب: «تيمي»)","coptic_display":"ϯⲙⲏⲓ","audio_text":"تيمي","audio_url":"audio_coptic/32tee.mp3","correct_word":"ϯⲙⲏⲓ","tiles":["ϯ","ⲙ","ⲏ","ⲓ"],"pairs":null,"is_correct":true,"order_index":6,"options":[]}]},{"id":131,"unit_id":40,"title":"🔄 مراجعة شاملة للأبجدية القبطية","xp_reward":5,"order_index":3,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":658,"lesson_id":131,"type":"match","question":"صل بين كل حرف قبطي ونطقه بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ϭ ϭ","right":"تشيما (تش (Tsh))"},{"left":"Ϯ ϯ","right":"تي (تـ + ي (Ti))"}],"is_correct":true,"order_index":1,"options":[]},{"id":659,"lesson_id":131,"type":"listen","question":"استمع إلى نطق الحرف ثم اختر الحرف المطابق","coptic_display":null,"audio_text":"تشيما","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3268,"challenge_id":659,"text":"Ϯ ϯ (تي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3269,"challenge_id":659,"text":"Ϭ ϭ (تشيما)","is_correct":true,"image_url":null,"audio_url":null}]},{"id":660,"lesson_id":131,"type":"select","question":"ما معنى الكلمة: ϯⲙⲏⲓ؟ (المعرب: «تيمي»)","coptic_display":"ϯⲙⲏⲓ","audio_text":"تيمي","audio_url":"audio_coptic/32tee.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3272,"challenge_id":660,"text":"السلام","is_correct":false,"image_url":null,"audio_url":null},{"id":3270,"challenge_id":660,"text":"الباطل","is_correct":false,"image_url":null,"audio_url":null},{"id":3271,"challenge_id":660,"text":"الحق / العدل","is_correct":true,"image_url":null,"audio_url":null},{"id":3273,"challenge_id":660,"text":"النعمة","is_correct":false,"image_url":null,"audio_url":null}]},{"id":661,"lesson_id":131,"type":"write","question":"رتب حروف الكلمة: الحق / العدل (المعرب: «تيمي»)","coptic_display":"ϯⲙⲏⲓ","audio_text":"تيمي","audio_url":"audio_coptic/32tee.mp3","correct_word":"ϯⲙⲏⲓ","tiles":["ϯ","ⲙ","ⲏ","ⲓ"],"pairs":null,"is_correct":true,"order_index":4,"options":[]},{"id":662,"lesson_id":131,"type":"read_select","question":"ما هو نطق الحرف القبطي: Ϭ؟","coptic_display":"Ϭ","audio_text":"تشيما","audio_url":"audio_coptic/31chema.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":5,"options":[{"id":3274,"challenge_id":662,"text":"شاي (ش)","is_correct":false,"image_url":null,"audio_url":null},{"id":3275,"challenge_id":662,"text":"تي (تـ+ي)","is_correct":false,"image_url":null,"audio_url":null},{"id":3276,"challenge_id":662,"text":"جانجا (ج)","is_correct":false,"image_url":null,"audio_url":null},{"id":3277,"challenge_id":662,"text":"تشيما (تش (Tsh))","is_correct":true,"image_url":null,"audio_url":null}]}]},{"id":132,"unit_id":40,"title":"🎓 الاختبار النهائي الشامل للمستوى الأول","xp_reward":5,"order_index":4,"practice_xp":1,"challenge_xp":5,"challenges":[{"id":663,"lesson_id":132,"type":"match","question":"صل الحرف بنطقه الصحيح بالعربية","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":[{"left":"Ⲁ ⲁ","right":"ألفا (أ)"},{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"ⲭ ⲭ","right":"خي (خ/ك/ش)"},{"left":"Ϯ ϯ","right":"تي (تـ+ي)"}],"is_correct":true,"order_index":1,"options":[]},{"id":664,"lesson_id":132,"type":"listen","question":"استمع واختر الحرف الصحيح","coptic_display":null,"audio_text":"ألفا","audio_url":"audio_coptic/1alfa.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":2,"options":[{"id":3278,"challenge_id":664,"text":"Ⲁ ⲁ (ألفا)","is_correct":true,"image_url":null,"audio_url":null},{"id":3279,"challenge_id":664,"text":"Ⲃ ⲃ (فيدا)","is_correct":false,"image_url":null,"audio_url":null},{"id":3280,"challenge_id":664,"text":"Ⲅ ⲅ (غاما)","is_correct":false,"image_url":null,"audio_url":null},{"id":3281,"challenge_id":664,"text":"Ⲇ ⲇ (دلدا)","is_correct":false,"image_url":null,"audio_url":null}]},{"id":665,"lesson_id":132,"type":"select","question":"ما معنى الكلمة القبطية: ⲛⲟⲩϯ؟ (المعرب: «نوتي»)","coptic_display":"ⲛⲟⲩϯ","audio_text":"نوتي","audio_url":"audio_coptic/14ni.mp3","correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":3,"options":[{"id":3283,"challenge_id":665,"text":"السماء","is_correct":false,"image_url":null,"audio_url":null},{"id":3285,"challenge_id":665,"text":"الكنيسة","is_correct":false,"image_url":null,"audio_url":null},{"id":3282,"challenge_id":665,"text":"الله","is_correct":true,"image_url":null,"audio_url":null},{"id":3284,"challenge_id":665,"text":"الملاك","is_correct":false,"image_url":null,"audio_url":null}]},{"id":666,"lesson_id":132,"type":"select","question":"كم عدد حروف الأبجدية القبطية كاملة؟","coptic_display":null,"audio_text":null,"audio_url":null,"correct_word":null,"tiles":null,"pairs":null,"is_correct":true,"order_index":4,"options":[{"id":3286,"challenge_id":666,"text":"٣٢ حرفاً","is_correct":true,"image_url":null,"audio_url":null},{"id":3287,"challenge_id":666,"text":"٢٨ حرفاً","is_correct":false,"image_url":null,"audio_url":null},{"id":3288,"challenge_id":666,"text":"٢٦ حرفاً","is_correct":false,"image_url":null,"audio_url":null},{"id":3289,"challenge_id":666,"text":"٣٠ حرفاً","is_correct":false,"image_url":null,"audio_url":null}]},{"id":667,"lesson_id":132,"type":"write","question":"رتب حروف الكلمة القبطية: ولد (المعرب: «أَلو») [ⲁⲗⲟⲩ]","coptic_display":"ⲁⲗⲟⲩ","audio_text":"أَلو","audio_url":"audio_coptic/1alfa.mp3","correct_word":"ⲁⲗⲟⲩ","tiles":["ⲁ","ⲗ","ⲟ","ⲩ"],"pairs":null,"is_correct":true,"order_index":5,"options":[]}]}]}],"chests":[{"id":"chest_unit_1","level_id":5,"unit_id":34,"title":"🎁 صندوق كنز الوحدة 1","description":"مكافأة إتمام دروس ومراجعة الوحدة 1","placement_type":"unit_end","after_lesson_id":125,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:25:43.11593+00:00"},{"id":"chest_unit_2","level_id":5,"unit_id":35,"title":"🎁 صندوق كنز الوحدة 2","description":"مكافأة إتمام دروس ومراجعة الوحدة 2","placement_type":"unit_end","after_lesson_id":126,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:25:48.431376+00:00"},{"id":"chest_unit_3","level_id":5,"unit_id":36,"title":"🎁 صندوق كنز الوحدة 3","description":"مكافأة إتمام دروس ومراجعة الوحدة 3","placement_type":"unit_end","after_lesson_id":127,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:25:55.073824+00:00"},{"id":"chest_unit_4","level_id":5,"unit_id":37,"title":"🎁 صندوق كنز الوحدة 4","description":"مكافأة إتمام دروس ومراجعة الوحدة 4","placement_type":"unit_end","after_lesson_id":128,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:26:03.070018+00:00"},{"id":"chest_unit_5","level_id":5,"unit_id":38,"title":"🎁 صندوق كنز الوحدة 5","description":"مكافأة إتمام دروس ومراجعة الوحدة 5","placement_type":"unit_end","after_lesson_id":129,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:26:11.17935+00:00"},{"id":"chest_unit_6","level_id":5,"unit_id":39,"title":"🎁 صندوق كنز الوحدة 6","description":"مكافأة إتمام دروس ومراجعة الوحدة 6","placement_type":"unit_end","after_lesson_id":130,"xp_mode":"fixed","xp_min":10,"xp_max":10,"hearts":1,"has_badge":false,"badge_title":"","badge_icon":"gift","badge_desc":"","order_index":0,"created_at":"2026-09-11T10:26:21.28979+00:00"},{"id":"chest_unit_7","level_id":5,"unit_id":40,"title":"🏆 صندوق التخرج والاحتفال الختامي للمستوى الأول","description":"تهانينا! لقد أتقنت جميع الـ 32 حرفاً القبطية بنجاح باهر!","placement_type":"unit_end","after_lesson_id":131,"xp_mode":"fixed","xp_min":50,"xp_max":50,"hearts":3,"has_badge":true,"badge_title":"متقن الأبجدية القبطية","badge_icon":"trophy","badge_desc":"أتممت المستوى الأول للأبجدية القبطية كاملاً (٣٢ حرفاً)","order_index":0,"created_at":"2026-09-11T10:26:28.011637+00:00"}]};
 
@@ -530,6 +537,66 @@ const CurriculumAdminSystem = (function(){
     }
 
     const defaultCurriculum = (typeof DEFAULT_SEEDED_CURRICULUM !== 'undefined' ? DEFAULT_SEEDED_CURRICULUM : (typeof DEFAULT_CURRICULUM !== 'undefined' ? DEFAULT_CURRICULUM : (window.DEFAULT_CURRICULUM || (window.GamificationService && window.GamificationService.DEFAULT_CURRICULUM))));
+
+    const hasUnits = curriculumData && Array.isArray(curriculumData.units) && curriculumData.units.length > 0;
+
+    if((!curriculumData || !hasUnits) && defaultCurriculum){
+      curriculumData = JSON.parse(JSON.stringify(defaultCurriculum));
+    } else if(!curriculumData){
+      curriculumData = {
+        levels: [
+          { id: 1, title: 'المستوى 1: الأبجدية القبطية (اللهجة البحيرية)', description: 'تعلّم نطق وكتابة وقراءة جميع الحروف القبطية الـ 32 من خلال 7 وحدات تدريبية ممتعة.', order_index: 1 }
+        ],
+        units: []
+      };
+    }
+
+    normalizeCurriculumData();
+    wireHeaderEvents();
+    renderLevelsOverview();
+    refreshStats();
+    updateHistoryButtons();
+
+    // 2. Supabase-First: Async load from Supabase if connected
+    if(window.sb){
+      loadCurriculumFromSupabase();
+    }
+  }
+
+  function normalizeCurriculumData(){
+    if(!curriculumData) curriculumData = {};
+    if(!curriculumData.levels || !Array.isArray(curriculumData.levels) || curriculumData.levels.length === 0){
+      if(curriculumData.level && typeof curriculumData.level === 'object'){
+        curriculumData.levels = [ curriculumData.level ];
+      } else {
+        curriculumData.levels = [
+          { id: 1, title: 'المستوى 1: الأبجدية القبطية (اللهجة البحيرية)', description: 'تعلّم نطق وكتابة وقراءة جميع الحروف القبطية الـ 32 من خلال 7 وحدات تدريبية ممتعة.', order_index: 1 }
+        ];
+      }
+    }
+
+    if(!curriculumData.units || !Array.isArray(curriculumData.units)){
+      curriculumData.units = [];
+    }
+
+    if(!curriculumData.chests || !Array.isArray(curriculumData.chests)){
+      curriculumData.chests = [];
+    }
+    curriculumData.chests.forEach((c, idx) => {
+      c.id = c.id || ('chest_' + Date.now() + '_' + idx);
+      c.title = c.title || 'صندوق المكافأة السري';
+      c.description = c.description || 'أحسنت وصولاً إلى هذه المحطة! إليك هديتك التشجيعية:';
+      c.level_id = c.level_id || (curriculumData.levels[0] ? curriculumData.levels[0].id : 1);
+      c.placement_type = c.placement_type || 'after_lesson';
+      c.hearts = parseInt(c.hearts, 10) >= 0 ? parseInt(c.hearts, 10) : 1;
+      c.xp_mode = c.xp_mode || 'range';
+      c.xp_min = parseInt(c.xp_min, 10) || 20;
+      c.xp_max = parseInt(c.xp_max, 10) || 50;
+      c.has_badge = !!c.has_badge;
+      c.badge_title = c.badge_title || '';
+      c.badge_icon = c.badge_icon || 'trophy';
+      c.badge_desc = c.badge_desc || '';
+    });
 
     // Dynamic Level XP calculation from lessons (No static fake XP)
     curriculumData.levels.forEach((lvl, idx) => {
@@ -3886,6 +3953,351 @@ const CurriculumAdminSystem = (function(){
       });
     }
 
+    if(type === 'text_view'){
+      let ov = (existingData && existingData.overview_data && typeof existingData.overview_data === 'object') ? existingData.overview_data : null;
+      if (!ov && existingData && existingData.explanation && typeof existingData.explanation === 'string' && existingData.explanation.trim().startsWith('{')) {
+        try { ov = JSON.parse(existingData.explanation); } catch(e){}
+      }
+      if (!ov && typeof findLetterCatalogItem === 'function') {
+        ov = findLetterCatalogItem(existingData || {});
+      }
+
+      const qInput = document.getElementById('challenge-input-question');
+      if (qInput && (!qInput.value.trim() || qInput.value.trim() === 'اقرأ وتأمّل' || qInput.value.trim() === 'شرح وقراءة (تأمّل وتعلّم)')) {
+        qInput.value = (ov && ov.name) ? `نبذة عن حرف ${ov.name} (${ov.pair || ov.upper || ''})` : 'نبذة عن الحرف';
+      }
+
+      const pairVal = (ov && ov.pair) || (existingData && existingData.coptic_display) || '';
+      const nameVal = (ov && ov.name) || (existingData && existingData.audio_text) || '';
+      const typeBadgeVal = (ov && ov.letterTypeBadge) || (ov && ov.isVowel ? 'حرف متحرك' : 'حرف ساكن');
+      const badgeClassVal = (ov && ov.badgeClass) || (ov && ov.isVowel ? 'badge-vowel' : 'badge-consonant');
+      const hasMulti = ov ? Boolean(ov.hasMultiple) : false;
+      const multiTextVal = (ov && ov.multipleCountText) || '';
+      const pronVal = (ov && ov.pronunciation) || '';
+      const soundVal = (ov && ov.soundFile) || (existingData && existingData.audio_url) || '';
+      const rulesTitleVal = (ov && ov.rulesTitle) || (hasMulti ? 'حالات وقواعد نطق الحرف بالتفصيل:' : 'قاعدة نطق الحرف:');
+      const rawRules = (ov && Array.isArray(ov.rules) && ov.rules.length > 0) ? ov.rules : ((ov && ov.rules) ? [ov.rules] : ['يُنطق الحرف وفقاً للقواعد الكنسية المعتمدة.']);
+      const wordTitleVal = (ov && ov.wordTitle) || 'نبذة عن الكلمة التطبيقية على الحرف';
+      const wordCopticVal = (ov && ov.word && ov.word.coptic) || '';
+      const wordPhoneticVal = (ov && ov.word && ov.word.phoneticAr) || '';
+      const wordMeaningVal = (ov && ov.word && ov.word.meaning) || '';
+
+      const cDisp = document.getElementById('challenge-input-coptic');
+      if (cDisp && !cDisp.value.trim() && pairVal) cDisp.value = pairVal;
+      const aText = document.getElementById('challenge-input-audio-text');
+      if (aText && !aText.value.trim() && nameVal) aText.value = nameVal;
+      const aUrl = document.getElementById('challenge-input-audio-url');
+      if (aUrl && !aUrl.value.trim() && soundVal) aUrl.value = soundVal;
+
+      container.innerHTML = `
+        <div class="tv-editor-wrapper" style="display:flex; flex-direction:column; gap:14px;">
+          
+          <div style="background:linear-gradient(135deg, #FFF9F0 0%, #FAF0E4 100%); border:1.5px solid #D6C3A5; border-radius:14px; padding:14px 16px;">
+            <div style="font-weight:900; color:#6F1737; font-size:1.02rem; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <span>لوحة التحكم الكاملة في بطاقة نبذة الحرف والكلمة (Full Interactive Flashcard)</span>
+              <span style="font-size:0.78rem; background:#6F1737; color:#fff; padding:3px 10px; border-radius:20px;">تحكم كامل وفوري</span>
+            </div>
+            <p style="font-size:0.83rem; color:#5D4037; margin:0;">يمكنك هنا تعديل جميع نصوص وكلمات وشارات وقواعد النطق وأصوات هذه الصفحة بسهولة تامة، وتنعكس التعديلات حياً ومباشرة في المعاينة أدناه.</p>
+          </div>
+
+          <!-- القسم 1: بيانات رأس الصفحة والحرف -->
+          <div class="tv-editor-box">
+            <div class="tv-editor-header">
+              <span>1. بيانات وشارات الحرف والنطق العام</span>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700;">اسم الحرف بالعربية *</label>
+                <input type="text" id="tv-letter-name" value="${escapeHtml(nameVal)}" placeholder="مثال: فيدا (بيتا)" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700;">رمز الحرف (كبير وصغير) *</label>
+                <input type="text" id="tv-letter-pair" class="coptic-input" value="${escapeHtml(pairVal)}" placeholder="مثال: Ⲃ ⲃ" dir="ltr" style="font-size:1.3rem; font-weight:800;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:10px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700;">تصنيف الحرف (الشارة الأولى)</label>
+                <select id="tv-letter-badge-select" onchange="CurriculumAdminSystem.onOverviewBadgeSelectChange()">
+                  <option value="حرف ساكن|badge-consonant" ${typeBadgeVal === 'حرف ساكن' ? 'selected' : ''}>حرف ساكن (أزرق)</option>
+                  <option value="حرف متحرك (للفتح)|badge-vowel" ${typeBadgeVal.includes('فتح') ? 'selected' : ''}>حرف متحرك للفتح (برتقالي)</option>
+                  <option value="حرف متحرك (للكسر)|badge-vowel" ${typeBadgeVal === 'حرف متحرك (للكسر)' ? 'selected' : ''}>حرف متحرك للكسر (برتقالي)</option>
+                  <option value="حرف متحرك (للكسر خفيف)|badge-vowel" ${typeBadgeVal.includes('كسر خفيف') ? 'selected' : ''}>حرف متحرك للكسر خفيف</option>
+                  <option value="حرف متحرك (للكسر طويل)|badge-vowel" ${typeBadgeVal.includes('كسر طويل') ? 'selected' : ''}>حرف متحرك للكسر طويل</option>
+                  <option value="حرف متحرك (للكسر قصير)|badge-vowel" ${typeBadgeVal.includes('كسر قصير') ? 'selected' : ''}>حرف متحرك للكسر قصير</option>
+                  <option value="حرف متحرك (للضم)|badge-vowel" ${typeBadgeVal === 'حرف متحرك (للضم)' ? 'selected' : ''}>حرف متحرك للضم</option>
+                  <option value="حرف متحرك (للضم قصير)|badge-vowel" ${typeBadgeVal.includes('ضم قصير') ? 'selected' : ''}>حرف متحرك للضم قصير</option>
+                  <option value="حرف متحرك (للضم طويل)|badge-vowel" ${typeBadgeVal.includes('ضم طويل') ? 'selected' : ''}>حرف متحرك للضم طويل</option>
+                  <option value="حرف متحرك (متعدد الحالات)|badge-vowel" ${typeBadgeVal.includes('متعدد') ? 'selected' : ''}>حرف متحرك متعدد الحالات</option>
+                  <option value="حرف ساكن مركب|badge-compound" ${typeBadgeVal.includes('مركب') ? 'selected' : ''}>حرف ساكن مركب (أخضر)</option>
+                  <option value="حرف مصري ديموطيقي|badge-demotic" ${typeBadgeVal.includes('ديموطيقي') ? 'selected' : ''}>حرف مصري ديموطيقي (بني)</option>
+                  <option value="مقطع ساكن ديموطيقي|badge-demotic" ${typeBadgeVal.includes('مقطع') ? 'selected' : ''}>مقطع ساكن ديموطيقي</option>
+                  <option value="رقم عددي رمزي|badge-symbol" ${typeBadgeVal.includes('رقم') ? 'selected' : ''}>رقم عددي رمزي (بنفسجي)</option>
+                  <option value="custom">نص مخصص...</option>
+                </select>
+                <input type="text" id="tv-letter-badge-custom" style="display:none; margin-top:6px;" value="${escapeHtml(typeBadgeVal)}" placeholder="اكتب نص الشارة المخصصة" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700;">شارة عدد الحالات الصوتية (الشارة الثانية)</label>
+                <select id="tv-multi-badge-select" onchange="CurriculumAdminSystem.onOverviewMultiSelectChange()">
+                  <option value="" ${!multiTextVal ? 'selected' : ''}>— بدون شارة ثانية (نطق واحد قياسي) —</option>
+                  <option value="له نطقان (ڤ / ب)" ${multiTextVal.includes('له نطقان (ڤ / ب)') ? 'selected' : ''}>له نطقان (ڤ / ب)</option>
+                  <option value="له نطقان (د / ذ)" ${multiTextVal.includes('له نطقان (د / ذ)') ? 'selected' : ''}>له نطقان (د / ذ)</option>
+                  <option value="له نطقان (ث / ت)" ${multiTextVal.includes('له نطقان (ث / ت)') ? 'selected' : ''}>له نطقان (ث / ت)</option>
+                  <option value="له نطقان (جـ معطشة / جـ)" ${multiTextVal.includes('له نطقان (جـ') ? 'selected' : ''}>له نطقان (جـ معطشة / جـ)</option>
+                  <option value="له 3 أصوات (جـ / ن / غ)" ${multiTextVal.includes('(جـ / ن / غ)') ? 'selected' : ''}>له 3 أصوات (جـ / ن / غ)</option>
+                  <option value="له 3 أصوات (ك / ش / خ)" ${multiTextVal.includes('(ك / ش / خ)') ? 'selected' : ''}>له 3 أصوات (ك / ش / خ)</option>
+                  <option value="له 3 حالات نطق (ڤ / و / ي)" ${multiTextVal.includes('(ڤ / و / ي)') ? 'selected' : ''}>له 3 حالات نطق (ڤ / و / ي)</option>
+                  <option value="نطق مركب مزدوج" ${multiTextVal.includes('مركب مزدوج') ? 'selected' : ''}>نطق مركب مزدوج</option>
+                  <option value="نطق مركب (ت + ش)" ${multiTextVal.includes('ت + ش') ? 'selected' : ''}>نطق مركب (ت + ش)</option>
+                  <option value="نطق مقطعي (تـ + ي)" ${multiTextVal.includes('تـ + ي') ? 'selected' : ''}>نطق مقطعي (تـ + ي)</option>
+                  <option value="custom">نص مخصص...</option>
+                </select>
+                <input type="text" id="tv-multi-badge-custom" style="display:none; margin-top:6px;" value="${escapeHtml(multiTextVal)}" placeholder="مثال: له نطقان..." oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:10px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700;">النطق بالعربي (النص المميز) *</label>
+                <input type="text" id="tv-letter-pron" value="${escapeHtml(pronVal)}" placeholder="مثال: ڤ (V) أو ب (B)" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700;">ملف صوت نطق الحرف</label>
+                <div style="display:flex; gap:6px;">
+                  <input type="text" id="tv-letter-sound" dir="ltr" value="${escapeHtml(soundVal)}" placeholder="مثال: audio_coptic/2veta.mp3" style="flex:1;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                  <button type="button" class="curriculum-btn curriculum-btn-secondary" style="padding:4px 10px;" onclick="CurriculumAdminSystem.playAudioSnippet(document.getElementById('tv-letter-sound').value, document.getElementById('tv-letter-name').value, this)" title="تجربة الصوت">▶</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- القسم 2: حالات وقواعد نطق الحرف بالتفصيل -->
+          <div class="tv-editor-box">
+            <div class="tv-editor-header">
+              <span>2. حالات وقواعد نطق الحرف بالتفصيل</span>
+              <button type="button" class="curriculum-btn curriculum-btn-secondary" style="padding:4px 10px; font-size:0.8rem;" onclick="CurriculumAdminSystem.addOverviewRuleRow()">+ إضافة قاعدة نطق جديدة</button>
+            </div>
+
+            <div class="curriculum-field" style="margin-bottom:12px;">
+              <label style="font-weight:700;">عنوان صندوق القواعد:</label>
+              <input type="text" id="tv-rules-title" value="${escapeHtml(rulesTitleVal)}" placeholder="مثال: حالات وقواعد نطق الحرف بالتفصيل:" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+            </div>
+
+            <div id="tv-rules-container" style="display:flex; flex-direction:column; gap:8px;">
+              ${rawRules.map((r, i) => `
+                <div class="tv-rule-row">
+                  <span class="tv-rule-num">${i + 1}.</span>
+                  <input type="text" class="tv-rule-input" value="${escapeHtml(r)}" placeholder="اكتب قاعدة النطق هنا..." oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                  <button type="button" class="curriculum-btn curriculum-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.removeOverviewRuleRow(this)" title="حذف القاعدة">✕</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- القسم 3: الكلمة التطبيقية على الحرف -->
+          <div class="tv-editor-box">
+            <div class="tv-editor-header">
+              <span>3. نبذة عن الكلمة التطبيقية على الحرف</span>
+            </div>
+
+            <div class="curriculum-field" style="margin-bottom:12px;">
+              <label style="font-weight:700;">عنوان بطاقة الكلمة:</label>
+              <input type="text" id="tv-word-title" value="${escapeHtml(wordTitleVal)}" placeholder="مثال: نبذة عن الكلمة التطبيقية على الحرف" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700;">الكلمة بالقبطية *</label>
+                <input type="text" id="tv-word-coptic" class="coptic-input" value="${escapeHtml(wordCopticVal)}" placeholder="مثال: ⲃⲉⲣⲧ" dir="ltr" style="font-size:1.3rem; font-weight:800;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700;">القبطي المعرب (النطق) *</label>
+                <input type="text" id="tv-word-phonetic" value="${escapeHtml(wordPhoneticVal)}" placeholder="مثال: فيرت" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700;">المعنى بالعربية *</label>
+                <input type="text" id="tv-word-meaning" value="${escapeHtml(wordMeaningVal)}" placeholder="مثال: وردة" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+            </div>
+          </div>
+
+          <!-- القسم 4: 🎨 تخصيص ألوان النصوص والخلفيات -->
+          <div class="tv-editor-box">
+            <div class="tv-editor-header" style="flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>4. 🎨 تخصيص ألوان النصوص والخلفيات</span>
+                <span style="font-size:0.75rem; background:#4A0D24; color:#FFE082; padding:3px 10px; border-radius:14px; font-weight:800;">تحكم مرئي فوري</span>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="curriculum-btn curriculum-btn-secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="CurriculumAdminSystem.applyColorPreset('default', this)">👑 الملكي (الافتراضي)</button>
+                <button type="button" class="curriculum-btn curriculum-btn-secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="CurriculumAdminSystem.applyColorPreset('dark', this)">🌙 الليلي الداكن</button>
+                <button type="button" class="curriculum-btn curriculum-btn-secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="CurriculumAdminSystem.applyColorPreset('emerald', this)">🌿 الزمردي الكنسي</button>
+                <button type="button" class="curriculum-btn curriculum-btn-secondary" style="font-size:0.75rem; padding:4px 10px;" onclick="CurriculumAdminSystem.applyColorPreset('papyrus', this)">📜 البردي العتيق</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-top:8px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون عنوان الدرس الرئيسي:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-title" value="${(ov && ov.colors && ov.colors.titleColor) || '#2E2018'}" oninput="document.getElementById('tv-col-title-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-title-text" value="${(ov && ov.colors && ov.colors.titleColor) || '#2E2018'}" oninput="document.getElementById('tv-col-title').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية بطاقة الحرف:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-card-bg" value="${(ov && ov.colors && ov.colors.cardBg) || '#FFFFFF'}" oninput="document.getElementById('tv-col-card-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-card-bg-text" value="${(ov && ov.colors && ov.colors.cardBg) || '#FFFFFF'}" oninput="document.getElementById('tv-col-card-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">إطار بطاقة الحرف:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-card-border" value="${(ov && ov.colors && ov.colors.cardBorder) || '#E6D7C3'}" oninput="document.getElementById('tv-col-card-border-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-card-border-text" value="${(ov && ov.colors && ov.colors.cardBorder) || '#E6D7C3'}" oninput="document.getElementById('tv-col-card-border').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون الحرف القبطي في الصندوق:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-glyph" value="${(ov && ov.colors && ov.colors.glyphColor) || '#6F1737'}" oninput="document.getElementById('tv-col-glyph-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-glyph-text" value="${(ov && ov.colors && ov.colors.glyphColor) || '#6F1737'}" oninput="document.getElementById('tv-col-glyph').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية صندوق الحرف:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-glyph-bg" value="${(ov && ov.colors && ov.colors.glyphBg) || '#FFF9F0'}" oninput="document.getElementById('tv-col-glyph-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-glyph-bg-text" value="${(ov && ov.colors && ov.colors.glyphBg) || '#FFF9F0'}" oninput="document.getElementById('tv-col-glyph-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون نص النطق بالعربي:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-pron" value="${(ov && ov.colors && ov.colors.pronColor) || '#8E1B3A'}" oninput="document.getElementById('tv-col-pron-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-pron-text" value="${(ov && ov.colors && ov.colors.pronColor) || '#8E1B3A'}" oninput="document.getElementById('tv-col-pron').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية صندوق النطق بالعربي:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-pron-bg" value="${(ov && ov.colors && ov.colors.pronBg) || '#FDF4E6'}" oninput="document.getElementById('tv-col-pron-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-pron-bg-text" value="${(ov && ov.colors && ov.colors.pronBg) || '#FDF4E6'}" oninput="document.getElementById('tv-col-pron-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية صندوق القواعد:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-rules-bg" value="${(ov && ov.colors && ov.colors.rulesBg) || '#FBF8F2'}" oninput="document.getElementById('tv-col-rules-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-rules-bg-text" value="${(ov && ov.colors && ov.colors.rulesBg) || '#FBF8F2'}" oninput="document.getElementById('tv-col-rules-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون عنوان قواعد النطق:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-rules-title" value="${(ov && ov.colors && ov.colors.rulesTitleColor) || '#6F1737'}" oninput="document.getElementById('tv-col-rules-title-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-rules-title-text" value="${(ov && ov.colors && ov.colors.rulesTitleColor) || '#6F1737'}" oninput="document.getElementById('tv-col-rules-title').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون نصوص وقواعد النطق:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-rules-text" value="${(ov && ov.colors && ov.colors.rulesTextColor) || '#3E2C22'}" oninput="document.getElementById('tv-col-rules-text-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-rules-text-text" value="${(ov && ov.colors && ov.colors.rulesTextColor) || '#3E2C22'}" oninput="document.getElementById('tv-col-rules-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية بطاقة الكلمة:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-word-card-bg" value="${(ov && ov.colors && ov.colors.wordCardBg) || '#FFFDF8'}" oninput="document.getElementById('tv-col-word-card-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-word-card-bg-text" value="${(ov && ov.colors && ov.colors.wordCardBg) || '#FFFDF8'}" oninput="document.getElementById('tv-col-word-card-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون الكلمة بالقبطية:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-word-coptic" value="${(ov && ov.colors && ov.colors.wordCopticColor) || '#6F1737'}" oninput="document.getElementById('tv-col-word-coptic-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-word-coptic-text" value="${(ov && ov.colors && ov.colors.wordCopticColor) || '#6F1737'}" oninput="document.getElementById('tv-col-word-coptic').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون القبطي المعرب (النطق):</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-word-phonetic" value="${(ov && ov.colors && ov.colors.wordPhoneticColor) || '#A3284B'}" oninput="document.getElementById('tv-col-word-phonetic-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-word-phonetic-text" value="${(ov && ov.colors && ov.colors.wordPhoneticColor) || '#A3284B'}" oninput="document.getElementById('tv-col-word-phonetic').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">لون المعنى بالعربية:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-word-meaning" value="${(ov && ov.colors && ov.colors.wordMeaningColor) || '#2D1B12'}" oninput="document.getElementById('tv-col-word-meaning-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-word-meaning-text" value="${(ov && ov.colors && ov.colors.wordMeaningColor) || '#2D1B12'}" oninput="document.getElementById('tv-col-word-meaning').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+
+              <div class="curriculum-field">
+                <label style="font-weight:700; font-size:0.83rem;">خلفية خلايا الكلمة:</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="tv-col-word-cell-bg" value="${(ov && ov.colors && ov.colors.wordCellBg) || '#FFFFFF'}" oninput="document.getElementById('tv-col-word-cell-bg-text').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="width:38px; height:34px; padding:0; border:1.5px solid #D6C3A5; border-radius:8px; cursor:pointer;">
+                  <input type="text" id="tv-col-word-cell-bg-text" value="${(ov && ov.colors && ov.colors.wordCellBg) || '#FFFFFF'}" oninput="document.getElementById('tv-col-word-cell-bg').value=this.value; CurriculumAdminSystem.updateOverviewLivePreview();" style="flex:1; font-size:0.82rem; direction:ltr; text-align:center;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- القسم 4: المعاينة الحية الفورية -->
+          <div class="tv-live-preview-container">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; border-bottom:1.5px dashed #D6C3A5; padding-bottom:8px;">
+              <div style="font-weight:900; color:#5D371E; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>المعاينة الحية الفورية للبطاقة (كما تظهر للطالب في الموقع والتطبيق تماماً):</span>
+              </div>
+              <span style="font-size:0.75rem; color:#888;">تحديث فوري أثناء الكتابة</span>
+            </div>
+            
+            <div id="tv-live-preview-box"></div>
+          </div>
+
+        </div>
+      `;
+
+      // ربط كتابة الحروف القبطية بالحقول
+      const pairInp = document.getElementById('tv-letter-pair');
+      if (pairInp) {
+        attachCopticKeyHandler(pairInp, () => { updateOverviewLivePreview(); });
+      }
+      const wordCopticInp = document.getElementById('tv-word-coptic');
+      if (wordCopticInp) {
+        attachCopticKeyHandler(wordCopticInp, () => { updateOverviewLivePreview(); });
+      }
+
+      // تشغيل المعاينة المبدئية
+      setTimeout(() => { updateOverviewLivePreview(); }, 30);
+      return;
+    }
+
     if(type === 'listen_write'){
       const correctWord = (existingData && (existingData.correct_word || existingData.coptic_display)) || '';
       const meaning = (existingData && (existingData.meaning || existingData.audio_text)) || '';
@@ -4357,12 +4769,98 @@ const CurriculumAdminSystem = (function(){
       }
       challengeObj.options = [];
     } else if(type === 'text_view'){
-      const textVal = document.getElementById('challenge-input-text-content')?.value.trim() || '';
-      if(!textVal && !challengeObj.coptic_display){
-        toast('يرجى كتابة محتوى النص أو الشرح التعليمي', true);
+      const name = document.getElementById('tv-letter-name')?.value.trim() || '';
+      const pair = document.getElementById('tv-letter-pair')?.value.trim() || '';
+      if(!name && !pair && !challengeObj.coptic_display){
+        toast('يرجى كتابة اسم الحرف ورمزه القبطي', true);
         return;
       }
-      challengeObj.explanation = textVal;
+      const badgeSel = document.getElementById('tv-letter-badge-select')?.value || 'حرف ساكن|badge-consonant';
+      let letterTypeBadge = 'حرف ساكن';
+      let badgeClass = 'badge-consonant';
+      if (badgeSel === 'custom') {
+        letterTypeBadge = document.getElementById('tv-letter-badge-custom')?.value.trim() || 'حرف مخصص';
+        badgeClass = 'badge-consonant';
+      } else {
+        const parts = badgeSel.split('|');
+        letterTypeBadge = parts[0] || 'حرف ساكن';
+        badgeClass = parts[1] || 'badge-consonant';
+      }
+
+      const multiSel = document.getElementById('tv-multi-badge-select')?.value || '';
+      let hasMultiple = false;
+      let multipleCountText = '';
+      if (multiSel === 'custom') {
+        hasMultiple = true;
+        multipleCountText = document.getElementById('tv-multi-badge-custom')?.value.trim() || '';
+      } else if (multiSel) {
+        hasMultiple = true;
+        multipleCountText = multiSel;
+      }
+
+      const pron = document.getElementById('tv-letter-pron')?.value.trim() || '';
+      const soundFile = document.getElementById('tv-letter-sound')?.value.trim() || '';
+      const rulesTitle = document.getElementById('tv-rules-title')?.value.trim() || 'حالات وقواعد نطق الحرف بالتفصيل:';
+
+      const rules = [];
+      document.querySelectorAll('#tv-rules-container .tv-rule-input').forEach(inp => {
+        const val = inp.value.trim();
+        if (val) rules.push(val);
+      });
+
+      const wordTitle = document.getElementById('tv-word-title')?.value.trim() || 'نبذة عن الكلمة التطبيقية على الحرف';
+      const wordCoptic = document.getElementById('tv-word-coptic')?.value.trim() || '';
+      const wordPhonetic = document.getElementById('tv-word-phonetic')?.value.trim() || '';
+      const wordMeaning = document.getElementById('tv-word-meaning')?.value.trim() || '';
+
+      const colors = {
+        titleColor: document.getElementById('tv-col-title')?.value || '',
+        cardBg: document.getElementById('tv-col-card-bg')?.value || '',
+        cardBorder: document.getElementById('tv-col-card-border')?.value || '',
+        glyphColor: document.getElementById('tv-col-glyph')?.value || '',
+        glyphBg: document.getElementById('tv-col-glyph-bg')?.value || '',
+        pronColor: document.getElementById('tv-col-pron')?.value || '',
+        pronBg: document.getElementById('tv-col-pron-bg')?.value || '',
+        rulesBg: document.getElementById('tv-col-rules-bg')?.value || '',
+        rulesTitleColor: document.getElementById('tv-col-rules-title')?.value || '',
+        rulesTextColor: document.getElementById('tv-col-rules-text')?.value || '',
+        wordCardBg: document.getElementById('tv-col-word-card-bg')?.value || '',
+        wordCopticColor: document.getElementById('tv-col-word-coptic')?.value || '',
+        wordPhoneticColor: document.getElementById('tv-col-word-phonetic')?.value || '',
+        wordMeaningColor: document.getElementById('tv-col-word-meaning')?.value || '',
+        wordCellBg: document.getElementById('tv-col-word-cell-bg')?.value || ''
+      };
+
+      const customOverview = {
+        title: challengeObj.question,
+        name: name,
+        pair: pair,
+        upper: pair.split(' ')[0] || pair,
+        lower: pair.split(' ')[1] || pair,
+        isVowel: badgeClass === 'badge-vowel',
+        letterTypeBadge: letterTypeBadge,
+        badgeClass: badgeClass,
+        hasMultiple: hasMultiple,
+        multipleCountText: multipleCountText,
+        pronunciation: pron,
+        soundFile: soundFile,
+        rulesTitle: rulesTitle,
+        rules: rules.length > 0 ? rules : ['يُنطق الحرف وفقاً للقواعد الكنسية المعتمدة.'],
+        wordTitle: wordTitle,
+        word: {
+          coptic: wordCoptic,
+          phoneticAr: wordPhonetic,
+          meaning: wordMeaning,
+          soundFile: soundFile
+        },
+        colors: colors
+      };
+
+      challengeObj.overview_data = customOverview;
+      challengeObj.explanation = JSON.stringify(customOverview);
+      challengeObj.coptic_display = pair;
+      challengeObj.audio_text = name;
+      challengeObj.audio_url = soundFile;
       challengeObj.options = [];
     } else if(type === 'read_select'){
       if(!challengeObj.coptic_display){
@@ -5441,7 +5939,19 @@ const CurriculumAdminSystem = (function(){
 
     let challengeContent = '';
 
-    if(challenge.type === 'listen_write'){
+    if(challenge.type === 'text_view'){
+      if(typeof window.renderLetterOverviewCardHtml === 'function'){
+        challengeContent = window.renderLetterOverviewCardHtml(challenge);
+      } else {
+        challengeContent = `
+          <div class="question-heading">${escapeHtml(challenge.question || 'شرح وقراءة')}</div>
+          <div class="coptic-letter-display"><span class="coptic-big-glyph">${escapeHtml(challenge.coptic_display || '')}</span></div>
+          <div style="background:#FFFDF7; border:1.5px solid #E4D5BC; border-radius:14px; padding:16px 20px; margin:14px auto 0; max-width:540px; text-align:right; color:#4A3525; font-size:1.05rem; line-height:1.8; font-weight:600; white-space:pre-line;">
+            ${escapeHtml(challenge.explanation || '')}
+          </div>
+        `;
+      }
+    } else if(challenge.type === 'listen_write'){
       const enteredVal = previewState.listenWriteValue || '';
       challengeContent = `
         <div class="question-heading">${escapeHtml(challenge.question || 'استمع جيداً ثم اكتب الحرف أو الكلمة القبطية')}</div>
@@ -5706,15 +6216,17 @@ const CurriculumAdminSystem = (function(){
 
     container.innerHTML = `
       <div class="runner-topbar">
-        <button type="button" class="runner-close-btn" onclick="CurriculumAdminSystem.closeInteractivePreview()" title="إغلاق" style="display:inline-flex; align-items:center; justify-content:center;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button type="button" class="runner-close-btn" onclick="CurriculumAdminSystem.closeInteractivePreview()" title="إغلاق المعاينة">&times;</button>
         <div class="runner-progress-track">
           <div class="runner-progress-fill" style="width:${progressPct}%;"></div>
         </div>
-        <div class="runner-xp-badge">+${previewState.score} XP</div>
-        <div class="runner-hearts">${SVG.heart} 5</div>
+        <div class="runner-hearts">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#FF4B4B" stroke="#FF4B4B" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span style="font-weight:900; font-size:1.15rem; color:#FF4B4B;">5</span>
+        </div>
       </div>
 
-      <div class="runner-body" style="padding-bottom:120px;">
+      <div class="runner-body">
         ${challengeContent}
       </div>
 
@@ -5734,21 +6246,25 @@ const CurriculumAdminSystem = (function(){
         </div>
 
         <div>
-          ${isMatchingType ? (
-            isMatchingComplete ? `
-              <button type="button" class="btn-check-answer btn-continue-ok" onclick="CurriculumAdminSystem.nextPreviewChallenge()">متابعة ${SVG.arrowLeft}</button>
-            ` : `
-              <button type="button" class="btn-check-answer" disabled>طابق جميع الأزواج</button>
-            `
-          ) : (
-            !previewState.isAnswered ? `
-              <button type="button" class="btn-check-answer" ${!canCheck ? 'disabled' : ''} onclick="CurriculumAdminSystem.checkPreviewAnswer()">تحقق</button>
-            ` : (
-              previewState.isCorrect ? `
+          ${(challenge.type === 'text_view' || challenge.type === 'image_view') ? `
+            <button type="button" class="btn-check-answer btn-continue-ok ready" onclick="CurriculumAdminSystem.nextPreviewChallenge()">فهمت ومتابعة ${SVG.arrowLeft}</button>
+          ` : (
+            isMatchingType ? (
+              isMatchingComplete ? `
                 <button type="button" class="btn-check-answer btn-continue-ok" onclick="CurriculumAdminSystem.nextPreviewChallenge()">متابعة ${SVG.arrowLeft}</button>
               ` : `
-                <button type="button" class="btn-check-answer btn-continue-err" onclick="CurriculumAdminSystem.nextPreviewChallenge()">متابعة ${SVG.arrowLeft}</button>
+                <button type="button" class="btn-check-answer" disabled>طابق جميع الأزواج</button>
               `
+            ) : (
+              !previewState.isAnswered ? `
+                <button type="button" class="btn-check-answer" ${!canCheck ? 'disabled' : ''} onclick="CurriculumAdminSystem.checkPreviewAnswer()">تحقق</button>
+              ` : (
+                previewState.isCorrect ? `
+                  <button type="button" class="btn-check-answer btn-continue-ok" onclick="CurriculumAdminSystem.nextPreviewChallenge()">متابعة ${SVG.arrowLeft}</button>
+                ` : `
+                  <button type="button" class="btn-check-answer btn-continue-err" onclick="CurriculumAdminSystem.nextPreviewChallenge()">متابعة ${SVG.arrowLeft}</button>
+                `
+              )
             )
           )}
         </div>
@@ -6003,6 +6519,272 @@ const CurriculumAdminSystem = (function(){
     return String(str).replace(/'/g, "\\'").replace(/"/g, '\\"');
   }
 
+
+  /* ============ TEXT VIEW OVERVIEW EDITOR HELPERS & LIVE PREVIEW ============ */
+  function onOverviewBadgeSelectChange(){
+    const sel = document.getElementById('tv-letter-badge-select');
+    const customInp = document.getElementById('tv-letter-badge-custom');
+    if (sel && customInp) {
+      customInp.style.display = sel.value === 'custom' ? 'block' : 'none';
+    }
+    updateOverviewLivePreview();
+  }
+
+  function onOverviewMultiSelectChange(){
+    const sel = document.getElementById('tv-multi-badge-select');
+    const customInp = document.getElementById('tv-multi-badge-custom');
+    if (sel && customInp) {
+      customInp.style.display = sel.value === 'custom' ? 'block' : 'none';
+    }
+    updateOverviewLivePreview();
+  }
+
+  function addOverviewRuleRow(text = ''){
+    const container = document.getElementById('tv-rules-container');
+    if (!container) return;
+    const rowCount = container.querySelectorAll('.tv-rule-row').length + 1;
+    const div = document.createElement('div');
+    div.className = 'tv-rule-row';
+    div.innerHTML = `
+      <span class="tv-rule-num">${rowCount}.</span>
+      <input type="text" class="tv-rule-input" value="${escapeHtml(text)}" placeholder="اكتب قاعدة النطق هنا..." oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+      <button type="button" class="curriculum-btn curriculum-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="CurriculumAdminSystem.removeOverviewRuleRow(this)" title="حذف القاعدة">✕</button>
+    `;
+    container.appendChild(div);
+    updateOverviewLivePreview();
+  }
+
+  function removeOverviewRuleRow(btn){
+    const row = btn.closest('.tv-rule-row');
+    if (row) row.remove();
+    const container = document.getElementById('tv-rules-container');
+    if (container) {
+      container.querySelectorAll('.tv-rule-row').forEach((r, idx) => {
+        const numSpan = r.querySelector('.tv-rule-num');
+        if (numSpan) numSpan.textContent = (idx + 1) + '.';
+      });
+    }
+    updateOverviewLivePreview();
+  }
+
+  
+  function applyColorPreset(preset, btn){
+    const presets = {
+      default: {
+        titleColor: '#2E2018',
+        cardBg: '#FFFFFF',
+        cardBorder: '#E6D7C3',
+        glyphColor: '#6F1737',
+        glyphBg: '#FFF9F0',
+        pronColor: '#8E1B3A',
+        pronBg: '#FDF4E6',
+        rulesBg: '#FBF8F2',
+        rulesTitleColor: '#6F1737',
+        rulesTextColor: '#3E2C22',
+        wordCardBg: '#FFFDF8',
+        wordCopticColor: '#6F1737',
+        wordPhoneticColor: '#A3284B',
+        wordMeaningColor: '#2D1B12',
+        wordCellBg: '#FFFFFF'
+      },
+      dark: {
+        titleColor: '#FFDF6D',
+        cardBg: '#23181D',
+        cardBorder: '#8C6A1A',
+        glyphColor: '#FFE082',
+        glyphBg: '#341D26',
+        pronColor: '#FFE082',
+        pronBg: '#3E212D',
+        rulesBg: '#2B1E24',
+        rulesTitleColor: '#FFDF6D',
+        rulesTextColor: '#FAF0E4',
+        wordCardBg: '#261A20',
+        wordCopticColor: '#FFDF6D',
+        wordPhoneticColor: '#FFB4C8',
+        wordMeaningColor: '#FFFFFF',
+        wordCellBg: '#35212B'
+      },
+      emerald: {
+        titleColor: '#0E3A24',
+        cardBg: '#F4FAF6',
+        cardBorder: '#A3D2BA',
+        glyphColor: '#0E5C34',
+        glyphBg: '#E2F3EA',
+        pronColor: '#0E5C34',
+        pronBg: '#E8F6EF',
+        rulesBg: '#EBF7F0',
+        rulesTitleColor: '#0E5C34',
+        rulesTextColor: '#143322',
+        wordCardBg: '#F0F9F4',
+        wordCopticColor: '#0E5C34',
+        wordPhoneticColor: '#1B824E',
+        wordMeaningColor: '#0E3A24',
+        wordCellBg: '#FFFFFF'
+      },
+      papyrus: {
+        titleColor: '#3A2718',
+        cardBg: '#FBF5E8',
+        cardBorder: '#D8C29D',
+        glyphColor: '#5C381E',
+        glyphBg: '#F4E8D2',
+        pronColor: '#7A4722',
+        pronBg: '#F3E5CC',
+        rulesBg: '#F7EEDC',
+        rulesTitleColor: '#5C381E',
+        rulesTextColor: '#3A2718',
+        wordCardBg: '#F9F1E0',
+        wordCopticColor: '#5C381E',
+        wordPhoneticColor: '#8C5228',
+        wordMeaningColor: '#2D1C10',
+        wordCellBg: '#FFFDF7'
+      }
+    };
+
+    const p = presets[preset] || presets.default;
+    const map = {
+      'tv-col-title': p.titleColor,
+      'tv-col-card-bg': p.cardBg,
+      'tv-col-card-border': p.cardBorder,
+      'tv-col-glyph': p.glyphColor,
+      'tv-col-glyph-bg': p.glyphBg,
+      'tv-col-pron': p.pronColor,
+      'tv-col-pron-bg': p.pronBg,
+      'tv-col-rules-bg': p.rulesBg,
+      'tv-col-rules-title': p.rulesTitleColor,
+      'tv-col-rules-text': p.rulesTextColor,
+      'tv-col-word-card-bg': p.wordCardBg,
+      'tv-col-word-coptic': p.wordCopticColor,
+      'tv-col-word-phonetic': p.wordPhoneticColor,
+      'tv-col-word-meaning': p.wordMeaningColor,
+      'tv-col-word-cell-bg': p.wordCellBg
+    };
+
+    Object.keys(map).forEach(id => {
+      const el = document.getElementById(id);
+      const textEl = document.getElementById(id + '-text');
+      if (el) el.value = map[id];
+      if (textEl) textEl.value = map[id];
+    });
+
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('button').forEach(b => {
+        b.style.borderColor = '';
+        b.style.background = '';
+        b.style.color = '';
+        b.style.boxShadow = '';
+      });
+      btn.style.borderColor = '#6F1737';
+      btn.style.background = '#6F1737';
+      btn.style.color = '#FFFFFF';
+      btn.style.boxShadow = '0 2px 8px rgba(111, 23, 55, 0.35)';
+    }
+
+    updateOverviewLivePreview();
+  }
+  window.applyColorPreset = applyColorPreset;
+
+  function updateOverviewLivePreview(){
+    const box = document.getElementById('tv-live-preview-box');
+    if (!box) return;
+
+    const name = document.getElementById('tv-letter-name')?.value.trim() || 'الحرف';
+    const pair = document.getElementById('tv-letter-pair')?.value.trim() || 'Ⲁ ⲁ';
+    const badgeSel = document.getElementById('tv-letter-badge-select')?.value || 'badge-consonant';
+    let letterTypeBadge = 'حرف ساكن';
+    let badgeClass = 'badge-consonant';
+
+    if (badgeSel === 'custom') {
+      letterTypeBadge = document.getElementById('tv-letter-badge-custom')?.value.trim() || 'حرف مخصص';
+      badgeClass = 'badge-consonant';
+    } else {
+      const opt = document.getElementById('tv-letter-badge-select')?.selectedOptions[0];
+      letterTypeBadge = opt ? opt.textContent.trim() : 'حرف ساكن';
+      badgeClass = badgeSel;
+    }
+
+    const multiSel = document.getElementById('tv-multi-badge-select')?.value || 'none';
+    let hasMultiple = false;
+    let multipleCountText = '';
+    if (multiSel === 'custom') {
+      hasMultiple = true;
+      multipleCountText = document.getElementById('tv-multi-badge-custom')?.value.trim() || '';
+    } else if (multiSel !== 'none') {
+      hasMultiple = true;
+      const opt = document.getElementById('tv-multi-badge-select')?.selectedOptions[0];
+      multipleCountText = opt ? opt.textContent.trim() : '';
+    }
+
+    const pron = document.getElementById('tv-letter-pron')?.value.trim() || '';
+    const soundFile = document.getElementById('tv-letter-sound')?.value.trim() || '';
+    const rulesTitle = document.getElementById('tv-rules-title')?.value.trim() || (hasMultiple ? 'حالات وقواعد نطق الحرف بالتفصيل:' : 'قاعدة نطق الحرف:');
+
+    const rules = [];
+    document.querySelectorAll('#tv-rules-container .tv-rule-input').forEach(inp => {
+      const val = inp.value.trim();
+      if (val) rules.push(val);
+    });
+
+    const wordTitle = document.getElementById('tv-word-title')?.value.trim() || 'نبذة عن الكلمة التطبيقية على الحرف';
+    const wordCoptic = document.getElementById('tv-word-coptic')?.value.trim() || '';
+    const wordPhonetic = document.getElementById('tv-word-phonetic')?.value.trim() || '';
+    const wordMeaning = document.getElementById('tv-word-meaning')?.value.trim() || '';
+
+    const colors = {
+      titleColor: document.getElementById('tv-col-title')?.value || '',
+      cardBg: document.getElementById('tv-col-card-bg')?.value || '',
+      cardBorder: document.getElementById('tv-col-card-border')?.value || '',
+      glyphColor: document.getElementById('tv-col-glyph')?.value || '',
+      glyphBg: document.getElementById('tv-col-glyph-bg')?.value || '',
+      pronColor: document.getElementById('tv-col-pron')?.value || '',
+      pronBg: document.getElementById('tv-col-pron-bg')?.value || '',
+      rulesBg: document.getElementById('tv-col-rules-bg')?.value || '',
+      rulesTitleColor: document.getElementById('tv-col-rules-title')?.value || '',
+      rulesTextColor: document.getElementById('tv-col-rules-text')?.value || '',
+      wordCardBg: document.getElementById('tv-col-word-card-bg')?.value || '',
+      wordCopticColor: document.getElementById('tv-col-word-coptic')?.value || '',
+      wordPhoneticColor: document.getElementById('tv-col-word-phonetic')?.value || '',
+      wordMeaningColor: document.getElementById('tv-col-word-meaning')?.value || '',
+      wordCellBg: document.getElementById('tv-col-word-cell-bg')?.value || ''
+    };
+
+    const mockCh = {
+      type: 'text_view',
+      question: `نبذة عن حرف ${name} (${pair})`,
+      coptic_display: pair,
+      audio_url: soundFile,
+      overview_data: {
+        title: `نبذة عن حرف ${name} (${pair})`,
+        name: name,
+        pair: pair,
+        upper: pair.split(' ')[0] || pair,
+        lower: pair.split(' ')[1] || pair,
+        isVowel: badgeClass === 'badge-vowel',
+        letterTypeBadge: letterTypeBadge,
+        badgeClass: badgeClass,
+        hasMultiple: hasMultiple,
+        multipleCountText: multipleCountText,
+        pronunciation: pron,
+        soundFile: soundFile,
+        rulesTitle: rulesTitle,
+        rules: rules.length > 0 ? rules : ['يُنطق الحرف وفقاً للقواعد الكنسية.'],
+        wordTitle: wordTitle,
+        word: {
+          coptic: wordCoptic,
+          phoneticAr: wordPhonetic,
+          meaning: wordMeaning,
+          soundFile: soundFile
+        },
+        colors: colors
+      }
+    };
+
+    if (typeof window.renderLetterOverviewCardHtml === 'function') {
+      box.innerHTML = window.renderLetterOverviewCardHtml(mockCh);
+    } else {
+      box.innerHTML = `<div style="padding:20px; text-align:center;">جاري تحميل المعاينة...</div>`;
+    }
+  }
+
   return {
     init,
     undo,
@@ -6106,7 +6888,13 @@ const CurriculumAdminSystem = (function(){
     handleDragEnd,
     setBadgeMode,
     handleBadgeImageUpload,
-    updateBadgePreview
+    updateBadgePreview,
+    applyColorPreset,
+    updateOverviewLivePreview,
+    addOverviewRuleRow,
+    removeOverviewRuleRow,
+    onOverviewBadgeSelectChange,
+    onOverviewMultiSelectChange
   };
 })();
 

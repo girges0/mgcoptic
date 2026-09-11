@@ -1015,8 +1015,13 @@
         return url;
       }
 
-      // ملف صوت محلي داخل مجلد audio/
-      return 'audio/' + url;
+      // مسارات صوتية محلية مباشرة
+      if (url.startsWith('assets/') || url.startsWith('audio_coptic/') || url.startsWith('audio/')) {
+        return url;
+      }
+
+      // ملف صوت محلي داخل assets/sounds/
+      return 'assets/sounds/' + url;
     }
 
     function playAudio(filename, btn) {
