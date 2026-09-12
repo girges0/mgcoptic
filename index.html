@@ -5138,6 +5138,70 @@
       50% { transform: translateY(-3px) scale(1.03); }
     }
 
+    /* ═══ Treasure Micro-Animations: XP Stars ⭐, Hearts ❤️ & Sparkles ✨ ═══ */
+    .chest-treasure-stars {
+      transform-origin: 48px 24px;
+    }
+    .chest-modal-overlay.is-opened .chest-treasure-stars {
+      animation: treasureStarPulse 2.6s ease-in-out infinite alternate 0.3s;
+    }
+
+    @keyframes treasureStarPulse {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 3px rgba(34, 139, 230, 0.6));
+      }
+      50% {
+        transform: translateY(-4px) scale(1.06) rotate(3deg);
+        filter: drop-shadow(0 0 10px rgba(51, 154, 240, 0.95)) drop-shadow(0 0 18px rgba(34, 139, 230, 0.5));
+      }
+      100% {
+        transform: translateY(-6px) scale(1.08) rotate(-2deg);
+        filter: drop-shadow(0 0 14px rgba(51, 154, 240, 1)) drop-shadow(0 0 22px rgba(116, 192, 252, 0.6));
+      }
+    }
+
+    .chest-treasure-hearts {
+      transform-origin: 44px 30px;
+    }
+    .chest-modal-overlay.is-opened .chest-treasure-hearts {
+      animation: treasureHeartPulse 1.9s ease-in-out infinite alternate 0.5s;
+    }
+
+    @keyframes treasureHeartPulse {
+      0% {
+        transform: translateY(0) scale(0.96);
+        filter: drop-shadow(0 0 3px rgba(224, 49, 49, 0.6));
+      }
+      40% {
+        transform: translateY(-3px) scale(1.08);
+        filter: drop-shadow(0 0 12px rgba(255, 107, 107, 0.95));
+      }
+      55% {
+        transform: translateY(-2px) scale(1.02);
+      }
+      75% {
+        transform: translateY(-5px) scale(1.12);
+        filter: drop-shadow(0 0 16px rgba(224, 49, 49, 1)) drop-shadow(0 0 24px rgba(255, 135, 135, 0.7));
+      }
+      100% {
+        transform: translateY(-4px) scale(1.05);
+      }
+    }
+
+    .chest-treasure-sparkles {
+      transform-origin: 48px 24px;
+    }
+    .chest-modal-overlay.is-opened .chest-treasure-sparkles {
+      animation: treasureSparkleBlink 1.5s ease-in-out infinite alternate 0.2s;
+    }
+
+    @keyframes treasureSparkleBlink {
+      0% { opacity: 0.35; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 6px #ffffff); }
+      100% { opacity: 0.5; transform: scale(0.95); }
+    }
+
     /* ═══ Interior Volumetric Light Beam ═══ */
     .chest-svg-light-beam {
       pointer-events: none;
@@ -7310,15 +7374,29 @@
                 </linearGradient>
                 <linearGradient id="modalChestBeamPink" x1="48" y1="42" x2="48" y2="-5" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
-                  <stop offset="30%" stop-color="#FF6584" stop-opacity="0.6"/>
-                  <stop offset="70%" stop-color="#FFB6C1" stop-opacity="0.2"/>
+                  <stop offset="20%" stop-color="#339af0" stop-opacity="0.65"/>
+                  <stop offset="50%" stop-color="#74C0FC" stop-opacity="0.3"/>
+                  <stop offset="80%" stop-color="#D0EBFF" stop-opacity="0.12"/>
                   <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient id="modalLockSapphire" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#E7F5FF"/>
+                  <stop offset="35%" stop-color="#339AF0"/>
+                  <stop offset="75%" stop-color="#1971C2"/>
+                  <stop offset="100%" stop-color="#0C4A7A"/>
                 </linearGradient>
                 <filter id="modalChestBeamBlur" x="-30%" y="-30%" width="160%" height="160%">
                   <feGaussianBlur stdDeviation="3"/>
                 </filter>
-                <filter id="modalCrystalGlow" x="-30%" y="-30%" width="160%" height="160%">
-                  <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FF2A6D" flood-opacity="0.8"/>
+                <filter id="modalCrystalGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#228be6" flood-opacity="0.85"/>
+                </filter>
+                <filter id="heartGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#e03131" flood-opacity="0.85"/>
                 </filter>
               </defs>
 
@@ -7340,24 +7418,42 @@
                 <line x1="22" y1="6.5" x2="74" y2="6.5" stroke="#FFFDE6" stroke-width="1.2" stroke-linecap="round"/>
               </g>
 
-              <!-- 2. Interior Atmospheric Light Beam -->
+              <!-- 2. Volumetric Interior Light Beam -->
               <g class="chest-svg-light-beam" filter="url(#modalChestBeamBlur)">
                 <polygon points="26 42 6 2 90 2 70 42" fill="url(#modalChestBeamPink)"/>
               </g>
 
-              <!-- 3. Glowing Ruby Crystals (Pinterest Style) -->
-              <g class="chest-crystals" filter="url(#modalCrystalGlow)">
-                <polygon points="24 43 27 30 32 32 30 43" fill="url(#modalCrystalPink1)"/>
-                <polygon points="29 43 33 26 38 29 36 43" fill="url(#modalCrystalPink2)"/>
-                <polygon points="37 43 43 20 49 22 47 43" fill="url(#modalCrystalPink1)"/>
-                <polygon points="46 43 51 22 56 25 54 43" fill="url(#modalCrystalPink2)"/>
-                <polygon points="55 43 59 28 65 31 63 43" fill="url(#modalCrystalPink1)"/>
-                <polygon points="63 43 67 33 72 35 70 43" fill="url(#modalCrystalPink2)"/>
-                <polygon points="40 43 44 32 48 43" fill="#FFF0F5" opacity="0.9"/>
-                <polygon points="49 43 53 34 57 43" fill="#FFF0F5" opacity="0.9"/>
-                <circle cx="44" cy="22" r="1.5" fill="#FFFFFF"/>
-                <circle cx="52" cy="24" r="1.2" fill="#FFFFFF"/>
-                <circle cx="34" cy="28" r="1" fill="#FFFFFF"/>
+              <!-- 3. Treasure Icons: XP Stars ⭐ & Hearts ❤️ emerging from chest -->
+              <g class="chest-crystals">
+                <!-- Blue XP Stars -->
+                <g class="chest-treasure-stars" filter="url(#starGlow)">
+                  <g transform="translate(26,24) scale(0.55)">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#228be6" stroke="#1971c2" stroke-width="0.8"/>
+                  </g>
+                  <g transform="translate(42,16) scale(0.75)">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#339af0" stroke="#1c7ed6" stroke-width="0.8"/>
+                  </g>
+                  <g transform="translate(58,22) scale(0.6)">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#228be6" stroke="#1971c2" stroke-width="0.8"/>
+                  </g>
+                </g>
+                <!-- Red Hearts -->
+                <g class="chest-treasure-hearts" filter="url(#heartGlow)">
+                  <g transform="translate(34,28) scale(0.5)">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#e03131" stroke="#c92a2a" stroke-width="0.8"/>
+                  </g>
+                  <g transform="translate(52,30) scale(0.45)">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ff6b6b" stroke="#e03131" stroke-width="0.8"/>
+                  </g>
+                </g>
+                <!-- White Sparkle Dots -->
+                <g class="chest-treasure-sparkles">
+                  <circle cx="32" cy="20" r="1.5" fill="#FFFFFF" opacity="0.95"/>
+                  <circle cx="54" cy="18" r="1.2" fill="#FFFFFF" opacity="0.9"/>
+                  <circle cx="44" cy="14" r="1.8" fill="#FFFFFF" opacity="0.85"/>
+                  <circle cx="66" cy="26" r="1" fill="#FFFFFF" opacity="0.8"/>
+                  <circle cx="24" cy="30" r="0.9" fill="#FFFFFF" opacity="0.75"/>
+                </g>
               </g>
 
               <!-- 4. Chest Body Base -->
@@ -7386,7 +7482,7 @@
                 <rect x="13" y="35" width="70" height="5" rx="2" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="2"/>
                 <line x1="15" y1="36.5" x2="81" y2="36.5" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
                 <rect x="41" y="31" width="14" height="15" rx="3" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
-                <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalCrystalPink1)" stroke="#FFD1DC" stroke-width="0.8"/>
+                <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalLockSapphire)" stroke="#A5D8FF" stroke-width="0.8"/>
                 <circle cx="46" cy="36" r="1.2" fill="#FFFFFF"/>
               </g>
             </svg>

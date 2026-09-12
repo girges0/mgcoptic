@@ -2769,6 +2769,70 @@
   50% { transform: translateY(-3px) scale(1.03); }
 }
 
+/* ═══ Treasure Micro-Animations: XP Stars ⭐, Hearts ❤️ & Sparkles ✨ ═══ */
+.chest-treasure-stars {
+  transform-origin: 48px 24px;
+}
+.chest-modal-overlay.is-opened .chest-treasure-stars {
+  animation: treasureStarPulse 2.6s ease-in-out infinite alternate 0.3s;
+}
+
+@keyframes treasureStarPulse {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 3px rgba(34, 139, 230, 0.6));
+  }
+  50% {
+    transform: translateY(-4px) scale(1.06) rotate(3deg);
+    filter: drop-shadow(0 0 10px rgba(51, 154, 240, 0.95)) drop-shadow(0 0 18px rgba(34, 139, 230, 0.5));
+  }
+  100% {
+    transform: translateY(-6px) scale(1.08) rotate(-2deg);
+    filter: drop-shadow(0 0 14px rgba(51, 154, 240, 1)) drop-shadow(0 0 22px rgba(116, 192, 252, 0.6));
+  }
+}
+
+.chest-treasure-hearts {
+  transform-origin: 44px 30px;
+}
+.chest-modal-overlay.is-opened .chest-treasure-hearts {
+  animation: treasureHeartPulse 1.9s ease-in-out infinite alternate 0.5s;
+}
+
+@keyframes treasureHeartPulse {
+  0% {
+    transform: translateY(0) scale(0.96);
+    filter: drop-shadow(0 0 3px rgba(224, 49, 49, 0.6));
+  }
+  40% {
+    transform: translateY(-3px) scale(1.08);
+    filter: drop-shadow(0 0 12px rgba(255, 107, 107, 0.95));
+  }
+  55% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  75% {
+    transform: translateY(-5px) scale(1.12);
+    filter: drop-shadow(0 0 16px rgba(224, 49, 49, 1)) drop-shadow(0 0 24px rgba(255, 135, 135, 0.7));
+  }
+  100% {
+    transform: translateY(-4px) scale(1.05);
+  }
+}
+
+.chest-treasure-sparkles {
+  transform-origin: 48px 24px;
+}
+.chest-modal-overlay.is-opened .chest-treasure-sparkles {
+  animation: treasureSparkleBlink 1.5s ease-in-out infinite alternate 0.2s;
+}
+
+@keyframes treasureSparkleBlink {
+  0% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.25); filter: drop-shadow(0 0 6px #ffffff); }
+  100% { opacity: 0.5; transform: scale(0.95); }
+}
+
 /* ═══ Interior Volumetric Light Beam ═══ */
 .chest-svg-light-beam {
   pointer-events: none;

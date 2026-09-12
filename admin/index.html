@@ -1027,15 +1027,29 @@
                     </linearGradient>
                     <linearGradient id="modalChestBeamPink" x1="48" y1="42" x2="48" y2="-5" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
-                      <stop offset="30%" stop-color="#FF6584" stop-opacity="0.6"/>
-                      <stop offset="70%" stop-color="#FFB6C1" stop-opacity="0.2"/>
+                      <stop offset="20%" stop-color="#339af0" stop-opacity="0.65"/>
+                      <stop offset="50%" stop-color="#74C0FC" stop-opacity="0.3"/>
+                      <stop offset="80%" stop-color="#D0EBFF" stop-opacity="0.12"/>
                       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="modalLockSapphire" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#E7F5FF"/>
+                      <stop offset="35%" stop-color="#339AF0"/>
+                      <stop offset="75%" stop-color="#1971C2"/>
+                      <stop offset="100%" stop-color="#0C4A7A"/>
                     </linearGradient>
                     <filter id="modalChestBeamBlur" x="-30%" y="-30%" width="160%" height="160%">
                       <feGaussianBlur stdDeviation="3"/>
                     </filter>
-                    <filter id="modalCrystalGlow" x="-30%" y="-30%" width="160%" height="160%">
-                      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FF2A6D" flood-opacity="0.8"/>
+                    <filter id="modalCrystalGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="blur"/>
+                      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#228be6" flood-opacity="0.85"/>
+                    </filter>
+                    <filter id="heartGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#e03131" flood-opacity="0.85"/>
                     </filter>
                   </defs>
 
@@ -1045,36 +1059,50 @@
                   <!-- 1. Open Lid (Pinterest 3D Style Arched Hood) -->
                   <g class="chest-open-lid">
                     <path d="M22 8 C22 1, 74 1, 74 8 L77 12 C77 6, 19 6, 19 12 Z" fill="#3D2103" stroke="#261401" stroke-width="1.5"/>
-                    <path d="M18 41 C18 16, 26 7, 48 7 C70 7, 78 16, 78 41 Z" fill="url(#modalInnerCeilingGrad)" stroke="#3D2103" stroke-width="2"/>
-                    <path d="M22 39 C22 19, 29 11, 48 11 C67 11, 74 19, 74 39" stroke="#1F0E02" stroke-width="2" fill="none" opacity="0.85"/>
-                    <line x1="48" y1="7" x2="48" y2="41" stroke="#1F0E02" stroke-width="1.8" opacity="0.6"/>
-                    <line x1="33" y1="9" x2="33" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
-                    <line x1="63" y1="9" x2="63" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
-                    <ellipse cx="48" cy="28" rx="22" ry="12" fill="url(#modalCrystalPink2)" opacity="0.25"/>
-                    <path d="M14 42 C14 13, 24 5, 48 5 L48 9 C27 9, 19 16, 19 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
-                    <path d="M82 42 C82 13, 72 5, 48 5 L48 9 C69 9, 77 16, 77 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
-                    <rect x="20" y="4.5" width="56" height="5" rx="2.5" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
-                    <line x1="22" y1="6.5" x2="74" y2="6.5" stroke="#FFFDE6" stroke-width="1.2" stroke-linecap="round"/>
+                    <path d="M22 8 C22 1, 74 1, 74 8 L71 42 C71 36, 25 36, 25 42 Z" fill="url(#modalLidWoodGrad)" stroke="#3D2103" stroke-width="1.8"/>
+                    <line x1="22" y1="18" x2="74" y2="18" stroke="#3D2103" stroke-width="1.5" opacity="0.6"/>
+                    <line x1="24" y1="28" x2="72" y2="28" stroke="#3D2103" stroke-width="1.5" opacity="0.6"/>
+                    <path d="M19 12 L22 8 L25 42 L16 38 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
+                    <path d="M77 12 L74 8 L71 42 L80 38 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
+                    <path d="M16 38 L25 42 L71 42 L80 38 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
                   </g>
 
-                  <!-- 2. Interior Atmospheric Light Beam -->
+                  <!-- 2. Volumetric Interior Light Beam -->
                   <g class="chest-svg-light-beam" filter="url(#modalChestBeamBlur)">
                     <polygon points="26 42 6 2 90 2 70 42" fill="url(#modalChestBeamPink)"/>
                   </g>
 
-                  <!-- 3. Glowing Ruby Crystals (Pinterest Style) -->
-                  <g class="chest-crystals" filter="url(#modalCrystalGlow)">
-                    <polygon points="24 43 27 30 32 32 30 43" fill="url(#modalCrystalPink1)"/>
-                    <polygon points="29 43 33 26 38 29 36 43" fill="url(#modalCrystalPink2)"/>
-                    <polygon points="37 43 43 20 49 22 47 43" fill="url(#modalCrystalPink1)"/>
-                    <polygon points="46 43 51 22 56 25 54 43" fill="url(#modalCrystalPink2)"/>
-                    <polygon points="55 43 59 28 65 31 63 43" fill="url(#modalCrystalPink1)"/>
-                    <polygon points="63 43 67 33 72 35 70 43" fill="url(#modalCrystalPink2)"/>
-                    <polygon points="40 43 44 32 48 43" fill="#FFF0F5" opacity="0.9"/>
-                    <polygon points="49 43 53 34 57 43" fill="#FFF0F5" opacity="0.9"/>
-                    <circle cx="44" cy="22" r="1.5" fill="#FFFFFF"/>
-                    <circle cx="52" cy="24" r="1.2" fill="#FFFFFF"/>
-                    <circle cx="34" cy="28" r="1" fill="#FFFFFF"/>
+                  <!-- 3. Treasure Icons: XP Stars ⭐ & Hearts ❤️ emerging from chest -->
+                  <g class="chest-crystals">
+                    <!-- Blue XP Stars -->
+                    <g class="chest-treasure-stars" filter="url(#starGlow)">
+                      <g transform="translate(26,24) scale(0.55)">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#228be6" stroke="#1971c2" stroke-width="0.8"/>
+                      </g>
+                      <g transform="translate(42,16) scale(0.75)">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#339af0" stroke="#1c7ed6" stroke-width="0.8"/>
+                      </g>
+                      <g transform="translate(58,22) scale(0.6)">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#228be6" stroke="#1971c2" stroke-width="0.8"/>
+                      </g>
+                    </g>
+                    <!-- Red Hearts -->
+                    <g class="chest-treasure-hearts" filter="url(#heartGlow)">
+                      <g transform="translate(34,28) scale(0.5)">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#e03131" stroke="#c92a2a" stroke-width="0.8"/>
+                      </g>
+                      <g transform="translate(52,30) scale(0.45)">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#ff6b6b" stroke="#e03131" stroke-width="0.8"/>
+                      </g>
+                    </g>
+                    <!-- White Sparkle Dots -->
+                    <g class="chest-treasure-sparkles">
+                      <circle cx="32" cy="20" r="1.5" fill="#FFFFFF" opacity="0.95"/>
+                      <circle cx="54" cy="18" r="1.2" fill="#FFFFFF" opacity="0.9"/>
+                      <circle cx="44" cy="14" r="1.8" fill="#FFFFFF" opacity="0.85"/>
+                      <circle cx="66" cy="26" r="1" fill="#FFFFFF" opacity="0.8"/>
+                      <circle cx="24" cy="30" r="0.9" fill="#FFFFFF" opacity="0.75"/>
+                    </g>
                   </g>
 
                   <!-- 4. Chest Body Base -->
@@ -1103,7 +1131,7 @@
                     <rect x="13" y="35" width="70" height="5" rx="2" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="2"/>
                     <line x1="15" y1="36.5" x2="81" y2="36.5" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
                     <rect x="41" y="31" width="14" height="15" rx="3" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
-                    <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalCrystalPink1)" stroke="#FFD1DC" stroke-width="0.8"/>
+                    <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalLockSapphire)" stroke="#A5D8FF" stroke-width="0.8"/>
                     <circle cx="46" cy="36" r="1.2" fill="#FFFFFF"/>
                   </g>
                 </svg>
