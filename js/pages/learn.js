@@ -707,7 +707,7 @@
         // 1. Anticipation Wobble
         modalEl.classList.add('is-wobbling');
 
-        // 2. Open Lid & Trigger Confetti Cannon after 380ms
+        // 2. Open Lid & Trigger Confetti Cannon after 620ms (matches physics wobble duration)
         setTimeout(() => {
           modalEl.classList.remove('is-wobbling');
           modalEl.classList.add('is-opened');
@@ -718,7 +718,7 @@
 
           const canvas = modalEl.querySelector('.chest-confetti-canvas');
           if (canvas) launchChestConfetti(canvas);
-        }, 380);
+        }, 620);
       }
 
       async function renderSkillMap() {

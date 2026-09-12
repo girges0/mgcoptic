@@ -2031,7 +2031,7 @@ const CurriculumAdminSystem = (function(){
     // 2. حركة ترقب واهتزاز الصندوق الممتعة (Anticipation Wobble)
     modal.classList.add('is-wobbling');
 
-    // 3. انبثاق الغطاء وإطلاق مدافع الكونفيتي بعد 380 مللي ثانية (مطابقة 100% للموقع)
+    // 3. انبثاق الغطاء وإطلاق مدافع الكونفيتي بعد 620 مللي ثانية (مطابقة حركة الاهتزاز الفيزيائية)
     if(chestPreviewTimer) clearTimeout(chestPreviewTimer);
     chestPreviewTimer = setTimeout(() => {
       modal.classList.remove('is-wobbling');
@@ -2041,7 +2041,7 @@ const CurriculumAdminSystem = (function(){
 
       const canvas = document.getElementById('admin-chest-confetti-canvas');
       if(canvas) launchChestConfetti(canvas);
-    }, 380);
+    }, 620);
   }
 
   function replayChestAnimation(){
@@ -2060,7 +2060,7 @@ const CurriculumAdminSystem = (function(){
         playChestSound();
         const canvas = document.getElementById('admin-chest-confetti-canvas');
         if(canvas) launchChestConfetti(canvas);
-      }, 380);
+      }, 620);
     }
   }
 
