@@ -1062,7 +1062,7 @@ class GamificationService {
       const raw = localStorage.getItem(userKey) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.PROGRESS);
       if(raw){
         const parsed = JSON.parse(raw);
-        return {
+        const resultProg = {
           user_id: uid,
           points: parsed.points ?? parsed.total_points ?? 0,
           total_points: parsed.points ?? parsed.total_points ?? 0,
@@ -1071,6 +1071,7 @@ class GamificationService {
           last_active_date: parsed.last_active_date || new Date().toISOString().split('T')[0],
           claimed_chests: parsed.claimed_chests || []
         };
+        return this.checkAndRegenerateHearts(resultProg, uid);
       }
     } catch(e){}
     return {
@@ -1097,7 +1098,7 @@ class GamificationService {
 
     // إذا كان التقدم مسجلاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً
     if(progress && !forceRemote){
-      return progress;
+      return this.checkAndRegenerateHearts(progress, uid);
     }
 
     if(sbClient && uid){
@@ -1130,6 +1131,7 @@ class GamificationService {
             localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(data.claimed_chests));
           }
           localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+          progress = this.checkAndRegenerateHearts(progress, uid);
           this.saveProgressLocal(progress, uid, false);
         } else if(!data && !error && uid){
           // إنشاء سجل تقدم جديد لهذا المستخدم في السحابة فقط إذا كان uid موجود
@@ -1216,23 +1218,124 @@ class GamificationService {
     }
     return prog;
   }
+  // فحص وإعادة شحن القلوب تلقائياً بمعدل قلب كل 4.8 ساعات (5 قلوب خلال 24 ساعة)
+  checkAndRegenerateHearts(prog, uid) {
+    if (!prog) return prog;
+    const currentHearts = Number(prog.hearts ?? 5);
+    const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
 
-  // خصم قلب عند الإجابة الخاطئة
-  async loseHeart(userId){
-    let prog = await this.getProgress(userId);
-    prog.hearts = Math.max(0, (prog.hearts || 5) - 1);
-    this.saveProgressLocal(prog);
+    if (currentHearts >= 5) {
+      prog.hearts = 5;
+      try { localStorage.removeItem(timerKey); } catch(e){}
+      return prog;
+    }
 
-    if(sbClient && userId){
-      sbClient.from('user_progress').update({ hearts: prog.hearts }).eq('user_id', userId).then(()=>{}).catch(()=>{});
+    let lastRefill = 0;
+    try {
+      lastRefill = Number(localStorage.getItem(timerKey) || prog.last_heart_loss_at || 0);
+    } catch(e){}
+
+    const now = Date.now();
+    if (!lastRefill || isNaN(lastRefill) || lastRefill <= 0) {
+      lastRefill = now;
+      try { localStorage.setItem(timerKey, String(lastRefill)); } catch(e){}
+      prog.last_heart_loss_at = lastRefill;
+      return prog;
+    }
+
+    const REGEN_PER_HEART = 17280000; // 24 hours / 5 hearts = 4.8 hours = 17,280,000 ms
+    const elapsed = now - lastRefill;
+
+    if (elapsed >= REGEN_PER_HEART) {
+      const heartsToAdd = Math.min(5 - currentHearts, Math.floor(elapsed / REGEN_PER_HEART));
+      if (heartsToAdd > 0) {
+        prog.hearts = Math.min(5, currentHearts + heartsToAdd);
+        const newLastRefill = lastRefill + (heartsToAdd * REGEN_PER_HEART);
+        if (prog.hearts >= 5) {
+          try { localStorage.removeItem(timerKey); } catch(e){}
+          prog.last_heart_loss_at = null;
+        } else {
+          try { localStorage.setItem(timerKey, String(newLastRefill)); } catch(e){}
+          prog.last_heart_loss_at = newLastRefill;
+        }
+        this.saveProgressLocal(prog, uid, false);
+        if (sbClient && uid) {
+          sbClient.from('user_progress').update({ hearts: prog.hearts }).eq('user_id', uid).then(()=>{}, ()=>{});
+        }
+      }
+    }
+    return prog;
+  }
+
+  // حساب الوقت المتبقي لشحن القلب التالي
+  getTimeUntilNextHeart(userId) {
+    const uid = userId || this.getCurrentUser()?.id;
+    const prog = this.getProgressLocal(uid);
+    const hearts = Number(prog?.hearts ?? 5);
+    if (hearts >= 5) {
+      return { isFull: true, hearts: 5, formatted: 'ممتلئة بالكامل', secondsRemaining: 0 };
+    }
+    const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
+    let lastRefill = 0;
+    try {
+      lastRefill = Number(localStorage.getItem(timerKey) || prog?.last_heart_loss_at || 0);
+    } catch(e){}
+    if (!lastRefill) lastRefill = Date.now();
+
+    const REGEN_PER_HEART = 17280000; // 4.8 hours
+    const now = Date.now();
+    const elapsed = Math.max(0, now - lastRefill);
+    const remainingMs = Math.max(0, REGEN_PER_HEART - (elapsed % REGEN_PER_HEART));
+    const totalSeconds = Math.ceil(remainingMs / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    let formatted = '';
+    if (hours > 0) {
+      formatted = `${hours} ساعة و ${minutes} دقيقة`;
+    } else {
+      formatted = `${minutes} دقيقة`;
+    }
+
+    return {
+      isFull: false,
+      hearts: hearts,
+      secondsRemaining: totalSeconds,
+      formatted: formatted,
+      fullRefillHours: Math.ceil((5 - hearts) * 4.8)
+    };
+  }
+
+  // خصم قلب عند الإجابة الخاطئة وبدء مؤقت الشحن
+    async loseHeart(userId){
+    const uid = userId || this.getCurrentUser()?.id;
+    let prog = await this.getProgress(uid);
+    const prevHearts = prog.hearts ?? 5;
+    prog.hearts = Math.max(0, prevHearts - 1);
+    const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
+
+    if (prog.hearts < 5) {
+      let timerVal = Number(localStorage.getItem(timerKey) || 0);
+      if (!timerVal || prevHearts >= 5) {
+        timerVal = Date.now();
+        try { localStorage.setItem(timerKey, String(timerVal)); } catch(e){}
+      }
+      prog.last_heart_loss_at = timerVal;
+    }
+
+    this.saveProgressLocal(prog, uid);
+
+    if(sbClient && uid){
+      sbClient.from('user_progress').update({ hearts: prog.hearts }).eq('user_id', uid).then(()=>{}).catch(()=>{});
     }
     return prog;
   }
 
   // إعادة ملء القلوب إلى 5
-  // شراء قلوب بنقاط الـ XP (القلب = 15 XP)
-  async buyHeartsWithXp(userId, count = 1, costPerHeart = 15){
-    let prog = await this.getProgress(userId);
+    // شراء قلوب بنقاط الـ XP (القلب = 100 XP)
+  async buyHeartsWithXp(userId, count = 1, costPerHeart = 100){
+    const uid = userId || this.getCurrentUser()?.id;
+    let prog = await this.getProgress(uid);
     const totalCost = count * costPerHeart;
     const currentPoints = prog.points || 0;
     if(currentPoints < totalCost){
@@ -1240,22 +1343,33 @@ class GamificationService {
     }
     prog.points = Math.max(0, currentPoints - totalCost);
     prog.hearts = Math.max(0, Math.min(5, (prog.hearts || 0) + count));
-    this.saveProgressLocal(prog);
-    if(sbClient && userId){
+
+    const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
+    if (prog.hearts >= 5) {
+      try { localStorage.removeItem(timerKey); } catch(e){}
+      prog.last_heart_loss_at = null;
+    }
+
+    this.saveProgressLocal(prog, uid);
+    if(sbClient && uid){
       try {
-        await sbClient.from('user_progress').update({ points: prog.points, hearts: prog.hearts }).eq('user_id', userId);
+        await sbClient.from('user_progress').update({ points: prog.points, hearts: prog.hearts }).eq('user_id', uid);
       } catch(e){}
     }
     return { success: true, prog };
   }
 
-  async refillHearts(userId){
-    let prog = await this.getProgress(userId);
+    async refillHearts(userId){
+    const uid = userId || this.getCurrentUser()?.id;
+    let prog = await this.getProgress(uid);
     prog.hearts = 5;
-    this.saveProgressLocal(prog);
-    if(sbClient && userId){
+    const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
+    try { localStorage.removeItem(timerKey); } catch(e){}
+    prog.last_heart_loss_at = null;
+    this.saveProgressLocal(prog, uid);
+    if(sbClient && uid){
       try {
-        await sbClient.from('user_progress').update({ hearts: 5 }).eq('user_id', userId);
+        await sbClient.from('user_progress').update({ hearts: 5 }).eq('user_id', uid);
       } catch(e){}
     }
     return prog;

@@ -4,7 +4,7 @@
  * - Levels, Units, Lessons, Challenges
  * - Chests (1-6: 10 XP + 1 Heart; 7: 50 XP + 3 Hearts + Trophy Badge)
  * - All XP numbers (Challenges 1 XP, Lessons 5-6-10 XP, Chests 10-50 XP, Total 310 XP)
- * - All Heart numbers (Max 5, Cost 15 XP, Chest bonuses +1/+3, Total +9 Hearts)
+ * - All Heart numbers (Max 5, Cost 100 XP, Chest bonuses +1/+3, Total +9 Hearts)
  * - Admin Dashboard views, stats bar, unit detail flow, chest modal & preview
  */
 

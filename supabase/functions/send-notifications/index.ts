@@ -277,10 +277,16 @@ serve(async (req: Request) => {
       let failedCount = 0;
       const deadTokens: string[] = [];
 
-      const targetDeepLink = String(event.deep_link || "index.html");
+      let cleanDeepLink = String(event.deep_link || "index.html").replace(/^\/+/, "");
+      if (cleanDeepLink.startsWith("gift?") || cleanDeepLink.startsWith("gift&") || cleanDeepLink === "gift") {
+        cleanDeepLink = "index.html?" + cleanDeepLink.replace(/^gift(\?|&)?/, "");
+      } else if (cleanDeepLink.startsWith("learn") && !cleanDeepLink.startsWith("learn.html")) {
+        cleanDeepLink = cleanDeepLink.replace(/^learn/, "learn.html");
+      }
+      const targetDeepLink = cleanDeepLink;
       const fullWebLink = targetDeepLink.startsWith("http")
         ? targetDeepLink
-        : `https://mgcoptic.vercel.app/${targetDeepLink.replace(/^\/+/, "")}`;
+        : `https://mgcoptic.vercel.app/${targetDeepLink}`;
 
       // رابط الأيقونة الرسمية لمنصة MG Coptic
       const officialIconUrl = "https://mgcoptic.vercel.app/icon-192.png";

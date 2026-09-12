@@ -184,9 +184,15 @@
       <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
       <span>الحروف</span>
     </button>
-    <button class="navlink" data-tab="grammar">
-      <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span>القواعد</span>
+    <button class="navlink" data-tab="competitions">
+      <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/>
+        <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/>
+        <path d="M4 22h16"/>
+        <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/>
+        <path d="M6 3h12v7a6 6 0 0 1-12 0V3z"/>
+      </svg>
+      <span>قسم المسابقات</span>
     </button>
     <button class="navlink" data-tab="quizzes">
       <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -241,12 +247,27 @@
     </section>
     <section class="panel" id="panel-vocabulary" style="display:none;"></section>
 
-    <section class="panel" id="panel-grammar">
-      <div class="toolbar"><h2>القواعد</h2><button class="btn" id="add-grammar">+ قسم جديد</button></div>
-      <table id="table-grammar">
-        <thead><tr><th style="width:70px">ترتيب</th><th>العنوان</th><th>المحتوى (HTML)</th><th></th></tr></thead>
-        <tbody></tbody>
-      </table>
+    <section class="panel" id="panel-competitions">
+      <div class="toolbar"><h2>قسم المسابقات</h2></div>
+      <div style="background:linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%); border:2px dashed #E6D7C3; border-radius:20px; padding:55px 24px; text-align:center; max-width:620px; margin:35px auto; box-shadow:0 8px 24px rgba(74, 13, 36, 0.04);">
+        <div style="width:74px; height:74px; margin:0 auto 18px; border-radius:50%; background:linear-gradient(135deg, #FFF4D6 0%, #FFE299 100%); display:flex; align-items:center; justify-content:center; color:#B37D14; box-shadow:0 6px 18px rgba(179, 125, 20, 0.22);">
+          <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/>
+            <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/>
+            <path d="M4 22h16"/>
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/>
+            <path d="M6 3h12v7a6 6 0 0 1-12 0V3z"/>
+          </svg>
+        </div>
+        <h3 style="font-size:1.5rem; font-weight:900; color:#3A2315; margin:0 0 10px;">قسم المسابقات</h3>
+        <p style="font-size:0.95rem; color:#8D725C; line-height:1.7; margin:0 auto 20px; max-width:440px;">
+          سيتم تفعيل وإضافة مسابقات وتحديات اللغة القبطية والجوائز التنافسية هنا قريباً.
+        </p>
+        <span style="display:inline-flex; align-items:center; gap:8px; background:#FAF4E8; border:1px solid #ECDDC5; color:#6F1737; padding:6px 16px; border-radius:30px; font-size:0.85rem; font-weight:800;">
+          <span style="width:8px; height:8px; border-radius:50%; background:#E5A93C;"></span>
+          قيد التجهيز والتطوير
+        </span>
+      </div>
     </section>
 
     <section class="panel active" id="panel-articles">
@@ -1292,10 +1313,6 @@
                     <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
                     <span>الحروف القبطية</span>
                   </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#grammar', 'قسم قواعد اللغة القبطية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    <span>قواعد اللغة</span>
-                  </button>
                   <button type="button" class="btn secondary" onclick="setNotifLink('index.html#quiz', 'بنك التحديات والاختبارات')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
                     <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                     <span>الاختبارات</span>
@@ -1553,14 +1570,38 @@
         </div>
       </div>
 
-      <!-- سجل الدروس المكتملة -->
-      <div style="background:#FFF; border:1px solid #E7DCC8; border-radius:12px; padding:14px 18px;">
-        <h4 style="margin:0 0 10px 0; font-size:0.95rem; font-weight:800; color:#6B1530; display:flex; align-items:center; gap:6px;">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          <span>سجل إنجاز الدروس والمستويات</span>
-        </h4>
-        <div id="m-student-lessons-list" style="max-height:160px; overflow-y:auto;">
-          <p style="color:#746B6F; font-size:0.88rem; margin:4px 0;">لا يوجد دروس مكتملة مسجلة بعد</p>
+      <!-- سجل إنجاز الدروس والمستويات وفحص النزاهة وكشف الثغرات -->
+      <div style="background:#FFFFFF; border:1.5px solid #E2D5C3; border-radius:14px; padding:16px 18px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.02);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid #F0E6D6; padding-bottom:10px;">
+          <h4 style="margin:0; font-size:0.96rem; font-weight:900; color:#6B1530; display:flex; align-items:center; gap:8px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>سجل إنجاز الدروس وفحص النزاهة وكشف الثغرات</span>
+          </h4>
+          <div id="m-student-anti-cheat-badge" style="display:inline-flex; align-items:center; gap:6px; font-size:0.82rem; font-weight:800;">
+            <!-- مؤشر كاشف الثغرات والتلاعب -->
+          </div>
+        </div>
+
+        <!-- شريط الإحصائيات الذكية والفلاتر السريعة -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; background:#FAF7F0; padding:9px 14px; border-radius:10px; border:1px solid #EAE0D0;">
+          <div style="display:flex; align-items:center; gap:14px; font-size:0.84rem; font-weight:800; color:#3F332C; flex-wrap:wrap;">
+            <span>📚 الدروس المسجلة: <b id="m-audit-lessons-count" style="color:#6B1530;">0</b></span>
+            <span>🎯 متوسط الدقة: <b id="m-audit-avg-score" style="color:#059669;">0%</b></span>
+            <span>⏱️ مدة الجلسات المتقاربة: <b id="m-audit-speed-stat" style="color:#D97706;">طبيعي</b></span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <input type="text" id="m-audit-search-input" oninput="filterStudentAuditLogLive()" placeholder="🔍 بحث برقم الدرس أو التاريخ..." style="padding:5px 10px; font-size:0.8rem; border:1px solid #D6C8B2; border-radius:6px; background:#FFF; width:160px; font-family:inherit; outline:none; font-weight:600;">
+            <select id="m-audit-filter-select" onchange="filterStudentAuditLogLive()" style="padding:5px 8px; font-size:0.8rem; border:1px solid #D6C8B2; border-radius:6px; background:#FFF; font-family:inherit; font-weight:700; color:#2E2018; outline:none; cursor:pointer;">
+              <option value="all">كل الدروس المسجلة</option>
+              <option value="suspicious">⚠️ المشبوهة فقط (ثغرات/سرعة/قفز)</option>
+              <option value="perfect">الدرجة الكاملة (100%)</option>
+              <option value="imperfect">أقل من 100%</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="m-student-lessons-list" style="max-height:300px; overflow-y:auto; padding-right:4px;">
+          <p style="color:#746B6F; font-size:0.88rem; margin:4px 0;">لا يوجد دروس مسجلة بعد</p>
         </div>
       </div>
 
@@ -1570,6 +1611,11 @@
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           <span>إجراءات وتحكم المشرف بحساب الطالب</span>
         </h4>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+          <button type="button" class="btn" id="btn-modal-gift-student" onclick="openGiftStudentModal()" style="background:linear-gradient(135deg, #059669 0%, #10B981 100%); color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 2px 8px rgba(16, 185, 129, 0.35); border:none;" title="إهداء رصيد نقاط XP أو قلوب للطالب مع رسالة تقدير واحترافية">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+            <span>🎁 إهداء XP أو قلوب</span>
+          </button>
           <button type="button" class="btn" id="btn-modal-send-notif" onclick="openSendNotificationForCurrentStudent()" style="background:#6B1530; color:#FFFFFF; font-weight:800; font-size:0.85rem; padding:9px 16px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" title="إرسال إشعار فوري لهاتف هذا الطالب">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span>إرسال إشعار للطالب</span>

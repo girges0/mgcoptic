@@ -1367,12 +1367,12 @@
               ` : ''}
             </div>
             <div class="write-area" style="direction:ltr !important;">
-              <div class="tiles-dropzone" id="tiles-dropzone" style="direction:ltr !important; flex-direction:row !important;">
+              <div class="tiles-dropzone" id="tiles-dropzone" style="direction:ltr !important; flex-direction:row !important;" onclick="if(event.target.closest('.word-tile') && window.unpickWordTile) window.unpickWordTile(event.target.closest('.word-tile'))">
                 <span style="color:var(--ink-soft);font-size:.92rem;direction:rtl;" id="dropzone-placeholder">اضغط على الحروف لترتيبها هنا</span>
               </div>
               <div class="tiles-pool" id="tiles-pool" style="direction:ltr !important; flex-direction:row !important;">
-                ${shuffled.map((t) => `
-                  <button type="button" class="word-tile" style="direction:ltr !important;" onclick="pickWordTile(this, '${t}')">${t}</button>
+                ${shuffled.map((t, idx) => `
+                  <button type="button" class="word-tile" data-tile-id="${idx}" data-letter="${escapeHtml(t)}" style="direction:ltr !important;" onclick="pickWordTile(this, '${t.replace(/'/g, "\\'")}', ${idx})">${t}</button>
                 `).join('')}
               </div>
             </div>
@@ -1910,46 +1910,96 @@
         if (btnCheck) btnCheck.disabled = false;
       };
 
-      window.pickWordTile = function(btn, letter) {
+      window.unpickWordTile = function(placedTileOrId, tileId) {
         if (runnerState !== 'answering') return;
         if (game.sound) game.sound.playClick();
         const dropzone = document.getElementById('tiles-dropzone');
+        if (!dropzone) return;
+
+        let placedEl = null;
+        let tId = tileId;
+
+        if (placedTileOrId instanceof HTMLElement) {
+          placedEl = placedTileOrId;
+          if (tId === undefined || tId === null) {
+            tId = placedEl.getAttribute('data-tile-id');
+          }
+        } else if (typeof placedTileOrId === 'number' || typeof placedTileOrId === 'string') {
+          tId = String(placedTileOrId);
+          placedEl = dropzone.querySelector(`.word-tile[data-tile-id="${tId}"]`);
+        }
+
+        if (placedEl) {
+          placedEl.remove();
+        }
+
+        if (tId !== undefined && tId !== null) {
+          const poolBtn = document.querySelector(`.tiles-pool .word-tile[data-tile-id="${tId}"]`);
+          if (poolBtn) {
+            poolBtn.classList.remove('is-placed');
+            poolBtn.style.visibility = 'visible';
+          }
+        }
+
+        const remainingTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
+        wordTilesBuilt = remainingTiles.map(el => el.getAttribute('data-letter') || el.textContent.trim());
+
+        if (wordTilesBuilt.length === 0 && !document.getElementById('dropzone-placeholder')) {
+          const ph = document.createElement('span');
+          ph.id = 'dropzone-placeholder';
+          ph.style.cssText = 'color:var(--ink-soft);font-size:.92rem;direction:rtl;';
+          ph.textContent = 'اضغط على الحروف لترتيبها هنا';
+          dropzone.appendChild(ph);
+        }
+
+        const btnCheck = document.getElementById('btn-check-action');
+        if (btnCheck) btnCheck.disabled = (wordTilesBuilt.length === 0);
+      };
+
+      window.pickWordTile = function(btn, letter, tileId) {
+        if (runnerState !== 'answering') return;
+        const tId = (tileId !== undefined && tileId !== null) ? String(tileId) : (btn.getAttribute('data-tile-id') || '0');
+
+        if (btn.classList.contains('is-placed')) {
+          window.unpickWordTile(null, tId);
+          return;
+        }
+
+        if (game.sound) game.sound.playClick();
+        const dropzone = document.getElementById('tiles-dropzone');
+        if (!dropzone) return;
         const placeholder = document.getElementById('dropzone-placeholder');
         if (placeholder) placeholder.remove();
 
-        wordTilesBuilt.push(letter);
-        btn.style.visibility = 'hidden';
+        btn.classList.add('is-placed');
 
         const placedTile = document.createElement('button');
         placedTile.type = 'button';
-        placedTile.className = 'word-tile';
+        placedTile.className = 'word-tile placed-tile';
         placedTile.style.direction = 'ltr';
         placedTile.style.unicodeBidi = 'isolate';
         placedTile.textContent = letter;
-        placedTile.onclick = function() {
-          if (runnerState !== 'answering') return;
-          if (game.sound) game.sound.playClick();
-          const childTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
-          const domIdx = childTiles.indexOf(placedTile);
-          placedTile.remove();
-          btn.style.visibility = 'visible';
-          if (domIdx !== -1) {
-            wordTilesBuilt.splice(domIdx, 1);
-          } else {
-            const idx = wordTilesBuilt.lastIndexOf(letter);
-            if (idx !== -1) wordTilesBuilt.splice(idx, 1);
+        placedTile.setAttribute('data-tile-id', tId);
+        placedTile.setAttribute('data-letter', letter);
+        placedTile.setAttribute('title', 'اضغط لإعادة الحرف');
+        placedTile.setAttribute('aria-label', `إعادة حرف ${letter}`);
+
+        const handleUnpick = function(e) {
+          if (e) {
+            e.stopPropagation();
+            if (e.cancelable) e.preventDefault();
           }
-          if (wordTilesBuilt.length === 0 && !document.getElementById('dropzone-placeholder')) {
-            const ph = document.createElement('span');
-            ph.id = 'dropzone-placeholder';
-            ph.style.cssText = 'color:var(--ink-soft);font-size:.92rem;direction:rtl;';
-            ph.textContent = 'اضغط على الحروف لترتيبها هنا';
-            dropzone.appendChild(ph);
-          }
-          const btnCheck = document.getElementById('btn-check-action');
-          if (btnCheck) btnCheck.disabled = wordTilesBuilt.length === 0;
+          window.unpickWordTile(placedTile, tId);
         };
+
+        placedTile.onclick = handleUnpick;
+        placedTile.addEventListener('touchend', handleUnpick, { passive: false });
+
         dropzone.appendChild(placedTile);
+
+        const remainingTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
+        wordTilesBuilt = remainingTiles.map(el => el.getAttribute('data-letter') || el.textContent.trim());
+
         const btnCheck = document.getElementById('btn-check-action');
         if (btnCheck) btnCheck.disabled = false;
       };
@@ -2021,6 +2071,8 @@
         } else if (ch.type === 'write') {
           const built = wordTilesBuilt.join('');
           isCorrect = (built === ch.correct_word);
+          const dropTiles = document.querySelectorAll('#tiles-dropzone .word-tile');
+          dropTiles.forEach(t => t.classList.add(isCorrect ? 'correct-tile' : 'wrong-tile'));
         } else if (ch.type === 'match') {
           const totalPairs = (ch.pairs || []).length || 4;
           isCorrect = (matchedPairsCount >= totalPairs);
@@ -2083,9 +2135,8 @@
 
         if (isCorrect) {
           correctAnswersCount++;
-          const rawChallengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null) ? ch.xp_reward : (ch.xp !== undefined && ch.xp !== null ? ch.xp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 1));
-          const parsedChallengeXp = parseInt(rawChallengeXp, 10);
-          const challengeXp = (!isNaN(parsedChallengeXp) && parsedChallengeXp >= 0) ? parsedChallengeXp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 1);
+          // كل تمرين في الدرس بـ 1 XP
+          const challengeXp = 1;
 
           // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو التمرين المُجاب عليه مسبقاً
           const challengeUniqueId = ch.id || `ch_${currentChallengeIndex}_${(ch.question || ch.coptic_display || '').substring(0,20)}`;
@@ -2113,11 +2164,7 @@
             feedbackBox.className = 'feedback-msg correct';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
-              if (ch.type === 'image_view' || ch.type === 'text_view') {
-                feedbackText.textContent = challengeXp > 0 ? `أحسنت! واصل التعلّم (+${challengeXp} XP)` : 'أحسنت! واصل التعلّم';
-              } else {
-                feedbackText.textContent = isReplayingLesson ? 'إجابة صحيحة وممتازة! (وضع المراجعة)' : (challengeXp > 0 ? `إجابة صحيحة وممتازة! (+${challengeXp} XP)` : 'إجابة صحيحة وممتازة!');
-              }
+              feedbackText.textContent = isReplayingLesson ? 'إجابة صحيحة وممتازة! (وضع المراجعة)' : 'إجابة صحيحة وممتازة! (+1 XP)';
             }
             feedbackBox.style.visibility = 'visible';
           }
@@ -2175,18 +2222,32 @@
           currentXP = prog.points || 0;
           hearts = prog.hearts || 0;
         }
-        const heartsNeeded = 5 - hearts;
-        const fullCost = heartsNeeded * 15;
+        const heartsNeeded = Math.max(1, 5 - hearts);
+        const costPerHeart = 100;
+        const fullCost = heartsNeeded * costPerHeart;
 
-        if (currentXP >= 15) {
+        // حساب وقت شحن القلب التلقائي القادم
+        let timeRemainingText = '';
+        if (game.getTimeUntilNextHeart) {
+          const timeInfo = game.getTimeUntilNextHeart(uid);
+          if (timeInfo && !timeInfo.isFull) {
+            timeRemainingText = `❤️ القلب القادم يتشحن تلقائياً خلال: <b>${timeInfo.formatted}</b>`;
+          }
+        }
+        if (!timeRemainingText) {
+          timeRemainingText = 'تتشحن القلوب تلقائياً حتى 5 قلوب كل 24 ساعة (قلب كل ٤.٨ ساعات)';
+        }
+
+        if (currentXP >= costPerHeart) {
           const canFull = currentXP >= fullCost;
           const htmlContent = `
             <div style="text-align:center;line-height:1.7;padding:6px 0;">
               <p style="font-size:1.15rem;font-weight:800;color:var(--madder);margin-bottom:6px;">نفدت محاولاتك! 💔</p>
-              <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:14px;">سعر القلب الواحد = <b>15 XP</b> ⭐ (رصيدك: <b>${currentXP} XP</b>)</p>
-              <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+              <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:8px;">سعر القلب الواحد = <b>${costPerHeart} XP</b> ⭐ (رصيدك: <b>${currentXP} XP</b>)</p>
+              <p style="font-size:.82rem;color:#0077CC;background:#F0F9FF;padding:6px 12px;border-radius:10px;margin-bottom:14px;display:inline-block;">⏱️ ${timeRemainingText}</p>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
                 <button type="button" id="swal-buy-1-heart" style="padding:12px 18px;font-size:.96rem;background:linear-gradient(135deg,#00A3FF,#0077CC);border:none;border-radius:14px;color:#fff;cursor:pointer;font-weight:800;box-shadow:0 4px 14px rgba(0,163,255,0.35);">
-                  شراء 1 قلب (+1 ❤️) بـ 15 XP
+                  شراء 1 قلب (+1 ❤️) بـ ${costPerHeart} XP
                 </button>
                 ${canFull ? `
                   <button type="button" id="swal-buy-all-hearts" style="padding:11px 18px;font-size:.92rem;background:#E7F5FF;border:1.5px solid #00A3FF;border-radius:14px;color:#0077CC;cursor:pointer;font-weight:800;">
@@ -2212,7 +2273,7 @@
                 b1.onclick = async () => {
                   Swal.close();
                   if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, 1, 15);
+                    const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
                     if (buyRes.success) {
                       await refreshStatsDisplay();
                       if (game.sound) game.sound.playCorrect();
@@ -2227,7 +2288,7 @@
                 bAll.onclick = async () => {
                   Swal.close();
                   if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, 15);
+                    const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
                     if (buyRes.success) {
                       await refreshStatsDisplay();
                       if (game.sound) game.sound.playCorrect();
@@ -2240,13 +2301,13 @@
             }
           });
 
-          if (result.dismiss === Swal.DismissReason.cancel) {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
             closeRunner();
           }
         } else {
           await mgAlert(
             'نفدت المحاولات! 💔',
-            `ليس لديك رصيد كافٍ من الـ XP لشراء قلوب جديدة.<br>سعر القلب الواحد = <b>15 XP</b> ورصيدك الحالي: <b>${currentXP} XP</b>.<br>يمكنك مراجعة الدروس السابقة لكسب المزيد من النقاط والمحاولة من جديد!`,
+            `ليس لديك رصيد كافٍ من الـ XP لشراء قلوب جديدة.<br>سعر القلب الواحد = <b>${costPerHeart} XP</b> ورصيدك الحالي: <b>${currentXP} XP</b>.<br><br>⏱️ ${timeRemainingText}<br><br>يمكنك مراجعة الدروس السابقة لكسب المزيد من النقاط أو الانتظار حتى تتشحن القلوب تلقائياً!`,
             'error'
           );
           closeRunner();

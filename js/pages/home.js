@@ -334,6 +334,11 @@
       const tbHearts2 = document.getElementById('topbar-hearts-val') || document.getElementById('hearts-val');
       if (tbHearts2) tbHearts2.textContent = prog.hearts ?? 5;
 
+      // تحديث شارة مركز الإشعارات
+      if (typeof window.refreshNotificationsCenter === 'function') {
+        window.refreshNotificationsCenter();
+      }
+
       const greetName = document.getElementById('home-greeting-name');
       const monogram = document.getElementById('home-monogram');
 

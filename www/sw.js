@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v2.0.0-curriculum-sync';
+const CACHE_NAME = 'mgcoptic-v2.0.1-admin-fix';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -73,6 +73,11 @@ self.addEventListener('fetch', (event) => {
 
   // Never cache Supabase database or auth API requests
   if (url.hostname.includes('supabase.co')) {
+    return;
+  }
+
+  // Never intercept admin portal routes
+  if (url.pathname.startsWith('/admin')) {
     return;
   }
 
@@ -190,11 +195,32 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
-// 4. Notification Click: Deep link directly into the application
+// 4. Notification Click: Deep link directly into the application safely without 404
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const rawLink = event.notification.data?.deep_link || '/';
-  const targetUrl = new URL(rawLink, self.location.origin).href;
+  const rawLink = event.notification.data?.deep_link || event.notification.data?.url || '/';
+  
+  function resolveTargetUrl(link, baseOrigin) {
+    if (!link || link === '/' || link === '') {
+      return new URL('index.html', baseOrigin).href;
+    }
+    if (link.startsWith('http://') || link.startsWith('https://')) {
+      return link;
+    }
+    let clean = link.replace(/^\/+/, '');
+    if (clean.startsWith('gift?') || clean.startsWith('gift&') || clean === 'gift') {
+      clean = 'index.html?' + clean.replace(/^gift(\?|&)?/, '');
+    } else if (clean.startsWith('learn') && !clean.startsWith('learn.html')) {
+      clean = clean.replace(/^learn/, 'learn.html');
+    } else if (clean.startsWith('login') && !clean.startsWith('login.html')) {
+      clean = clean.replace(/^login/, 'login.html');
+    } else if (clean.startsWith('signup') && !clean.startsWith('signup.html')) {
+      clean = clean.replace(/^signup/, 'signup.html');
+    }
+    return new URL(clean, baseOrigin).href;
+  }
+
+  const targetUrl = resolveTargetUrl(rawLink, self.location.origin);
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {

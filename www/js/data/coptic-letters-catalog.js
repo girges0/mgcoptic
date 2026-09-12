@@ -21,7 +21,7 @@
       rules: [
         'الحرف الأول في الأبجدية القبطية. يُنطق دائماً ألفاً مفتوحة مشبعة مثل <strong>(أَ)</strong> في العربية أو <strong>(A)</strong> في كلمة (Father).'
       ],
-      word: { coptic: 'ⲁⲗⲟⲩ', phoneticAr: 'أَلو', meaning: 'ولد / طفل' },
+      word: { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلوم', meaning: 'جبنة' },
       soundFile: 'audio_coptic/1alfa.mp3'
     },
     {
@@ -35,7 +35,7 @@
         'يُنطق <strong>(ڤ / V)</strong>: إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).',
         'يُنطق <strong>(ب / B)</strong>: إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.'
       ],
-      word: { coptic: 'ⲃⲉⲣⲧ', phoneticAr: 'ڤيرت', meaning: 'وردة' },
+      word: { coptic: 'ⲃⲱ', phoneticAr: 'ڤو', meaning: 'شجرة' },
       soundFile: 'audio_coptic/2veta.mp3'
     },
     {
@@ -50,7 +50,7 @@
         'يُنطق <strong>(ن)</strong>: إذا جاء بعده أحد الحروف الحلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ).',
         'يُنطق <strong>(غ)</strong>: في الكلمات القبطية، وفي الكلمات اليونانية في باقي الحالات.'
       ],
-      word: { coptic: 'ⲁⲅⲅⲉⲗⲟⲥ', phoneticAr: 'أنجيلوس', meaning: 'ملاك' },
+      word: { coptic: 'ⲅⲁⲗⲁ', phoneticAr: 'غالا', meaning: 'لبن' },
       soundFile: 'audio_coptic/3ghamma.mp3'
     },
     {
@@ -64,7 +64,7 @@
         'يُنطق <strong>(د)</strong>: في أسماء الأعلام والأشخاص والبلاد، وفي الكلمات القبطية الأصل.',
         'يُنطق <strong>(ذ)</strong>: في باقي الكلمات ذات الأصل اليوناني.'
       ],
-      word: { coptic: 'ⲇⲱⲣⲟⲛ', phoneticAr: 'ذورون', meaning: 'عطية / هدية' },
+      word: { coptic: 'ⲁⲇⲁⲙ', phoneticAr: 'آدام', meaning: 'آدم' },
       soundFile: 'audio_coptic/4delta.mp3'
     },
     {
@@ -77,7 +77,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق فتحة مائلة للكسر مثل حرف <strong>(E)</strong> في كلمة (pen) أو (bed).'
       ],
-      word: { coptic: 'ⲉⲛ', phoneticAr: 'إن', meaning: 'قرد' },
+      word: { coptic: 'ⲉ̀ⲣϣⲱ', phoneticAr: 'إرجو', meaning: 'دجاجة' },
       soundFile: 'audio_coptic/5ei.mp3'
     },
 
@@ -92,7 +92,7 @@
       rules: [
         'ليس حرفاً هجائياً أصيلاً بل رمز ورقم عددي يدل على <strong>الرقم ستة (٦)</strong>. يوضع فوقه شرطة أفقية لتمييزه كرقم، ويُنطق <strong>"سو"</strong>.'
       ],
-      word: { coptic: 'ⲥⲟⲟⲩ', phoneticAr: 'سو', meaning: 'الرقم ستة (٦)' },
+      word: { coptic: 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ', phoneticAr: 'إسوؤو إن شكيلكيل', meaning: '6 أجراس' },
       soundFile: 'audio_coptic/6sow.mp3'
     },
     {
@@ -105,7 +105,7 @@
       rules: [
         'يُنطق دائماً حرف زين <strong>"ز"</strong> مثل حرف <strong>(Z)</strong> في الإنجليزية في جميع الكلمات والمواضع.'
       ],
-      word: { coptic: 'ⲧⲣⲁⲡⲉⲍⲁ', phoneticAr: 'ترابيزا', meaning: 'مائدة / ترابيزة' },
+      word: { coptic: 'ⲍⲱⲙⲟⲥ', phoneticAr: 'أزموس', meaning: 'شوربة' },
       soundFile: 'audio_coptic/7zeta.mp3'
     },
     {
@@ -118,7 +118,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق ياء طويلة مشبعة ممدودة مثل <strong>(ee)</strong> في كلمة (meet) أو (see).'
       ],
-      word: { coptic: 'ⲁⲛⲍⲏⲃ', phoneticAr: 'أنزيب', meaning: 'مدرسة' },
+      word: { coptic: 'ⲏ̀ⲡⲓ', phoneticAr: 'إيبي', meaning: 'قبة' },
       soundFile: 'audio_coptic/8eta.mp3'
     },
     {
@@ -132,7 +132,7 @@
         'يُنطق <strong>(ت)</strong>: إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ).',
         'يُنطق <strong>(ث)</strong>: في باقي الحالات الأخرى مثل حرف <strong>(Th)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲙⲁⲱⲟⲩⲧ', phoneticAr: 'ماووت', meaning: 'مشط' },
+      word: { coptic: 'ⲕⲓⲑⲁⲣⲁ', phoneticAr: 'كيثارا', meaning: 'قيثارة' },
       soundFile: 'audio_coptic/9seta.mp3'
     },
     {
@@ -145,7 +145,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف <strong>(I)</strong> في كلمة (sit) أو (pin).'
       ],
-      word: { coptic: 'ⲱⲓⲛⲓ', phoneticAr: 'أويني', meaning: 'صنارة / نور' },
+      word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إيال', meaning: 'مراية' },
       soundFile: 'audio_coptic/10yota.mp3'
     },
 
@@ -160,7 +160,7 @@
       rules: [
         'يُنطق دائماً حرف كاف <strong>"ك"</strong> في جميع المواضع والكلمات دون استثناء.'
       ],
-      word: { coptic: 'ⲉⲕⲕⲗⲏⲥⲓⲁ', phoneticAr: 'إككليسيا', meaning: 'كنيسة' },
+      word: { coptic: 'ⲕⲁϣ', phoneticAr: 'كاش', meaning: 'قلم' },
       soundFile: 'audio_coptic/11kapa.mp3'
     },
     {
@@ -173,7 +173,7 @@
       rules: [
         'يُنطق دائماً حرف لام <strong>"ل"</strong> مثل حرف <strong>(L)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲗⲁⲙⲡⲁⲥ', phoneticAr: 'لامباس', meaning: 'مصباح / قنديل' },
+      word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لاڤو', meaning: 'أسد' },
       soundFile: 'audio_coptic/12lavla.mp3'
     },
     {
@@ -186,7 +186,7 @@
       rules: [
         'يُنطق دائماً حرف ميم <strong>"م"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲙⲟⲗϧ', phoneticAr: 'مولخ', meaning: 'شمعة' },
+      word: { coptic: 'ⲙⲁⲛϩⲟⲛ', phoneticAr: 'مانهون', meaning: 'برتقال' },
       soundFile: 'audio_coptic/13mi.mp3'
     },
     {
@@ -199,7 +199,7 @@
       rules: [
         'يُنطق دائماً حرف نون <strong>"ن"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲛⲟⲩϯ', phoneticAr: 'نوتي', meaning: 'الله' },
+      word: { coptic: 'ⲉⲛ̀ⲕⲟⲧ', phoneticAr: 'إنكوت', meaning: 'ينام' },
       soundFile: 'audio_coptic/14ni.mp3'
     },
     {
@@ -212,7 +212,7 @@
       rules: [
         'حرف مركب يُنطق كاف وسين معاً <strong>(كـ + س = X)</strong> في مقطع صوتي واحد.'
       ],
-      word: { coptic: 'ⲟⲩⲁⲗⲓⲝ', phoneticAr: 'أواليكس', meaning: 'ستارة' },
+      word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إكسومي', meaning: 'مسطرة' },
       soundFile: 'audio_coptic/15axsy.mp3'
     },
 
@@ -227,7 +227,7 @@
       rules: [
         'حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف <strong>(O)</strong> في كلمة (not) أو (hot).'
       ],
-      word: { coptic: 'ⲥⲓⲟⲩ', phoneticAr: 'سيو', meaning: 'نجم' },
+      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أوؤم', meaning: 'يأكل' },
       soundFile: 'audio_coptic/16oo.mp3'
     },
     {
@@ -240,7 +240,7 @@
       rules: [
         'يُنطق باء شديدة تخرج بحبس الهواء ثم إطلاقه بقوة مثل حرف <strong>(P)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲡⲉ', phoneticAr: 'بي', meaning: 'سماء' },
+      word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بايوت', meaning: 'أبي' },
       soundFile: 'audio_coptic/17pee.mp3'
     },
     {
@@ -253,7 +253,7 @@
       rules: [
         'يُنطق دائماً حرف راء <strong>"ر"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲣⲱⲙⲓ', phoneticAr: 'رومي', meaning: 'إنسان' },
+      word: { coptic: 'ⲣⲏ', phoneticAr: 'ري', meaning: 'شمس' },
       soundFile: 'audio_coptic/18roo.mp3'
     },
     {
@@ -266,7 +266,7 @@
       rules: [
         'يُنطق دائماً حرف سين <strong>"س"</strong> في جميع المواضع.'
       ],
-      word: { coptic: 'ⲥⲱ', phoneticAr: 'سو', meaning: 'يشرب' },
+      word: { coptic: 'ⲡⲁⲥⲟⲛ', phoneticAr: 'باصون', meaning: 'أخي' },
       soundFile: 'audio_coptic/19sema.mp3'
     },
     {
@@ -279,7 +279,7 @@
       rules: [
         'يُنطق دائماً حرف تاء <strong>"ت"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲧⲱⲟⲩ', phoneticAr: 'توو', meaning: 'جبل' },
+      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تاماف', meaning: 'أمي' },
       soundFile: 'audio_coptic/20tav.mp3'
     },
 
@@ -296,7 +296,7 @@
         'يُنطق <strong>(و ممدودة)</strong>: إذا سبقه حرف Ⲟ (أو قصيرة) في المقطع (ⲞⲨ).',
         'يُنطق <strong>(ي)</strong>: في باقي الحالات إذا لم يسبقه (Ⲁ أو Ⲉ أو Ⲟ).'
       ],
-      word: { coptic: 'ⲩⲓⲟⲥ', phoneticAr: 'إيوس', meaning: 'ابن' },
+      word: { coptic: 'ⲩⲥⲓⲥ', phoneticAr: 'إيسيس', meaning: 'مطر' },
       soundFile: 'audio_coptic/21epselon.mp3'
     },
     {
@@ -309,7 +309,7 @@
       rules: [
         'يُنطق دائماً حرف فاء <strong>"ف"</strong> مثل حرف <strong>(F)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲫⲟⲟⲩ', phoneticAr: 'إفهو', meaning: 'اليوم / النهار' },
+      word: { coptic: 'ⲫⲉⲃ', phoneticAr: 'أفيغ', meaning: 'بطيخ' },
       soundFile: 'audio_coptic/22fi.mp3'
     },
     {
@@ -324,7 +324,7 @@
         'يُنطق <strong>(ش)</strong>: في الكلمات ذات الأصل اليوناني إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).',
         'يُنطق <strong>(خ)</strong>: في الكلمات ذات الأصل اليوناني في باقي الحالات (إذا لم يأتِ بعده كسر).'
       ],
-      word: { coptic: 'ⲭⲣⲓⲥⲧⲟⲥ', phoneticAr: 'خريستوس', meaning: 'المسيح' },
+      word: { coptic: 'ⲭ̀ⲗⲓⲗ', phoneticAr: 'إخليل', meaning: 'عقد' },
       soundFile: 'audio_coptic/23ki.mp3'
     },
     {
@@ -337,7 +337,7 @@
       rules: [
         'حرف مركب يُنطق باء خفيفة وسين معاً <strong>(بـ + س = Ps)</strong> في مقطع صوتي واحد.'
       ],
-      word: { coptic: 'ⲯⲁⲗⲙⲟⲥ', phoneticAr: 'بصالموس', meaning: 'مزمور' },
+      word: { coptic: 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', phoneticAr: 'إبسيت إن كينكين', meaning: '9 دفوف' },
       soundFile: 'audio_coptic/24psi.mp3'
     },
     {
@@ -350,7 +350,7 @@
       rules: [
         'آخر الحروف المأخوذة من الأبجدية اليونانية. حرف متحرك للضم يُنطق واواً طويلة مفتوحة مشبعة ممدودة <strong>(Ō)</strong>.'
       ],
-      word: { coptic: 'ⲱⲛϧ', phoneticAr: 'أونخ', meaning: 'حياة' },
+      word: { coptic: 'ⲧⲁⲥⲱⲛⲓ', phoneticAr: 'تاسوني', meaning: 'أختي' },
       soundFile: 'audio_coptic/25oo.mp3'
     },
 
@@ -365,7 +365,7 @@
       rules: [
         'أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم، يُنطق دائماً حرف شين <strong>"ش"</strong>.'
       ],
-      word: { coptic: 'ϣⲏⲣⲓ', phoneticAr: 'شيري', meaning: 'ابن / صبي' },
+      word: { coptic: 'ϣⲁⲩ', phoneticAr: 'شاف', meaning: 'قطة' },
       soundFile: 'audio_coptic/26shay.mp3'
     },
     {
@@ -378,7 +378,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف فاء <strong>"ف"</strong>.'
       ],
-      word: { coptic: 'ϥⲱⲓ', phoneticAr: 'فوي', meaning: 'شعر (شعر الرأس)' },
+      word: { coptic: 'ϥⲱⲓ', phoneticAr: 'فوي', meaning: 'شعر' },
       soundFile: 'audio_coptic/27fay.mp3'
     },
     {
@@ -391,7 +391,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف خاء <strong>"خ"</strong>.'
       ],
-      word: { coptic: 'Ϧⲏⲧ', phoneticAr: 'خيت', meaning: 'قلب' },
+      word: { coptic: 'ϧⲏⲃⲥ', phoneticAr: 'خيبس', meaning: 'مصباح' },
       soundFile: 'audio_coptic/28khay.mp3'
     },
     {
@@ -404,7 +404,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف هاء <strong>"هـ"</strong>.'
       ],
-      word: { coptic: 'ϩⲱⲃ', phoneticAr: 'هوب', meaning: 'عمل / شيء' },
+      word: { coptic: 'ϩ̀ⲑⲟ', phoneticAr: 'إهثو', meaning: 'حصان' },
       soundFile: 'audio_coptic/29hory.mp3'
     },
     {
@@ -418,7 +418,7 @@
         'يُنطق <strong>(جـ معطشة)</strong>: إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).',
         'يُنطق <strong>(جـ غير معطشة)</strong>: مثل الجيم المصرية في باقي الحالات.'
       ],
-      word: { coptic: 'ϫⲱ', phoneticAr: 'جو', meaning: 'رأس / يقول' },
+      word: { coptic: 'ϫⲉⲙⲫⲉϩ', phoneticAr: 'جيمفيه', meaning: 'تفاح' },
       soundFile: 'audio_coptic/30ganga.mp3'
     },
 
@@ -433,7 +433,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً تاء وشين معاً <strong>(تش)</strong> مثل <strong>(Ch)</strong> في كلمة (church).'
       ],
-      word: { coptic: 'ϭⲟⲓⲥ', phoneticAr: 'تشويس', meaning: 'رب / سيد' },
+      word: { coptic: 'ϭⲁϫ', phoneticAr: 'تشاج', meaning: 'عصفور' },
       soundFile: 'audio_coptic/31chema.mp3'
     },
     {
@@ -446,7 +446,7 @@
       rules: [
         'الحرف الثاني والثلاثون، آخر حروف الأبجدية القبطية. مقطع صوتي ديموطيقي مركب يُنطق تاء متبوعة بكسرة ياء <strong>(تـ + ي = Ti)</strong>.'
       ],
-      word: { coptic: 'ϯⲙⲓ', phoneticAr: 'تيمي', meaning: 'قرية / بلدة' },
+      word: { coptic: 'ϯⲙⲓ', phoneticAr: 'تيمي', meaning: 'قرية' },
       soundFile: 'audio_coptic/32tee.mp3'
     }
   ];
@@ -585,30 +585,34 @@
           <!-- بطاقة النبذة عن الحرف -->
           <div class="letter-overview-card" ${letterCardAttr}>
             <div class="letter-overview-header">
-              <div class="letter-glyph-box" ${glyphBoxAttr}>
-                <span class="letter-glyph-val" ${glyphValAttr}>${escapeHtml(pair)}</span>
-              </div>
-
-              <div class="letter-meta-col">
-                <div class="letter-meta-top">
-                  <span class="letter-name-title">حرف ${escapeHtml(item.name)}</span>
-                  <span class="coptic-badge ${badgeClass}">${escapeHtml(typeBadge)}</span>
-                  ${hasMulti && multiText ? `<span class="coptic-badge badge-multi">${escapeHtml(multiText)}</span>` : ''}
+              <div class="letter-header-top-row">
+                <div class="letter-glyph-box" ${glyphBoxAttr}>
+                  <span class="letter-glyph-val" ${glyphValAttr}>${escapeHtml(pair)}</span>
                 </div>
-                <div class="letter-pron-preview">
-                  <span>النطق بالعربي:</span>
-                  <span class="letter-pron-val" ${pronValAttr}>« ${escapeHtml(pron)} »</span>
+
+                <div class="letter-meta-col">
+                  <div class="letter-title-row">
+                    <span class="letter-name-title">حرف ${escapeHtml(item.name)}</span>
+                  </div>
+                  <div class="letter-badges-row">
+                    <span class="coptic-badge ${badgeClass}">${escapeHtml(typeBadge)}</span>
+                    ${hasMulti && multiText ? `<span class="coptic-badge badge-multi">${escapeHtml(multiText)}</span>` : ''}
+                  </div>
+                  <div class="letter-pron-preview">
+                    <span class="letter-pron-label">النطق بالعربي:</span>
+                    <span class="letter-pron-val" ${pronValAttr}>« ${escapeHtml(pron)} »</span>
+                  </div>
                 </div>
               </div>
 
               <div class="letter-audio-action">
                 <button type="button" class="btn-listen-letter" aria-label="استمع لنطق الحرف" title="استمع لنطق الحرف" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('${soundFile}', '${item.name}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('${soundFile}', '${item.name}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio('${soundFile}', '${item.name}'); }">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                     <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
                   </svg>
-                  <span>استمع للحرف</span>
+                  <span>استمع لنطق الحرف</span>
                 </button>
               </div>
             </div>

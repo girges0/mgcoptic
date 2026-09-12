@@ -438,6 +438,7 @@ if(logoutBtn){
 
 function switchAdminTab(tab, updateUrl = true) {
   if (!tab) return;
+  if (tab === 'grammar') tab = 'competitions';
   if ((tab === 'users' || tab === 'notifications') && window.currentAdminRole !== 'super_admin') {
     tab = 'articles';
   }
@@ -541,7 +542,7 @@ async function refreshStats(){
       sb.from('quiz_questions').select('*',{count:'exact',head:true}),
     ]);
     const stats = [
-      ['المقالات', a.count], ['الحروف', l.count], ['المفردات', v.count], ['أقسام القواعد', g.count], ['أسئلة الاختبار', q.count]
+      ['المقالات', a.count], ['الحروف', l.count], ['المفردات', v.count], ['المسابقات', 'قريباً'], ['أسئلة الاختبار', q.count]
     ];
     statsRow.innerHTML = stats.map(([lbl,num])=>
       `<div class="stat-card"><div class="num">${num ?? '—'}</div><div class="lbl">${lbl}</div></div>`).join('');
@@ -2651,8 +2652,8 @@ async function loadUsers(isSilent = false) {
       sb.from('user_progress').select('*'),
       sb.from('user_lesson_progress').select('user_id, status, lesson_id, score, updated_at'),
       sb.from('levels').select('id, title, order_index').order('order_index'),
-      sb.from('units').select('id, level_id, order_index').order('order_index'),
-      sb.from('lessons').select('id, unit_id, order_index').order('order_index')
+      sb.from('units').select('id, level_id, title, order_index').order('order_index'),
+      sb.from('lessons').select('id, unit_id, title, xp_reward, order_index').order('order_index')
     ]);
 
     if (uRes.error) throw uRes.error;
@@ -2666,18 +2667,36 @@ async function loadUsers(isSilent = false) {
 
     // ربط الوحدات والدروس بالمستويات الفعلية
     const unitToLevel = {};
+    const unitMap = {};
     dbUnits.forEach(u => {
       unitToLevel[u.id] = u.level_id || (dbLevels[0] ? dbLevels[0].id : 1);
+      unitMap[u.id] = u;
     });
 
+    const levelMap = {};
     const levelLessonsMap = {};
-    dbLevels.forEach(l => { levelLessonsMap[l.id] = []; });
+    dbLevels.forEach(l => {
+      levelMap[l.id] = l;
+      levelLessonsMap[l.id] = [];
+    });
     if (Object.keys(levelLessonsMap).length === 0) levelLessonsMap[1] = [];
 
+    window.adminLessonsMetaMap = {};
     dbLessons.forEach(les => {
       const lvlId = unitToLevel[les.unit_id] || (dbLevels[0] ? dbLevels[0].id : 1);
       if (!levelLessonsMap[lvlId]) levelLessonsMap[lvlId] = [];
       levelLessonsMap[lvlId].push(les.id);
+
+      const u = unitMap[les.unit_id];
+      const l = levelMap[lvlId];
+      window.adminLessonsMetaMap[les.id] = {
+        id: les.id,
+        title: les.title || `درس #${les.order_index || les.id}`,
+        order_index: les.order_index || 1,
+        unit_id: les.unit_id,
+        unit_title: u ? (u.title || `الوحدة ${u.order_index || 1}`) : '',
+        level_title: l ? (l.title || `المستوى ${l.order_index || 1}`) : ''
+      };
     });
 
     const progMap = {};
@@ -3082,26 +3101,8 @@ function viewStudentDetails(userId) {
   isStudentPasswordVisible = false;
   renderStudentPasswordUI(student);
 
-  // ملء قائمة الدروس المكتملة
-  const lessonsListEl = document.getElementById('m-student-lessons-list');
-  if (lessonsListEl) {
-    const completed = (student.lessons_detail || []).filter(l => l.status === 'completed');
-    if (completed.length === 0) {
-      lessonsListEl.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; gap:6px; color:#746B6F; font-size:0.88rem; padding:12px 0;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>لم يتم إكمال أي دروس حتى الآن</span></div>';
-    } else {
-      lessonsListEl.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:6px;">
-          ${completed.map((l, idx) => `
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:#FAF6EE; border:1px solid #E7DCC8; border-radius:8px; font-size:0.86rem;">
-              <span style="font-weight:800; color:#2E2018; display:flex; align-items:center; gap:6px;">${ICONS_SVG.book} درس #${l.lesson_id}</span>
-              <span style="color:#15803D; font-weight:800;">النتيجة: ${l.score || 100}%</span>
-              <span style="color:#8C857E; font-size:0.78rem;">${l.updated_at ? new Date(l.updated_at).toLocaleDateString('ar-EG') : '-'}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-  }
+  // ملء وتدقيق سجل إنجاز الدروس والمستويات مع كاشف التلاعب والثغرات (Anti-Cheat)
+  renderStudentLessonsAudit(student);
 
   // ملء وتحديث حالة الحظر في نافذة التفاصيل
   const isBanned = isStudentCurrentlyBanned(student);
@@ -3298,8 +3299,313 @@ function closeStudentModal() {
   const modal = document.getElementById('modal-student-details');
   if (modal) modal.style.display = 'none';
   activeSelectedStudent = null;
+  currentAuditStudent = null;
 }
 window.closeStudentModal = closeStudentModal;
+
+// ============================================================================
+// 🛡️ نظام تدقيق سجل الدروس وفحص النزاهة وكشف الثغرات والتلاعب (Anti-Cheat)
+// ============================================================================
+let currentAuditStudent = null;
+
+function formatAuditDuration(seconds) {
+  if (seconds === null || seconds === undefined) return 'أول درس مسجل';
+  if (seconds < 0) return 'غير محدد';
+  if (seconds === 0) return '0 ثانية (تزامن فوري)';
+  if (seconds < 60) return `${seconds} ثانية`;
+  const mins = Math.floor(seconds / 60);
+  const remSec = seconds % 60;
+  if (mins < 60) return remSec > 0 ? `${mins} دقيقة و ${remSec} ثانية` : `${mins} دقيقة`;
+  const hours = Math.floor(mins / 60);
+  const remMin = mins % 60;
+  return `${hours} ساعة و ${remMin} دقيقة`;
+}
+
+function renderStudentLessonsAudit(student = null) {
+  if (student) currentAuditStudent = student;
+  const s = currentAuditStudent;
+  if (!s) return;
+
+  const lessonsListEl = document.getElementById('m-student-lessons-list');
+  const antiCheatBadgeEl = document.getElementById('m-student-anti-cheat-badge');
+  const countEl = document.getElementById('m-audit-lessons-count');
+  const avgEl = document.getElementById('m-audit-avg-score');
+  const speedEl = document.getElementById('m-audit-speed-stat');
+
+  if (!lessonsListEl) return;
+
+  const rawList = Array.isArray(s.lessons_detail) ? [...s.lessons_detail] : [];
+  if (rawList.length === 0) {
+    lessonsListEl.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#746B6F; font-size:0.9rem; padding:24px 0;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:0.6;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>لا توجد أي دروس مسجلة في سجل هذا الطالب حتى الآن</span>
+      </div>
+    `;
+    if (antiCheatBadgeEl) antiCheatBadgeEl.innerHTML = '<span style="color:#6B7280; font-size:0.8rem; font-weight:700;">لا يوجد نشاط</span>';
+    if (countEl) countEl.textContent = '0';
+    if (avgEl) avgEl.textContent = '0%';
+    if (speedEl) speedEl.textContent = '-';
+    window.__cachedEnrichedAuditList = [];
+    return;
+  }
+
+  // 1. فرز الدروس زمنياً تصاعدياً (من الأقدم للأحدث) لفحص الفواصل الزمنية وكشف القفز
+  const sortedAsc = [...rawList].sort((a, b) => {
+    const timeA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+    const timeB = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+    return timeA - timeB;
+  });
+
+  const completedIdsSoFar = new Set();
+  let totalAnomalies = 0;
+  let rapidCount = 0;
+  let skippedCount = 0;
+
+  const enrichedList = sortedAsc.map((l, index) => {
+    const meta = (window.adminLessonsMetaMap && window.adminLessonsMetaMap[l.lesson_id]) || {
+      id: l.lesson_id,
+      title: `درس #${l.lesson_id}`,
+      unit_title: '',
+      level_title: ''
+    };
+
+    const d = l.updated_at ? new Date(l.updated_at) : null;
+    const prev = index > 0 ? sortedAsc[index - 1] : null;
+    const prevD = prev && prev.updated_at ? new Date(prev.updated_at) : null;
+    const deltaSec = (d && prevD) ? Math.max(0, Math.round((d.getTime() - prevD.getTime()) / 1000)) : null;
+
+    // فحص سرعة الإنجاز الخارقة (< 25 ثانية)
+    const isRapid = (deltaSec !== null && deltaSec < 25);
+    const isInstantDup = (deltaSec !== null && deltaSec === 0);
+
+    // فحص قفز الدروس
+    let isSkipped = false;
+    if (Number(l.lesson_id) > 15 && completedIdsSoFar.size < 5) {
+      isSkipped = true;
+    }
+
+    if (l.status === 'completed') {
+      completedIdsSoFar.add(String(l.lesson_id));
+    }
+
+    const anomalies = [];
+    if (isRapid) {
+      anomalies.push(`تم إكمال الدرس في غضون ${deltaSec} ثانية فقط (سرعة خارقة مريبة تشير لتخطي آلي أو سكربت)!`);
+      rapidCount++;
+      totalAnomalies++;
+    }
+    if (isInstantDup) {
+      anomalies.push(`تم تسجيل الدرس في نفس لحظة الدرس السابق (0 ثانية - شبهة تكرار متزامن)!`);
+    }
+    if (isSkipped) {
+      anomalies.push(`قفز مباشر لدرس متقدم #${l.lesson_id} مع وجود ${completedIdsSoFar.size} دروس فقط مكتملة قبله!`);
+      skippedCount++;
+      totalAnomalies++;
+    }
+
+    return {
+      ...l,
+      meta,
+      dateObj: d,
+      deltaSec,
+      isRapid,
+      isInstantDup,
+      isSkipped,
+      anomalies
+    };
+  });
+
+  // تحديث الإحصائيات
+  const completedItems = enrichedList.filter(l => l.status === 'completed');
+  if (countEl) countEl.textContent = completedItems.length + ' / ' + enrichedList.length;
+  const avgScoreVal = completedItems.length > 0 
+    ? Math.round(completedItems.reduce((acc, c) => acc + (Number(c.score) || 100), 0) / completedItems.length) 
+    : 0;
+  if (avgEl) avgEl.textContent = avgScoreVal + '%';
+
+  if (speedEl) {
+    if (rapidCount > 0) {
+      speedEl.innerHTML = `<span style="color:#DC2626;">⚡ ${rapidCount} دروس سريعة جداً</span>`;
+    } else {
+      speedEl.innerHTML = `<span style="color:#059669;">✅ فترات طبيعية</span>`;
+    }
+  }
+
+  // تحديث شارة كاشف التلاعب والنزاهة
+  if (antiCheatBadgeEl) {
+    if (totalAnomalies > 0) {
+      antiCheatBadgeEl.innerHTML = `
+        <span style="background:#FEE2E2; color:#991B1B; border:1.5px solid #F87171; border-radius:20px; padding:4px 12px; font-weight:900; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(239,68,68,0.2);">
+          <span style="display:inline-block; width:8px; height:8px; background:#DC2626; border-radius:50%; box-shadow:0 0 6px #DC2626;"></span>
+          <span>🚨 رصد ${totalAnomalies} مؤشر شبهة وتخطي!</span>
+        </span>
+      `;
+    } else {
+      antiCheatBadgeEl.innerHTML = `
+        <span style="background:#ECFDF5; color:#065F46; border:1.5px solid #6EE7B7; border-radius:20px; padding:4px 12px; font-weight:900; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px;">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>🛡️ سجل طبيعي وموثوق</span>
+        </span>
+      `;
+    }
+  }
+
+  window.__cachedEnrichedAuditList = enrichedList;
+  filterStudentAuditLogLive();
+}
+window.renderStudentLessonsAudit = renderStudentLessonsAudit;
+
+function filterStudentAuditLogLive() {
+  const lessonsListEl = document.getElementById('m-student-lessons-list');
+  if (!lessonsListEl || !window.__cachedEnrichedAuditList) return;
+
+  const query = (document.getElementById('m-audit-search-input')?.value || '').trim().toLowerCase();
+  const filterType = document.getElementById('m-audit-filter-select')?.value || 'all';
+
+  let list = [...window.__cachedEnrichedAuditList];
+
+  if (filterType === 'suspicious') {
+    list = list.filter(l => l.anomalies && l.anomalies.length > 0);
+  } else if (filterType === 'perfect') {
+    list = list.filter(l => Number(l.score) === 100);
+  } else if (filterType === 'imperfect') {
+    list = list.filter(l => Number(l.score) < 100);
+  }
+
+  if (query) {
+    list = list.filter(l => {
+      const lesId = String(l.lesson_id);
+      const title = String(l.meta?.title || '').toLowerCase();
+      const unit = String(l.meta?.unit_title || '').toLowerCase();
+      const dateStr = l.dateObj ? l.dateObj.toLocaleDateString('ar-EG') : '';
+      return lesId.includes(query) || title.includes(query) || unit.includes(query) || dateStr.includes(query);
+    });
+  }
+
+  // عرض الدروس من الأحدث للأقدم
+  const displayList = [...list].reverse();
+
+  if (displayList.length === 0) {
+    lessonsListEl.innerHTML = `
+      <div style="text-align:center; padding:24px 0; color:#8C857E; font-size:0.88rem; font-weight:700;">
+        لا توجد دروس تطابق خيارات البحث أو التصفية الحالية
+      </div>
+    `;
+    return;
+  }
+
+  lessonsListEl.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${displayList.map(l => {
+        const isSuspicious = l.anomalies && l.anomalies.length > 0;
+        const d = l.dateObj;
+        const dateStr = d ? d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+        const timeStr = d ? d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }) : '';
+        const score = Number(l.score) || 100;
+        const scoreColor = score >= 90 ? '#15803D' : (score >= 70 ? '#D97706' : '#DC2626');
+        const scoreBg = score >= 90 ? '#DCFCE7' : (score >= 70 ? '#FEF3C7' : '#FEE2E2');
+
+        return `
+          <div style="background:${isSuspicious ? '#FFF5F5' : '#FAF7F0'}; border:1.5px solid ${isSuspicious ? '#FECACA' : '#EAE0D0'}; border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:${isSuspicious ? '#FEE2E2' : '#E8DFD0'}; color:${isSuspicious ? '#991B1B' : '#4A3B32'}; font-weight:900; font-size:0.8rem; padding:2px 8px; border-radius:6px;">
+                  درس #${l.lesson_id}
+                </span>
+                <span style="font-weight:900; color:#2E2018; font-size:0.92rem;">
+                  ${esc(l.meta.title || ('درس رقم ' + l.lesson_id))}
+                </span>
+                ${l.meta.unit_title ? `<span style="font-size:0.75rem; color:#8C857E; background:#FFF; border:1px solid #E2D5C3; padding:1px 7px; border-radius:10px;">${esc(l.meta.unit_title)}</span>` : ''}
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:${scoreBg}; color:${scoreColor}; font-weight:900; font-size:0.82rem; padding:3px 10px; border-radius:20px; border:1px solid ${scoreColor}33;">
+                  النتيجة: ${score}%
+                </span>
+                <button type="button" onclick="deleteSingleStudentLesson('${currentAuditStudent.id}', ${l.lesson_id})" title="حذف وإلغاء تسجيل هذا الدرس للطالب" style="background:#FFF; border:1px solid #E2D5C3; color:#DC2626; border-radius:6px; padding:3px 8px; font-size:0.75rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  <span>شطب</span>
+                </button>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.78rem; color:#6B7280; border-top:1px dashed ${isSuspicious ? '#FED7D7' : '#EAE0D0'}; padding-top:6px;">
+              <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span>📅 التاريخ: <b>${dateStr}</b></span>
+                <span>⏰ الوقت الدقيق: <b style="color:#2E2018;">${timeStr}</b></span>
+              </div>
+              <div>
+                <span>الفارق الزمني عن سابقه: </span>
+                ${l.isRapid 
+                  ? `<b style="color:#DC2626; background:#FEE2E2; padding:1px 6px; border-radius:4px;">⚡ ${l.deltaSec} ثانية فقط (سرعة خارقة مشبوهة!)</b>`
+                  : (l.isInstantDup 
+                      ? `<b style="color:#DC2626; background:#FEE2E2; padding:1px 6px; border-radius:4px;">⚡ 0 ثانية (تكرار متزامن مريب!)</b>`
+                      : `<b style="color:#059669;">${formatAuditDuration(l.deltaSec)}</b>`
+                    )
+                }
+              </div>
+            </div>
+
+            ${isSuspicious ? `
+              <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:6px; padding:6px 10px; font-size:0.8rem; color:#991B1B; font-weight:800; display:flex; flex-direction:column; gap:3px;">
+                ${l.anomalies.map(a => `<div style="display:flex; align-items:center; gap:6px;"><span>⚠️</span><span>${a}</span></div>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+window.filterStudentAuditLogLive = filterStudentAuditLogLive;
+
+async function deleteSingleStudentLesson(userId, lessonId) {
+  const c = await mgConfirm(
+    'شطب تسجيل الدرس',
+    `هل تريد بالتأكيد شطب وإلغاء تسجيل درس #${lessonId} لهذا الطالب؟ سيتم حذفه من سجل إنجازه وتحديث إحصائياته ومستواه فورياً.`,
+    'warning'
+  );
+  if (!c) return;
+
+  Swal.fire({
+    title: 'جارٍ شطب الدرس...',
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  const { error } = await sb
+    .from('user_lesson_progress')
+    .delete()
+    .eq('user_id', userId)
+    .eq('lesson_id', lessonId);
+
+  Swal.close();
+
+  if (error) {
+    toast('تعذر شطب الدرس: ' + error.message, true);
+    return;
+  }
+
+  // تحديث الذاكرة الحية للمشرف
+  const student = (allLoadedStudents || []).find(s => s.id === userId);
+  if (student && student.lessons_detail) {
+    student.lessons_detail = student.lessons_detail.filter(l => Number(l.lesson_id) !== Number(lessonId));
+    student.completed_lessons = student.lessons_detail.filter(l => l.status === 'completed').length;
+  }
+  if (activeSelectedStudent && activeSelectedStudent.id === userId) {
+    activeSelectedStudent.lessons_detail = activeSelectedStudent.lessons_detail.filter(l => Number(l.lesson_id) !== Number(lessonId));
+    activeSelectedStudent.completed_lessons = activeSelectedStudent.lessons_detail.filter(l => l.status === 'completed').length;
+    const countEl = document.getElementById('m-student-lessons-count');
+    if (countEl) countEl.textContent = activeSelectedStudent.completed_lessons + ' درس';
+  }
+
+  updateStudentsSummaryStats(allLoadedStudents);
+  filterStudentsTable();
+  renderStudentLessonsAudit(activeSelectedStudent || student);
+  toast(`تم شطب وإلغاء درس #${lessonId} بنجاح`);
+}
+window.deleteSingleStudentLesson = deleteSingleStudentLesson;
 
 function copyStudentId() {
   if (!activeSelectedStudent) return;
@@ -3416,6 +3722,350 @@ async function adjustUserXP(userId, currentPoints = 0) {
   toast(`تم تحديث رصيد الـ XP إلى ${newXp} نقطة بنجاح`);
 }
 window.adjustUserXP = adjustUserXP;
+
+// ============================================================================
+// 🎁 إهداء نقاط XP أو قلوب للطالب مع رسالة احترافية فائقة وتحديث لحظي
+// ============================================================================
+async function openGiftStudentModal(studentId = null) {
+  const student = studentId 
+    ? ((allLoadedStudents || []).find(s => String(s.id) === String(studentId)) || activeSelectedStudent)
+    : activeSelectedStudent;
+
+  if (!student) {
+    toast('يرجى اختيار الطالب أولاً', true);
+    return;
+  }
+
+  const studentName = student.full_name || 'الطالب';
+  const curXp = student.points || 0;
+  const curHearts = typeof student.hearts === 'number' ? student.hearts : 5;
+
+  const GIFT_TEMPLATES = {
+    excellence: {
+      label: '🌟 مكافأة تميز وتفوق استثنائي',
+      title: '🌟 مكافأة تميز وتفوق استثنائي',
+      msg: `عزيزي الطالب ${studentName}،\nيسر إدارة منصة MG Coptic أن تقدم لك هذه المكافأة التقديرية تقديراً لجهدك المتميز وتفوقك المستمر في دراسة لغتنا القبطية العريقة. فخورون جداً بما تحققه من إنجاز وتقدم، ونتمنى لك دوام التألق والبركة في مسيرتك! ✨`
+    },
+    encouragement: {
+      label: '💪 هدية تشجيعية لمواصلة التعلم',
+      title: '💪 هدية تشجيعية لمواصلة التعلم',
+      msg: `عزيزي الطالب ${studentName}،\nرسالة محبة وتشجيع خاصة من أسرة منصة MG Coptic: مسيرتك في التعلم ملهمة لنا جميعاً! نرسل لك هذه الهدية لتكون عوناً ودافعاً لك لإكمال دروسك القادمة ومواصلة التدريب بكل حماس وشغف. 🚀`
+    },
+    perseverance: {
+      label: '🏆 تكريم الالتزام والمثابرة اليومية',
+      title: '🏆 تكريم الالتزام والمثابرة اليومية',
+      msg: `عزيزي الطالب ${studentName}،\nتحية تقدير واعتزاز خاصة من إدارة المنصة على التزامك ومثابرتك اليومية الرائعة. اجتهادك المستمر يثمر دائماً، وهذه الهدية تعبير بسيط عن اعتزازنا بجهودك وهمتك العالية! 🥇`
+    },
+    hearts_support: {
+      label: '❤️ شحن قلوب ودعم إضافي للتدريب',
+      title: '❤️ دعم إضافي بالقلوب لتخطي الصعاب',
+      msg: `عزيزي الطالب ${studentName}،\nلا تدع صعوبة التمارين تثبط عزيمتك! أرسلنا لك دعماً خاصاً من القلوب ورصيد التعلم لتواصل تدريباتك وتصحح إجاباتك دون أي توقف. طريق النجاح يحتاج الصبر، وكلنا ثقة في قدرتك! 🤍`
+    },
+    milestone: {
+      label: '🎉 مكافأة اجتياز مرحلة تعليمية بنجاح',
+      title: '🎉 مكافأة اجتياز مرحلة تعليمية بنجاح',
+      msg: `عزيزي الطالب ${studentName}،\nمبارك وصولك إلى هذه المرحلة المتقدمة! تثميناً لإصرارك واجتيازك التحديات بجدارة، يسعدنا تقديم هذه المكافأة الحصرية لك. استمر في الصعود نحو القمة وتحقيق أهدافك! 🎯`
+    },
+    custom: {
+      label: '🎁 إهداء مخصص من المشرف',
+      title: '🎁 هدية خاصة من إدارة المنصة',
+      msg: `عزيزي الطالب ${studentName}،\nيسر إدارة منصة MG Coptic أن تهديكم هذه المكافأة التقديرية، متمنين لكم كل التوفيق والتقدم والبركة في مسيرتكم التعليمية المباركة.`
+    }
+  };
+
+  const defaultOccasion = 'excellence';
+  const initialData = GIFT_TEMPLATES[defaultOccasion];
+
+  const modalHtml = `
+    <div style="direction:rtl; text-align:right; font-family:'Cairo',sans-serif; color:#2E2018;">
+      <!-- بطاقة معلومات الطالب والرصيد الحالي -->
+      <div style="background:linear-gradient(135deg, #FFF7ED 0%, #FEF2F2 100%); border:1.5px solid #FED7AA; border-radius:14px; padding:14px 18px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:44px; height:44px; border-radius:50%; background:#10B981; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.3rem; font-weight:900; box-shadow:0 4px 10px rgba(16,185,129,0.3);">
+            🎁
+          </div>
+          <div>
+            <div style="font-size:1.05rem; font-weight:900; color:#1F2937;">${studentName}</div>
+            <div style="font-size:0.8rem; color:#6B7280;">${student.email || ''}</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="background:#FEF3C7; color:#92400E; padding:4px 10px; border-radius:20px; font-size:0.85rem; font-weight:800; display:inline-flex; align-items:center; gap:5px; border:1px solid #FDE68A;">
+            ⚡ <b>${curXp.toLocaleString()}</b> XP
+          </span>
+          <span style="background:#FFE4E6; color:#9F1239; padding:4px 10px; border-radius:20px; font-size:0.85rem; font-weight:800; display:inline-flex; align-items:center; gap:5px; border:1px solid #FECDD3;">
+            ❤️ <b>${curHearts}</b> / 5
+          </span>
+        </div>
+      </div>
+
+      <!-- تحديد كميات الهدية -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+        <!-- بطاقة XP -->
+        <div style="background:#FFFBEB; border:1.5px solid #FCD34D; border-radius:12px; padding:12px;">
+          <label style="display:block; font-size:0.88rem; font-weight:900; color:#92400E; margin-bottom:6px;">
+            ⚡ إهداء نقاط XP:
+          </label>
+          <input type="number" id="swal-gift-xp" class="swal2-input" value="100" min="0" step="10" 
+            style="margin:0 0 8px 0; width:100%; box-sizing:border-box; height:42px; font-size:1.05rem; font-weight:800; text-align:center; color:#92400E; border:2px solid #F59E0B; border-radius:8px;">
+          <div style="display:flex; gap:4px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='0'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">0</button>
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='25'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">+25</button>
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='50'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">+50</button>
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='100'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">+100</button>
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='250'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">+250</button>
+            <button type="button" onclick="document.getElementById('swal-gift-xp').value='500'" style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#92400E;">+500</button>
+          </div>
+        </div>
+
+        <!-- بطاقة القلوب -->
+        <div style="background:#FFF1F2; border:1.5px solid #FDA4AF; border-radius:12px; padding:12px;">
+          <label style="display:block; font-size:0.88rem; font-weight:900; color:#BE123C; margin-bottom:6px;">
+            ❤️ إهداء قلوب إضافية:
+          </label>
+          <input type="number" id="swal-gift-hearts" class="swal2-input" value="2" min="0" max="5" step="1" 
+            style="margin:0 0 8px 0; width:100%; box-sizing:border-box; height:42px; font-size:1.05rem; font-weight:800; text-align:center; color:#BE123C; border:2px solid #F43F5E; border-radius:8px;">
+          <div style="display:flex; gap:4px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" onclick="document.getElementById('swal-gift-hearts').value='0'" style="background:#FFE4E6; border:1px solid #FDA4AF; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#BE123C;">0</button>
+            <button type="button" onclick="document.getElementById('swal-gift-hearts').value='1'" style="background:#FFE4E6; border:1px solid #FDA4AF; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#BE123C;">+1</button>
+            <button type="button" onclick="document.getElementById('swal-gift-hearts').value='2'" style="background:#FFE4E6; border:1px solid #FDA4AF; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#BE123C;">+2</button>
+            <button type="button" onclick="document.getElementById('swal-gift-hearts').value='3'" style="background:#FFE4E6; border:1px solid #FDA4AF; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#BE123C;">+3</button>
+            <button type="button" onclick="document.getElementById('swal-gift-hearts').value='5'" style="background:#FFE4E6; border:1px solid #FDA4AF; border-radius:6px; padding:2px 7px; font-size:0.75rem; font-weight:800; cursor:pointer; color:#BE123C;">+5 كاملة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- اختيار المناسبة -->
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.9rem; font-weight:800; color:#374151; margin-bottom:6px;">
+          🎯 مناسبة الإهداء (يحدد نص الرسالة تلقائياً):
+        </label>
+        <select id="swal-gift-occasion" class="swal2-select" style="margin:0; width:100%; box-sizing:border-box; height:42px; font-size:0.92rem; font-weight:700; border-radius:8px; border:1.5px solid #D1D5DB; padding:6px 12px; background:#F9FAFB;">
+          ${Object.entries(GIFT_TEMPLATES).map(([key, item]) => `
+            <option value="${key}" ${key === defaultOccasion ? 'selected' : ''}>${item.label}</option>
+          `).join('')}
+        </select>
+      </div>
+
+      <!-- عنوان الهدية -->
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.9rem; font-weight:800; color:#374151; margin-bottom:6px;">
+          🏷️ عنوان الهدية في الإشعار:
+        </label>
+        <input type="text" id="swal-gift-title" class="swal2-input" value="${initialData.title}" 
+          style="margin:0; width:100%; box-sizing:border-box; height:42px; font-size:0.95rem; font-weight:800; border-radius:8px; border:1.5px solid #D1D5DB; padding:0 12px;">
+      </div>
+
+      <!-- الرسالة التحفيزية الاحترافية -->
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:0.9rem; font-weight:800; color:#374151; margin-bottom:6px;">
+          ✉️ نص رسالة الإهداء والتشجيع للطالب (تظهر له في نافذة احتفالية راقية):
+        </label>
+        <textarea id="swal-gift-msg" rows="4" 
+          style="width:100%; box-sizing:border-box; border-radius:8px; border:1.5px solid #D1D5DB; padding:10px 12px; font-size:0.92rem; font-family:'Cairo',sans-serif; line-height:1.6; resize:vertical; background:#FFFFFF; color:#1F2937; font-weight:600;">${initialData.msg}</textarea>
+      </div>
+
+      <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:10px 14px; font-size:0.83rem; color:#166534; font-weight:700; display:flex; align-items:center; gap:8px;">
+        <span style="font-size:1.1rem;">🔔</span>
+        <span>سيتم تحديث رصيد الطالب فوراً في قاعدة البيانات وإرسال إشعار احتفالي له مع مؤثرات صوتية وبصرية!</span>
+      </div>
+    </div>
+  `;
+
+  const result = await Swal.fire({
+    title: '🎁 إهداء XP أو قلوب للطالب',
+    html: modalHtml,
+    width: '580px',
+    showCancelButton: true,
+    confirmButtonText: 'إرسال الهدية الآن 🎁',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#059669',
+    cancelButtonColor: '#6B7280',
+    didOpen: () => {
+      const occasionSelect = document.getElementById('swal-gift-occasion');
+      const titleInput = document.getElementById('swal-gift-title');
+      const msgTextarea = document.getElementById('swal-gift-msg');
+      if (occasionSelect && titleInput && msgTextarea) {
+        occasionSelect.addEventListener('change', () => {
+          const selected = GIFT_TEMPLATES[occasionSelect.value];
+          if (selected) {
+            titleInput.value = selected.title;
+            msgTextarea.value = selected.msg;
+          }
+        });
+      }
+    },
+    preConfirm: () => {
+      const xpVal = parseInt(document.getElementById('swal-gift-xp')?.value, 10) || 0;
+      const heartsVal = parseInt(document.getElementById('swal-gift-hearts')?.value, 10) || 0;
+      const titleVal = document.getElementById('swal-gift-title')?.value.trim();
+      const msgVal = document.getElementById('swal-gift-msg')?.value.trim();
+
+      if (xpVal <= 0 && heartsVal <= 0) {
+        Swal.showValidationMessage('يرجى إدخال عدد نقاط XP أو قلوب أكبر من الصفر على الأقل!');
+        return false;
+      }
+      if (!titleVal) {
+        Swal.showValidationMessage('يرجى كتابة عنوان للهدية!');
+        return false;
+      }
+      if (!msgVal) {
+        Swal.showValidationMessage('يرجى كتابة نص رسالة الإهداء!');
+        return false;
+      }
+
+      return { xp: xpVal, hearts: heartsVal, title: titleVal, message: msgVal };
+    }
+  });
+
+  if (!result.isConfirmed || !result.value) return;
+
+  const { xp, hearts, title, message } = result.value;
+
+  // إظهار لودنج التحميل أثناء المعالجة
+  Swal.fire({
+    title: 'جارٍ إرسال الهدية وتحديث الرصيد...',
+    html: `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:10px 0;">
+        <div class="spinner" style="width:38px; height:38px; border-width:3px;"></div>
+        <p style="margin:0; font-weight:800; color:#2E2018; font-size:1rem;">يتم اعتماد الهدية وإيداعها في حساب الطالب فورياً...</p>
+      </div>
+    `,
+    allowOutsideClick: false,
+    showConfirmButton: false
+  });
+
+  try {
+    const userId = student.id;
+    // 1. جلب التقدم الحالي
+    const { data: curProg } = await sb.from('user_progress').select('*').eq('user_id', userId).maybeSingle();
+    const curPoints = curProg?.points || 0;
+    const curH = typeof curProg?.hearts === 'number' ? curProg.hearts : 5;
+    const newPoints = Math.max(0, curPoints + xp);
+    const newHearts = Math.min(5, Math.max(0, curH + hearts));
+
+    let updateErr;
+    if (curProg) {
+      const res = await sb.from('user_progress').update({ points: newPoints, hearts: newHearts }).eq('user_id', userId);
+      updateErr = res.error;
+    } else {
+      const res = await sb.from('user_progress').insert({ user_id: userId, points: newPoints, hearts: newHearts, streak_days: 1 });
+      updateErr = res.error;
+    }
+
+    if (updateErr) {
+      throw updateErr;
+    }
+
+    // 2. إنشاء إشعار في notification_events
+    const giftId = 'gift_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const deepLink = `index.html?gift_id=${giftId}&xp=${xp}&hearts=${hearts}&title=${encodeURIComponent(title)}`;
+    
+    try {
+      await sb.from('notification_events').insert({
+        event_type: 'admin_broadcast',
+        target_user_id: userId,
+        title: title,
+        body: message,
+        deep_link: deepLink,
+        status: 'pending'
+      });
+    } catch (errNotif) {
+      console.warn('[Gift Notification Event Error]', errNotif);
+    }
+
+    // 3. إرسال Push Notification
+    const anonKey = window.SUPABASE_ANON_KEY || window.SB_ANON_KEY || SUPABASE_ANON_KEY;
+    fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
+      }
+    }).catch(e => console.log('[Gift FCM Dispatch]', e));
+
+    // 4. البث المباشر الفوري للعميل
+    broadcastAdminActionToClient(userId, 'gift', {
+      giftId,
+      xp,
+      hearts,
+      title,
+      message,
+      newPoints,
+      newHearts,
+      sender: 'إدارة المنصة'
+    });
+
+    // 5. المزامنة المحلية إذا كان المتصفح مسجل بنفس حساب الطالب
+    try {
+      const localUserRaw = localStorage.getItem('mg_coptic_user');
+      if (localUserRaw) {
+        const u = JSON.parse(localUserRaw);
+        if (u && u.id === userId) {
+          const progKey = `mg_coptic_progress_${userId}`;
+          const curLocal = JSON.parse(localStorage.getItem(progKey) || localStorage.getItem('mg_coptic_progress') || '{}');
+          curLocal.points = newPoints;
+          curLocal.total_points = newPoints;
+          curLocal.hearts = newHearts;
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(curLocal));
+          localStorage.setItem(progKey, JSON.stringify(curLocal));
+        }
+      }
+      localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
+    } catch (_) {}
+
+    // 6. تحديث الذاكرة المحلية للمشرف والواجهة
+    const sInTable = (allLoadedStudents || []).find(s => s.id === userId);
+    if (sInTable) {
+      sInTable.points = newPoints;
+      sInTable.hearts = newHearts;
+    }
+    if (activeSelectedStudent && activeSelectedStudent.id === userId) {
+      activeSelectedStudent.points = newPoints;
+      activeSelectedStudent.hearts = newHearts;
+      const xpEl = document.getElementById('m-student-xp');
+      if (xpEl) xpEl.textContent = newPoints.toLocaleString() + ' XP';
+      const heartsEl = document.getElementById('m-student-hearts');
+      if (heartsEl) heartsEl.innerHTML = `${ICONS_SVG.heart} <span>${newHearts}</span>`;
+    }
+    updateStudentsSummaryStats(allLoadedStudents);
+    filterStudentsTable();
+
+    // 7. رسالة نجاح احتفالية للمشرف
+    Swal.fire({
+      icon: 'success',
+      title: 'تم إرسال الهدية بنجاح! 🎁',
+      html: `
+        <div style="direction:rtl; text-align:center; font-family:'Cairo',sans-serif; color:#2E2018;">
+          <p style="font-size:1rem; font-weight:800; margin:6px 0 14px 0;">
+            تم إيداع الهدية بحساب الطالب <span style="color:#059669;">${studentName}</span> بنجاح:
+          </p>
+          <div style="display:flex; justify-content:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+            ${xp > 0 ? `<span style="background:#FEF3C7; color:#92400E; padding:6px 14px; border-radius:20px; font-weight:900; font-size:0.95rem; border:1px solid #FDE68A;">⚡ +${xp.toLocaleString()} XP</span>` : ''}
+            ${hearts > 0 ? `<span style="background:#FFE4E6; color:#9F1239; padding:6px 14px; border-radius:20px; font-weight:900; font-size:0.95rem; border:1px solid #FECDD3;">❤️ +${hearts} قلوب</span>` : ''}
+          </div>
+          <p style="font-size:0.88rem; color:#6B7280; margin:0;">
+            الرصيد الجديد: <b>${newPoints.toLocaleString()} XP</b> | <b>${newHearts} / 5 قلوب</b>
+          </p>
+        </div>
+      `,
+      confirmButtonText: 'ممتاز',
+      confirmButtonColor: '#059669'
+    });
+
+  } catch (error) {
+    console.error('sendStudentGift error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'تعذر إرسال الهدية',
+      text: error.message || 'حدث خطأ أثناء الاتصال بقاعدة البيانات',
+      confirmButtonText: 'حسناً',
+      confirmButtonColor: '#8C2430'
+    });
+  }
+}
+window.openGiftStudentModal = openGiftStudentModal;
 
 function promptAdjustPointsModal() {
   if (!activeSelectedStudent) return;
@@ -3804,10 +4454,7 @@ async function resetFullAccount(userId, userName) {
       const levelEl = document.getElementById('m-student-level');
       if (levelEl) levelEl.textContent = 'المستوى 1';
 
-      const lessonsListEl = document.getElementById('m-student-lessons-list');
-      if (lessonsListEl) {
-        lessonsListEl.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; gap:6px; color:#746B6F; font-size:0.88rem; padding:12px 0;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>لم يتم إكمال أي دروس حتى الآن</span></div>';
-      }
+      renderStudentLessonsAudit(activeSelectedStudent);
     }
 
     // 6) تحديث الإحصائيات والجدول

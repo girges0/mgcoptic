@@ -766,6 +766,11 @@
       // تفعيل الاستماع اللحظي لتحديثات المشرف بالسحابة فورا (0ms) دون ريلود
       if (currentAuthUser && currentAuthUser.id) {
         initRealtimeAccountSync(currentAuthUser.id);
+        setTimeout(() => {
+          if (typeof checkPendingStudentGifts === 'function') {
+            checkPendingStudentGifts(currentAuthUser.id);
+          }
+        }, 1500);
       }
     }
 
@@ -2102,6 +2107,33 @@
           if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(cached));
         } catch (_) {}
         if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
+      } else if (data.actionType === 'gift') {
+        const newPts = typeof data.newPoints === 'number' ? data.newPoints : null;
+        const newH = typeof data.newHearts === 'number' ? data.newHearts : null;
+        let cached = getUserProgressData();
+        if (newPts !== null) {
+          cached.points = newPts;
+          cached.total_points = newPts;
+        } else if (typeof data.xp === 'number') {
+          cached.points = (cached.points || 0) + data.xp;
+          cached.total_points = cached.points;
+        }
+        if (newH !== null) {
+          cached.hearts = newH;
+        } else if (typeof data.hearts === 'number') {
+          cached.hearts = Math.min(5, Math.max(0, (cached.hearts ?? 5) + data.hearts));
+        }
+
+        try {
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(cached));
+          if (currentAuthUser) localStorage.setItem(`mg_coptic_progress_${currentAuthUser.id}`, JSON.stringify(cached));
+        } catch (_) {}
+
+        if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
+        if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+        if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+
+        showStudentGiftCelebration(data);
       } else if (data.actionType === 'reset') {
         const uid = currentAuthUser?.id || data.userId;
         if (uid) {
@@ -2138,6 +2170,317 @@
         if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
         if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
         if (typeof renderSkillMap === 'function') renderSkillMap();
+      }
+    }
+
+    // =========================================================================
+    // ✨ محرك عرض نافذة الهدية الاحتفالية الراقية للطالب مع الكونفيتي والأصوات ✨
+    // =========================================================================
+    function renderGiftConfetti(canvas) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const w = rect.width || 500;
+      const h = rect.height || 480;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+
+      const colors = ['#FFD700', '#FFA000', '#10B981', '#059669', '#FF3366', '#6366F1', '#FFFFFF', '#F59E0B'];
+      const particles = [];
+      const count = 65;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.random() * Math.PI * 1.4) + Math.PI * 0.8;
+        const speed = 3.5 + Math.random() * 7;
+        particles.push({
+          x: w / 2 + (Math.random() * 40 - 20),
+          y: h / 3,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2,
+          size: 4 + Math.random() * 5.5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.25,
+          gravity: 0.18,
+          drag: 0.97,
+          opacity: 1,
+          decay: 0.008 + Math.random() * 0.01,
+          shape: Math.random() > 0.4 ? 'rect' : 'circle'
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        let active = false;
+
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.vx *= p.drag;
+          p.vy *= p.drag;
+          p.rotation += p.rotSpeed;
+          p.opacity -= p.decay;
+
+          if (p.opacity > 0) {
+            active = true;
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.opacity);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.fillStyle = p.color;
+
+            if (p.shape === 'circle') {
+              ctx.beginPath();
+              ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.65);
+            }
+            ctx.restore();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animate);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function showStudentGiftCelebration(data) {
+      if (!data) return;
+      if (document.getElementById('mg-student-gift-modal-overlay')) return;
+
+      const xp = Number(data.xp || 0);
+      const hearts = Number(data.hearts || 0);
+      const title = data.title || '🌟 مكافأة تميز وتفوق استثنائي';
+      const message = data.message || data.body || 'يسر إدارة منصة MG Coptic أن تقدم لك هذه المكافأة التقديرية تشجيعاً لك ولجهودك الرائعة!';
+      const giftId = data.giftId || ('gift_' + Date.now());
+
+      // تشغيل الصوت الاحتفالي
+      try {
+        if (window.Sound && typeof window.Sound.playVictory === 'function') {
+          window.Sound.playVictory();
+        } else if (window.game && window.game.sound && typeof window.game.sound.playVictory === 'function') {
+          window.game.sound.playVictory();
+        }
+      } catch (_) {}
+
+      // حقن الأنماط إذا لم تكن موجودة
+      if (!document.getElementById('mg-gift-celebration-styles')) {
+        const style = document.createElement('style');
+        style.id = 'mg-gift-celebration-styles';
+        style.textContent = `
+          @keyframes giftModalIn {
+            0% { opacity: 0; transform: scale(0.75) translateY(30px); }
+            60% { transform: scale(1.03) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+          }
+          @keyframes giftBoxFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-4deg); }
+            75% { transform: translateY(-4px) rotate(4deg); }
+          }
+          @keyframes giftGlowPulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.45), 0 0 50px rgba(16, 185, 129, 0.25); }
+            50% { box-shadow: 0 0 45px rgba(245, 158, 11, 0.75), 0 0 75px rgba(16, 185, 129, 0.45); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const overlay = document.createElement('div');
+      overlay.id = 'mg-student-gift-modal-overlay';
+      overlay.style.cssText = `
+        position: fixed;
+        inset: 0;
+        z-index: 1000000;
+        background: rgba(15, 23, 42, 0.78);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        box-sizing: border-box;
+      `;
+
+      overlay.innerHTML = `
+        <div style="position:relative; width:100%; max-width:520px; background:linear-gradient(180deg, #FFFFFF 0%, #FFFDF8 100%); border-radius:24px; border:2px solid #F59E0B; box-shadow:0 25px 60px rgba(0,0,0,0.35), 0 0 50px rgba(245, 158, 11, 0.25); padding:28px 24px 24px 24px; text-align:center; font-family:'Cairo',sans-serif; direction:rtl; animation:giftModalIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; overflow:hidden;">
+          <canvas id="mg-gift-confetti-canvas" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1;"></canvas>
+
+          <div style="position:relative; z-index:2;">
+            <!-- أيقونة الصندوق العائمة -->
+            <div style="width:84px; height:84px; margin:0 auto 12px auto; background:linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.6rem; border:3.5px solid #FFFFFF; animation:giftBoxFloat 3s ease-in-out infinite, giftGlowPulse 2.5s ease-in-out infinite;">
+              🎁
+            </div>
+
+            <!-- شارة التكريم -->
+            <div style="display:inline-block; background:linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border:1px solid #F59E0B; color:#92400E; font-size:0.82rem; font-weight:900; padding:4px 14px; border-radius:20px; margin-bottom:10px; letter-spacing:0.3px;">
+              ✨ هدية وتكريم خاص من إدارة المنصة ✨
+            </div>
+
+            <!-- عنوان المناسبة -->
+            <h3 style="margin:0 0 14px 0; font-size:1.3rem; font-weight:900; color:#6B1530; line-height:1.4;">
+              ${title}
+            </h3>
+
+            <!-- بطاقات محتوى الهدية -->
+            <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+              ${xp > 0 ? `
+                <div style="background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border:2px solid #F59E0B; border-radius:14px; padding:10px 18px; display:inline-flex; align-items:center; gap:10px; box-shadow:0 4px 14px rgba(245,158,11,0.25);">
+                  <span style="font-size:1.6rem;">⚡</span>
+                  <div style="text-align:right;">
+                    <div style="font-size:0.75rem; color:#92400E; font-weight:800;">رصيد XP مضاف</div>
+                    <div style="font-size:1.25rem; color:#78350F; font-weight:900;">+${xp.toLocaleString()} XP</div>
+                  </div>
+                </div>
+              ` : ''}
+              ${hearts > 0 ? `
+                <div style="background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:2px solid #F43F5E; border-radius:14px; padding:10px 18px; display:inline-flex; align-items:center; gap:10px; box-shadow:0 4px 14px rgba(244,63,94,0.25);">
+                  <span style="font-size:1.6rem;">❤️</span>
+                  <div style="text-align:right;">
+                    <div style="font-size:0.75rem; color:#9F1239; font-weight:800;">قلوب إضافية</div>
+                    <div style="font-size:1.25rem; color:#881337; font-weight:900;">+${hearts} قلوب</div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- بطاقة الرسالة الرسمية الراقية -->
+            <div style="background:#FDFBF7; border:1.5px solid #F1E7D7; border-radius:16px; padding:16px 20px; text-align:right; margin-bottom:20px; position:relative; box-shadow:inset 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="position:absolute; top:-11px; right:16px; background:#6B1530; color:#FFFFFF; font-size:0.72rem; font-weight:800; padding:2px 10px; border-radius:12px;">
+                رسالة المشرف ✉️
+              </div>
+              <p style="margin:6px 0 12px 0; font-size:0.95rem; line-height:1.85; color:#2E2018; font-weight:700; white-space:pre-line;">
+                ${message}
+              </p>
+              <div style="border-top:1px dashed #E2D9C8; padding-top:8px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:#7A6953; font-weight:700;">
+                <span>أسرة وإدارة منصة MG Coptic</span>
+                <span style="color:#6B1530;">🤍 🕊️</span>
+              </div>
+            </div>
+
+            <!-- زر الاستلام -->
+            <button type="button" id="btn-claim-gift-modal" style="background:linear-gradient(135deg, #059669 0%, #10B981 100%); color:#FFFFFF; font-family:'Cairo',sans-serif; font-weight:900; font-size:1.05rem; padding:13px 36px; border-radius:50px; border:none; cursor:pointer; box-shadow:0 8px 22px rgba(16, 185, 129, 0.45); display:inline-flex; align-items:center; gap:8px; transition:transform 0.15s ease;">
+              <span>استلام الهدية وإضافتها لرصيدي 🎁</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // تشغيل الكانفاس للاحتفال بالكونفيتي
+      setTimeout(() => {
+        const canvas = document.getElementById('mg-gift-confetti-canvas');
+        if (canvas) renderGiftConfetti(canvas);
+      }, 100);
+
+      // ربط زر الاستلام
+      const claimBtn = document.getElementById('btn-claim-gift-modal');
+      if (claimBtn) {
+        claimBtn.addEventListener('click', () => {
+          try {
+            const uid = currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : 'anon');
+            const key = `mg_claimed_gifts_${uid}`;
+            const claimed = JSON.parse(localStorage.getItem(key) || '[]');
+            if (!claimed.includes(giftId)) {
+              claimed.push(giftId);
+              localStorage.setItem(key, JSON.stringify(claimed));
+            }
+          } catch (_) {}
+
+          try {
+            if (typeof window.refreshStatsDisplay === 'function') {
+              window.refreshStatsDisplay();
+            }
+          } catch (_) {}
+
+          overlay.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            overlay.remove();
+          }, 250);
+        });
+      }
+    }
+
+    async function checkPendingStudentGifts(userId) {
+      if (!userId || !window.sb) return;
+      try {
+        const { data: notifs } = await sb
+          .from('notification_events')
+          .select('*')
+          .eq('target_user_id', userId)
+          .like('deep_link', '%gift%')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (!notifs || notifs.length === 0) return;
+
+        const key = `mg_claimed_gifts_${userId}`;
+        const claimed = JSON.parse(localStorage.getItem(key) || '[]');
+
+        for (const ev of notifs) {
+          let giftId = ev.id;
+          let xp = 0;
+          let hearts = 0;
+          let title = ev.title;
+          let message = ev.body;
+
+          try {
+            const rawParams = (ev.deep_link || '').includes('?') ? ev.deep_link.split('?')[1] : (ev.deep_link || '');
+            const params = new URLSearchParams(rawParams);
+            if (params.get('id') || params.get('gift_id')) giftId = params.get('id') || params.get('gift_id');
+            if (params.get('xp')) xp = parseInt(params.get('xp'), 10) || 0;
+            if (params.get('hearts')) hearts = parseInt(params.get('hearts'), 10) || 0;
+            if (params.get('title')) title = decodeURIComponent(params.get('title'));
+          } catch (_) {}
+
+          if (!claimed.includes(giftId)) {
+            setTimeout(() => {
+              showStudentGiftCelebration({ giftId, xp, hearts, title, message });
+            }, 1200);
+            break;
+          }
+        }
+      } catch (e) {
+        console.warn('checkPendingStudentGifts error:', e);
+      }
+    }
+
+    function checkUrlForGiftParams() {
+      try {
+        const search = window.location.search;
+        if (!search || (!search.includes('gift') && !search.includes('xp=') && !search.includes('hearts='))) return;
+        const params = new URLSearchParams(search);
+        const giftId = params.get('gift_id') || params.get('id');
+        const xp = parseInt(params.get('xp'), 10) || 0;
+        const hearts = parseInt(params.get('hearts'), 10) || 0;
+        const title = params.get('title');
+
+        if (giftId || xp > 0 || hearts > 0) {
+          setTimeout(() => {
+            showStudentGiftCelebration({
+              giftId: giftId || ('gift_' + Date.now()),
+              xp,
+              hearts,
+              title: title ? decodeURIComponent(title) : '🌟 هدية خاصة من إدارة المنصة',
+              message: 'يسر إدارة منصة MG Coptic أن تقدم لك هذه المكافأة التقديرية تشجيعاً لك ولجهودك الرائعة!'
+            });
+            try {
+              const cleanUrl = window.location.pathname + window.location.hash;
+              window.history.replaceState({}, document.title, cleanUrl);
+            } catch (_) {}
+          }, 800);
+        }
+      } catch (e) {
+        console.warn('checkUrlForGiftParams error:', e);
       }
     }
 
@@ -2252,6 +2595,8 @@
     }
 
     // تصدير الدوال للاستخدام العام عبر الصفحات
+    window.showStudentGiftCelebration = showStudentGiftCelebration;
+    window.checkPendingStudentGifts = checkPendingStudentGifts;
     window.togglePassVisibility = togglePassVisibility;
     window.openWhatsAppSupport = openWhatsAppSupport;
     window.showBannedAccountScreen = showBannedAccountScreen;
@@ -2306,5 +2651,6 @@
     if (!isAuthPage) {
       window.__mgAuthCheckPending = true;
       enforceAccessControl();
+      checkUrlForGiftParams();
     }
 })();

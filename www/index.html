@@ -547,6 +547,448 @@
       border-radius: 50%;
     }
 
+    /* ==========================================================================
+       NOTIFICATION CENTER STYLES (100% SVG Vector Art — Zero Emojis / Stickers)
+       ========================================================================== */
+    .topbar-notif-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .topbar-notif-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--parchment-card, #FFFDF9);
+      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--madder, #6B1530);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+      box-shadow: 0 2px 6px rgba(36, 27, 18, 0.08);
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .topbar-notif-btn:hover {
+      border-color: var(--madder, #6B1530);
+      background: var(--parchment-soft, #FAF3E8);
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.2);
+    }
+
+    .topbar-notif-btn:active {
+      transform: scale(0.94);
+    }
+
+    .topbar-notif-btn:focus-visible {
+      outline: 2px solid var(--madder, #6B1530);
+      outline-offset: 2px;
+    }
+
+    .topbar-notif-btn .notif-btn-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topbar-notif-btn.has-new-alert .notif-bell-icon {
+      animation: notifBellWiggle 0.65s ease-in-out;
+      transform-origin: top center;
+    }
+
+    @keyframes notifBellWiggle {
+      0%, 100% { transform: rotate(0); }
+      20% { transform: rotate(14deg); }
+      40% { transform: rotate(-14deg); }
+      60% { transform: rotate(8deg); }
+      80% { transform: rotate(-8deg); }
+    }
+
+    .topbar-notif-btn .notif-badge-count {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 4px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #FF4B4B 0%, #D32F2F 100%);
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 800;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #FFFDF9;
+      box-shadow: 0 2px 5px rgba(211, 47, 47, 0.4);
+      pointer-events: none;
+      animation: notifBadgeBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes notifBadgeBounce {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Backdrop */
+    .mg-notif-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(36, 27, 18, 0.35);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      display: none;
+    }
+    .mg-notif-backdrop.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Dropdown / Dialog Panel */
+    .mg-notif-panel {
+      position: fixed;
+      top: 68px;
+      left: 16px;
+      width: 390px;
+      max-width: calc(100vw - 32px);
+      max-height: calc(85vh - 75px);
+      background: var(--parchment-card, #FFFDF9);
+      border: 2px solid var(--duo-border, rgba(168, 130, 58, 0.35));
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(36, 27, 18, 0.22), 0 4px 12px rgba(107, 21, 48, 0.08);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      direction: rtl;
+      text-align: right;
+      animation: notifPanelSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes notifPanelSlideIn {
+      from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .mg-notif-panel-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid rgba(168, 130, 58, 0.2);
+      background: linear-gradient(180deg, #FAF3E8 0%, #FFFDF9 100%);
+      flex-shrink: 0;
+    }
+
+    .mg-notif-panel-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mg-notif-panel-icon-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(107, 21, 48, 0.1);
+      color: #6B1530;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mg-notif-panel-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #241B12;
+      font-family: var(--font-display, inherit);
+    }
+
+    .mg-notif-count-pill {
+      background: #6B1530;
+      color: #FFFFFF;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      min-width: 20px;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .mg-notif-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mg-notif-clear-all-btn {
+      background: transparent;
+      border: 1px solid rgba(168, 130, 58, 0.25);
+      color: #746B6F;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+
+    .mg-notif-clear-all-btn:hover {
+      color: #D32F2F;
+      border-color: rgba(211, 47, 47, 0.3);
+      background: rgba(211, 47, 47, 0.08);
+    }
+
+    .mg-notif-close-btn {
+      background: rgba(168, 130, 58, 0.12);
+      border: none;
+      color: #5A4A3A;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mg-notif-close-btn:hover {
+      background: #6B1530;
+      color: #FFFFFF;
+    }
+
+    .mg-notif-panel-body {
+      padding: 10px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      max-height: 400px;
+    }
+
+    .mg-notif-panel-body::-webkit-scrollbar {
+      width: 5px;
+    }
+    .mg-notif-panel-body::-webkit-scrollbar-thumb {
+      background: rgba(168, 130, 58, 0.3);
+      border-radius: 10px;
+    }
+
+    /* Notification Card Item */
+    .mg-notif-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(168, 130, 58, 0.2);
+      box-shadow: 0 2px 6px rgba(36, 27, 18, 0.04);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+      position: relative;
+    }
+
+    .mg-notif-item:hover {
+      border-color: rgba(107, 21, 48, 0.35);
+      box-shadow: 0 4px 12px rgba(36, 27, 18, 0.08);
+      background: #FAF6EF;
+    }
+
+    .mg-notif-item.removing {
+      animation: notifItemDismiss 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes notifItemDismiss {
+      0% { opacity: 1; transform: translateX(0) scale(1); max-height: 140px; margin-bottom: 10px; }
+      50% { opacity: 0.3; transform: translateX(-40px) scale(0.95); }
+      100% { opacity: 0; transform: translateX(-80px) scale(0.9); max-height: 0; padding-top: 0; padding-bottom: 0; margin-bottom: 0; border-width: 0; }
+    }
+
+    .mg-notif-type-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mg-notif-type-gift { background: rgba(168, 130, 58, 0.15); color: #A8823A; }
+    .mg-notif-type-hearts { background: rgba(255, 75, 75, 0.14); color: #FF4B4B; }
+    .mg-notif-type-xp { background: rgba(0, 163, 255, 0.14); color: #00A3FF; }
+    .mg-notif-type-streak { background: rgba(255, 150, 0, 0.14); color: #FF9600; }
+    .mg-notif-type-welcome { background: rgba(46, 125, 50, 0.14); color: #2E7D32; }
+    .mg-notif-type-broadcast { background: rgba(107, 21, 48, 0.12); color: #6B1530; }
+
+    .mg-notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mg-notif-item-title {
+      font-size: 0.94rem;
+      font-weight: 800;
+      color: #241B12;
+      margin: 0 0 3px 0;
+      line-height: 1.35;
+    }
+
+    .mg-notif-item-body {
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: #5A4A3A;
+      line-height: 1.45;
+      margin: 0 0 8px 0;
+      word-break: break-word;
+    }
+
+    .mg-notif-item-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mg-notif-time {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: #8A7A6D;
+      font-weight: 600;
+    }
+
+    .mg-notif-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: #6B1530;
+      background: rgba(107, 21, 48, 0.08);
+      border: 1px solid rgba(107, 21, 48, 0.2);
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .mg-notif-action-btn:hover {
+      background: #6B1530;
+      color: #FFFFFF;
+      border-color: #6B1530;
+    }
+
+    .mg-notif-delete-single-btn {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      color: #8A7A6D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .mg-notif-delete-single-btn:hover {
+      background: rgba(211, 47, 47, 0.12);
+      color: #D32F2F;
+      transform: scale(1.1);
+    }
+
+    /* Empty State (100% SVG, Zero Stickers) */
+    .mg-notif-empty-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px;
+      text-align: center;
+    }
+
+    .mg-notif-empty-svg {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(168, 130, 58, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .mg-notif-empty-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #241B12;
+      margin-bottom: 6px;
+    }
+
+    .mg-notif-empty-desc {
+      font-size: 0.83rem;
+      color: #746B6F;
+      line-height: 1.5;
+      margin: 0;
+      max-width: 260px;
+    }
+
+    @media (max-width: 599px) {
+      .mg-notif-panel {
+        top: 62px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: calc(100vw - 20px);
+        max-height: 80vh;
+      }
+      .topbar-notif-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+      }
+      .topbar-notif-btn .notif-bell-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+
     .topbar-login-btn {
       display: none;
       align-items: center;
@@ -5437,11 +5879,11 @@
       max-width: 680px;
       margin: 0 auto;
       width: 100%;
-      padding: 8px 18px 12px;
+      padding: 8px 18px 28px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      justify-content: safe center;
+      justify-content: flex-start;
+      align-items: center;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       box-sizing: border-box;
@@ -6219,12 +6661,53 @@
       box-shadow: 0 3px 0 rgba(168, 130, 58, 0.25);
       transition: all .15s;
       user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
       direction: ltr !important;
       unicode-bidi: isolate;
     }
     .word-tile:hover {
       transform: translateY(-2px);
       border-color: var(--madder);
+    }
+    .word-tile:active {
+      transform: translateY(1px) scale(0.96);
+    }
+    .word-tile.placed-tile {
+      background: #FFFFFF;
+      border-color: #6B1530;
+      color: #6B1530;
+      box-shadow: 0 3px 0 rgba(107, 21, 48, 0.2);
+      animation: popTileIn 0.15s ease-out;
+    }
+    .word-tile.placed-tile:hover {
+      border-color: #A12542;
+      background: #FFF9F6;
+      transform: translateY(-2px) scale(1.03);
+    }
+    .word-tile.is-placed {
+      background: rgba(168, 130, 58, 0.08) !important;
+      border: 2px dashed rgba(168, 130, 58, 0.35) !important;
+      color: transparent !important;
+      box-shadow: none !important;
+      transform: none !important;
+      cursor: pointer;
+    }
+    .word-tile.wrong-tile {
+      border-color: #A13030 !important;
+      color: #A13030 !important;
+      background: #FFF2F2 !important;
+      box-shadow: 0 3px 0 rgba(161, 48, 48, 0.25) !important;
+    }
+    .word-tile.correct-tile {
+      border-color: #2E6B3E !important;
+      color: #2E6B3E !important;
+      background: #F0F9F2 !important;
+      box-shadow: 0 3px 0 rgba(46, 107, 62, 0.25) !important;
+    }
+    @keyframes popTileIn {
+      0% { transform: scale(0.85); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     /* تمرين المطابقة */
@@ -6602,169 +7085,228 @@
       }
     }
 
-    /* ============================================================
-       تنسيقات نبذة عن الحرف والكلمة (نطق، متحرك/ساكن، تعدد، وسماع)
+        /* ============================================================
+       تنسيقات نبذة عن الحرف والكلمة (متناسقة وواضحة لجميع الشاشات)
        ============================================================ */
     .coptic-overview-wrap {
       width: 100%;
-      max-width: 620px;
-      margin: 10px auto 20px;
+      max-width: 580px;
+      margin: 8px auto 24px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       text-align: right;
       box-sizing: border-box;
       direction: rtl;
+      padding-bottom: 24px;
     }
+
     .letter-overview-card {
       background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
       border: 2px solid #E6D7C3;
       border-radius: 20px;
-      padding: 18px 22px;
+      padding: 18px 20px;
       box-shadow: 0 6px 20px rgba(74, 13, 36, 0.06);
       position: relative;
+      box-sizing: border-box;
+      width: 100%;
     }
+
     .letter-overview-header {
       display: flex;
-      align-items: center;
-      gap: 16px;
+      flex-direction: column;
+      gap: 12px;
       border-bottom: 1.5px dashed #E8DAC6;
       padding-bottom: 14px;
       margin-bottom: 14px;
-      flex-wrap: wrap;
+      width: 100%;
     }
+
+    .letter-header-top-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
     .letter-glyph-box {
-      min-width: 70px;
-      height: 70px;
+      width: 78px;
+      min-width: 78px;
+      height: 82px;
       background: linear-gradient(135deg, #FFF9F0 0%, #F5ECE0 100%);
       border: 2px solid #D6C3A5;
-      border-radius: 16px;
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.04), 0 4px 10px rgba(168, 130, 58, 0.12);
       flex-shrink: 0;
+      padding: 4px;
+      box-sizing: border-box;
     }
+
     .letter-glyph-val {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       color: #6F1737;
       line-height: 1;
       font-weight: 800;
       font-family: 'coptic_font', 'girges', 'Segoe UI Historic', 'Noto Sans Coptic', sans-serif;
+      direction: ltr;
+      display: inline-block;
+      text-align: center;
+      letter-spacing: 2px;
     }
+
     .letter-meta-col {
       flex: 1;
-      min-width: 180px;
+      min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
+      justify-content: center;
     }
-    .letter-meta-top {
+
+    .letter-title-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
     }
+
     .letter-name-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 900;
       color: #3A2315;
+      line-height: 1.2;
     }
+
+    .letter-badges-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
     .coptic-badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 800;
       padding: 3px 10px;
       border-radius: 20px;
       white-space: nowrap;
+      line-height: 1.3;
     }
+
     .badge-vowel {
       background: linear-gradient(135deg, #E65100 0%, #F57C00 100%);
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(230, 81, 0, 0.25);
+      box-shadow: 0 2px 8px rgba(230, 81, 0, 0.22);
     }
+
     .badge-consonant {
       background: linear-gradient(135deg, #0F4C81 0%, #1976D2 100%);
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(15, 76, 129, 0.25);
+      box-shadow: 0 2px 8px rgba(15, 76, 129, 0.22);
     }
+
     .badge-symbol {
       background: linear-gradient(135deg, #6A1B9A 0%, #8E24AA 100%);
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(106, 27, 154, 0.25);
+      box-shadow: 0 2px 8px rgba(106, 27, 154, 0.22);
     }
+
     .badge-compound {
       background: linear-gradient(135deg, #00695C 0%, #00897B 100%);
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(0, 105, 92, 0.25);
+      box-shadow: 0 2px 8px rgba(0, 105, 92, 0.22);
     }
+
     .badge-demotic {
       background: linear-gradient(135deg, #795548 0%, #A1887F 100%);
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(121, 85, 72, 0.25);
+      box-shadow: 0 2px 8px rgba(121, 85, 72, 0.22);
     }
+
     .badge-multi {
       background: linear-gradient(135deg, #880E4F 0%, #AD1457 100%);
       color: #FFE082;
       border: 1px solid #FFE082;
-      box-shadow: 0 2px 8px rgba(136, 14, 79, 0.25);
+      box-shadow: 0 2px 8px rgba(136, 14, 79, 0.22);
     }
+
     .letter-pron-preview {
-      font-size: 0.96rem;
+      font-size: 0.92rem;
       color: #5D4037;
       font-weight: 700;
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+      margin-top: 1px;
     }
+
+    .letter-pron-label {
+      color: #6C5140;
+      font-weight: 700;
+    }
+
     .letter-pron-val {
       color: #8E1B3A;
       font-weight: 900;
       background: #FDF4E6;
-      padding: 2px 8px;
+      padding: 2px 10px;
       border-radius: 8px;
-      border: 1px solid #ECD4B6;
+      border: 1.5px solid #ECD4B6;
+      font-size: 0.95rem;
+      display: inline-block;
     }
+
     .letter-audio-action {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
+      width: 100%;
     }
+
     .btn-listen-letter {
+      width: 100%;
       background: linear-gradient(135deg, #6F1737 0%, #8A1E45 100%);
       color: #FFFFFF;
       border: none;
-      border-radius: 50px;
-      padding: 8px 16px;
-      font-size: 0.88rem;
+      border-radius: 14px;
+      padding: 11px 18px;
+      font-size: 0.94rem;
       font-weight: 800;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(111, 23, 55, 0.25);
+      box-shadow: 0 4px 14px rgba(111, 23, 55, 0.22);
       transition: all 0.2s ease;
+      box-sizing: border-box;
     }
+
     .btn-listen-letter:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(111, 23, 55, 0.35);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(111, 23, 55, 0.32);
+      background: linear-gradient(135deg, #7F1A3E 0%, #9C224E 100%);
     }
+
     .btn-listen-letter:active {
       transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(111, 23, 55, 0.2);
     }
+
     .letter-rules-box {
       background: #FBF8F2;
-      border: 1px solid #EBDDC9;
+      border: 1.5px solid #EBDDC9;
       border-radius: 14px;
       padding: 14px 16px;
+      box-sizing: border-box;
+      width: 100%;
     }
+
     .letter-rules-title {
-      font-size: 0.92rem;
+      font-size: 0.94rem;
       font-weight: 800;
       color: #6F1737;
       margin-bottom: 8px;
@@ -6772,25 +7314,26 @@
       align-items: center;
       gap: 6px;
     }
+
     .letter-rules-list {
       margin: 0;
-      padding-right: 22px;
+      padding-right: 20px;
       list-style-type: decimal;
       color: #3E2C22;
-      font-size: 0.96rem;
-      line-height: 1.75;
+      font-size: 0.94rem;
+      line-height: 1.7;
       font-weight: 600;
     }
+
     .letter-rules-list.single-rule {
       list-style-type: none;
       padding-right: 4px;
     }
+
     .letter-rules-list li {
       margin-bottom: 4px;
     }
-    .letter-rules-list li strong {
-      color: #8E1B3A;
-    }
+
     /* بطاقة نبذة عن الكلمة */
     .word-overview-card {
       background: linear-gradient(180deg, #FFFDF8 0%, #FBF6EC 100%);
@@ -6798,24 +7341,36 @@
       border-radius: 20px;
       padding: 18px 20px;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+      box-sizing: border-box;
+      width: 100%;
     }
+
     .word-card-title {
       font-size: 1.05rem;
       font-weight: 900;
       color: #5D371E;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
       border-bottom: 1.5px solid #ECDDC5;
       padding-bottom: 8px;
     }
+
     .word-card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
       align-items: stretch;
     }
+
+    @media (min-width: 580px) {
+      .word-card-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+    }
+
     .word-grid-cell {
       background: #FFFFFF;
       border: 1.5px solid #EBDDC9;
@@ -6827,38 +7382,44 @@
       justify-content: center;
       align-items: center;
       gap: 6px;
+      min-height: 86px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      box-sizing: border-box;
     }
+
     .cell-label {
       font-size: 0.76rem;
       font-weight: 800;
       color: #8D725C;
       text-transform: uppercase;
-      letter-spacing: 0.2px;
     }
+
     .cell-coptic-val {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       color: #6F1737;
       font-weight: 800;
       font-family: 'coptic_font', 'girges', 'Segoe UI Historic', 'Noto Sans Coptic', sans-serif;
       line-height: 1.2;
     }
+
     .cell-phonetic-val {
-      font-size: 1.22rem;
+      font-size: 1.15rem;
       color: #A3284B;
       font-weight: 900;
     }
+
     .cell-meaning-val {
       font-size: 1.05rem;
       color: #2D1B12;
       font-weight: 800;
     }
+
     .btn-listen-word {
       background: #FAF3E6;
       border: 1.5px solid #C4A052;
       color: #6F1737;
-      padding: 8px 12px;
-      border-radius: 30px;
+      padding: 8px 10px;
+      border-radius: 12px;
       font-size: 0.84rem;
       font-weight: 800;
       cursor: pointer;
@@ -6867,36 +7428,56 @@
       justify-content: center;
       gap: 6px;
       width: 100%;
+      height: 38px;
       box-shadow: 0 2px 6px rgba(196, 160, 82, 0.18);
       transition: all 0.2s ease;
+      box-sizing: border-box;
     }
+
     .btn-listen-word:hover {
       background: #C4A052;
       color: #FFFFFF;
       transform: translateY(-1px);
     }
-    .btn-listen-word:active {
-      transform: translateY(1px);
-    }
-    @media (max-width: 600px) {
+
+    @media (max-width: 480px) {
       .coptic-overview-wrap {
-        margin: 8px auto 14px;
+        margin: 6px auto 20px;
         gap: 12px;
+        padding-bottom: 24px;
       }
       .letter-overview-card, .word-overview-card {
-        padding: 14px 15px;
+        padding: 14px 14px;
         border-radius: 16px;
       }
       .letter-glyph-box {
-        width: 60px;
-        height: 60px;
-        min-width: 60px;
+        width: 70px;
+        min-width: 70px;
+        height: 74px;
+        border-radius: 14px;
       }
       .letter-glyph-val {
         font-size: 2rem;
       }
-      .word-card-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .letter-name-title {
+        font-size: 1.2rem;
+      }
+      .btn-listen-letter {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+      }
+      .word-grid-cell {
+        padding: 10px 6px;
+        min-height: 80px;
+      }
+      .cell-coptic-val {
+        font-size: 1.5rem;
+      }
+      .cell-phonetic-val {
+        font-size: 1.05rem;
+      }
+      .cell-meaning-val {
+        font-size: 0.96rem;
       }
     }
   </style>
@@ -7014,7 +7595,21 @@
             <span class="topbar-stat-val stat-val" id="topbar-hearts-val" style="color:#FF4B4B;">5</span>
           </div>
         </div>
-        <button type="button" class="user-profile-btn" id="topbar-user-badge" onclick="switchTab('settings')"
+                <!-- زر الإشعارات الفاخر مع أيقونة SVG وشارة التنبيهات -->
+        <div class="topbar-notif-wrapper" id="topbar-notif-wrapper">
+          <button type="button" class="topbar-notif-btn" id="topbar-notif-btn" onclick="window.toggleNotificationsCenter && window.toggleNotificationsCenter(event)"
+            title="الإشعارات" aria-label="الإشعارات" aria-haspopup="dialog" aria-expanded="false">
+            <span class="notif-btn-inner">
+              <svg class="notif-bell-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <span class="notif-badge-count" id="topbar-notif-badge" style="display:none;">0</span>
+            </span>
+          </button>
+        </div>
+
+<button type="button" class="user-profile-btn" id="topbar-user-badge" onclick="switchTab('settings')"
           title="الملف الشخصي والإعدادات" aria-label="الملف الشخصي والإعدادات">
           <span class="user-chip-avatar" id="topbar-avatar">
             <svg id="topbar-avatar-svg" width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF">
@@ -12140,12 +12735,12 @@
               ` : ''}
             </div>
             <div class="write-area" style="direction:ltr !important;">
-              <div class="tiles-dropzone" id="tiles-dropzone" style="direction:ltr !important; flex-direction:row !important;">
+              <div class="tiles-dropzone" id="tiles-dropzone" style="direction:ltr !important; flex-direction:row !important;" onclick="if(event.target.closest('.word-tile') && window.unpickWordTile) window.unpickWordTile(event.target.closest('.word-tile'))">
                 <span style="color:var(--ink-soft);font-size:.92rem;direction:rtl;" id="dropzone-placeholder">اضغط على الحروف لترتيبها هنا</span>
               </div>
               <div class="tiles-pool" id="tiles-pool" style="direction:ltr !important; flex-direction:row !important;">
-                ${shuffled.map((t) => `
-                  <button type="button" class="word-tile" style="direction:ltr !important;" onclick="pickWordTile(this, '${t}')">${t}</button>
+                ${shuffled.map((t, idx) => `
+                  <button type="button" class="word-tile" data-tile-id="${idx}" data-letter="${escapeHtml(t)}" style="direction:ltr !important;" onclick="pickWordTile(this, '${t.replace(/'/g, "\\'")}', ${idx})">${t}</button>
                 `).join('')}
               </div>
             </div>
@@ -12743,46 +13338,96 @@
         if (btnCheck) btnCheck.disabled = false;
       };
 
-      window.pickWordTile = function(btn, letter) {
+      window.unpickWordTile = function(placedTileOrId, tileId) {
         if (runnerState !== 'answering') return;
         if (game.sound) game.sound.playClick();
         const dropzone = document.getElementById('tiles-dropzone');
+        if (!dropzone) return;
+
+        let placedEl = null;
+        let tId = tileId;
+
+        if (placedTileOrId instanceof HTMLElement) {
+          placedEl = placedTileOrId;
+          if (tId === undefined || tId === null) {
+            tId = placedEl.getAttribute('data-tile-id');
+          }
+        } else if (typeof placedTileOrId === 'number' || typeof placedTileOrId === 'string') {
+          tId = String(placedTileOrId);
+          placedEl = dropzone.querySelector(`.word-tile[data-tile-id="${tId}"]`);
+        }
+
+        if (placedEl) {
+          placedEl.remove();
+        }
+
+        if (tId !== undefined && tId !== null) {
+          const poolBtn = document.querySelector(`.tiles-pool .word-tile[data-tile-id="${tId}"]`);
+          if (poolBtn) {
+            poolBtn.classList.remove('is-placed');
+            poolBtn.style.visibility = 'visible';
+          }
+        }
+
+        const remainingTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
+        wordTilesBuilt = remainingTiles.map(el => el.getAttribute('data-letter') || el.textContent.trim());
+
+        if (wordTilesBuilt.length === 0 && !document.getElementById('dropzone-placeholder')) {
+          const ph = document.createElement('span');
+          ph.id = 'dropzone-placeholder';
+          ph.style.cssText = 'color:var(--ink-soft);font-size:.92rem;direction:rtl;';
+          ph.textContent = 'اضغط على الحروف لترتيبها هنا';
+          dropzone.appendChild(ph);
+        }
+
+        const btnCheck = document.getElementById('btn-check-action');
+        if (btnCheck) btnCheck.disabled = (wordTilesBuilt.length === 0);
+      };
+
+      window.pickWordTile = function(btn, letter, tileId) {
+        if (runnerState !== 'answering') return;
+        const tId = (tileId !== undefined && tileId !== null) ? String(tileId) : (btn.getAttribute('data-tile-id') || '0');
+
+        if (btn.classList.contains('is-placed')) {
+          window.unpickWordTile(null, tId);
+          return;
+        }
+
+        if (game.sound) game.sound.playClick();
+        const dropzone = document.getElementById('tiles-dropzone');
+        if (!dropzone) return;
         const placeholder = document.getElementById('dropzone-placeholder');
         if (placeholder) placeholder.remove();
 
-        wordTilesBuilt.push(letter);
-        btn.style.visibility = 'hidden';
+        btn.classList.add('is-placed');
 
         const placedTile = document.createElement('button');
         placedTile.type = 'button';
-        placedTile.className = 'word-tile';
+        placedTile.className = 'word-tile placed-tile';
         placedTile.style.direction = 'ltr';
         placedTile.style.unicodeBidi = 'isolate';
         placedTile.textContent = letter;
-        placedTile.onclick = function() {
-          if (runnerState !== 'answering') return;
-          if (game.sound) game.sound.playClick();
-          const childTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
-          const domIdx = childTiles.indexOf(placedTile);
-          placedTile.remove();
-          btn.style.visibility = 'visible';
-          if (domIdx !== -1) {
-            wordTilesBuilt.splice(domIdx, 1);
-          } else {
-            const idx = wordTilesBuilt.lastIndexOf(letter);
-            if (idx !== -1) wordTilesBuilt.splice(idx, 1);
+        placedTile.setAttribute('data-tile-id', tId);
+        placedTile.setAttribute('data-letter', letter);
+        placedTile.setAttribute('title', 'اضغط لإعادة الحرف');
+        placedTile.setAttribute('aria-label', `إعادة حرف ${letter}`);
+
+        const handleUnpick = function(e) {
+          if (e) {
+            e.stopPropagation();
+            if (e.cancelable) e.preventDefault();
           }
-          if (wordTilesBuilt.length === 0 && !document.getElementById('dropzone-placeholder')) {
-            const ph = document.createElement('span');
-            ph.id = 'dropzone-placeholder';
-            ph.style.cssText = 'color:var(--ink-soft);font-size:.92rem;direction:rtl;';
-            ph.textContent = 'اضغط على الحروف لترتيبها هنا';
-            dropzone.appendChild(ph);
-          }
-          const btnCheck = document.getElementById('btn-check-action');
-          if (btnCheck) btnCheck.disabled = wordTilesBuilt.length === 0;
+          window.unpickWordTile(placedTile, tId);
         };
+
+        placedTile.onclick = handleUnpick;
+        placedTile.addEventListener('touchend', handleUnpick, { passive: false });
+
         dropzone.appendChild(placedTile);
+
+        const remainingTiles = Array.from(dropzone.querySelectorAll('.word-tile'));
+        wordTilesBuilt = remainingTiles.map(el => el.getAttribute('data-letter') || el.textContent.trim());
+
         const btnCheck = document.getElementById('btn-check-action');
         if (btnCheck) btnCheck.disabled = false;
       };
@@ -12854,6 +13499,8 @@
         } else if (ch.type === 'write') {
           const built = wordTilesBuilt.join('');
           isCorrect = (built === ch.correct_word);
+          const dropTiles = document.querySelectorAll('#tiles-dropzone .word-tile');
+          dropTiles.forEach(t => t.classList.add(isCorrect ? 'correct-tile' : 'wrong-tile'));
         } else if (ch.type === 'match') {
           const totalPairs = (ch.pairs || []).length || 4;
           isCorrect = (matchedPairsCount >= totalPairs);
@@ -13017,18 +13664,32 @@
           currentXP = prog.points || 0;
           hearts = prog.hearts || 0;
         }
-        const heartsNeeded = 5 - hearts;
-        const fullCost = heartsNeeded * 15;
+        const heartsNeeded = Math.max(1, 5 - hearts);
+        const costPerHeart = 100;
+        const fullCost = heartsNeeded * costPerHeart;
 
-        if (currentXP >= 15) {
+        // حساب وقت شحن القلب التلقائي القادم
+        let timeRemainingText = '';
+        if (game.getTimeUntilNextHeart) {
+          const timeInfo = game.getTimeUntilNextHeart(uid);
+          if (timeInfo && !timeInfo.isFull) {
+            timeRemainingText = `❤️ القلب القادم يتشحن تلقائياً خلال: <b>${timeInfo.formatted}</b>`;
+          }
+        }
+        if (!timeRemainingText) {
+          timeRemainingText = 'تتشحن القلوب تلقائياً حتى 5 قلوب كل 24 ساعة (قلب كل ٤.٨ ساعات)';
+        }
+
+        if (currentXP >= costPerHeart) {
           const canFull = currentXP >= fullCost;
           const htmlContent = `
             <div style="text-align:center;line-height:1.7;padding:6px 0;">
               <p style="font-size:1.15rem;font-weight:800;color:var(--madder);margin-bottom:6px;">نفدت محاولاتك! 💔</p>
-              <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:14px;">سعر القلب الواحد = <b>15 XP</b> ⭐ (رصيدك: <b>${currentXP} XP</b>)</p>
-              <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px;">
+              <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:8px;">سعر القلب الواحد = <b>${costPerHeart} XP</b> ⭐ (رصيدك: <b>${currentXP} XP</b>)</p>
+              <p style="font-size:.82rem;color:#0077CC;background:#F0F9FF;padding:6px 12px;border-radius:10px;margin-bottom:14px;display:inline-block;">⏱️ ${timeRemainingText}</p>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
                 <button type="button" id="swal-buy-1-heart" style="padding:12px 18px;font-size:.96rem;background:linear-gradient(135deg,#00A3FF,#0077CC);border:none;border-radius:14px;color:#fff;cursor:pointer;font-weight:800;box-shadow:0 4px 14px rgba(0,163,255,0.35);">
-                  شراء 1 قلب (+1 ❤️) بـ 15 XP
+                  شراء 1 قلب (+1 ❤️) بـ ${costPerHeart} XP
                 </button>
                 ${canFull ? `
                   <button type="button" id="swal-buy-all-hearts" style="padding:11px 18px;font-size:.92rem;background:#E7F5FF;border:1.5px solid #00A3FF;border-radius:14px;color:#0077CC;cursor:pointer;font-weight:800;">
@@ -13054,7 +13715,7 @@
                 b1.onclick = async () => {
                   Swal.close();
                   if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, 1, 15);
+                    const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
                     if (buyRes.success) {
                       await refreshStatsDisplay();
                       if (game.sound) game.sound.playCorrect();
@@ -13069,7 +13730,7 @@
                 bAll.onclick = async () => {
                   Swal.close();
                   if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, 15);
+                    const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
                     if (buyRes.success) {
                       await refreshStatsDisplay();
                       if (game.sound) game.sound.playCorrect();
@@ -13082,13 +13743,13 @@
             }
           });
 
-          if (result.dismiss === Swal.DismissReason.cancel) {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
             closeRunner();
           }
         } else {
           await mgAlert(
             'نفدت المحاولات! 💔',
-            `ليس لديك رصيد كافٍ من الـ XP لشراء قلوب جديدة.<br>سعر القلب الواحد = <b>15 XP</b> ورصيدك الحالي: <b>${currentXP} XP</b>.<br>يمكنك مراجعة الدروس السابقة لكسب المزيد من النقاط والمحاولة من جديد!`,
+            `ليس لديك رصيد كافٍ من الـ XP لشراء قلوب جديدة.<br>سعر القلب الواحد = <b>${costPerHeart} XP</b> ورصيدك الحالي: <b>${currentXP} XP</b>.<br><br>⏱️ ${timeRemainingText}<br><br>يمكنك مراجعة الدروس السابقة لكسب المزيد من النقاط أو الانتظار حتى تتشحن القلوب تلقائياً!`,
             'error'
           );
           closeRunner();
@@ -13327,7 +13988,46 @@
     </div>
   </div>
 
-  <!-- PWA Service Worker Registration & Notification Prompt -->
+    <!-- مركز الإشعارات (SVG فقط — بدون أي ملصقات أو إيموجي) -->
+  <div class="mg-notif-backdrop" id="mg-notif-backdrop" onclick="window.closeNotificationsCenter && window.closeNotificationsCenter()"></div>
+
+  <div class="mg-notif-panel" id="mg-notif-panel" role="dialog" aria-modal="true" aria-labelledby="mg-notif-panel-title" style="display:none;">
+    <!-- Header -->
+    <div class="mg-notif-panel-header">
+      <div class="mg-notif-panel-title-box">
+        <div class="mg-notif-panel-icon-wrap">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </div>
+        <h3 class="mg-notif-panel-title" id="mg-notif-panel-title">الإشعارات</h3>
+        <span class="mg-notif-count-pill" id="mg-notif-count-pill">0</span>
+      </div>
+      <div class="mg-notif-header-actions">
+        <button type="button" class="mg-notif-clear-all-btn" id="mg-notif-clear-all-btn" onclick="window.clearAllNotifications && window.clearAllNotifications()" title="مسح جميع الإشعارات">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          <span>مسح الكل</span>
+        </button>
+        <button type="button" class="mg-notif-close-btn" onclick="window.closeNotificationsCenter && window.closeNotificationsCenter()" title="إغلاق" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification List / Body -->
+    <div class="mg-notif-panel-body" id="mg-notif-panel-body">
+      <!-- يتم تعبئتها ديناميكياً عبر مركز الإشعارات -->
+    </div>
+  </div>
+
+<!-- PWA Service Worker Registration & Notification Prompt -->
   <script src="js/pwa-register.js" defer></script>
   <script src="js/notification-prompt.js" defer></script>
 </body>

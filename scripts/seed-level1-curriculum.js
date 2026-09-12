@@ -34,10 +34,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ألف مفتوحة (أ)',
     soundFile: 'audio_coptic/1alfa.mp3',
     info: 'الحرف الأول في الأبجدية القبطية. يُنطق دائماً مثل حرف الألف المفتوحة في العربية أو (A) في الإنجليزية.',
-    wordCoptic: 'ⲁⲗⲟⲩ',
-    wordPhoneticAr: 'أَلو',
-    wordMeaning: 'ولد / طفل',
-    wrongMeanings: ['بنت', 'مدرسة', 'شمس'],
+    wordCoptic: 'ⲁⲗⲱⲙ',
+    wordPhoneticAr: 'آلوم',
+    wordMeaning: 'جبنة',
+    wrongMeanings: ['لبن', 'شجرة', 'خبز'],
     wrongLetterPron: ['فيدا (ف أو ب)', 'غاما (غ أو ج)', 'دلدا (د أو ذ)']
   },
   {
@@ -48,10 +48,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ف أو ب',
     soundFile: 'audio_coptic/2veta.mp3',
     info: 'الحرف الثاني. يُنطق "ف" إذا جاء بعده حرف متحرك، ويُنطق "ب" إذا لم يأتِ بعده متحرك أو في نهاية الكلمة.',
-    wordCoptic: 'ⲃⲉⲣⲧ',
-    wordPhoneticAr: 'فيرت',
-    wordMeaning: 'وردة',
-    wrongMeanings: ['شجرة', 'ماء', 'نور'],
+    wordCoptic: 'ⲃⲱ',
+    wordPhoneticAr: 'ڤو',
+    wordMeaning: 'شجرة',
+    wrongMeanings: ['وردة', 'جبنة', 'ماء'],
     wrongLetterPron: ['ألفا (أ)', 'دلدا (د أو ذ)', 'إي (إي)']
   },
   {
@@ -62,10 +62,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'غ أو ج أو ن',
     soundFile: 'audio_coptic/3ghamma.mp3',
     info: 'الحرف الثالث. ينطق "غ" في الكلمات القبطية، و"ن" قبل الحلقيات، و"ج" معطشة قبل المتحرك للكسر في اليونانية.',
-    wordCoptic: 'ⲁⲅⲅⲉⲗⲟⲥ',
-    wordPhoneticAr: 'أنجيلوس',
-    wordMeaning: 'ملاك',
-    wrongMeanings: ['إنسان', 'قديس', 'نبي'],
+    wordCoptic: 'ⲅⲁⲗⲁ',
+    wordPhoneticAr: 'غالا',
+    wordMeaning: 'لبن',
+    wrongMeanings: ['عسل', 'ماء', 'زيت'],
     wrongLetterPron: ['فيدا (ف أو ب)', 'سو (٦)', 'زاتا (ز)']
   },
   {
@@ -76,10 +76,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'د أو ذ',
     soundFile: 'audio_coptic/4delta.mp3',
     info: 'الحرف الرابع. يُنطق "د" في أسماء الأعلام والكلمات القبطية، و"ذ" في الكلمات اليونانية.',
-    wordCoptic: 'ⲇⲱⲣⲟⲛ',
-    wordPhoneticAr: 'ذورون',
-    wordMeaning: 'عطية / هدية',
-    wrongMeanings: ['صلاة', 'خبز', 'كتاب'],
+    wordCoptic: 'ⲁⲇⲁⲙ',
+    wordPhoneticAr: 'آدام',
+    wordMeaning: 'آدم',
+    wrongMeanings: ['إنسان', 'نوح', 'ملاك'],
     wrongLetterPron: ['غاما (غ أو ج)', 'إي (إي)', 'هيتا (ياء طويلة)']
   },
   {
@@ -90,10 +90,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'إي خفيفة',
     soundFile: 'audio_coptic/5ei.mp3',
     info: 'الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).',
-    wordCoptic: 'ⲉⲛ',
-    wordPhoneticAr: 'إن',
-    wordMeaning: 'قرد',
-    wrongMeanings: ['أسد', 'طائر', 'سمكة'],
+    wordCoptic: 'ⲉ̀ⲣϣⲱ',
+    wordPhoneticAr: 'إرجو',
+    wordMeaning: 'دجاجة',
+    wrongMeanings: ['عصفور', 'حمامة', 'بطة'],
     wrongLetterPron: ['ألفا (أ)', 'فيدا (ف أو ب)', 'دلدا (د أو ذ)']
   },
 
@@ -106,10 +106,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'سو (الرقم 6)',
     soundFile: 'audio_coptic/6sow.mp3',
     info: 'رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق "سو".',
-    wordCoptic: 'ⲥⲟⲟⲩ',
-    wordPhoneticAr: 'سو',
-    wordMeaning: 'الرقم ستة (٦)',
-    wrongMeanings: ['الرقم خمسة', 'الرقم سبعة', 'الرقم عشرة'],
+    wordCoptic: 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ',
+    wordPhoneticAr: 'إسوؤو إن شكيلكيل',
+    wordMeaning: '6 أجراس',
+    wrongMeanings: ['٥ أجراس', '٦ شموع', '٧ كؤوس'],
     wrongLetterPron: ['زاتا (ز)', 'ثيتا (ث أو ت)', 'كابا (ك)']
   },
   {
@@ -120,10 +120,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ز',
     soundFile: 'audio_coptic/7zeta.mp3',
     info: 'الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف "ز" مثل حرف (Z) في الإنجليزية.',
-    wordCoptic: 'ⲧⲣⲁⲡⲉⲍⲁ',
-    wordPhoneticAr: 'ترابيزا',
-    wordMeaning: 'مائدة / ترابيزة',
-    wrongMeanings: ['كرسي', 'باب', 'نافذة'],
+    wordCoptic: 'ⲍⲱⲙⲟⲥ',
+    wordPhoneticAr: 'أزموس',
+    wordMeaning: 'شوربة',
+    wrongMeanings: ['طعام', 'ماء', 'زيت'],
     wrongLetterPron: ['سو (٦)', 'هيتا (ياء طويلة)', 'إيوتا (ياء قصيرة)']
   },
   {
@@ -134,10 +134,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ياء طويلة ممدودة',
     soundFile: 'audio_coptic/8eta.mp3',
     info: 'الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.',
-    wordCoptic: 'ⲁⲛⲍⲏⲃ',
-    wordPhoneticAr: 'أنزيب',
-    wordMeaning: 'مدرسة',
-    wrongMeanings: ['كنيسة', 'بيت', 'طريق'],
+    wordCoptic: 'ⲏ̀ⲡⲓ',
+    wordPhoneticAr: 'إيبي',
+    wordMeaning: 'قبة',
+    wrongMeanings: ['كنيسة', 'مدرسة', 'هيكل'],
     wrongLetterPron: ['زاتا (ز)', 'ثيتا (ث أو ت)', 'لابدا (ل)']
   },
   {
@@ -148,10 +148,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ث أو ت',
     soundFile: 'audio_coptic/9seta.mp3',
     info: 'الحرف التاسع. يُنطق "ث" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق "ت".',
-    wordCoptic: 'ⲙⲁⲱⲟⲩⲧ',
-    wordPhoneticAr: 'ماووت',
-    wordMeaning: 'مشط',
-    wrongMeanings: ['مرآة', 'ثوب', 'خاتم'],
+    wordCoptic: 'ⲕⲓⲑⲁⲣⲁ',
+    wordPhoneticAr: 'كيثارا',
+    wordMeaning: 'قيثارة',
+    wrongMeanings: ['دف', 'مزمار', 'ناي'],
     wrongLetterPron: ['هيتا (ياء طويلة)', 'إيوتا (ياء قصيرة)', 'مي (م)']
   },
   {
@@ -162,10 +162,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ياء قصيرة',
     soundFile: 'audio_coptic/10yota.mp3',
     info: 'الحرف العاشر. حرف متحرك يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في الإنجليزية.',
-    wordCoptic: 'ⲱⲓⲛⲓ',
-    wordPhoneticAr: 'أويني',
-    wordMeaning: 'صنارة / نور',
-    wrongMeanings: ['شبكة', 'قارب', 'بحر'],
+    wordCoptic: 'ⲓⲁⲗ',
+    wordPhoneticAr: 'إيال',
+    wordMeaning: 'مراية',
+    wrongMeanings: ['صورة', 'نور', 'نافذة'],
     wrongLetterPron: ['ثيتا (ث أو ت)', 'كابا (ك)', 'ني (ن)']
   },
 
@@ -178,10 +178,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ك',
     soundFile: 'audio_coptic/11kapa.mp3',
     info: 'الحرف الحادي عشر في الأبجدية القبطية. يُنطق "ك" دائماً في جميع المواضع.',
-    wordCoptic: 'ⲉⲕⲕⲗⲏⲥⲓⲁ',
-    wordPhoneticAr: 'إككليسيا',
-    wordMeaning: 'كنيسة',
-    wrongMeanings: ['دير', 'مذبح', 'هيكل'],
+    wordCoptic: 'ⲕⲁϣ',
+    wordPhoneticAr: 'كاش',
+    wordMeaning: 'قلم',
+    wrongMeanings: ['كتاب', 'مسطرة', 'ورقة'],
     wrongLetterPron: ['لابدا (ل)', 'مي (م)', 'كسي (كـ+س)']
   },
   {
@@ -192,10 +192,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ل',
     soundFile: 'audio_coptic/12lavla.mp3',
     info: 'الحرف الثاني عشر. يُنطق "ل" دائماً.',
-    wordCoptic: 'ⲗⲁⲙⲡⲁⲥ',
-    wordPhoneticAr: 'لامباس',
-    wordMeaning: 'مصباح / قنديل',
-    wrongMeanings: ['نار', 'زيت', 'شمس'],
+    wordCoptic: 'ⲗⲁⲃⲟ',
+    wordPhoneticAr: 'لاڤو',
+    wordMeaning: 'أسد',
+    wrongMeanings: ['ذئب', 'نمر', 'حصان'],
     wrongLetterPron: ['كابا (ك)', 'ني (ن)', 'بي (ب مشددة)']
   },
   {
@@ -206,10 +206,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'م',
     soundFile: 'audio_coptic/13mi.mp3',
     info: 'الحرف الثالث عشر. يُنطق حرف "م" دائماً.',
-    wordCoptic: 'ⲙⲟⲗϧ',
-    wordPhoneticAr: 'مولخ',
-    wordMeaning: 'شمعة',
-    wrongMeanings: ['بخور', 'صليب', 'كأس'],
+    wordCoptic: 'ⲙⲁⲛϩⲟⲛ',
+    wordPhoneticAr: 'مانهون',
+    wordMeaning: 'برتقال',
+    wrongMeanings: ['تفاح', 'بطيخ', 'عنب'],
     wrongLetterPron: ['لابدا (ل)', 'ني (ن)', 'رو (ر)']
   },
   {
@@ -220,10 +220,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ن',
     soundFile: 'audio_coptic/14ni.mp3',
     info: 'الحرف الرابع عشر. يُنطق حرف "ن" دائماً.',
-    wordCoptic: 'ⲛⲟⲩϯ',
-    wordPhoneticAr: 'نوتي',
-    wordMeaning: 'الله',
-    wrongMeanings: ['السماء', 'النور', 'الحق'],
+    wordCoptic: 'ⲉⲛ̀ⲕⲟⲧ',
+    wordPhoneticAr: 'إنكوت',
+    wordMeaning: 'ينام',
+    wrongMeanings: ['يأكل', 'يستيقظ', 'يجلس'],
     wrongLetterPron: ['مي (م)', 'كسي (كـ+س)', 'سيما (س)']
   },
   {
@@ -234,10 +234,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'كـ + س',
     soundFile: 'audio_coptic/15axsy.mp3',
     info: 'الحرف الخامس عشر. حرف مركب يُنطق كاف وسين معاً (كـ + س = X) في صوت واحد.',
-    wordCoptic: 'ⲟⲩⲁⲗⲓⲝ',
-    wordPhoneticAr: 'أواليكس',
-    wordMeaning: 'ستارة',
-    wrongMeanings: ['مائدة', 'حائط', 'سقف'],
+    wordCoptic: 'ⲝⲟⲩⲏ',
+    wordPhoneticAr: 'إكسومي',
+    wordMeaning: 'مسطرة',
+    wrongMeanings: ['قلم', 'كتاب', 'ممحاة'],
     wrongLetterPron: ['كابا (ك)', 'ني (ن)', 'تاف (ت)']
   },
 
@@ -250,10 +250,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'واو قصيرة مضمومة',
     soundFile: 'audio_coptic/16oo.mp3',
     info: 'الحرف السادس عشر. حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة.',
-    wordCoptic: 'ⲥⲓⲟⲩ',
-    wordPhoneticAr: 'سيو',
-    wordMeaning: 'نجم',
-    wrongMeanings: ['قمر', 'سماء', 'سحاب'],
+    wordCoptic: 'ⲟⲩⲱⲙ',
+    wordPhoneticAr: 'أوؤم',
+    wordMeaning: 'يأكل',
+    wrongMeanings: ['يشرب', 'ينام', 'يمشي'],
     wrongLetterPron: ['بي (ب ثقيلة)', 'رو (ر)', 'أوميغا (واو طويلة)']
   },
   {
@@ -264,10 +264,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ب ثقيلة مشددة',
     soundFile: 'audio_coptic/17pee.mp3',
     info: 'الحرف السابع عشر. يُنطق "ب" شديدة مشددة مثل حرف (P) في اللغة الإنجليزية.',
-    wordCoptic: 'ⲡⲉ',
-    wordPhoneticAr: 'بي',
-    wordMeaning: 'سماء',
-    wrongMeanings: ['أرض', 'ماء', 'نار'],
+    wordCoptic: 'ⲡⲓⲱⲧ',
+    wordPhoneticAr: 'بايوت',
+    wordMeaning: 'أبي',
+    wrongMeanings: ['أمي', 'أخي', 'أختي'],
     wrongLetterPron: ['أُو (واو قصيرة)', 'سيما (س)', 'تاف (ت)']
   },
   {
@@ -278,10 +278,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ر',
     soundFile: 'audio_coptic/18roo.mp3',
     info: 'الحرف الثامن عشر. يُنطق حرف "ر" دائماً.',
-    wordCoptic: 'ⲣⲱⲙⲓ',
-    wordPhoneticAr: 'رومي',
-    wordMeaning: 'إنسان',
-    wrongMeanings: ['ملاك', 'حيوان', 'شجر'],
+    wordCoptic: 'ⲣⲏ',
+    wordPhoneticAr: 'ري',
+    wordMeaning: 'شمس',
+    wrongMeanings: ['قمر', 'نجم', 'سماء'],
     wrongLetterPron: ['بي (ب مشددة)', 'سيما (س)', 'خي (خ)']
   },
   {
@@ -292,10 +292,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'س',
     soundFile: 'audio_coptic/19sema.mp3',
     info: 'الحرف التاسع عشر. يُنطق حرف "س" دائماً.',
-    wordCoptic: 'ⲥⲱ',
-    wordPhoneticAr: 'سو',
-    wordMeaning: 'يشرب',
-    wrongMeanings: ['يأكل', 'ينام', 'يمشي'],
+    wordCoptic: 'ⲡⲁⲥⲟⲛ',
+    wordPhoneticAr: 'باصون',
+    wordMeaning: 'أخي',
+    wrongMeanings: ['أبي', 'أمي', 'صديقي'],
     wrongLetterPron: ['رو (ر)', 'تاف (ت)', 'في (ف)']
   },
   {
@@ -306,10 +306,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ت',
     soundFile: 'audio_coptic/20tav.mp3',
     info: 'الحرف العشرون في الأبجدية القبطية. يُنطق حرف "ت" دائماً.',
-    wordCoptic: 'ⲧⲱⲟⲩ',
-    wordPhoneticAr: 'توو',
-    wordMeaning: 'جبل',
-    wrongMeanings: ['وادي', 'نهر', 'صحراء'],
+    wordCoptic: 'ⲧⲁⲙⲁⲩ',
+    wordPhoneticAr: 'تاماف',
+    wordMeaning: 'أمي',
+    wrongMeanings: ['أبي', 'أختي', 'جدتي'],
     wrongLetterPron: ['سيما (س)', 'إبسيلون (ي/و)', 'شاي (ش)']
   },
 
@@ -322,10 +322,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ي أو ڤ أو و',
     soundFile: 'audio_coptic/21epselon.mp3',
     info: 'الحرف الحادي والعشرون. حرف متحرك ينطق "ڤ" بعد Ⲁ أو Ⲉ، وينطق "و" طويلة بعد Ⲟ (ⲟⲩ)، وينطق "ي" في الحالات الأخرى.',
-    wordCoptic: 'ⲩⲓⲟⲥ',
-    wordPhoneticAr: 'إيوس',
-    wordMeaning: 'ابن',
-    wrongMeanings: ['أب', 'أم', 'أخ'],
+    wordCoptic: 'ⲩⲥⲓⲥ',
+    wordPhoneticAr: 'إيسيس',
+    wordMeaning: 'مطر',
+    wrongMeanings: ['سحاب', 'ثلج', 'ريح'],
     wrongLetterPron: ['في (ف)', 'خي (خ أو ك)', 'إبسي (بـ+س)']
   },
   {
@@ -336,10 +336,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ف',
     soundFile: 'audio_coptic/22fi.mp3',
     info: 'الحرف الثاني والعشرون. يُنطق حرف "ف" دائماً.',
-    wordCoptic: 'ⲫⲟⲟⲩ',
-    wordPhoneticAr: 'إفهو',
-    wordMeaning: 'اليوم / النهار',
-    wrongMeanings: ['أمس', 'غداً', 'الليل'],
+    wordCoptic: 'ⲫⲉⲃ',
+    wordPhoneticAr: 'أفيغ',
+    wordMeaning: 'بطيخ',
+    wrongMeanings: ['تفاح', 'برتقال', 'عنب'],
     wrongLetterPron: ['إبسيلون (ي/و)', 'خي (خ أو ك)', 'أوميغا (واو طويلة)']
   },
   {
@@ -350,10 +350,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'خ أو ك أو ش',
     soundFile: 'audio_coptic/23ki.mp3',
     info: 'الحرف الثالث والعشرون. يُنطق "ك" في الكلمات القبطية، ويُنطق "خ" أو "ش" في الكلمات ذات الأصل اليوناني.',
-    wordCoptic: 'ⲭⲣⲓⲥⲧⲟⲥ',
-    wordPhoneticAr: 'خريستوس',
-    wordMeaning: 'المسيح',
-    wrongMeanings: ['المعلم', 'الملك', 'المخلص'],
+    wordCoptic: 'ⲭ̀ⲗⲓⲗ',
+    wordPhoneticAr: 'إخليل',
+    wordMeaning: 'عقد',
+    wrongMeanings: ['تاج', 'خاتم', 'سوار'],
     wrongLetterPron: ['في (ف)', 'إبسي (بـ+س)', 'هوري (هـ)']
   },
   {
@@ -364,10 +364,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'بـ + س',
     soundFile: 'audio_coptic/24psi.mp3',
     info: 'الحرف الرابع والعشرون. حرف مركب يُنطق باء وسين معاً في صوت واحد (بـ + س = Ps).',
-    wordCoptic: 'ⲯⲁⲗⲙⲟⲥ',
-    wordPhoneticAr: 'بصالموس',
-    wordMeaning: 'مزمور',
-    wrongMeanings: ['صلاة', 'إنجيل', 'ترنيمة'],
+    wordCoptic: 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ',
+    wordPhoneticAr: 'إبسيت إن كينكين',
+    wordMeaning: '9 دفوف',
+    wrongMeanings: ['٧ دفوف', '٨ قيثارات', '٩ أجراس'],
     wrongLetterPron: ['خي (خ أو ك)', 'أوميغا (واو طويلة)', 'جانجا (ج)']
   },
   {
@@ -378,10 +378,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'واو طويلة ممدودة',
     soundFile: 'audio_coptic/25oo.mp3',
     info: 'الحرف الخامس والعشرون. آخر الحروف المأخوذة من اليونانية. يُنطق واواً طويلة ومفتوحة (Ō).',
-    wordCoptic: 'ⲱⲛϧ',
-    wordPhoneticAr: 'أونخ',
-    wordMeaning: 'حياة',
-    wrongMeanings: ['موت', 'سلام', 'فرح'],
+    wordCoptic: 'ⲧⲁⲥⲱⲛⲓ',
+    wordPhoneticAr: 'تاسوني',
+    wordMeaning: 'أختي',
+    wrongMeanings: ['أمي', 'أخي', 'أبي'],
     wrongLetterPron: ['إبسي (بـ+س)', 'شاي (ش)', 'فاي (ف)']
   },
 
@@ -394,10 +394,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ش',
     soundFile: 'audio_coptic/26shay.mp3',
     info: 'الحرف السادس والعشرون. أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم. يُنطق حرف "ش" دائماً.',
-    wordCoptic: 'ϣⲏⲣⲓ',
-    wordPhoneticAr: 'شيري',
-    wordMeaning: 'ابن / صبي',
-    wrongMeanings: ['بنت', 'رجل', 'شيخ'],
+    wordCoptic: 'ϣⲁⲩ',
+    wordPhoneticAr: 'شاف',
+    wordMeaning: 'قطة',
+    wrongMeanings: ['كلب', 'أسد', 'طائر'],
     wrongLetterPron: ['فاي (ف)', 'خاي (خ)', 'هوري (هـ)']
   },
   {
@@ -410,8 +410,8 @@ const LETTERS_DATA = [
     info: 'الحرف السابع والعشرون. حرف مصري ديموطيقي أصيل يُنطق "ف".',
     wordCoptic: 'ϥⲱⲓ',
     wordPhoneticAr: 'فوي',
-    wordMeaning: 'شعر (شعر الرأس)',
-    wrongMeanings: ['عين', 'يد', 'قدم'],
+    wordMeaning: 'شعر',
+    wrongMeanings: ['رأس', 'عين', 'يد'],
     wrongLetterPron: ['شاي (ش)', 'خاي (خ)', 'جانجا (ج)']
   },
   {
@@ -422,10 +422,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'خ',
     soundFile: 'audio_coptic/28khay.mp3',
     info: 'الحرف الثامن والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "خ" دائماً.',
-    wordCoptic: 'ϧⲏⲧ',
-    wordPhoneticAr: 'خيت',
-    wordMeaning: 'قلب',
-    wrongMeanings: ['عقل', 'روح', 'جسد'],
+    wordCoptic: 'ϧⲏⲃⲥ',
+    wordPhoneticAr: 'خيبس',
+    wordMeaning: 'مصباح',
+    wrongMeanings: ['شمعة', 'نور', 'قنديل'],
     wrongLetterPron: ['فاي (ف)', 'هوري (هـ)', 'تشيما (تش)']
   },
   {
@@ -436,10 +436,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'هـ',
     soundFile: 'audio_coptic/29hory.mp3',
     info: 'الحرف التاسع والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "هـ" دائماً.',
-    wordCoptic: 'ϩⲱⲃ',
-    wordPhoneticAr: 'هوب',
-    wordMeaning: 'عمل / شيء',
-    wrongMeanings: ['راحة', 'كلام', 'فكر'],
+    wordCoptic: 'ϩ̀ⲑⲟ',
+    wordPhoneticAr: 'إهثو',
+    wordMeaning: 'حصان',
+    wrongMeanings: ['جمل', 'خروف', 'أسد'],
     wrongLetterPron: ['خاي (خ)', 'جانجا (ج)', 'تي (تـ+ي)']
   },
   {
@@ -450,10 +450,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ج (معطشة أو غير معطشة)',
     soundFile: 'audio_coptic/30ganga.mp3',
     info: 'الحرف الثلاثون. حرف مصري ديموطيقي أصيل. يُنطق "ج" معطشة قبل المتحرك للكسر، و"ج" غير معطشة في الحالات الأخرى.',
-    wordCoptic: 'ϫⲱ',
-    wordPhoneticAr: 'جو',
-    wordMeaning: 'رأس / يقول',
-    wrongMeanings: ['قدم', 'لسان', 'عين'],
+    wordCoptic: 'ϫⲉⲙⲫⲉϩ',
+    wordPhoneticAr: 'جيمفيه',
+    wordMeaning: 'تفاح',
+    wrongMeanings: ['برتقال', 'بطيخ', 'عنب'],
     wrongLetterPron: ['هوري (هـ)', 'تشيما (تش)', 'تي (تـ+ي)']
   },
 
@@ -466,10 +466,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'تش',
     soundFile: 'audio_coptic/31chema.mp3',
     info: 'الحرف الحادي والثلاثون. الحرف السادس من الحروف المصرية الديموطيقية، يُنطق تاء وشين معاً (تش) دائماً.',
-    wordCoptic: 'ϭⲟⲓⲥ',
-    wordPhoneticAr: 'تشويس',
-    wordMeaning: 'رب / سيد',
-    wrongMeanings: ['عبد', 'خادم', 'ملك'],
+    wordCoptic: 'ϭⲁϫ',
+    wordPhoneticAr: 'تشاج',
+    wordMeaning: 'عصفور',
+    wrongMeanings: ['دجاجة', 'حمامة', 'بطة'],
     wrongLetterPron: ['جانجا (ج)', 'تي (تـ+ي)', 'شاي (ش)']
   },
   {
@@ -480,10 +480,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'تـ + ي',
     soundFile: 'audio_coptic/32tee.mp3',
     info: 'الحرف الثاني والثلاثون والأخير في الأبجدية القبطية. مقطع صوتي مركب ينطق تاء وياء معاً (تـ + ي = Ti).',
-    wordCoptic: 'ϯⲙⲏⲓ',
+    wordCoptic: 'ϯⲙⲓ',
     wordPhoneticAr: 'تيمي',
-    wordMeaning: 'الحق / العدل',
-    wrongMeanings: ['الباطل', 'السلام', 'النعمة'],
+    wordMeaning: 'قرية',
+    wrongMeanings: ['مدينة', 'بيت', 'كنيسة'],
     wrongLetterPron: ['تشيما (تش)', 'هوري (هـ)', 'خاي (خ)']
   }
 ];
@@ -918,18 +918,18 @@ async function seed() {
   const exWord = await postJson('challenges', {
     lesson_id: examLesson.id,
     type: 'select',
-    question: `ما معنى الكلمة القبطية: ⲛⲟⲩϯ؟ (المعرب: «نوتي»)`,
-    coptic_display: 'ⲛⲟⲩϯ',
-    audio_text: 'نوتي',
-    audio_url: 'audio_coptic/14ni.mp3',
+    question: `ما معنى الكلمة القبطية: ⲁⲗⲱⲙ؟ (المعرب: «آلوم»)`,
+    coptic_display: 'ⲁⲗⲱⲙ',
+    audio_text: 'آلوم',
+    audio_url: 'audio_coptic/1alfa.mp3',
     order_index: 3
   });
   totalChallengesCreated++;
   for (const opt of [
-    { text: 'الله', is_correct: true },
-    { text: 'السماء', is_correct: false },
-    { text: 'الملاك', is_correct: false },
-    { text: 'الكنيسة', is_correct: false }
+    { text: 'جبنة', is_correct: true },
+    { text: 'لبن', is_correct: false },
+    { text: 'شجرة', is_correct: false },
+    { text: 'خبز', is_correct: false }
   ]) {
     await postJson('challenge_options', { challenge_id: exWord.id, text: opt.text, is_correct: opt.is_correct });
   }
@@ -955,12 +955,12 @@ async function seed() {
   await postJson('challenges', {
     lesson_id: examLesson.id,
     type: 'write',
-    question: `رتب حروف الكلمة القبطية: ولد (المعرب: «أَلو») [ⲁⲗⲟⲩ]`,
-    coptic_display: 'ⲁⲗⲟⲩ',
-    audio_text: 'أَلو',
+    question: `رتب حروف الكلمة القبطية: جبنة (المعرب: «آلوم») [ⲁⲗⲱⲙ]`,
+    coptic_display: 'ⲁⲗⲱⲙ',
+    audio_text: 'آلوم',
     audio_url: 'audio_coptic/1alfa.mp3',
-    correct_word: 'ⲁⲗⲟⲩ',
-    tiles: ['ⲁ', 'ⲗ', 'ⲟ', 'ⲩ'],
+    correct_word: 'ⲁⲗⲱⲙ',
+    tiles: ['ⲁ', 'ⲗ', 'ⲱ', 'ⲙ'],
     order_index: 5
   });
   totalChallengesCreated++;
