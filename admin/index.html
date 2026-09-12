@@ -84,8 +84,8 @@
   </style>
 
   <!-- Admin Modular CSS Styles -->
-  <link rel="stylesheet" href="css/variables.css?v=3.2.6">
-  <link rel="stylesheet" href="css/admin.css?v=3.2.6">
+  <link rel="stylesheet" href="css/variables.css?v=3.2.8">
+  <link rel="stylesheet" href="css/admin.css?v=3.2.8">
 
   <!-- External Vendor Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -974,78 +974,158 @@
         </div>
 
         <!-- Modal: Interactive Chest Preview (#modal-chest-preview) -->
-        <div class="curriculum-modal-overlay" id="modal-chest-preview" style="display:none;">
-          <div class="chest-modal-card" style="position:relative; max-width:440px; background:#FFFFFF; border-radius:24px; padding:28px 24px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); border:2.5px solid #D4AF37;">
-            <button type="button" class="curriculum-btn curriculum-btn-secondary" onclick="document.getElementById('modal-chest-preview').style.display='none'" style="position:absolute; top:14px; left:14px; border-radius:50%; width:36px; height:36px; padding:0; display:flex; align-items:center; justify-content:center;">✕</button>
-            <div style="display:flex; justify-content:center; margin-bottom:12px;">
-              <svg viewBox="0 0 96 74" width="105" height="82" fill="none">
-                <defs>
-                  <filter id="adminPreviewChestGlow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#4A0D24" flood-opacity="0.25"/>
-                  </filter>
-                  <linearGradient id="apLidGrad" x1="48" y1="6" x2="48" y2="30" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#FFF9DB"/>
-                    <stop offset="25%" stop-color="#F2D16B"/>
-                    <stop offset="70%" stop-color="#C89726"/>
-                    <stop offset="100%" stop-color="#8F6310"/>
-                  </linearGradient>
-                  <linearGradient id="apBodyGrad" x1="48" y1="30" x2="48" y2="62" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#F6DA7E"/>
-                    <stop offset="35%" stop-color="#D6A42E"/>
-                    <stop offset="85%" stop-color="#9C6B10"/>
-                    <stop offset="100%" stop-color="#664303"/>
-                  </linearGradient>
-                  <linearGradient id="apTrimGrad" x1="12" y1="30" x2="84" y2="30" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#FFF5C2"/>
-                    <stop offset="50%" stop-color="#FFE066"/>
-                    <stop offset="100%" stop-color="#C5931C"/>
-                  </linearGradient>
-                  <linearGradient id="apRubyGrad" x1="48" y1="26" x2="48" y2="37" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#FF5277"/>
-                    <stop offset="45%" stop-color="#D80032"/>
-                    <stop offset="100%" stop-color="#670014"/>
-                  </linearGradient>
-                </defs>
-                <ellipse cx="48" cy="67" rx="34" ry="5.5" fill="rgba(80,50,10,0.28)"/>
-                <g filter="url(#adminPreviewChestGlow)">
-                  <rect x="15" y="28" width="66" height="34" rx="6" fill="url(#apBodyGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-                  <line x1="28" y1="30" x2="28" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                  <line x1="29.5" y1="30" x2="29.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                  <line x1="41" y1="30" x2="41" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                  <line x1="42.5" y1="30" x2="42.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                  <line x1="55" y1="30" x2="55" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                  <line x1="56.5" y1="30" x2="56.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                  <line x1="68" y1="30" x2="68" y2="61" stroke="#5E3F0A" stroke-width="2" opacity="0.6"/>
-                  <line x1="69.5" y1="30" x2="69.5" y2="61" stroke="#FFF3C4" stroke-width="1.2" opacity="0.4"/>
-                  <rect x="13" y="58" width="70" height="5" rx="2.5" fill="#B37C17" stroke="#5E3F0A" stroke-width="2"/>
-                  <path d="M14 29 C14 13, 26 7, 48 7 C70 7, 82 13, 82 29 Z" fill="url(#apLidGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
-                  <path d="M28 11 C25 17, 25 24, 28 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                  <path d="M41 8 C40 16, 40 23, 41 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                  <path d="M55 8 C56 16, 56 23, 55 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                  <path d="M68 11 C71 17, 71 24, 68 29" stroke="#5E3F0A" stroke-width="1.8" opacity="0.5"/>
-                  <rect x="12" y="27" width="72" height="5" rx="2" fill="url(#apTrimGrad)" stroke="#5E3F0A" stroke-width="2"/>
-                  <line x1="14" y1="28" x2="82" y2="28" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
-                  <rect x="41" y="23" width="14" height="17" rx="3.5" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
-                  <rect x="43" y="25" width="10" height="13" rx="2.5" fill="#3D2103"/>
-                  <rect x="44" y="26.5" width="8" height="10" rx="2" fill="url(#apRubyGrad)" stroke="#FFD1DC" stroke-width="0.8"/>
-                  <circle cx="46" cy="28.5" r="1.2" fill="#FFFFFF"/>
-                </g>
-              </svg>
+        <div class="chest-modal-overlay" id="modal-chest-preview" style="display:none;" onclick="if(event.target===this)CurriculumAdminSystem.closeChestPreview()">
+          <div class="chest-modal-card">
+            <button type="button" class="chest-modal-close" onclick="CurriculumAdminSystem.closeChestPreview()" aria-label="إغلاق">&times;</button>
+            <div class="chest-stage-wrap">
+              <div class="chest-sunburst-rays"></div>
+              <div class="chest-ambient-glow"></div>
+              <canvas class="chest-confetti-canvas" id="admin-chest-confetti-canvas"></canvas>
+              <div class="chest-stars-layer">
+                <span class="chest-star star-1">✦</span>
+                <span class="chest-star star-2">★</span>
+                <span class="chest-star star-3">✦</span>
+                <span class="chest-star star-4">★</span>
+              </div>
+              <div class="chest-icon-wrap">
+                <svg viewBox="0 0 96 82" width="130" height="110" fill="none" class="chest-main-svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="modalBodyWoodGrad" x1="48" y1="36" x2="48" y2="72" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#8F5E24"/>
+                      <stop offset="40%" stop-color="#6E4413"/>
+                      <stop offset="85%" stop-color="#4F300C"/>
+                      <stop offset="100%" stop-color="#341E06"/>
+                    </linearGradient>
+                    <linearGradient id="modalGoldBevelGrad" x1="12" y1="36" x2="84" y2="72" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#FFF5C2"/>
+                      <stop offset="25%" stop-color="#F2D16B"/>
+                      <stop offset="65%" stop-color="#C89726"/>
+                      <stop offset="100%" stop-color="#7A510A"/>
+                    </linearGradient>
+                    <linearGradient id="modalGoldHighlightGrad" x1="48" y1="6" x2="48" y2="44" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#FFFDF0"/>
+                      <stop offset="35%" stop-color="#FFE066"/>
+                      <stop offset="80%" stop-color="#C5931C"/>
+                      <stop offset="100%" stop-color="#734B03"/>
+                    </linearGradient>
+                    <linearGradient id="modalInnerCeilingGrad" x1="48" y1="6" x2="48" y2="40" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#241305"/>
+                      <stop offset="30%" stop-color="#45270C"/>
+                      <stop offset="70%" stop-color="#6B4117"/>
+                      <stop offset="100%" stop-color="#8C5722"/>
+                    </linearGradient>
+                    <linearGradient id="modalCrystalPink1" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#FFF0F5"/>
+                      <stop offset="30%" stop-color="#FF6584"/>
+                      <stop offset="80%" stop-color="#D80032"/>
+                      <stop offset="100%" stop-color="#670014"/>
+                    </linearGradient>
+                    <linearGradient id="modalCrystalPink2" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#FFE3EC"/>
+                      <stop offset="40%" stop-color="#FF2A6D"/>
+                      <stop offset="100%" stop-color="#A00028"/>
+                    </linearGradient>
+                    <linearGradient id="modalChestBeamPink" x1="48" y1="42" x2="48" y2="-5" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
+                      <stop offset="30%" stop-color="#FF6584" stop-opacity="0.6"/>
+                      <stop offset="70%" stop-color="#FFB6C1" stop-opacity="0.2"/>
+                      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+                    </linearGradient>
+                    <filter id="modalChestBeamBlur" x="-30%" y="-30%" width="160%" height="160%">
+                      <feGaussianBlur stdDeviation="3"/>
+                    </filter>
+                    <filter id="modalCrystalGlow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#FF2A6D" flood-opacity="0.8"/>
+                    </filter>
+                  </defs>
+
+                  <!-- Ground Shadow -->
+                  <ellipse cx="48" cy="76" rx="36" ry="6" fill="rgba(80,50,10,0.28)"/>
+
+                  <!-- 1. Open Lid (Pinterest 3D Style Arched Hood) -->
+                  <g class="chest-open-lid">
+                    <path d="M22 8 C22 1, 74 1, 74 8 L77 12 C77 6, 19 6, 19 12 Z" fill="#3D2103" stroke="#261401" stroke-width="1.5"/>
+                    <path d="M18 41 C18 16, 26 7, 48 7 C70 7, 78 16, 78 41 Z" fill="url(#modalInnerCeilingGrad)" stroke="#3D2103" stroke-width="2"/>
+                    <path d="M22 39 C22 19, 29 11, 48 11 C67 11, 74 19, 74 39" stroke="#1F0E02" stroke-width="2" fill="none" opacity="0.85"/>
+                    <line x1="48" y1="7" x2="48" y2="41" stroke="#1F0E02" stroke-width="1.8" opacity="0.6"/>
+                    <line x1="33" y1="9" x2="33" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="63" y1="9" x2="63" y2="41" stroke="#1F0E02" stroke-width="1.5" opacity="0.5"/>
+                    <ellipse cx="48" cy="28" rx="22" ry="12" fill="url(#modalCrystalPink2)" opacity="0.25"/>
+                    <path d="M14 42 C14 13, 24 5, 48 5 L48 9 C27 9, 19 16, 19 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                    <path d="M82 42 C82 13, 72 5, 48 5 L48 9 C69 9, 77 16, 77 42 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                    <rect x="20" y="4.5" width="56" height="5" rx="2.5" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.5"/>
+                    <line x1="22" y1="6.5" x2="74" y2="6.5" stroke="#FFFDE6" stroke-width="1.2" stroke-linecap="round"/>
+                  </g>
+
+                  <!-- 2. Interior Atmospheric Light Beam -->
+                  <g class="chest-svg-light-beam" filter="url(#modalChestBeamBlur)">
+                    <polygon points="26 42 6 2 90 2 70 42" fill="url(#modalChestBeamPink)"/>
+                  </g>
+
+                  <!-- 3. Glowing Ruby Crystals (Pinterest Style) -->
+                  <g class="chest-crystals" filter="url(#modalCrystalGlow)">
+                    <polygon points="24 43 27 30 32 32 30 43" fill="url(#modalCrystalPink1)"/>
+                    <polygon points="29 43 33 26 38 29 36 43" fill="url(#modalCrystalPink2)"/>
+                    <polygon points="37 43 43 20 49 22 47 43" fill="url(#modalCrystalPink1)"/>
+                    <polygon points="46 43 51 22 56 25 54 43" fill="url(#modalCrystalPink2)"/>
+                    <polygon points="55 43 59 28 65 31 63 43" fill="url(#modalCrystalPink1)"/>
+                    <polygon points="63 43 67 33 72 35 70 43" fill="url(#modalCrystalPink2)"/>
+                    <polygon points="40 43 44 32 48 43" fill="#FFF0F5" opacity="0.9"/>
+                    <polygon points="49 43 53 34 57 43" fill="#FFF0F5" opacity="0.9"/>
+                    <circle cx="44" cy="22" r="1.5" fill="#FFFFFF"/>
+                    <circle cx="52" cy="24" r="1.2" fill="#FFFFFF"/>
+                    <circle cx="34" cy="28" r="1" fill="#FFFFFF"/>
+                  </g>
+
+                  <!-- 4. Chest Body Base -->
+                  <g class="chest-svg-body">
+                    <rect x="16" y="38" width="64" height="34" rx="5" fill="url(#modalBodyWoodGrad)" stroke="#4A2A06" stroke-width="2.5"/>
+                    <line x1="18" y1="49" x2="78" y2="49" stroke="#341A02" stroke-width="2" opacity="0.8"/>
+                    <line x1="18" y1="50.5" x2="78" y2="50.5" stroke="#9C6B28" stroke-width="1" opacity="0.4"/>
+                    <line x1="18" y1="61" x2="78" y2="61" stroke="#341A02" stroke-width="2" opacity="0.8"/>
+                    <line x1="18" y1="62.5" x2="78" y2="62.5" stroke="#9C6B28" stroke-width="1" opacity="0.4"/>
+                    <path d="M14 36 L21 37 L19 72 L12 71 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                    <path d="M82 36 L75 37 L77 72 L84 71 Z" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="1.8"/>
+                    <rect x="13" y="36" width="70" height="5" rx="2" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                    <rect x="14" y="69" width="68" height="4.5" rx="2" fill="#8F5E12" stroke="#4A2A06" stroke-width="1.8"/>
+                    <path d="M42 36 L54 36 L56 46 L48 53 L40 46 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                    <circle cx="48" cy="44" r="3" fill="#3D2103"/>
+                    <circle cx="48" cy="43.5" r="1.5" fill="#FFD700"/>
+                  </g>
+
+                  <!-- 5. Closed Lid (Flips up and back on open) -->
+                  <g class="chest-closed-lid">
+                    <path d="M15 38 C15 17, 26 9, 48 9 C70 9, 81 17, 81 38 Z" fill="url(#modalGoldHighlightGrad)" stroke="#5E3F0A" stroke-width="2.5"/>
+                    <path d="M28 13 C25 21, 25 30, 28 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                    <path d="M41 10 C40 20, 40 29, 41 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                    <path d="M55 10 C56 20, 56 29, 55 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                    <path d="M68 13 C71 21, 71 30, 68 37" stroke="#5E3F0A" stroke-width="1.8" opacity="0.55"/>
+                    <rect x="13" y="35" width="70" height="5" rx="2" fill="url(#modalGoldBevelGrad)" stroke="#5E3F0A" stroke-width="2"/>
+                    <line x1="15" y1="36.5" x2="81" y2="36.5" stroke="#FFFDE6" stroke-width="1.5" stroke-linecap="round"/>
+                    <rect x="41" y="31" width="14" height="15" rx="3" fill="#6B470D" stroke="#FFE175" stroke-width="2"/>
+                    <rect x="44" y="34" width="8" height="9" rx="2" fill="url(#modalCrystalPink1)" stroke="#FFD1DC" stroke-width="0.8"/>
+                    <circle cx="46" cy="36" r="1.2" fill="#FFFFFF"/>
+                  </g>
+                </svg>
+              </div>
             </div>
-            <div style="margin-bottom:10px;">
-              <span class="chest-reward-tag" style="background:#D1FADF; color:#027A48; border:1.5px solid #A6F4C5; padding:3px 14px; border-radius:14px; font-weight:800; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>تم الفتح</span></span>
-            </div>
-            <h2 id="preview-popup-title" style="margin:0 0 6px 0; font-size:1.35rem; font-weight:900; color:#4A0D24;">صندوق المكافأة السري!</h2>
-            <p id="preview-popup-desc" style="margin:0 0 18px 0; font-size:0.9rem; color:#706354; line-height:1.5;">أحسنت وصولاً إلى هذه المحطة! إليك هديتك التشجيعية:</p>
+            <h2 class="chest-modal-title" id="preview-popup-title">صندوق المكافأة السري!</h2>
+            <p class="chest-modal-desc" id="preview-popup-desc">أحسنت وصولاً إلى هذه المحطة!<br>إليك هديتك التشجيعية:</p>
             
-            <div id="preview-popup-rewards-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:10px; margin-bottom:20px;">
+            <div class="chest-rewards-grid" id="preview-popup-rewards-grid">
               <!-- Dynamic reward cards -->
             </div>
 
-            <button type="button" class="curriculum-btn curriculum-btn-gold" style="width:100%; padding:12px; font-size:1rem; font-weight:800; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; gap:8px;" onclick="CurriculumAdminSystem.triggerPreviewCelebration()">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-              <span>تجربة استلام المكافأة الآن</span>
-            </button>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button type="button" class="btn-3d-gold-claim" id="btn-admin-test-claim" onclick="CurriculumAdminSystem.triggerPreviewCelebration()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>تجربة استلام المكافأة الآن</span>
+              </button>
+              <button type="button" class="curriculum-btn curriculum-btn-outline" style="width:100%; padding:9px; font-size:0.85rem; font-weight:700; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; gap:6px;" onclick="CurriculumAdminSystem.replayChestAnimation()">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l6.73-6.73"/></svg>
+                <span>إعادة تشغيل حركة الفتح (Replay Animation)</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1568,8 +1648,8 @@
 </div>
 
   <!-- Admin Logic Modules -->
-  <script src="js/admin.js?v=3.2.6"></script>
-  <script src="js/curriculum-admin.js?v=3.2.6"></script>
+  <script src="js/admin.js?v=3.2.8"></script>
+  <script src="js/curriculum-admin.js?v=3.2.8"></script>
   <script src="../js/pwa-register.js?v=3.0.0" defer></script>
   <script>
     function togglePassVisibility(inputId, btn) {

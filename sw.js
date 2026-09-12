@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v2.0.0-curriculum-sync';
+const CACHE_NAME = 'mgcoptic-v2.0.1-admin-fix';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -73,6 +73,11 @@ self.addEventListener('fetch', (event) => {
 
   // Never cache Supabase database or auth API requests
   if (url.hostname.includes('supabase.co')) {
+    return;
+  }
+
+  // Never intercept admin portal routes
+  if (url.pathname.startsWith('/admin')) {
     return;
   }
 

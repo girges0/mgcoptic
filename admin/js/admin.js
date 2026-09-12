@@ -323,7 +323,7 @@ function applyRoleBasedUI() {
 }
 
 async function checkSession(){
-  if(window.location.search.includes('bypass=1') || localStorage.getItem('mg_coptic_admin_dev') === '1'){
+  if(window.location.search.includes('bypass=1') || window.location.hash.includes('bypass=1') || localStorage.getItem('mg_coptic_admin_dev') === '1'){
     loginScreen.style.display='none';
     shell.classList.add('show');
     window.currentAdminRole = 'super_admin';

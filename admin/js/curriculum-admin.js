@@ -1867,10 +1867,110 @@ const CurriculumAdminSystem = (function(){
     }
   }
 
+  /* =========================================================
+     ✨ High-End Cinematic Chest Opening Engine (Admin Preview) ✨
+     مطابق بنسبة 100% لمحاكاة موقع وتطبيق الطالب
+     ========================================================= */
+  let currentActivePreviewChestId = null;
+  let chestPreviewTimer = null;
+
+  function launchChestConfetti(canvas) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = 380;
+    const h = 320;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+
+    const colors = ['#FFD700', '#FFA000', '#00D2FF', '#FF3366', '#00E676', '#FFFFFF', '#E040FB'];
+    const particles = [];
+    const count = 75;
+
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.random() * Math.PI * 1.3) + Math.PI * 0.85;
+      const speed = 4 + Math.random() * 8.5;
+      particles.push({
+        x: w / 2 + (Math.random() * 24 - 12),
+        y: h / 2 + 10,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 4 + Math.random() * 6.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.3,
+        gravity: 0.22,
+        drag: 0.965,
+        opacity: 1,
+        decay: 0.009 + Math.random() * 0.012,
+        shape: Math.random() > 0.35 ? 'rect' : 'circle'
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      let active = false;
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= p.drag;
+        p.vy *= p.drag;
+        p.rotation += p.rotSpeed;
+        p.opacity = Math.max(0, p.opacity - p.decay);
+
+        if (p.opacity > 0 && p.y < h + 30) {
+          active = true;
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+
+          if (p.shape === 'rect') {
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          } else {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        }
+      });
+
+      if (active) {
+        requestAnimationFrame(animate);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  function playChestSound() {
+    try {
+      const audio = new Audio('assets/sounds/chest.mp3');
+      audio.play().catch(() => {
+        try {
+          const audio2 = new Audio('../assets/sounds/chest.mp3');
+          audio2.play().catch(() => {});
+        } catch(e){}
+      });
+    } catch(e){}
+
+    if (PreviewSound && typeof PreviewSound.playVictory === 'function') {
+      PreviewSound.playVictory();
+    }
+  }
+
   function previewChest(chestId){
     const chest = (curriculumData.chests || []).find(c => String(c.id) === String(chestId));
     if(!chest) return;
 
+    currentActivePreviewChestId = chestId;
     const modal = document.getElementById('modal-chest-preview');
     const titleEl = document.getElementById('preview-popup-title');
     const descEl = document.getElementById('preview-popup-desc');
@@ -1880,45 +1980,111 @@ const CurriculumAdminSystem = (function(){
     if(titleEl) titleEl.textContent = chest.title || 'صندوق المكافأة السري!';
     if(descEl) descEl.textContent = chest.description || 'أحسنت وصولاً إلى هذه المحطة! إليك هديتك التشجيعية:';
 
-    const xpText = chest.xp_mode === 'range' ? `+${chest.xp_min}~${chest.xp_max} XP` : `+${chest.xp_min || 30} XP`;
+    const xpMin = chest.xp_min || 30;
+    const xpMax = chest.xp_max || xpMin;
+    const xpText = chest.xp_mode === 'range' && xpMax > xpMin ? `+${xpMin}~${xpMax} XP` : `+${xpMin} XP`;
+    const heartsCount = parseInt(chest.hearts, 10) || 0;
 
     if(gridEl){
       gridEl.innerHTML = `
-        <div style="background:#F0F8FF; border:1.5px solid #BAE3FF; border-radius:14px; padding:14px; text-align:center;">
-          <div style="font-size:1.6rem; color:#00A3FF; margin-bottom:4px;">${SVG.zap}</div>
-          <div style="font-size:1.05rem; font-weight:900; color:#0077CC;">${xpText}</div>
-          <div style="font-size:0.75rem; color:#706354; font-weight:700;">نقاط خبرة إضافية</div>
+        <div class="chest-reward-card xp-reward">
+          <div class="reward-icon-wrap">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="#228be6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="reward-card-val xp-val" dir="ltr">
+            <span>${xpText}</span>
+          </div>
+          <div class="reward-card-lbl">نقاط خبرة إضافية</div>
         </div>
 
-        ${chest.hearts > 0 ? `
-          <div style="background:#FFF5F5; border:1.5px solid #FFCDD2; border-radius:14px; padding:14px; text-align:center;">
-            <div style="font-size:1.6rem; color:#FF4B4B; margin-bottom:4px;">${SVG.heart}</div>
-            <div style="font-size:1.05rem; font-weight:900; color:#D92D20;">+${chest.hearts} محاولات</div>
-            <div style="font-size:0.75rem; color:#706354; font-weight:700;">محاولات إضافية</div>
+        ${heartsCount > 0 ? `
+          <div class="chest-reward-card heart-reward">
+            <div class="reward-icon-wrap">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="#e03131"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div class="reward-card-val heart-val" dir="ltr">
+              <span>+${heartsCount} محاولات</span>
+            </div>
+            <div class="reward-card-lbl">محاولات إضافية</div>
           </div>
         ` : ''}
+
         ${chest.has_badge ? `
-          <div style="background:#FFFDF0; border:1.5px solid #FFE082; border-radius:14px; padding:14px; text-align:center;">
-            <div style="font-size:1.6rem; color:#D4AF37; margin-bottom:4px;">${SVG.crown || SVG.trophy}</div>
-            <div style="font-size:1.05rem; font-weight:900; color:#8C6A1A;">${escapeHtml(chest.badge_title || 'وسام التميز')}</div>
-            <div style="font-size:0.75rem; color:#706354; font-weight:700;">وسام تخرج خاص</div>
+          <div class="chest-reward-card badge-reward">
+            <div class="reward-icon-wrap">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="#e67700"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="reward-card-val badge-val">
+              <span>${escapeHtml(chest.badge_title || 'وسام التميز')}</span>
+            </div>
+            <div class="reward-card-lbl">وسام تشجيعي</div>
           </div>
         ` : ''}
       `;
     }
 
+    // 1. إعادة ضبط الحالة الأولية
+    modal.classList.remove('is-opened');
+    modal.classList.remove('is-wobbling');
     modal.style.display = 'flex';
+
+    // 2. حركة ترقب واهتزاز الصندوق الممتعة (Anticipation Wobble)
+    modal.classList.add('is-wobbling');
+
+    // 3. انبثاق الغطاء وإطلاق مدافع الكونفيتي بعد 380 مللي ثانية (مطابقة 100% للموقع)
+    if(chestPreviewTimer) clearTimeout(chestPreviewTimer);
+    chestPreviewTimer = setTimeout(() => {
+      modal.classList.remove('is-wobbling');
+      modal.classList.add('is-opened');
+
+      playChestSound();
+
+      const canvas = document.getElementById('admin-chest-confetti-canvas');
+      if(canvas) launchChestConfetti(canvas);
+    }, 380);
+  }
+
+  function replayChestAnimation(){
+    if(currentActivePreviewChestId){
+      previewChest(currentActivePreviewChestId);
+    } else {
+      const modal = document.getElementById('modal-chest-preview');
+      if(!modal) return;
+      modal.classList.remove('is-opened');
+      modal.classList.remove('is-wobbling');
+      modal.classList.add('is-wobbling');
+      if(chestPreviewTimer) clearTimeout(chestPreviewTimer);
+      chestPreviewTimer = setTimeout(() => {
+        modal.classList.remove('is-wobbling');
+        modal.classList.add('is-opened');
+        playChestSound();
+        const canvas = document.getElementById('admin-chest-confetti-canvas');
+        if(canvas) launchChestConfetti(canvas);
+      }, 380);
+    }
+  }
+
+  function closeChestPreview(){
+    const modal = document.getElementById('modal-chest-preview');
+    if(!modal) return;
+    modal.style.display = 'none';
+    modal.classList.remove('is-opened', 'is-wobbling');
+    if(chestPreviewTimer) clearTimeout(chestPreviewTimer);
   }
 
   function triggerPreviewCelebration(){
-    if(window.Sound && typeof window.Sound.playChestReward === 'function'){
-      window.Sound.playChestReward();
-    } else if(window.Sound && typeof window.Sound.playVictory === 'function'){
-      window.Sound.playVictory();
+    playChestSound();
+
+    const canvas = document.getElementById('admin-chest-confetti-canvas');
+    if(canvas) launchChestConfetti(canvas);
+
+    toast('🎉 أحسنت! تم فتح الكنز وتجربة استلام المكافآت بنجاح في وضع المعاينة');
+
+    const btn = document.getElementById('btn-admin-test-claim');
+    if(btn){
+      btn.style.transform = 'scale(0.96)';
+      setTimeout(() => { btn.style.transform = ''; }, 200);
     }
-    toast('تم استلام المكافأة بنجاح في وضع المعاينة!');
-    const modal = document.getElementById('modal-chest-preview');
-    if(modal) setTimeout(() => modal.style.display = 'none', 1200);
   }
 
   async function syncChestToDatabase(chest){
@@ -3325,7 +3491,11 @@ const CurriculumAdminSystem = (function(){
 
   /* ============ MODAL CONTROLLERS & CRUD FORMS ============ */
   function closeModals(){
-    document.querySelectorAll('.curriculum-modal-overlay').forEach(m => m.style.display = 'none');
+    document.querySelectorAll('.curriculum-modal-overlay, .chest-modal-overlay').forEach(m => {
+      m.style.display = 'none';
+      m.classList.remove('is-opened', 'is-wobbling');
+    });
+    if (chestPreviewTimer) clearTimeout(chestPreviewTimer);
   }
 
   /* LEVEL MODAL */
@@ -6939,6 +7109,8 @@ const CurriculumAdminSystem = (function(){
     deleteChest,
     previewChest,
     triggerPreviewCelebration,
+    replayChestAnimation,
+    closeChestPreview,
     onChestUnitChange,
     onChestPlacementChange,
     onChestXpModeChange,
