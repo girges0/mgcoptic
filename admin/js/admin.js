@@ -461,6 +461,10 @@ function switchAdminTab(tab, updateUrl = true) {
 
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
   if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') loadNotificationsAdmin();
+  if (tab === 'curriculum' && window.CurriculumAdminSystem && typeof window.CurriculumAdminSystem.renderLevelsOverview === 'function') {
+    window.CurriculumAdminSystem.renderLevelsOverview();
+    window.CurriculumAdminSystem.refreshStats();
+  }
 }
 window.switchAdminTab = switchAdminTab;
 

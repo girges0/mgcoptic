@@ -96,15 +96,15 @@ async function main() {
   let currAdminCode = fs.readFileSync(currAdminPath, 'utf8');
 
   // Embed DEFAULT_CURRICULUM directly into curriculum-admin.js if missing or empty
-  const defaultCurriculumSnippet = `const DEFAULT_SEEDED_CURRICULUM = ${JSON.stringify(canonicalCurriculum)};\n`;
+  const defaultCurriculumSnippet = `const DEFAULT_SEEDED_CURRICULUM = ${JSON.stringify(canonicalCurriculum)};`;
   if (!currAdminCode.includes('DEFAULT_SEEDED_CURRICULUM')) {
     currAdminCode = currAdminCode.replace(
-      'const CurriculumAdminSystem = (function(){',
-      `const CurriculumAdminSystem = (function(){\n  ${defaultCurriculumSnippet}`
+      'let navState = {\n    levelId: null,\n    unitId: null,\n    lessonId: null\n  };',
+      `let navState = {\n    levelId: null,\n    unitId: null,\n    lessonId: null\n  };\n  ${defaultCurriculumSnippet}`
     );
   } else {
     currAdminCode = currAdminCode.replace(
-      /const DEFAULT_SEEDED_CURRICULUM = \{[\s\S]*?\n\s*\};\n/,
+      /const DEFAULT_SEEDED_CURRICULUM = \{.*?\};/,
       defaultCurriculumSnippet
     );
   }
