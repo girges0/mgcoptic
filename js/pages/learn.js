@@ -29,6 +29,7 @@
       let currentActiveChestId = null;
       let currentActiveChestData = null;
       let isReplayingLesson = false;
+      let sessionAnsweredChallenges = new Set(); // تتبع التمارين المُجاب عليها لمنع تكرار النقاط
 
       function getAuthUserId() {
         if (window.currentAuthUser && window.currentAuthUser.id) return window.currentAuthUser.id;
@@ -996,9 +997,34 @@
           return;
         }
 
+        // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً لمنع تكرار المكافآت
+        try {
+          const uid = getAuthUserId();
+          const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
+          const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
+          if (rawLP) {
+            const parsed = JSON.parse(rawLP);
+            if (parsed && typeof parsed === 'object') activeLessonProgress = parsed;
+          }
+        } catch(e) {}
+
         // فحص ما إذا كان المستوى قد تم إكماله مسبقاً (وضع الإعادة/المراجعة)
         const currentProg = (activeLessonProgress && activeLessonProgress[String(lesson.id)]) || {};
         isReplayingLesson = (currentProg.status === 'completed');
+
+        // استعادة قائمة التمارين المُجاب عليها مسبقاً لهذا الدرس (لمنع تكرار XP عند الخروج والعودة)
+        sessionAnsweredChallenges = new Set();
+        if (!isReplayingLesson) {
+          try {
+            const uid = getAuthUserId();
+            const answeredKey = `mg_coptic_answered_${uid || 'guest'}_${lesson.id}`;
+            const savedAnswered = localStorage.getItem(answeredKey);
+            if (savedAnswered) {
+              const arr = JSON.parse(savedAnswered);
+              if (Array.isArray(arr)) arr.forEach(id => sessionAnsweredChallenges.add(id));
+            }
+          } catch(e) {}
+        }
 
         initialChallengesCount = currentChallenges.length;
         currentChallengeIndex = 0;
@@ -2061,12 +2087,24 @@
           const parsedChallengeXp = parseInt(rawChallengeXp, 10);
           const challengeXp = (!isNaN(parsedChallengeXp) && parsedChallengeXp >= 0) ? parsedChallengeXp : ((ch.type === 'image_view' || ch.type === 'text_view') ? 0 : 1);
 
-          // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو إذا كانت النقاط 0
-          if (!isReplayingLesson && challengeXp > 0) {
+          // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو التمرين المُجاب عليه مسبقاً
+          const challengeUniqueId = ch.id || `ch_${currentChallengeIndex}_${(ch.question || ch.coptic_display || '').substring(0,20)}`;
+          const alreadyAnsweredThisChallenge = sessionAnsweredChallenges.has(challengeUniqueId);
+
+          if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
             if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
+          }
+
+          // تسجيل التمرين كمُجاب عليه وحفظه محلياً
+          if (!isReplayingLesson && !alreadyAnsweredThisChallenge) {
+            sessionAnsweredChallenges.add(challengeUniqueId);
+            try {
+              const answeredKey = `mg_coptic_answered_${uid || 'guest'}_${selectedLesson.id}`;
+              localStorage.setItem(answeredKey, JSON.stringify([...sessionAnsweredChallenges]));
+            } catch(e) {}
           }
 
           if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
@@ -2244,6 +2282,13 @@
           game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).catch(e => {
             console.warn('Background completeLesson error:', e);
           });
+
+          // مسح سجل التمارين المُجاب عليها بعد إكمال الدرس بالكامل (لم يعد مطلوباً)
+          try {
+            const answeredKey = `mg_coptic_answered_${uid || 'guest'}_${selectedLesson.id}`;
+            localStorage.removeItem(answeredKey);
+          } catch(e) {}
+          sessionAnsweredChallenges = new Set();
         }
       }
 
