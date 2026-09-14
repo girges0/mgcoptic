@@ -21,7 +21,7 @@
       rules: [
         'الحرف الأول في الأبجدية القبطية. يُنطق دائماً ألفاً مفتوحة مشبعة مثل <strong>(أَ)</strong> في العربية أو <strong>(A)</strong> في كلمة (Father).'
       ],
-      word: { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلوم', meaning: 'جبنة' },
+      word: { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلوم', meaning: 'جبنة', soundFile: 'assets/sounds/1alom.mp3' },
       soundFile: 'audio_coptic/1alfa.mp3'
     },
     {
@@ -35,7 +35,7 @@
         'يُنطق <strong>(ڤ / V)</strong>: إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).',
         'يُنطق <strong>(ب / B)</strong>: إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.'
       ],
-      word: { coptic: 'ⲃⲱ', phoneticAr: 'ڤو', meaning: 'شجرة' },
+      word: { coptic: 'ⲃⲱ', phoneticAr: 'ڤو', meaning: 'شجرة', soundFile: 'assets/sounds/2vo.mp3' },
       soundFile: 'audio_coptic/2veta.mp3'
     },
     {
@@ -50,7 +50,7 @@
         'يُنطق <strong>(ن)</strong>: إذا جاء بعده أحد الحروف الحلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ).',
         'يُنطق <strong>(غ)</strong>: في الكلمات القبطية، وفي الكلمات اليونانية في باقي الحالات.'
       ],
-      word: { coptic: 'ⲅⲁⲗⲁ', phoneticAr: 'غالا', meaning: 'لبن' },
+      word: { coptic: 'ⲅⲁⲗⲁ', phoneticAr: 'غالا', meaning: 'لبن', soundFile: 'assets/sounds/3ghala.mp3' },
       soundFile: 'audio_coptic/3ghamma.mp3'
     },
     {
@@ -64,7 +64,7 @@
         'يُنطق <strong>(د)</strong>: في أسماء الأعلام والأشخاص والبلاد، وفي الكلمات القبطية الأصل.',
         'يُنطق <strong>(ذ)</strong>: في باقي الكلمات ذات الأصل اليوناني.'
       ],
-      word: { coptic: 'Ⲇⲟⲝⲁ', phoneticAr: 'ذوكسا', meaning: 'مجد' },
+      word: { coptic: 'Ⲇⲟⲝⲁ', phoneticAr: 'ذوكسا', meaning: 'مجد', soundFile: 'assets/sounds/4zoksa.mp3' },
       soundFile: 'audio_coptic/4delta.mp3'
     },
     {
@@ -77,7 +77,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق فتحة مائلة للكسر مثل حرف <strong>(E)</strong> في كلمة (pen) أو (bed).'
       ],
-      word: { coptic: 'ⲉ̀ⲣϣⲱ', phoneticAr: 'إرجو', meaning: 'دجاجة' },
+      word: { coptic: 'ⲉ̀ⲣϣⲱ', phoneticAr: 'إرجو', meaning: 'دجاجة', soundFile: 'assets/sounds/5ergoh.mp3' },
       soundFile: 'audio_coptic/5ei.mp3'
     },
 
@@ -92,7 +92,7 @@
       rules: [
         'ليس حرفاً هجائياً أصيلاً بل رمز ورقم عددي يدل على <strong>الرقم ستة (٦)</strong>. يوضع فوقه شرطة أفقية لتمييزه كرقم، ويُنطق <strong>"سو"</strong>.'
       ],
-      word: { coptic: 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', phoneticAr: 'سوآوو إن رومي', meaning: '6 رجال' },
+      word: { coptic: 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', phoneticAr: 'سوآوو إن رومي', meaning: '6 رجال', soundFile: 'assets/sounds/6soohinrpmy.mp3' },
       soundFile: 'audio_coptic/6sow.mp3'
     },
     {
@@ -105,7 +105,7 @@
       rules: [
         'يُنطق دائماً حرف زين <strong>"ز"</strong> مثل حرف <strong>(Z)</strong> في الإنجليزية في جميع الكلمات والمواضع.'
       ],
-      word: { coptic: 'Ⲍⲱⲏ', phoneticAr: 'زوي', meaning: 'حياة' },
+      word: { coptic: 'Ⲍⲱⲏ', phoneticAr: 'زوي', meaning: 'حياة', soundFile: 'assets/sounds/7zowy.mp3' },
       soundFile: 'audio_coptic/7zeta.mp3'
     },
     {
@@ -118,7 +118,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق ياء طويلة مشبعة ممدودة مثل <strong>(ee)</strong> في كلمة (meet) أو (see).'
       ],
-      word: { coptic: 'Ⲏⲓ', phoneticAr: 'إي', meaning: 'بيت' },
+      word: { coptic: 'Ⲏⲓ', phoneticAr: 'إي', meaning: 'بيت', soundFile: 'assets/sounds/8ei.mp3' },
       soundFile: 'audio_coptic/8eta.mp3'
     },
     {
@@ -132,7 +132,7 @@
         'يُنطق <strong>(ت)</strong>: إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ).',
         'يُنطق <strong>(ث)</strong>: في باقي الحالات الأخرى مثل حرف <strong>(Th)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'Ⲑⲁⲙⲓⲟ', phoneticAr: 'ثاميو', meaning: 'يخلق' },
+      word: { coptic: 'Ⲑⲁⲙⲓⲟ', phoneticAr: 'ثاميو', meaning: 'يخلق', soundFile: 'assets/sounds/9samyo.mp3' },
       soundFile: 'audio_coptic/9seta.mp3'
     },
     {
@@ -145,7 +145,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف <strong>(I)</strong> في كلمة (sit) أو (pin).'
       ],
-      word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إيال', meaning: 'مراية' },
+      word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إيال', meaning: 'مراية', soundFile: 'assets/sounds/1alom.mp3' },
       soundFile: 'audio_coptic/10yota.mp3'
     },
 
@@ -160,7 +160,7 @@
       rules: [
         'يُنطق دائماً حرف كاف <strong>"ك"</strong> في جميع المواضع والكلمات دون استثناء.'
       ],
-      word: { coptic: 'ⲕⲁϣ', phoneticAr: 'كاش', meaning: 'قلم' },
+      word: { coptic: 'ⲕⲁϣ', phoneticAr: 'كاش', meaning: 'قلم', soundFile: 'assets/sounds/2vo.mp3' },
       soundFile: 'audio_coptic/11kapa.mp3'
     },
     {
@@ -173,7 +173,7 @@
       rules: [
         'يُنطق دائماً حرف لام <strong>"ل"</strong> مثل حرف <strong>(L)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لاڤو', meaning: 'أسد' },
+      word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لاڤو', meaning: 'أسد', soundFile: 'assets/sounds/3ghala.mp3' },
       soundFile: 'audio_coptic/12lavla.mp3'
     },
     {
@@ -186,7 +186,7 @@
       rules: [
         'يُنطق دائماً حرف ميم <strong>"م"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲙⲁⲛϩⲟⲛ', phoneticAr: 'مانهون', meaning: 'برتقال' },
+      word: { coptic: 'ⲙⲁⲛϩⲟⲛ', phoneticAr: 'مانهون', meaning: 'برتقال', soundFile: 'assets/sounds/4zoksa.mp3' },
       soundFile: 'audio_coptic/13mi.mp3'
     },
     {
@@ -199,7 +199,7 @@
       rules: [
         'يُنطق دائماً حرف نون <strong>"ن"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲉⲛ̀ⲕⲟⲧ', phoneticAr: 'إنكوت', meaning: 'ينام' },
+      word: { coptic: 'ⲉⲛ̀ⲕⲟⲧ', phoneticAr: 'إنكوت', meaning: 'ينام', soundFile: 'assets/sounds/5ergoh.mp3' },
       soundFile: 'audio_coptic/14ni.mp3'
     },
     {
@@ -212,7 +212,7 @@
       rules: [
         'حرف مركب يُنطق كاف وسين معاً <strong>(كـ + س = X)</strong> في مقطع صوتي واحد.'
       ],
-      word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إكسومي', meaning: 'مسطرة' },
+      word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إكسومي', meaning: 'مسطرة', soundFile: 'assets/sounds/6soohinrpmy.mp3' },
       soundFile: 'audio_coptic/15axsy.mp3'
     },
 
@@ -227,7 +227,7 @@
       rules: [
         'حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف <strong>(O)</strong> في كلمة (not) أو (hot).'
       ],
-      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أوؤم', meaning: 'يأكل' },
+      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أوؤم', meaning: 'يأكل', soundFile: 'assets/sounds/7zowy.mp3' },
       soundFile: 'audio_coptic/16oo.mp3'
     },
     {
@@ -240,7 +240,7 @@
       rules: [
         'يُنطق باء شديدة تخرج بحبس الهواء ثم إطلاقه بقوة مثل حرف <strong>(P)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بايوت', meaning: 'أبي' },
+      word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بايوت', meaning: 'أبي', soundFile: 'assets/sounds/8ei.mp3' },
       soundFile: 'audio_coptic/17pee.mp3'
     },
     {
@@ -253,7 +253,7 @@
       rules: [
         'يُنطق دائماً حرف راء <strong>"ر"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲣⲏ', phoneticAr: 'ري', meaning: 'شمس' },
+      word: { coptic: 'ⲣⲏ', phoneticAr: 'ري', meaning: 'شمس', soundFile: 'assets/sounds/9samyo.mp3' },
       soundFile: 'audio_coptic/18roo.mp3'
     },
     {
@@ -653,7 +653,7 @@
 
               <div class="word-grid-cell" ${wordCellAttr}>
                 <span class="cell-label">النطق السماعي</span>
-                <button type="button" class="btn-listen-word" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('', '${phoneticAr}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('', '${phoneticAr}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio('', '${phoneticAr}'); }">
+                <button type="button" class="btn-listen-word" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="const _wAudio = '${wordObj.soundFile || wordObj.audioFile || ''}'; if(window.playChallengeAudio){ window.playChallengeAudio(_wAudio, '${phoneticAr}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet(_wAudio, '${phoneticAr}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio(_wAudio, '${phoneticAr}'); }">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                   <span>استمع للكلمة</span>
                 </button>
