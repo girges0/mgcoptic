@@ -1166,16 +1166,16 @@
     .runner-hearts svg {
       filter: drop-shadow(0 2px 4px rgba(229, 57, 53, 0.25));
     }
-    .runner-body {
+        .runner-body {
       flex: 1 1 auto;
       min-height: 0;
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
       width: 100%;
-      padding: 10px 20px 24px;
+      padding: clamp(12px, 2.5vh, 24px) 20px clamp(16px, 3vh, 28px);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: space-evenly;
       align-items: stretch;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
@@ -1183,40 +1183,42 @@
     }
     .question-heading {
       font-family: 'Cairo', var(--font-display), sans-serif;
-      font-size: 1.4rem;
+      font-size: clamp(1.3rem, 2.6vh, 1.6rem);
       font-weight: 900;
       color: #2D1A12;
-      margin: 4px 0 18px;
+      margin: 0 0 clamp(8px, 1.8vh, 16px);
       text-align: center;
       line-height: 1.45;
       letter-spacing: -0.2px;
+      flex-shrink: 0;
     }
     .coptic-letter-display {
       width: 100%;
-      max-width: 440px;
-      margin: 0 auto 20px;
+      max-width: 480px;
+      min-height: clamp(160px, 25vh, 240px);
+      margin: 0 auto clamp(12px, 2.5vh, 24px);
       background: #FFFFFF;
       border: 2.5px solid #EADBBE;
-      border-radius: 24px;
-      padding: 22px 24px 18px;
+      border-radius: 26px;
+      padding: clamp(20px, 3.5vh, 32px) 24px clamp(16px, 2.5vh, 24px);
       text-align: center;
-      box-shadow: 0 10px 28px -6px rgba(74, 40, 15, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 12px 30px -6px rgba(74, 40, 15, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: clamp(10px, 2vh, 18px);
       box-sizing: border-box;
       transition: all 0.2s ease;
       position: relative;
     }
     .coptic-letter-display:hover {
       border-color: #D4AF37;
-      box-shadow: 0 12px 32px -6px rgba(74, 40, 15, 0.13), 0 4px 10px rgba(197, 160, 89, 0.12);
+      box-shadow: 0 14px 34px -6px rgba(74, 40, 15, 0.14), 0 4px 10px rgba(197, 160, 89, 0.14);
     }
     .coptic-big-glyph {
       font-family: var(--font-coptic), 'girges', sans-serif !important;
-      font-size: 4.8rem;
+      font-size: clamp(4.4rem, 8.8vh, 6.2rem);
       color: #6B1530;
       line-height: 1.05;
       display: block;
@@ -1225,11 +1227,12 @@
       filter: drop-shadow(0 4px 12px rgba(107, 21, 48, 0.2));
     }
     .audio-icon-btn, .audio-play-btn {
-      width: 52px;
-      height: 52px;
-      margin-top: 4px;
+      width: clamp(52px, 7.5vh, 64px);
+      height: clamp(52px, 7.5vh, 64px);
+      min-width: clamp(52px, 7.5vh, 64px);
+      margin-top: 2px;
       background: #FFF8EA;
-      border: 2px solid #C5A059;
+      border: 2.5px solid #C5A059;
       border-radius: 50%;
       color: #6B1530;
       cursor: pointer;
@@ -1238,7 +1241,7 @@
       justify-content: center;
       padding: 0;
       transition: all .2s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 14px rgba(197, 160, 89, 0.28);
+      box-shadow: 0 6px 18px rgba(197, 160, 89, 0.3);
       outline: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -1247,7 +1250,7 @@
       border-color: #A8823A;
       color: #4A0E21;
       transform: scale(1.12);
-      box-shadow: 0 6px 20px rgba(107, 21, 48, 0.28);
+      box-shadow: 0 8px 22px rgba(107, 21, 48, 0.28);
     }
     .audio-icon-btn:active, .audio-icon-btn.is-playing,
     .audio-play-btn:active, .audio-play-btn.is-playing {
@@ -1258,6 +1261,8 @@
       box-shadow: 0 0 0 6px rgba(107, 21, 48, 0.22);
     }
     .audio-icon-btn svg, .audio-play-btn svg {
+      width: clamp(26px, 3.8vh, 32px);
+      height: clamp(26px, 3.8vh, 32px);
       display: block;
       transition: transform 0.18s ease;
     }
@@ -1277,11 +1282,11 @@
     }
     .options-grid {
       width: 100%;
-      max-width: 480px;
-      margin: 0 auto 8px;
+      max-width: 520px;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: clamp(12px, 2.2vh, 18px);
       box-sizing: border-box;
     }
     @media (max-width: 440px) {
@@ -1292,24 +1297,24 @@
     .option-card {
       width: 100%;
       background: #FFFFFF;
-      border: 2px solid #E2D7C3;
-      border-bottom: 4px solid #C8B89E;
-      border-radius: 18px;
-      padding: 14px 16px;
+      border: 2.5px solid #E2D7C3;
+      border-bottom: 5px solid #C8B89E;
+      border-radius: 20px;
+      padding: clamp(16px, 2.4vh, 22px) clamp(14px, 2vw, 20px);
       font-family: 'Cairo', var(--font-display), sans-serif;
-      font-size: 1.15rem;
+      font-size: clamp(1.15rem, 2.4vh, 1.35rem);
       font-weight: 800;
       color: #2D1A12;
       cursor: pointer;
       text-align: center;
       transition: all .12s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
       user-select: none;
-      min-height: 58px;
+      min-height: clamp(66px, 9.2vh, 84px);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: clamp(10px, 1.8vw, 14px);
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
@@ -1318,7 +1323,7 @@
       border-bottom-color: #8C6A28;
       background: #FFFDF9;
       transform: translateY(-2px);
-      box-shadow: 0 5px 12px rgba(168, 130, 58, 0.16);
+      box-shadow: 0 6px 16px rgba(168, 130, 58, 0.18);
     }
     .option-card:active {
       transform: translateY(2px);
@@ -1330,7 +1335,7 @@
       border-bottom-color: #9E7D38 !important;
       color: #6B1530 !important;
       transform: translateY(1px);
-      border-bottom-width: 3px;
+      border-bottom-width: 3.5px;
       box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.25) !important;
     }
     .option-card.correct {
@@ -1353,13 +1358,13 @@
       40%, 80% { transform: translateX(6px); }
     }
     .option-badge {
-      width: 28px;
-      height: 28px;
-      min-width: 28px;
+      width: clamp(30px, 4.2vh, 36px);
+      height: clamp(30px, 4.2vh, 36px);
+      min-width: clamp(30px, 4.2vh, 36px);
       border-radius: 50%;
       background: #F0E8D9;
       color: #7D6B58;
-      font-size: 0.85rem;
+      font-size: clamp(0.9rem, 1.8vh, 1.05rem);
       font-weight: 900;
       display: inline-flex;
       align-items: center;
