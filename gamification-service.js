@@ -93,6 +93,7 @@ class SoundEffects {
           src.start(0);
         }
       }
+      this.preloadAllSounds();
     } catch(e){}
   }
 
@@ -246,6 +247,57 @@ class SoundEffects {
   }
   _audioBufferCache = new Map();
   _currentSourceNode = null;
+  _allSoundsPreloaded = false;
+
+  preloadAllSounds() {
+    if (this._allSoundsPreloaded) return;
+    this._allSoundsPreloaded = true;
+    this._init();
+
+    const localSounds = [
+      '1alfa.mp3', '2veta.mp3', '3ghamma.mp3', '4delta.mp3', '5ei.mp3',
+      '6sow.mp3', '7zeta.mp3', '8eta.mp3', '9seta.mp3', '10yota.mp3',
+      '11kapa.mp3', '12lavla.mp3', '13mi.mp3', '14ni.mp3', '15axsy.mp3',
+      '16oo.mp3', '17pee.mp3', '18roo.mp3', '19sema.mp3', '20tav.mp3',
+      '21epselon.mp3', '22fi.mp3', '23ki.mp3', '24psi.mp3', '25oo.mp3',
+      '26shay.mp3', '27fay.mp3', '28khay.mp3', '29hory.mp3', '30ganga.mp3',
+      '31chema.mp3', '32tee.mp3',
+      '1alom.mp3', '2vo.mp3', '3ghala.mp3', '4zoksa.mp3', '5ergoh.mp3',
+      '6soohinrpmy.mp3', '7zowy.mp3', '8ei.mp3', '9samyo.mp3',
+      'correct.wav', 'wrong.wav', 'victory.wav', 'chest.wav'
+    ];
+
+    const isSub = (typeof window !== 'undefined' && window.location.pathname && window.location.pathname.includes('/admin/'));
+    const prefix = isSub ? '../assets/sounds/' : 'assets/sounds/';
+
+    localSounds.forEach(fn => {
+      const src = prefix + fn;
+      if (!this._soundFileCache.has(fn)) {
+        try {
+          const a = new Audio();
+          a.preload = 'auto';
+          a.src = src;
+          this._soundFileCache.set(fn, a);
+          this._soundFileCache.set(src, a);
+          this._soundFileCache.set(fn.replace(/\.(mp3|wav)$/i, ''), a);
+        } catch(_) {}
+      }
+
+      if (this.ctx && !this._audioBufferCache.has(fn)) {
+        fetch(src)
+          .then(r => r.ok ? r.arrayBuffer() : null)
+          .then(buf => (buf && this.ctx) ? this.ctx.decodeAudioData(buf) : null)
+          .then(decoded => {
+            if (decoded) {
+              this._audioBufferCache.set(fn, decoded);
+              this._audioBufferCache.set(src, decoded);
+              this._audioBufferCache.set(fn.replace(/\.(mp3|wav)$/i, ''), decoded);
+            }
+          })
+          .catch(() => {});
+      }
+    });
+  }
 
   resolveAudioCandidates(input){
     if(!input) return [];
@@ -285,6 +337,15 @@ class SoundEffects {
       '30': '30ganga.mp3', 'ganga': '30ganga.mp3', '30ganga': '30ganga.mp3', 'جانجا': '30ganga.mp3', 'Ϫ': '30ganga.mp3', 'ϫ': '30ganga.mp3',
       '31': '31chema.mp3', 'chema': '31chema.mp3', '31chema': '31chema.mp3', 'تشيما': '31chema.mp3', 'Ϭ': '31chema.mp3', 'ϭ': '31chema.mp3',
       '32': '32tee.mp3', 'tee': '32tee.mp3', '32tee': '32tee.mp3', 'تي': '32tee.mp3', 'Ϯ': '32tee.mp3', 'ϯ': '32tee.mp3',
+      'alom': '1alom.mp3', '1alom': '1alom.mp3', 'ⲁⲗⲱⲙ': '1alom.mp3', 'آلوم': '1alom.mp3',
+      'vo': '2vo.mp3', '2vo': '2vo.mp3', 'ⲃⲱ': '2vo.mp3', 'ڤو': '2vo.mp3',
+      'ghala': '3ghala.mp3', '3ghala': '3ghala.mp3', 'ⲅⲁⲗⲁ': '3ghala.mp3', 'غالا': '3ghala.mp3',
+      'zoksa': '4zoksa.mp3', '4zoksa': '4zoksa.mp3', 'Ⲇⲟⲝⲁ': '4zoksa.mp3', 'ذوكسا': '4zoksa.mp3',
+      'ergoh': '5ergoh.mp3', '5ergoh': '5ergoh.mp3', 'ⲉ̀ⲣϣⲱ': '5ergoh.mp3', 'إرجو': '5ergoh.mp3',
+      'soohinrpmy': '6soohinrpmy.mp3', '6soohinrpmy': '6soohinrpmy.mp3', 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ': '6soohinrpmy.mp3', 'سوآوو إن رومي': '6soohinrpmy.mp3',
+      'zowy': '7zowy.mp3', '7zowy': '7zowy.mp3', 'Ⲍⲱⲏ': '7zowy.mp3', 'زوي': '7zowy.mp3',
+      '8ei': '8ei.mp3', 'Ⲏⲓ': '8ei.mp3', 'بيت': '8ei.mp3',
+      'samyo': '9samyo.mp3', '9samyo': '9samyo.mp3', 'Ⲑⲁⲙⲓⲟ': '9samyo.mp3', 'ثاميو': '9samyo.mp3',
       'chest': 'chest.mp3', 'correct': 'correct.mp3', 'victory': 'victory.mp3', 'wrong': 'wrong.mp3'
     };
 
@@ -294,17 +355,16 @@ class SoundEffects {
 
     // 1. الأولوية القصوى للملفات الصوتية المحلية المباشرة
     if(mapped || /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(raw)){
-      return Array.from(new Set([
-        `audio_coptic/${filename}`,
-        `assets/sounds/${filename}`,
-        `../audio_coptic/${filename}`,
-        `../assets/sounds/${filename}`,
-        `/${filename}`,
-        `/${raw}`,
-        raw,
-        `../${raw}`,
-        `audio/${filename}`
-      ]));
+      const candidates = [];
+      if (raw.startsWith('assets/') || raw.startsWith('audio_coptic/') || raw.startsWith('./') || raw.startsWith('../')) {
+        candidates.push(raw);
+      }
+      candidates.push(`assets/sounds/${filename}`);
+      candidates.push(`audio_coptic/${filename}`);
+      candidates.push(`../assets/sounds/${filename}`);
+      candidates.push(`../audio_coptic/${filename}`);
+      candidates.push(raw);
+      return Array.from(new Set(candidates));
     }
 
     // 2. Google Drive
@@ -367,15 +427,27 @@ class SoundEffects {
       return false;
     }
 
-    // 1. إذا كان الصوت مخزناً في كاش Web Audio
-    if(this._audioBufferCache.has(cleanPrimary) && this.ctx){
+    // 1. إذا كان الصوت مخزناً في كاش Web Audio فائق السرعة (0ms)
+    const cachedBuf = this._audioBufferCache.get(cleanPrimary) || this._audioBufferCache.get(filename);
+    if(cachedBuf && this.ctx){
       try {
-        const buffer = this._audioBufferCache.get(cleanPrimary);
         const source = this.ctx.createBufferSource();
-        source.buffer = buffer;
+        source.buffer = cachedBuf;
         source.connect(this.ctx.destination);
         source.start(0);
         this._currentSourceNode = source;
+        return true;
+      } catch(e){}
+    }
+
+    // 1.5. إذا كان الصوت في كاش عناصر HTML5 Audio مسبق التحميل (0ms)
+    const cachedAudio = this._soundFileCache.get(cleanPrimary) || this._soundFileCache.get(filename);
+    if(cachedAudio){
+      try {
+        cachedAudio.currentTime = 0;
+        this._activeAudio = cachedAudio;
+        const p = cachedAudio.play();
+        if(p !== undefined) p.catch(() => {});
         return true;
       } catch(e){}
     }

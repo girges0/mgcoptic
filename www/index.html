@@ -9619,6 +9619,7 @@
           openCard(card, i, alphabetData[i].audio);
         });
       });
+      if (typeof preloadAlphabetAudio === 'function') preloadAlphabetAudio();
     }
 
     /* ============ VOCAB RENDER ============ */
@@ -10259,6 +10260,39 @@
     let _activePlayingAudio = null;
     let _lastPlayAudioTime = 0;
     let _lastPlayAudioSrc = '';
+    const _letterAudioCache = new Map();
+
+    function preloadAlphabetAudio() {
+      if (typeof window !== 'undefined' && window.Sound && typeof window.Sound.preloadAllSounds === 'function') {
+        window.Sound.preloadAllSounds();
+      }
+      if (!Array.isArray(alphabetData)) return;
+      alphabetData.forEach(l => {
+        if (!l.audio) return;
+        const src = resolveAudioUrl(l.audio);
+        if (!_letterAudioCache.has(src)) {
+          try {
+            const a = new Audio();
+            a.preload = 'auto';
+            a.src = src;
+            _letterAudioCache.set(src, a);
+            _letterAudioCache.set(l.audio, a);
+            const fn = src.split('/').pop();
+            _letterAudioCache.set(fn, a);
+          } catch(_) {}
+        }
+      });
+    }
+
+    // تفعيل فوري لكاش الصوت والمحرك مع أول لمسة أو نقرة للمستخدم
+    if (typeof window !== 'undefined') {
+      window.addEventListener('pointerdown', () => {
+        preloadAlphabetAudio();
+        if (window.Sound && typeof window.Sound.unlock === 'function') {
+          window.Sound.unlock();
+        }
+      }, { once: true, passive: true });
+    }
 
     function playAudio(filename, btn) {
       if (!filename) {
@@ -10271,49 +10305,73 @@
       }
       const src = resolveAudioUrl(filename);
       const now = Date.now();
-      if (src === _lastPlayAudioSrc && now - _lastPlayAudioTime < 250) {
+      if (src === _lastPlayAudioSrc && now - _lastPlayAudioTime < 200) {
         return _activePlayingAudio;
       }
       _lastPlayAudioTime = now;
       _lastPlayAudioSrc = src;
 
-      // إيقاف أي مقطع صوتي سابق لمنع التكرار والتداخل
+      // إيقاف أي مقطع صوتي سابق فوراً لمنع التداخل
       if (_activePlayingAudio) {
         try {
-          _activePlayingAudio.pause();
-          _activePlayingAudio.currentTime = 0;
+          if (typeof _activePlayingAudio.pause === 'function') {
+            _activePlayingAudio.pause();
+            _activePlayingAudio.currentTime = 0;
+          }
         } catch (_) {}
         _activePlayingAudio = null;
       }
 
-      const audio = new Audio(src);
-      _activePlayingAudio = audio;
+      const resetUi = () => {
+        if (btn) btn.classList.remove('is-playing');
+        const card = btn ? btn.closest('.word-card, .letter-card') : null;
+        if (card) card.classList.remove('playing');
+        if (_activePlayingAudio === audioObj) _activePlayingAudio = null;
+      };
+
       if (btn) {
         btn.classList.add('is-playing');
         const card = btn.closest('.word-card, .letter-card');
         if (card) card.classList.add('playing');
-        audio.addEventListener('ended', () => {
-          btn.classList.remove('is-playing');
-          if (card) card.classList.remove('playing');
-          if (_activePlayingAudio === audio) _activePlayingAudio = null;
-        });
-        audio.addEventListener('pause', () => {
-          btn.classList.remove('is-playing');
-          if (card) card.classList.remove('playing');
-          if (_activePlayingAudio === audio) _activePlayingAudio = null;
-        });
       }
-      audio.play().catch(err => {
-        console.warn('تعذر تشغيل الصوت:', src, err);
-        if (btn) {
-          btn.classList.remove('is-playing');
-          const card = btn.closest('.word-card, .letter-card');
-          if (card) card.classList.remove('playing');
-          btn.title = 'تعذّر تشغيل الملف — تأكد من صحة الرابط أو جعل ملف Google Drive عامًا';
+
+      const fn = src.split('/').pop();
+      let audioObj = _letterAudioCache.get(src) || _letterAudioCache.get(filename) || _letterAudioCache.get(fn);
+      if (!audioObj) {
+        try {
+          audioObj = new Audio(src);
+          audioObj.preload = 'auto';
+          _letterAudioCache.set(src, audioObj);
+        } catch(_) {}
+      } else {
+        try {
+          audioObj.pause();
+          audioObj.currentTime = 0;
+        } catch(_) {}
+      }
+
+      _activePlayingAudio = audioObj;
+
+      if (audioObj) {
+        audioObj.onended = resetUi;
+        audioObj.onpause = resetUi;
+        const p = audioObj.play();
+        if (p !== undefined) {
+          p.catch(err => {
+            console.warn('تعذر تشغيل الصوت عبر HTML5 Audio:', src, err);
+            resetUi();
+            // تشغيل بديل فوري عبر window.Sound
+            if (window.Sound && typeof window.Sound.playAudio === 'function') {
+              window.Sound.playAudio(src);
+            }
+          });
         }
-        if (_activePlayingAudio === audio) _activePlayingAudio = null;
-      });
-      return audio;
+      } else if (window.Sound && typeof window.Sound.playAudio === 'function') {
+        window.Sound.playAudio(src);
+        setTimeout(resetUi, 1000);
+      }
+
+      return audioObj;
     }
 
     /* ============ INIT ============ */
