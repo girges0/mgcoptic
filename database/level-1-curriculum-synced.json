@@ -93,7 +93,7 @@
                 {
                   "id": 4340,
                   "challenge_id": 671,
-                  "text": "أ",
+                  "text": "ألف (فتحة)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -101,7 +101,7 @@
                 {
                   "id": 4341,
                   "challenge_id": 671,
-                  "text": "غ أو ج",
+                  "text": "ياء قصيرة (كسرة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -109,7 +109,7 @@
                 {
                   "id": 4342,
                   "challenge_id": 671,
-                  "text": "د أو ذ",
+                  "text": "واو قصيرة (ضمة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -117,7 +117,7 @@
                 {
                   "id": 4343,
                   "challenge_id": 671,
-                  "text": "ف أو ب",
+                  "text": "ياء طويلة (إي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -141,15 +141,15 @@
                 {
                   "id": 4344,
                   "challenge_id": 672,
-                  "text": "لبن",
-                  "is_correct": false,
+                  "text": "جبنة",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4345,
                   "challenge_id": 672,
-                  "text": "شجرة",
+                  "text": "لبن",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -157,15 +157,15 @@
                 {
                   "id": 4346,
                   "challenge_id": 672,
-                  "text": "جبنة",
-                  "is_correct": true,
+                  "text": "خبز",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4347,
                   "challenge_id": 672,
-                  "text": "خبز",
+                  "text": "عسل",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -265,15 +265,15 @@
                 {
                   "id": 4348,
                   "challenge_id": 677,
-                  "text": "د أو ذ",
-                  "is_correct": false,
+                  "text": "ب أو ڤ",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4349,
                   "challenge_id": 677,
-                  "text": "أ",
+                  "text": "ف فقط",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -281,15 +281,15 @@
                 {
                   "id": 4350,
                   "challenge_id": 677,
-                  "text": "ف أو ب",
-                  "is_correct": true,
+                  "text": "ب فقط",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4351,
                   "challenge_id": 677,
-                  "text": "إي",
+                  "text": "م أو و",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -321,7 +321,7 @@
                 {
                   "id": 4353,
                   "challenge_id": 678,
-                  "text": "وردة",
+                  "text": "نخلة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -329,7 +329,7 @@
                 {
                   "id": 4354,
                   "challenge_id": 678,
-                  "text": "جبنة",
+                  "text": "غصن",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -337,7 +337,7 @@
                 {
                   "id": 4355,
                   "challenge_id": 678,
-                  "text": "ماء",
+                  "text": "وردة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -435,15 +435,15 @@
                 {
                   "id": 4356,
                   "challenge_id": 683,
-                  "text": "ز",
-                  "is_correct": false,
+                  "text": "غ أو ج أو ن",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4357,
                   "challenge_id": 683,
-                  "text": "٦",
+                  "text": "غ أو خ أو ك",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -451,7 +451,7 @@
                 {
                   "id": 4358,
                   "challenge_id": 683,
-                  "text": "ف أو ب",
+                  "text": "ج أو د أو ذ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -459,8 +459,8 @@
                 {
                   "id": 4359,
                   "challenge_id": 683,
-                  "text": "غ أو ج أو ن",
-                  "is_correct": true,
+                  "text": "ك أو ق أو غ",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -607,23 +607,23 @@
                 {
                   "id": 4364,
                   "challenge_id": 689,
-                  "text": "إي",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4365,
-                  "challenge_id": 689,
                   "text": "د أو ذ",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4365,
+                  "challenge_id": 689,
+                  "text": "ت أو ط",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4366,
                   "challenge_id": 689,
-                  "text": "ياء طويلة",
+                  "text": "د أو ض",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -631,7 +631,7 @@
                 {
                   "id": 4367,
                   "challenge_id": 689,
-                  "text": "غ أو ج",
+                  "text": "ذ أو ز",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -779,15 +779,15 @@
                 {
                   "id": 4372,
                   "challenge_id": 695,
-                  "text": "د أو ذ",
-                  "is_correct": false,
+                  "text": "إي خفيفة (كسرة قصيرة)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4373,
                   "challenge_id": 695,
-                  "text": "ف أو ب",
+                  "text": "ياء طويلة ممدودة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -795,7 +795,7 @@
                 {
                   "id": 4374,
                   "challenge_id": 695,
-                  "text": "أ",
+                  "text": "ألف ممدودة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -803,8 +803,8 @@
                 {
                   "id": 4375,
                   "challenge_id": 695,
-                  "text": "إي خفيفة",
-                  "is_correct": true,
+                  "text": "واو قصيرة (ضمة)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -947,7 +947,7 @@
                 {
                   "id": 4597,
                   "challenge_id": 861,
-                  "text": "Ⲅ ⲅ (غاما)",
+                  "text": "Ⲉ ⲉ (إي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -955,7 +955,7 @@
                 {
                   "id": 4596,
                   "challenge_id": 861,
-                  "text": "Ⲇ ⲇ (دلدا)",
+                  "text": "Ⲏ ⲏ (هيتا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -963,7 +963,7 @@
                 {
                   "id": 4598,
                   "challenge_id": 861,
-                  "text": "Ⲃ ⲃ (فيدا)",
+                  "text": "Ⲟ ⲟ (أُو)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -987,23 +987,23 @@
                 {
                   "id": 4600,
                   "challenge_id": 862,
-                  "text": "جبنة",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4602,
-                  "challenge_id": 862,
                   "text": "شجرة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4602,
+                  "challenge_id": 862,
+                  "text": "نخلة",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4603,
                   "challenge_id": 862,
-                  "text": "ماء",
+                  "text": "غصن",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1056,15 +1056,15 @@
                 {
                   "id": 4606,
                   "challenge_id": 864,
-                  "text": "زاتا (ز)",
-                  "is_correct": false,
+                  "text": "غاما (غ أو ج أو ن)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4607,
                   "challenge_id": 864,
-                  "text": "سو (٦)",
+                  "text": "غاما (غ أو خ أو ك)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1072,15 +1072,15 @@
                 {
                   "id": 4604,
                   "challenge_id": 864,
-                  "text": "غاما (غ أو ج أو ن)",
-                  "is_correct": true,
+                  "text": "جانجا (ج معطشة)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4605,
                   "challenge_id": 864,
-                  "text": "فيدا (ف أو ب)",
+                  "text": "كابا (ك)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1170,15 +1170,15 @@
                 {
                   "id": 4380,
                   "challenge_id": 701,
-                  "text": "ك",
-                  "is_correct": false,
+                  "text": "الرقم 6 (سو)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4381,
                   "challenge_id": 701,
-                  "text": "ث أو ت",
+                  "text": "الرقم 7 (شاشف)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1186,7 +1186,7 @@
                 {
                   "id": 4382,
                   "challenge_id": 701,
-                  "text": "ز",
+                  "text": "الرقم 5 (تيو)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1194,8 +1194,8 @@
                 {
                   "id": 4383,
                   "challenge_id": 701,
-                  "text": "الرقم 6",
-                  "is_correct": true,
+                  "text": "الرقم 8 (شمين)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -1346,15 +1346,15 @@
                 {
                   "id": 4390,
                   "challenge_id": 707,
-                  "text": "ياء قصيرة",
-                  "is_correct": false,
+                  "text": "ز",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4391,
                   "challenge_id": 707,
-                  "text": "٦",
+                  "text": "س",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1362,15 +1362,15 @@
                 {
                   "id": 4389,
                   "challenge_id": 707,
-                  "text": "ز",
-                  "is_correct": true,
+                  "text": "ذ",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4388,
                   "challenge_id": 707,
-                  "text": "ياء طويلة",
+                  "text": "ص",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1517,15 +1517,15 @@
                 {
                   "id": 4397,
                   "challenge_id": 713,
-                  "text": "ث أو ت",
-                  "is_correct": false,
+                  "text": "ياء طويلة ممدودة",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4398,
                   "challenge_id": 713,
-                  "text": "ل",
+                  "text": "ياء قصيرة (كسرة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1533,15 +1533,15 @@
                 {
                   "id": 4399,
                   "challenge_id": 713,
-                  "text": "ياء طويلة ممدودة",
-                  "is_correct": true,
+                  "text": "إي خفيفة",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4396,
                   "challenge_id": 713,
-                  "text": "ز",
+                  "text": "واو طويلة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1695,7 +1695,7 @@
                 {
                   "id": 4406,
                   "challenge_id": 719,
-                  "text": "ياء قصيرة",
+                  "text": "ت أو ط",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1703,7 +1703,7 @@
                 {
                   "id": 4405,
                   "challenge_id": 719,
-                  "text": "ياء طويلة",
+                  "text": "ث أو س",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1711,7 +1711,7 @@
                 {
                   "id": 4407,
                   "challenge_id": 719,
-                  "text": "م",
+                  "text": "د أو ذ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1868,7 +1868,7 @@
                 {
                   "id": 4414,
                   "challenge_id": 725,
-                  "text": "ث أو ت",
+                  "text": "ياء طويلة ممدودة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1876,7 +1876,7 @@
                 {
                   "id": 4415,
                   "challenge_id": 725,
-                  "text": "ن",
+                  "text": "إي خفيفة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1884,7 +1884,7 @@
                 {
                   "id": 4412,
                   "challenge_id": 725,
-                  "text": "ك",
+                  "text": "ألف لينة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1924,7 +1924,7 @@
                 {
                   "id": 4417,
                   "challenge_id": 726,
-                  "text": "نور",
+                  "text": "لوحة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2018,21 +2018,13 @@
                 {
                   "id": 4610,
                   "challenge_id": 866,
-                  "text": "Ⲑ ⲑ (ثيتا)",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4608,
-                  "challenge_id": 866,
                   "text": "Ⲋ ⲋ (سو (رقم ٦))",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
-                  "id": 4609,
+                  "id": 4608,
                   "challenge_id": 866,
                   "text": "Ⲍ ⲍ (زاتا)",
                   "is_correct": false,
@@ -2040,9 +2032,17 @@
                   "audio_url": null
                 },
                 {
+                  "id": 4609,
+                  "challenge_id": 866,
+                  "text": "Ⲥ ⲥ (سيما)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4611,
                   "challenge_id": 866,
-                  "text": "Ⲏ ⲏ (هيتا)",
+                  "text": "Ϣ ϣ (شاي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2141,7 +2141,7 @@
                 {
                   "id": 4617,
                   "challenge_id": 869,
-                  "text": "زاتا (ز)",
+                  "text": "إيوتا (ياء قصيرة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2149,7 +2149,7 @@
                 {
                   "id": 4619,
                   "challenge_id": 869,
-                  "text": "ثيتا (ث أو ت)",
+                  "text": "إي (إي خفيفة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2157,7 +2157,7 @@
                 {
                   "id": 4618,
                   "challenge_id": 869,
-                  "text": "لابدا (ل)",
+                  "text": "أوميجا (واو طويلة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2247,15 +2247,15 @@
                 {
                   "id": 4420,
                   "challenge_id": 731,
-                  "text": "كـ+س",
-                  "is_correct": false,
+                  "text": "ك",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4422,
                   "challenge_id": 731,
-                  "text": "ل",
+                  "text": "ق",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2263,7 +2263,7 @@
                 {
                   "id": 4421,
                   "challenge_id": 731,
-                  "text": "م",
+                  "text": "خ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2271,8 +2271,8 @@
                 {
                   "id": 4423,
                   "challenge_id": 731,
-                  "text": "ك",
-                  "is_correct": true,
+                  "text": "غ",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -2418,15 +2418,15 @@
                 {
                   "id": 4429,
                   "challenge_id": 737,
-                  "text": "ب مشددة",
-                  "is_correct": false,
+                  "text": "ل",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4430,
                   "challenge_id": 737,
-                  "text": "ن",
+                  "text": "ر",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2434,15 +2434,15 @@
                 {
                   "id": 4428,
                   "challenge_id": 737,
-                  "text": "ل",
-                  "is_correct": true,
+                  "text": "ن",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4431,
                   "challenge_id": 737,
-                  "text": "ك",
+                  "text": "م",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2590,15 +2590,15 @@
                 {
                   "id": 4436,
                   "challenge_id": 743,
-                  "text": "ن",
-                  "is_correct": false,
+                  "text": "م",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4437,
                   "challenge_id": 743,
-                  "text": "ل",
+                  "text": "ن",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2606,15 +2606,15 @@
                 {
                   "id": 4438,
                   "challenge_id": 743,
-                  "text": "م",
-                  "is_correct": true,
+                  "text": "ب",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4439,
                   "challenge_id": 743,
-                  "text": "ر",
+                  "text": "و",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2772,7 +2772,7 @@
                 {
                   "id": 4445,
                   "challenge_id": 749,
-                  "text": "كـ+س",
+                  "text": "م",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2780,7 +2780,7 @@
                 {
                   "id": 4446,
                   "challenge_id": 749,
-                  "text": "م",
+                  "text": "ل",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2788,7 +2788,7 @@
                 {
                   "id": 4444,
                   "challenge_id": 749,
-                  "text": "س",
+                  "text": "ر",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2938,23 +2938,23 @@
                 {
                   "id": 4453,
                   "challenge_id": 755,
-                  "text": "ن",
-                  "is_correct": false,
+                  "text": "كـ + س (إكس)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4455,
                   "challenge_id": 755,
-                  "text": "كـ + س",
-                  "is_correct": true,
+                  "text": "بـ + س (إبسي)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4454,
                   "challenge_id": 755,
-                  "text": "ك",
+                  "text": "ت + س",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2962,7 +2962,7 @@
                 {
                   "id": 4452,
                   "challenge_id": 755,
-                  "text": "ت",
+                  "text": "ك + ش",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3097,15 +3097,15 @@
                 {
                   "id": 4622,
                   "challenge_id": 871,
-                  "text": "Ⲙ ⲙ (مي)",
-                  "is_correct": false,
+                  "text": "Ⲕ ⲕ (كابا)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4623,
                   "challenge_id": 871,
-                  "text": "Ⲛ ⲛ (ني)",
+                  "text": "Ⲭ ⲭ (خي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3113,15 +3113,15 @@
                 {
                   "id": 4620,
                   "challenge_id": 871,
-                  "text": "Ⲕ ⲕ (كابا)",
-                  "is_correct": true,
+                  "text": "Ⲅ ⲅ (غاما)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4621,
                   "challenge_id": 871,
-                  "text": "Ⲗ ⲗ (لابدا)",
+                  "text": "Ⲧ ⲧ (تاو)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3213,21 +3213,13 @@
                 {
                   "id": 4629,
                   "challenge_id": 874,
-                  "text": "لابدا (ل)",
-                  "is_correct": false,
+                  "text": "مي (م)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4630,
-                  "challenge_id": 874,
-                  "text": "رو (ر)",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4631,
                   "challenge_id": 874,
                   "text": "ني (ن)",
                   "is_correct": false,
@@ -3235,10 +3227,18 @@
                   "audio_url": null
                 },
                 {
+                  "id": 4631,
+                  "challenge_id": 874,
+                  "text": "لابدا (ل)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4628,
                   "challenge_id": 874,
-                  "text": "مي (م)",
-                  "is_correct": true,
+                  "text": "رو (ر)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -3327,23 +3327,23 @@
                 {
                   "id": 4463,
                   "challenge_id": 761,
-                  "text": "واو طويلة",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4460,
-                  "challenge_id": 761,
                   "text": "واو قصيرة مضمومة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4460,
+                  "challenge_id": 761,
+                  "text": "واو طويلة ممدودة",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4461,
                   "challenge_id": 761,
-                  "text": "ب ثقيلة",
+                  "text": "ألف مفخمة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3351,7 +3351,7 @@
                 {
                   "id": 4462,
                   "challenge_id": 761,
-                  "text": "ر",
+                  "text": "واو لينة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3499,23 +3499,23 @@
                 {
                   "id": 4469,
                   "challenge_id": 767,
-                  "text": "ت",
-                  "is_correct": false,
+                  "text": "ب ثقيلة (P)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4471,
                   "challenge_id": 767,
-                  "text": "ب ثقيلة مشددة",
-                  "is_correct": true,
+                  "text": "ب أو ڤ (فيدا)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4470,
                   "challenge_id": 767,
-                  "text": "واو قصيرة",
+                  "text": "ف",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3523,7 +3523,7 @@
                 {
                   "id": 4468,
                   "challenge_id": 767,
-                  "text": "س",
+                  "text": "م",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3671,23 +3671,23 @@
                 {
                   "id": 4479,
                   "challenge_id": 773,
-                  "text": "س",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4476,
-                  "challenge_id": 773,
                   "text": "ر",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4476,
+                  "challenge_id": 773,
+                  "text": "ل",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4477,
                   "challenge_id": 773,
-                  "text": "خ",
+                  "text": "د",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3695,7 +3695,7 @@
                 {
                   "id": 4478,
                   "challenge_id": 773,
-                  "text": "ب مشددة",
+                  "text": "ز",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3841,23 +3841,23 @@
                 {
                   "id": 4485,
                   "challenge_id": 779,
-                  "text": "ف",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4487,
-                  "challenge_id": 779,
                   "text": "س",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4487,
+                  "challenge_id": 779,
+                  "text": "ص",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4486,
                   "challenge_id": 779,
-                  "text": "ت",
+                  "text": "ز",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -3865,7 +3865,7 @@
                 {
                   "id": 4484,
                   "challenge_id": 779,
-                  "text": "ر",
+                  "text": "ش",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4022,7 +4022,7 @@
                 {
                   "id": 4492,
                   "challenge_id": 785,
-                  "text": "ش",
+                  "text": "ط",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4030,7 +4030,7 @@
                 {
                   "id": 4493,
                   "challenge_id": 785,
-                  "text": "ي/و",
+                  "text": "د",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4038,7 +4038,7 @@
                 {
                   "id": 4494,
                   "challenge_id": 785,
-                  "text": "س",
+                  "text": "ث",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4182,7 +4182,7 @@
                 {
                   "id": 4635,
                   "challenge_id": 876,
-                  "text": "Ⲥ ⲥ (سيما)",
+                  "text": "Ⲱ ⲱ (أوميجا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4190,7 +4190,7 @@
                 {
                   "id": 4633,
                   "challenge_id": 876,
-                  "text": "Ⲡ ⲡ (بي)",
+                  "text": "Ⲉ ⲉ (إي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4198,7 +4198,7 @@
                 {
                   "id": 4634,
                   "challenge_id": 876,
-                  "text": "Ⲣ ⲣ (رو)",
+                  "text": "Ⲁ ⲁ (ألفا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4291,15 +4291,15 @@
                 {
                   "id": 4642,
                   "challenge_id": 879,
-                  "text": "خي (خ)",
-                  "is_correct": false,
+                  "text": "رو (ر)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4643,
                   "challenge_id": 879,
-                  "text": "سيما (س)",
+                  "text": "لابدا (ل)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4307,15 +4307,15 @@
                 {
                   "id": 4640,
                   "challenge_id": 879,
-                  "text": "رو (ر)",
-                  "is_correct": true,
+                  "text": "دلدا (د أو ذ)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4641,
                   "challenge_id": 879,
-                  "text": "بي (ب مشددة)",
+                  "text": "زاتا (ز)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4405,15 +4405,15 @@
                 {
                   "id": 4501,
                   "challenge_id": 791,
-                  "text": "بـ+س",
-                  "is_correct": false,
+                  "text": "ي أو ڤ أو و",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4502,
                   "challenge_id": 791,
-                  "text": "ف",
+                  "text": "ياء طويلة فقط",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4421,15 +4421,15 @@
                 {
                   "id": 4500,
                   "challenge_id": 791,
-                  "text": "ي أو ڤ أو و",
-                  "is_correct": true,
+                  "text": "واو فقط",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4503,
                   "challenge_id": 791,
-                  "text": "خ أو ك",
+                  "text": "ب أو ڤ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4585,7 +4585,7 @@
                 {
                   "id": 4509,
                   "challenge_id": 797,
-                  "text": "واو طويلة",
+                  "text": "ب أو ڤ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4593,7 +4593,7 @@
                 {
                   "id": 4510,
                   "challenge_id": 797,
-                  "text": "ي/و",
+                  "text": "ث",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4601,7 +4601,7 @@
                 {
                   "id": 4511,
                   "challenge_id": 797,
-                  "text": "خ أو ك",
+                  "text": "خ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4748,15 +4748,15 @@
                 {
                   "id": 4517,
                   "challenge_id": 803,
-                  "text": "بـ+س",
-                  "is_correct": false,
+                  "text": "ك أو ش أو خ",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4518,
                   "challenge_id": 803,
-                  "text": "ف",
+                  "text": "ك أو ق أو ج",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4764,15 +4764,15 @@
                 {
                   "id": 4519,
                   "challenge_id": 803,
-                  "text": "خ أو ك أو ش",
-                  "is_correct": true,
+                  "text": "خ أو غ أو ق",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4516,
                   "challenge_id": 803,
-                  "text": "هـ",
+                  "text": "ش أو س أو ص",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4921,7 +4921,7 @@
                 {
                   "id": 4524,
                   "challenge_id": 809,
-                  "text": "بـ + س",
+                  "text": "بـ + س (إبسي)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -4929,7 +4929,7 @@
                 {
                   "id": 4525,
                   "challenge_id": 809,
-                  "text": "خ أو ك",
+                  "text": "كـ + س (إكسي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4937,7 +4937,7 @@
                 {
                   "id": 4526,
                   "challenge_id": 809,
-                  "text": "واو طويلة",
+                  "text": "ب + ش",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -4945,7 +4945,7 @@
                 {
                   "id": 4527,
                   "challenge_id": 809,
-                  "text": "ج",
+                  "text": "ف + س",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5101,15 +5101,15 @@
                 {
                   "id": 4533,
                   "challenge_id": 815,
-                  "text": "بـ+س",
-                  "is_correct": false,
+                  "text": "واو طويلة ممدودة",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4534,
                   "challenge_id": 815,
-                  "text": "ف",
+                  "text": "واو قصيرة مضمومة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5117,15 +5117,15 @@
                 {
                   "id": 4535,
                   "challenge_id": 815,
-                  "text": "واو طويلة ممدودة",
-                  "is_correct": true,
+                  "text": "ألف مفخمة",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4532,
                   "challenge_id": 815,
-                  "text": "ش",
+                  "text": "واو لينة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5270,7 +5270,7 @@
                 {
                   "id": 4645,
                   "challenge_id": 881,
-                  "text": "Ⲫ ⲫ (في)",
+                  "text": "Ⲓ ⲓ (إيوتا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5278,7 +5278,7 @@
                 {
                   "id": 4646,
                   "challenge_id": 881,
-                  "text": "Ⲭ ⲭ (خي)",
+                  "text": "Ⲏ ⲏ (هيتا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5286,7 +5286,7 @@
                 {
                   "id": 4647,
                   "challenge_id": 881,
-                  "text": "Ⲯ ⲯ (إبسي)",
+                  "text": "Ⲟ ⲟ (أُو)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5380,7 +5380,7 @@
                 {
                   "id": 4652,
                   "challenge_id": 884,
-                  "text": "خي (خ أو ك أو ش)",
+                  "text": "كي (ك أو ش أو خ)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -5388,7 +5388,7 @@
                 {
                   "id": 4655,
                   "challenge_id": 884,
-                  "text": "إبسي (بـ+س)",
+                  "text": "غاما (غ أو ج أو ن)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5396,7 +5396,7 @@
                 {
                   "id": 4653,
                   "challenge_id": 884,
-                  "text": "في (ف)",
+                  "text": "كابا (ك)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5404,7 +5404,7 @@
                 {
                   "id": 4654,
                   "challenge_id": 884,
-                  "text": "هوري (هـ)",
+                  "text": "شاي (ش)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5502,7 +5502,7 @@
                 {
                   "id": 4541,
                   "challenge_id": 821,
-                  "text": "هـ",
+                  "text": "س",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5510,7 +5510,7 @@
                 {
                   "id": 4542,
                   "challenge_id": 821,
-                  "text": "خ",
+                  "text": "ص",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5518,7 +5518,7 @@
                 {
                   "id": 4543,
                   "challenge_id": 821,
-                  "text": "ف",
+                  "text": "تش",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5673,7 +5673,7 @@
                 {
                   "id": 4550,
                   "challenge_id": 827,
-                  "text": "ش",
+                  "text": "ب",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5681,7 +5681,7 @@
                 {
                   "id": 4551,
                   "challenge_id": 827,
-                  "text": "خ",
+                  "text": "ڤ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5689,7 +5689,7 @@
                 {
                   "id": 4548,
                   "challenge_id": 827,
-                  "text": "ج",
+                  "text": "و",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5844,7 +5844,7 @@
                 {
                   "id": 4557,
                   "challenge_id": 833,
-                  "text": "ف",
+                  "text": "غ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5852,7 +5852,7 @@
                 {
                   "id": 4558,
                   "challenge_id": 833,
-                  "text": "هـ",
+                  "text": "ح",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -5860,7 +5860,7 @@
                 {
                   "id": 4559,
                   "challenge_id": 833,
-                  "text": "تش",
+                  "text": "هـ",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6008,15 +6008,15 @@
                 {
                   "id": 4565,
                   "challenge_id": 839,
-                  "text": "تـ+ي",
-                  "is_correct": false,
+                  "text": "هـ",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4566,
                   "challenge_id": 839,
-                  "text": "خ",
+                  "text": "ح",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6024,15 +6024,15 @@
                 {
                   "id": 4567,
                   "challenge_id": 839,
-                  "text": "هـ",
-                  "is_correct": true,
+                  "text": "خ",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4564,
                   "challenge_id": 839,
-                  "text": "ج",
+                  "text": "ع",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6180,15 +6180,15 @@
                 {
                   "id": 4572,
                   "challenge_id": 845,
-                  "text": "هـ",
-                  "is_correct": false,
+                  "text": "ج معطشة (أو د)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4573,
                   "challenge_id": 845,
-                  "text": "تش",
+                  "text": "ج أو غ أو ن (غاما)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6196,7 +6196,7 @@
                 {
                   "id": 4574,
                   "challenge_id": 845,
-                  "text": "تـ+ي",
+                  "text": "تش (تشيما)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6204,8 +6204,8 @@
                 {
                   "id": 4575,
                   "challenge_id": 845,
-                  "text": "معطشة أو غير معطشة",
-                  "is_correct": true,
+                  "text": "ش",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -6349,7 +6349,7 @@
                 {
                   "id": 4657,
                   "challenge_id": 886,
-                  "text": "Ϥ ϥ (فاي)",
+                  "text": "Ⲥ ⲥ (سيما)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6357,7 +6357,7 @@
                 {
                   "id": 4658,
                   "challenge_id": 886,
-                  "text": "Ϧ ϧ (خاي)",
+                  "text": "Ϭ ϭ (تشيما)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6365,7 +6365,7 @@
                 {
                   "id": 4659,
                   "challenge_id": 886,
-                  "text": "Ϩ ϩ (هوري)",
+                  "text": "Ϫ ϫ (جانجا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6459,23 +6459,23 @@
                 {
                   "id": 4664,
                   "challenge_id": 889,
-                  "text": "تشيما (تش)",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4665,
-                  "challenge_id": 889,
                   "text": "خاي (خ)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
+                  "id": 4665,
+                  "challenge_id": 889,
+                  "text": "هوري (هـ)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
                   "id": 4666,
                   "challenge_id": 889,
-                  "text": "فاي (ف)",
+                  "text": "غاما (غ أو ج أو ن)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6483,7 +6483,7 @@
                 {
                   "id": 4667,
                   "challenge_id": 889,
-                  "text": "هوري (هـ)",
+                  "text": "تشيما (تش)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6573,16 +6573,16 @@
                 {
                   "id": 4581,
                   "challenge_id": 851,
-                  "text": "تـ+ي",
-                  "is_correct": false,
+                  "text": "تش",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4582,
                   "challenge_id": 851,
-                  "text": "تش",
-                  "is_correct": true,
+                  "text": "ش",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
@@ -6597,7 +6597,7 @@
                 {
                   "id": 4580,
                   "challenge_id": 851,
-                  "text": "ش",
+                  "text": "ت",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6744,23 +6744,23 @@
                 {
                   "id": 4588,
                   "challenge_id": 857,
-                  "text": "هـ",
-                  "is_correct": false,
+                  "text": "تـ + ي (تي)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4589,
                   "challenge_id": 857,
-                  "text": "تـ + ي",
-                  "is_correct": true,
+                  "text": "ت",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4590,
                   "challenge_id": 857,
-                  "text": "تش",
+                  "text": "ث",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6768,7 +6768,7 @@
                 {
                   "id": 4591,
                   "challenge_id": 857,
-                  "text": "خ",
+                  "text": "د + ي (دي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -6894,16 +6894,32 @@
                 {
                   "id": 4669,
                   "challenge_id": 891,
-                  "text": "Ϯ ϯ (تي)",
-                  "is_correct": false,
+                  "text": "Ϭ ϭ (تشيما)",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
                   "id": 4668,
                   "challenge_id": 891,
-                  "text": "Ϭ ϭ (تشيما)",
-                  "is_correct": true,
+                  "text": "Ϣ ϣ (شاي)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 98912,
+                  "challenge_id": 891,
+                  "text": "Ϫ ϫ (جانجا)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 98913,
+                  "challenge_id": 891,
+                  "text": "Ϯ ϯ (تي)",
+                  "is_correct": false,
                   "image_url": null,
                   "audio_url": null
                 }
@@ -6993,23 +7009,23 @@
                 {
                   "id": 4676,
                   "challenge_id": 894,
-                  "text": "جانجا (ج)",
-                  "is_correct": false,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
-                  "id": 4677,
-                  "challenge_id": 894,
                   "text": "تشيما (تش)",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
                 {
-                  "id": 4674,
+                  "id": 4677,
                   "challenge_id": 894,
                   "text": "شاي (ش)",
+                  "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4674,
+                  "challenge_id": 894,
+                  "text": "جانجا (ج معطشة)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -7092,7 +7108,7 @@
                 {
                   "id": 4680,
                   "challenge_id": 896,
-                  "text": "Ⲅ ⲅ (غاما)",
+                  "text": "Ⲉ ⲉ (إي)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -7100,7 +7116,7 @@
                 {
                   "id": 4679,
                   "challenge_id": 896,
-                  "text": "Ⲃ ⲃ (فيدا)",
+                  "text": "Ⲏ ⲏ (هيتا)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -7108,7 +7124,7 @@
                 {
                   "id": 4681,
                   "challenge_id": 896,
-                  "text": "Ⲇ ⲇ (دلدا)",
+                  "text": "Ⲟ ⲟ (أُو)",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -7148,7 +7164,7 @@
                 {
                   "id": 4684,
                   "challenge_id": 897,
-                  "text": "شجرة",
+                  "text": "خبز",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -7156,7 +7172,7 @@
                 {
                   "id": 4685,
                   "challenge_id": 897,
-                  "text": "خبز",
+                  "text": "عسل",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null

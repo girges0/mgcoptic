@@ -118,6 +118,15 @@
         if (!container) return;
 
         if (!activeCurriculum || !activeCurriculum.units || activeCurriculum.units.length === 0) {
+          // التحقق من صلاحية وتحديث خيارات التمارين
+          try {
+            const curVer = localStorage.getItem('mg_coptic_curriculum_v_tag');
+            if (curVer !== 'v3_challenging_options') {
+              localStorage.removeItem('mg_coptic_curriculum_v2');
+              localStorage.removeItem('mg_coptic_curriculum_v1');
+              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v3_challenging_options');
+            }
+          } catch(e) {}
           const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');
           if (raw) {
             try { activeCurriculum = JSON.parse(raw); } catch (e) { }
@@ -1218,11 +1227,15 @@
               </div>
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => `
-                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
-                  ${opt.text}
-                </div>
-              `).join('')}
+              ${(ch.options || []).map((opt, i) => {
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                return `
+                  <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                    <span class="option-badge">${letters[i] || (i + 1)}</span>
+                    <span class="option-label-text">${escapeHtml(opt.text)}</span>
+                  </div>
+                `;
+              }).join('')}
             </div>
           `;
         } else if (ch.type === 'read_select') {
@@ -1256,9 +1269,11 @@
                 const optText = (typeof window.formatPronunciationOption === 'function') 
                   ? window.formatPronunciationOption(opt.text) 
                   : (opt.text ? opt.text.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').replace(/[A-Za-zŌō]/g, '').trim() : '');
+                const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
-                    ${escapeHtml(optText || opt.text)}
+                    <span class="option-badge">${letters[i] || (i + 1)}</span>
+                    <span class="option-label-text">${escapeHtml(optText || opt.text)}</span>
                   </div>
                 `;
               }).join('')}
@@ -1299,11 +1314,15 @@
               ` : ''}
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => `
-                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
-                  ${opt.text}
-                </div>
-              `).join('')}
+              ${(ch.options || []).map((opt, i) => {
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                return `
+                  <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                    <span class="option-badge">${letters[i] || (i + 1)}</span>
+                    <span class="option-label-text">${escapeHtml(opt.text)}</span>
+                  </div>
+                `;
+              }).join('')}
             </div>
           `;
         } else if (ch.type === 'listen') {
@@ -1319,11 +1338,15 @@
               </button>
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => `
-                <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
-                  ${opt.text}
-                </div>
-              `).join('')}
+              ${(ch.options || []).map((opt, i) => {
+                const letters = ['أ', 'ب', 'ج', 'د'];
+                return `
+                  <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                    <span class="option-badge">${letters[i] || (i + 1)}</span>
+                    <span class="option-label-text">${escapeHtml(opt.text)}</span>
+                  </div>
+                `;
+              }).join('')}
             </div>
           `;
         } else if (ch.type === 'write') {
@@ -2195,7 +2218,15 @@
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
                 feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
-                feedbackText.textContent = 'إجابة غير صحيحة، حاول مجددًا في التمرين القادم';
+                const correctOpt = (ch.options || []).find(o => o.is_correct);
+                if (correctOpt) {
+                  const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
+                    ? window.formatPronunciationOption(correctOpt.text)
+                    : correctOpt.text;
+                  feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${correctText}»`;
+                } else {
+                  feedbackText.textContent = 'إجابة غير صحيحة، حاول مجددًا في التمرين القادم';
+                }
               }
             }
             feedbackBox.style.visibility = 'visible';
