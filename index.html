@@ -7358,73 +7358,6 @@
       background: linear-gradient(180deg, #6B1530 0%, #4A0E21 100%) !important;
       border-bottom: 4px solid #2B0813 !important;
     }
-
-    /* Media queries for Mobile and short screen heights to optimize spacing */
-    @media (max-width: 600px), (max-height: 850px) {
-      .runner-topbar {
-        padding: 10px 16px 6px;
-        gap: 12px;
-      }
-      .runner-close-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1.35rem;
-      }
-      .runner-progress-track {
-        height: 14px;
-        border-radius: 8px;
-      }
-      .runner-hearts {
-        font-size: 1.05rem;
-        padding: 4px 10px;
-        gap: 5px;
-      }
-      .runner-hearts svg {
-        width: 18px;
-        height: 18px;
-      }
-      .runner-body {
-        padding: 8px 16px 14px;
-      }
-      .question-heading {
-        font-size: 1.25rem;
-        margin: 2px 0 12px;
-      }
-      .coptic-letter-display {
-        width: 100%;
-        max-width: 440px;
-        padding: 16px 18px 14px;
-        margin-bottom: 14px;
-        border-radius: 20px;
-      }
-      .coptic-big-glyph {
-        font-size: 3.8rem;
-        line-height: 1.05;
-      }
-      .audio-icon-btn, .audio-play-btn, .coptic-audio-circle-btn {
-        width: 46px;
-        height: 46px;
-        min-width: 46px;
-        margin-top: 4px;
-      }
-      .audio-icon-btn svg, .audio-play-btn svg, .coptic-audio-circle-btn svg {
-        width: 24px;
-        height: 24px;
-      }
-      .options-grid {
-        width: 100%;
-        max-width: 480px;
-        gap: 10px;
-        margin-bottom: 6px;
-      }
-      .option-card {
-        padding: 12px 14px;
-        font-size: 1.1rem;
-        border-radius: 16px;
-        min-height: 52px;
-        border-bottom: 3.5px solid #C8B89E;
-      }
-
     /* Media queries for Mobile and short screen heights to optimize spacing */
     @media (max-width: 600px), (max-height: 850px) {
       .runner-topbar {
@@ -8750,7 +8683,7 @@
     </div>
 
     <!-- شاشة النصر -->
-    <div class="victory-modal" id="victory-modal">
+    <div class="victory-modal" id="victory-modal" style="display: none;">
       <div class="victory-card">
         <div class="victory-badge"><svg viewBox="0 0 24 24" width="60" height="60" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
         <h2 class="victory-title">درس مكتمل بنجاح!</h2>
@@ -9281,27 +9214,6 @@
       </div>
     </section>
   </main>
-
-    <footer class="site-footer" dir="rtl">
-    <div class="site-footer-inner">
-      <div class="footer-brand-row">
-        <span class="footer-cross">☩</span>
-        <span class="footer-brand-name">MG COPTIC</span>
-        <span class="footer-coptic-text" dir="ltr">ⲙⲉⲧⲣⲉⲙⲛ̀ⲭⲏⲙⲓ</span>
-      </div>
-      <p class="footer-tagline">منصة تفاعلية حديثة لتعلّم وإتقان نطق وكتابة وقواعد اللغة القبطية الكنسية</p>
-      <div class="footer-ornament">
-        <span class="ornament-line"></span>
-        <span class="ornament-icon">✝</span>
-        <span class="ornament-line"></span>
-      </div>
-      <div class="footer-meta-row">
-        <span class="footer-dev">برمجة وتطوير: <strong class="dev-name">Girges</strong></span>
-        <span class="footer-dot">•</span>
-        <span class="footer-copy">جميع الحقوق محفوظة © 2026</span>
-      </div>
-    </div>
-  </footer>
 
   <nav class="bottom-nav" aria-label="التنقل الرئيسي">
     <button type="button" class="bn-btn active" data-tab="home" aria-label="الرئيسية">
