@@ -730,22 +730,26 @@ class GamificationService {
             if(curUid && updatedUid && curUid === updatedUid){
               if(rtProgressDebounce) clearTimeout(rtProgressDebounce);
               rtProgressDebounce = setTimeout(() => {
-                const isReset = payload?.new?.points === 0;
-                this.getProgress(curUid, isReset).then(fresh => {
+                const newResetVer = Number(payload?.new?.reset_version || 0);
+                const oldResetVer = Number(payload?.old?.reset_version || 0);
+                const rawLocalReset = localStorage.getItem(`mg_coptic_reset_version_${curUid}`);
+                const localResetVer = Number(rawLocalReset || 0);
+                const isExplicitReset = (rawLocalReset !== null && newResetVer > oldResetVer && newResetVer > localResetVer && localResetVer > 0);
+                this.getProgress(curUid, isExplicitReset).then(fresh => {
                   if(typeof window !== 'undefined'){
                     if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(fresh);
                     if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
                     if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
                   }
                 });
-                if(isReset){
+                if(isExplicitReset){
                   this.getLessonProgress(curUid, true).then(() => {
                     if(typeof window !== 'undefined' && typeof window.renderSkillMap === 'function'){
                       window.renderSkillMap();
                     }
                   });
                 }
-              }, 600);
+              }, 400);
             }
           })
           .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, (payload) => {
@@ -1106,14 +1110,16 @@ class GamificationService {
         const { data, error } = await sbClient.from('user_progress').select('*').eq('user_id', uid).maybeSingle();
         if(!error && data){
           const serverResetVersion = Number(data.reset_version || 0);
-          const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
-          const isResetDetected = (serverResetVersion > localResetVersion);
+          const rawLocalReset = localStorage.getItem(`mg_coptic_reset_version_${uid}`);
+          const hasLocalVersion = (rawLocalReset !== null && rawLocalReset !== undefined);
+          const localResetVersion = Number(rawLocalReset || 0);
+          const isResetDetected = hasLocalVersion && (serverResetVersion > localResetVersion) && (localResetVersion > 0);
 
           if (isResetDetected) {
             console.log('[Gamification] Account reset detected from server. Purging local stale cache...');
             this.resetFullAccountLocal(uid);
-            localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
           }
+          localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
 
           progress = {
             user_id: uid,
@@ -1384,7 +1390,15 @@ class GamificationService {
     let cachedCurriculum = null;
     try {
       const cached = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.CURRICULUM);
-      if(cached) cachedCurriculum = JSON.parse(cached);
+      if(cached) {
+        if (cached.includes('ⲁⲇⲁⲙ') || cached.includes('ⲏ̀ⲡⲓ')) {
+          localStorage.removeItem('mg_coptic_curriculum_v2');
+          localStorage.removeItem('mg_coptic_curriculum_v1');
+          localStorage.removeItem(MG_CONFIG.STORAGE_KEYS.CURRICULUM);
+        } else {
+          cachedCurriculum = JSON.parse(cached);
+        }
+      }
     } catch(e){}
 
     // إذا كان المنهج محفوظاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً
@@ -1526,7 +1540,7 @@ class GamificationService {
       try {
         const { data, error } = await sbClient.from('user_lesson_progress').select('*').eq('user_id', uid);
         if(!error){
-          // السيرفر هو مصدر الحقيقة للحساب المسجل
+          // دمج بيانات السيرفر مع البيانات المحلية بأمان تام دون حذف أي إنجاز للطالب
           const serverMap = {};
           if(Array.isArray(data) && data.length > 0){
             data.forEach(row => {
@@ -1540,9 +1554,11 @@ class GamificationService {
                 serverMap[`${lid}_c`] = { status: 'completed', score: row.score || 100 };
               }
             });
-            map = Object.keys(serverMap).length > 0 ? serverMap : { '1': { status: 'in_progress', score: 0 } };
-          } else {
-            // لا توجد أي دروس مكتملة في السحابة لهذا الحساب (تم تصفير الحساب أو حساب جديد)
+          }
+
+          // ندمج بيانات السيرفر مع ما لدى المستخدم محلياً لضمان عدم ضياع أي دروس مكتملة
+          map = { ...map, ...serverMap };
+          if(!map || Object.keys(map).length === 0){
             map = { '1': { status: 'in_progress', score: 0 } };
           }
 

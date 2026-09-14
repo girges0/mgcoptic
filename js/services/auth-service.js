@@ -646,7 +646,9 @@
           if (prog) {
             const uid = activeSession.user.id;
             const serverResetVersion = Number(prog.reset_version || 0);
-            const localResetVersion = Number(localStorage.getItem(`mg_coptic_reset_version_${uid}`) || 0);
+            const rawLocalReset = localStorage.getItem(`mg_coptic_reset_version_${uid}`);
+            const hasLocalVersion = (rawLocalReset !== null && rawLocalReset !== undefined);
+            const localResetVersion = Number(rawLocalReset || 0);
 
             const localProgRaw = localStorage.getItem(`mg_coptic_progress_${uid}`) || localStorage.getItem('mg_coptic_progress');
             let localProg = null;
@@ -654,7 +656,7 @@
             const localPoints = Number(localProg?.points || 0);
             const serverPoints = Number(prog.points || 0);
 
-            const resetOccurred = (serverResetVersion > localResetVersion);
+            const resetOccurred = hasLocalVersion && (serverResetVersion > localResetVersion) && (localResetVersion > 0);
 
             if (resetOccurred) {
               console.log('[Auth] Account reset detected on session init. Purging all local caches...');

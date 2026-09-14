@@ -238,7 +238,8 @@
       border: 1px solid rgba(168, 130, 58, .4);
       border-radius: 26px;
       box-shadow: 0 -4px 6px rgba(36, 27, 18, .04), 0 16px 44px rgba(36, 27, 18, .20);
-      padding: 10px 6px calc(6px + env(safe-area-inset-bottom));
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+      min-height: 64px;
       list-style: none;
       margin: 0 auto;
       box-sizing: border-box;
@@ -376,9 +377,9 @@
       border-radius: 50%;
       background: linear-gradient(155deg, var(--madder), var(--madder-dark));
       color: var(--gold-pale);
-      transform: translateY(-20px);
+      transform: translateY(-16px);
       box-shadow: 0 8px 18px rgba(140, 36, 48, .4), 0 0 0 5px rgba(250, 246, 233, .96);
-      margin-bottom: -16px;
+      margin-bottom: -10px;
     }
 
     .bottom-nav .bn-btn.active .bn-icon svg,

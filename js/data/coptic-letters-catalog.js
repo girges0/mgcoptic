@@ -15,7 +15,7 @@
       id: 1, upper: 'Ⲁ', lower: 'ⲁ', pair: 'Ⲁ ⲁ', name: 'ألفا',
       isVowel: true, vowelType: 'متحرك للفتح', letterTypeBadge: 'حرف متحرك (للفتح)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'ألف مفتوحة (أَ)',
+      pronunciation: 'أ ، ا',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -25,10 +25,10 @@
       soundFile: 'audio_coptic/1alfa.mp3'
     },
     {
-      id: 2, upper: 'Ⲃ', lower: 'ⲃ', pair: 'Ⲃ ⲃ', name: 'ڤيتا (بيتا)',
+      id: 2, upper: 'Ⲃ', lower: 'ⲃ', pair: 'Ⲃ ⲃ', name: 'بيتا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ڤ (V) أو ب (B)',
+      pronunciation: 'ب، ف',
       hasMultiple: true,
       multipleCountText: 'له نطقان (ڤ / ب)',
       rules: [
@@ -39,10 +39,10 @@
       soundFile: 'audio_coptic/2veta.mp3'
     },
     {
-      id: 3, upper: 'Ⲅ', lower: 'ⲅ', pair: 'Ⲅ ⲅ', name: 'غاما',
+      id: 3, upper: 'Ⲅ', lower: 'ⲅ', pair: 'Ⲅ ⲅ', name: 'غما',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'جـ معطشة أو ن أو غ',
+      pronunciation: 'ج، غ، ن',
       hasMultiple: true,
       multipleCountText: 'له 3 أصوات (جـ / ن / غ)',
       rules: [
@@ -54,24 +54,24 @@
       soundFile: 'audio_coptic/3ghamma.mp3'
     },
     {
-      id: 4, upper: 'Ⲇ', lower: 'ⲇ', pair: 'Ⲇ ⲇ', name: 'دلدا (دلتا)',
+      id: 4, upper: 'Ⲇ', lower: 'ⲇ', pair: 'Ⲇ ⲇ', name: 'دلتا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'د أو ذ',
+      pronunciation: 'د، ذ',
       hasMultiple: true,
       multipleCountText: 'له نطقان (د / ذ)',
       rules: [
         'يُنطق <strong>(د)</strong>: في أسماء الأعلام والأشخاص والبلاد، وفي الكلمات القبطية الأصل.',
         'يُنطق <strong>(ذ)</strong>: في باقي الكلمات ذات الأصل اليوناني.'
       ],
-      word: { coptic: 'ⲁⲇⲁⲙ', phoneticAr: 'آدام', meaning: 'آدم' },
+      word: { coptic: 'Ⲇⲟⲝⲁ', phoneticAr: 'ذوكسا', meaning: 'مجد' },
       soundFile: 'audio_coptic/4delta.mp3'
     },
     {
       id: 5, upper: 'Ⲉ', lower: 'ⲉ', pair: 'Ⲉ ⲉ', name: 'إي',
       isVowel: true, vowelType: 'متحرك للكسر (خفيف)', letterTypeBadge: 'حرف متحرك (للكسر خفيف)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'إي خفيفة (E)',
+      pronunciation: 'إمالة صغيرة',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -83,63 +83,63 @@
 
     // الوحدة 2 (Ⲋ - Ⲓ)
     {
-      id: 6, upper: 'Ⲋ', lower: 'ⲋ', pair: 'Ⲋ ⲋ', name: 'سو (رقم ٦)',
+      id: 6, upper: 'Ⲋ', lower: 'ⲋ', pair: 'Ⲋ ⲋ', name: 'سوو',
       isVowel: false, vowelType: null, letterTypeBadge: 'رقم عددي رمزي',
       badgeClass: 'badge-symbol',
-      pronunciation: 'سو (الرقم 6)',
+      pronunciation: 'للعدد 6',
       hasMultiple: false,
       multipleCountText: 'نطق واحد',
       rules: [
         'ليس حرفاً هجائياً أصيلاً بل رمز ورقم عددي يدل على <strong>الرقم ستة (٦)</strong>. يوضع فوقه شرطة أفقية لتمييزه كرقم، ويُنطق <strong>"سو"</strong>.'
       ],
-      word: { coptic: 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ', phoneticAr: 'إسوؤو إن شكيلكيل', meaning: '6 أجراس' },
+      word: { coptic: 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', phoneticAr: 'سوآوو إن رومي', meaning: '6 رجال' },
       soundFile: 'audio_coptic/6sow.mp3'
     },
     {
-      id: 7, upper: 'Ⲍ', lower: 'ⲍ', pair: 'Ⲍ ⲍ', name: 'زاتا',
+      id: 7, upper: 'Ⲍ', lower: 'ⲍ', pair: 'Ⲍ ⲍ', name: 'زيتا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ز (Z)',
+      pronunciation: 'ز',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
         'يُنطق دائماً حرف زين <strong>"ز"</strong> مثل حرف <strong>(Z)</strong> في الإنجليزية في جميع الكلمات والمواضع.'
       ],
-      word: { coptic: 'ⲍⲱⲙⲟⲥ', phoneticAr: 'أزموس', meaning: 'شوربة' },
+      word: { coptic: 'Ⲍⲱⲏ', phoneticAr: 'زوي', meaning: 'حياة' },
       soundFile: 'audio_coptic/7zeta.mp3'
     },
     {
-      id: 8, upper: 'Ⲏ', lower: 'ⲏ', pair: 'Ⲏ ⲏ', name: 'هيتا (إيتا)',
+      id: 8, upper: 'Ⲏ', lower: 'ⲏ', pair: 'Ⲏ ⲏ', name: 'إيتا',
       isVowel: true, vowelType: 'متحرك للكسر (طويل ممدود)', letterTypeBadge: 'حرف متحرك (للكسر طويل)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'ياء طويلة ممدودة (ee)',
+      pronunciation: 'إ، ى',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
         'حرف متحرك للكسر يُنطق ياء طويلة مشبعة ممدودة مثل <strong>(ee)</strong> في كلمة (meet) أو (see).'
       ],
-      word: { coptic: 'ⲏ̀ⲡⲓ', phoneticAr: 'إيبي', meaning: 'قبة' },
+      word: { coptic: 'Ⲏⲓ', phoneticAr: 'إي', meaning: 'بيت' },
       soundFile: 'audio_coptic/8eta.mp3'
     },
     {
       id: 9, upper: 'Ⲑ', lower: 'ⲑ', pair: 'Ⲑ ⲑ', name: 'ثيتا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ث أو ت',
+      pronunciation: 'ث',
       hasMultiple: true,
       multipleCountText: 'له نطقان (ث / ت)',
       rules: [
         'يُنطق <strong>(ت)</strong>: إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ).',
         'يُنطق <strong>(ث)</strong>: في باقي الحالات الأخرى مثل حرف <strong>(Th)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲕⲓⲑⲁⲣⲁ', phoneticAr: 'كيثارا', meaning: 'قيثارة' },
+      word: { coptic: 'Ⲑⲁⲙⲓⲟ', phoneticAr: 'ثاميو', meaning: 'يخلق' },
       soundFile: 'audio_coptic/9seta.mp3'
     },
     {
-      id: 10, upper: 'Ⲓ', lower: 'ⲓ', pair: 'Ⲓ ⲓ', name: 'إيوتا',
+      id: 10, upper: 'Ⲓ', lower: 'ⲓ', pair: 'Ⲓ ⲓ', name: 'يوتا',
       isVowel: true, vowelType: 'متحرك للكسر (قصير)', letterTypeBadge: 'حرف متحرك (للكسر قصير)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'ياء قصيرة خفيفة (i)',
+      pronunciation: 'ى',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -151,10 +151,10 @@
 
     // الوحدة 3 (Ⲕ - Ⲝ)
     {
-      id: 11, upper: 'Ⲕ', lower: 'ⲕ', pair: 'Ⲕ ⲕ', name: 'كابا',
+      id: 11, upper: 'Ⲕ', lower: 'ⲕ', pair: 'Ⲕ ⲕ', name: 'كبا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ك (K)',
+      pronunciation: 'ك',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -164,10 +164,10 @@
       soundFile: 'audio_coptic/11kapa.mp3'
     },
     {
-      id: 12, upper: 'Ⲗ', lower: 'ⲗ', pair: 'Ⲗ ⲗ', name: 'لابدا (لافلا)',
+      id: 12, upper: 'Ⲗ', lower: 'ⲗ', pair: 'Ⲗ ⲗ', name: 'لولا/لافلا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ل (L)',
+      pronunciation: 'ل',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -180,7 +180,7 @@
       id: 13, upper: 'Ⲙ', lower: 'ⲙ', pair: 'Ⲙ ⲙ', name: 'مي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'م (M)',
+      pronunciation: 'م',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -193,7 +193,7 @@
       id: 14, upper: 'Ⲛ', lower: 'ⲛ', pair: 'Ⲛ ⲛ', name: 'ني',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ن (N)',
+      pronunciation: 'ن',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -203,10 +203,10 @@
       soundFile: 'audio_coptic/14ni.mp3'
     },
     {
-      id: 15, upper: 'Ⲝ', lower: 'ⲝ', pair: 'Ⲝ ⲝ', name: 'كسي',
+      id: 15, upper: 'Ⲝ', lower: 'ⲝ', pair: 'Ⲝ ⲝ', name: 'إكسي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن مركب',
       badgeClass: 'badge-compound',
-      pronunciation: 'كـ + س (X)',
+      pronunciation: 'إكس',
       hasMultiple: false,
       multipleCountText: 'نطق مركب مزدوج',
       rules: [
@@ -218,10 +218,10 @@
 
     // الوحدة 4 (Ⲟ - Ⲧ)
     {
-      id: 16, upper: 'Ⲟ', lower: 'ⲟ', pair: 'Ⲟ ⲟ', name: 'أُو (قصيرة)',
+      id: 16, upper: 'Ⲟ', lower: 'ⲟ', pair: 'Ⲟ ⲟ', name: 'أو',
       isVowel: true, vowelType: 'متحرك للضم (قصير)', letterTypeBadge: 'حرف متحرك (للضم قصير)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'واو قصيرة مضمومة (O)',
+      pronunciation: 'أو',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -234,7 +234,7 @@
       id: 17, upper: 'Ⲡ', lower: 'ⲡ', pair: 'Ⲡ ⲡ', name: 'بي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ب ثقيلة مشددة (P)',
+      pronunciation: 'ب',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -247,7 +247,7 @@
       id: 18, upper: 'Ⲣ', lower: 'ⲣ', pair: 'Ⲣ ⲣ', name: 'رو',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ر (R)',
+      pronunciation: 'ر',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -260,7 +260,7 @@
       id: 19, upper: 'Ⲥ', lower: 'ⲥ', pair: 'Ⲥ ⲥ', name: 'سيما',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'س (S)',
+      pronunciation: 'س',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -273,7 +273,7 @@
       id: 20, upper: 'Ⲧ', lower: 'ⲧ', pair: 'Ⲧ ⲧ', name: 'تاف',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ت (T)',
+      pronunciation: 'ت',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -288,7 +288,7 @@
       id: 21, upper: 'Ⲩ', lower: 'ⲩ', pair: 'Ⲩ ⲩ', name: 'إبسيلون',
       isVowel: true, vowelType: 'متحرك (متعدد الحالات)', letterTypeBadge: 'حرف متحرك (متعدد الحالات)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'ڤ (V) أو و أو ي',
+      pronunciation: 'ى، و، ف',
       hasMultiple: true,
       multipleCountText: 'له 3 حالات نطق (ڤ / و / ي)',
       rules: [
@@ -303,7 +303,7 @@
       id: 22, upper: 'Ⲫ', lower: 'ⲫ', pair: 'Ⲫ ⲫ', name: 'في',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ف (F)',
+      pronunciation: 'ف',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -313,10 +313,10 @@
       soundFile: 'audio_coptic/22fi.mp3'
     },
     {
-      id: 23, upper: 'Ⲭ', lower: 'ⲭ', pair: 'Ⲭ ⲭ', name: 'خي (كي)',
+      id: 23, upper: 'Ⲭ', lower: 'ⲭ', pair: 'Ⲭ ⲭ', name: 'كي، خي، شي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن',
       badgeClass: 'badge-consonant',
-      pronunciation: 'ك أو ش أو خ',
+      pronunciation: 'ك، خ، ش',
       hasMultiple: true,
       multipleCountText: 'له 3 أصوات (ك / ش / خ)',
       rules: [
@@ -328,10 +328,10 @@
       soundFile: 'audio_coptic/23ki.mp3'
     },
     {
-      id: 24, upper: 'Ⲯ', lower: 'ⲯ', pair: 'Ⲯ ⲯ', name: 'إبسي',
+      id: 24, upper: 'Ⲯ', lower: 'ⲯ', pair: 'Ⲯ ⲯ', name: 'بسي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن مركب',
       badgeClass: 'badge-compound',
-      pronunciation: 'بـ + س (Ps)',
+      pronunciation: 'بس',
       hasMultiple: false,
       multipleCountText: 'نطق مركب مزدوج',
       rules: [
@@ -341,10 +341,10 @@
       soundFile: 'audio_coptic/24psi.mp3'
     },
     {
-      id: 25, upper: 'Ⲱ', lower: 'ⲱ', pair: 'Ⲱ ⲱ', name: 'أوميغا (أو طويلة)',
+      id: 25, upper: 'Ⲱ', lower: 'ⲱ', pair: 'Ⲱ ⲱ', name: 'أوو',
       isVowel: true, vowelType: 'متحرك للضم (طويل)', letterTypeBadge: 'حرف متحرك (للضم طويل)',
       badgeClass: 'badge-vowel',
-      pronunciation: 'واو طويلة ممدودة (Ō)',
+      pronunciation: 'أوو',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -359,7 +359,7 @@
       id: 26, upper: 'Ϣ', lower: 'ϣ', pair: 'Ϣ ϣ', name: 'شاي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'ش (Sh)',
+      pronunciation: 'ش',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -372,7 +372,7 @@
       id: 27, upper: 'Ϥ', lower: 'ϥ', pair: 'Ϥ ϥ', name: 'فاي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'ف (F)',
+      pronunciation: 'ف',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -385,7 +385,7 @@
       id: 28, upper: 'Ϧ', lower: 'ϧ', pair: 'Ϧ ϧ', name: 'خاي',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'خ (Kh)',
+      pronunciation: 'خ',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -398,7 +398,7 @@
       id: 29, upper: 'Ϩ', lower: 'ϩ', pair: 'Ϩ ϩ', name: 'هوري',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'هـ (H)',
+      pronunciation: 'هـ',
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
@@ -408,10 +408,10 @@
       soundFile: 'audio_coptic/29hory.mp3'
     },
     {
-      id: 30, upper: 'Ϫ', lower: 'ϫ', pair: 'Ϫ ϫ', name: 'جانجا',
+      id: 30, upper: 'Ϫ', lower: 'ϫ', pair: 'Ϫ ϫ', name: 'جنجا',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'جـ معطشة أو جـ غير معطشة',
+      pronunciation: 'ج',
       hasMultiple: true,
       multipleCountText: 'له نطقان (جـ معطشة / جـ)',
       rules: [
@@ -427,7 +427,7 @@
       id: 31, upper: 'Ϭ', lower: 'ϭ', pair: 'Ϭ ϭ', name: 'تشيما',
       isVowel: false, vowelType: null, letterTypeBadge: 'حرف ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'تش (Tsh)',
+      pronunciation: 'تش',
       hasMultiple: false,
       multipleCountText: 'نطق مركب (ت + ش)',
       rules: [
@@ -440,7 +440,7 @@
       id: 32, upper: 'Ϯ', lower: 'ϯ', pair: 'Ϯ ϯ', name: 'تي',
       isVowel: false, vowelType: null, letterTypeBadge: 'مقطع ساكن ديموطيقي',
       badgeClass: 'badge-demotic',
-      pronunciation: 'تـ + ي (Ti)',
+      pronunciation: 'تي',
       hasMultiple: false,
       multipleCountText: 'نطق مقطعي (تـ + ي)',
       rules: [

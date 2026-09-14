@@ -553,7 +553,7 @@
               "coptic_display": "Ⲇ ⲇ",
               "audio_text": "دلدا",
               "audio_url": "audio_coptic/4delta.mp3",
-              "correct_word": "• اسم الحرف: دلدا\n• نطق الحرف بالعربي: د أو ذ\n• قواعد النطق: الحرف الرابع. يُنطق \"د\" في أسماء الأعلام والكلمات القبطية، و\"ذ\" في الكلمات اليونانية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲁⲇⲁⲙ\n  - القبطي المعرب (نطقها): «آدام»\n  - المعنى بالعربية: آدم\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
+              "correct_word": "• اسم الحرف: دلدا\n• نطق الحرف بالعربي: د أو ذ\n• قواعد النطق: الحرف الرابع. يُنطق \"د\" في أسماء الأعلام والكلمات القبطية، و\"ذ\" في الكلمات اليونانية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: Ⲇⲟⲝⲁ\n  - القبطي المعرب (نطقها): «ذوكسا»\n  - المعنى بالعربية: مجد\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
               "tiles": null,
               "pairs": null,
               "is_correct": true,
@@ -642,9 +642,9 @@
               "id": 690,
               "lesson_id": 136,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲁⲇⲁⲙ؟ (المعرب: «آدام»)",
-              "coptic_display": "ⲁⲇⲁⲙ",
-              "audio_text": "آدام",
+              "question": "ما معنى الكلمة القبطية: Ⲇⲟⲝⲁ؟ (المعرب: «ذوكسا»)",
+              "coptic_display": "Ⲇⲟⲝⲁ",
+              "audio_text": "ذوكسا",
               "audio_url": "audio_coptic/4delta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -655,7 +655,7 @@
                 {
                   "id": 4368,
                   "challenge_id": 690,
-                  "text": "ملاك",
+                  "text": "كرامة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -663,7 +663,7 @@
                 {
                   "id": 4369,
                   "challenge_id": 690,
-                  "text": "آدم",
+                  "text": "مجد",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -671,7 +671,7 @@
                 {
                   "id": 4370,
                   "challenge_id": 690,
-                  "text": "إنسان",
+                  "text": "بركة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -679,7 +679,7 @@
                 {
                   "id": 4371,
                   "challenge_id": 690,
-                  "text": "نوح",
+                  "text": "نعمة",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -690,16 +690,16 @@
               "id": 691,
               "lesson_id": 136,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: آدم (المعرب: «آدام»)",
-              "coptic_display": "ⲁⲇⲁⲙ",
-              "audio_text": "آدام",
+              "question": "رتب حروف الكلمة القبطية لتكوين: مجد (المعرب: «ذوكسا»)",
+              "coptic_display": "Ⲇⲟⲝⲁ",
+              "audio_text": "ذوكسا",
               "audio_url": "audio_coptic/4delta.mp3",
-              "correct_word": "ⲁⲇⲁⲙ",
+              "correct_word": "Ⲇⲟⲝⲁ",
               "tiles": [
-                "ⲁ",
-                "ⲇ",
-                "ⲁ",
-                "ⲙ"
+                "Ⲇ",
+                "ⲟ",
+                "ⲝ",
+                "ⲁ"
               ],
               "pairs": null,
               "is_correct": true,
@@ -1116,7 +1116,7 @@
               "coptic_display": "Ⲋ ⲋ",
               "audio_text": "سو (رقم ٦)",
               "audio_url": "audio_coptic/6sow.mp3",
-              "correct_word": "• اسم الحرف: سو (رقم ٦)\n• نطق الحرف بالعربي: سو (الرقم 6)\n• قواعد النطق: رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق \"سو\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ\n  - القبطي المعرب (نطقها): «إسوؤو إن شكيلكيل»\n  - المعنى بالعربية: 6 أجراس\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
+              "correct_word": "• اسم الحرف: سو (رقم ٦)\n• نطق الحرف بالعربي: سو (الرقم 6)\n• قواعد النطق: رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق \"سو\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲋ̅ ⲛ̀ⲣⲱⲙⲓ\n  - القبطي المعرب (نطقها): «سوآوو إن رومي»\n  - المعنى بالعربية: 6 رجال\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
               "tiles": null,
               "pairs": null,
               "is_correct": true,
@@ -1205,9 +1205,9 @@
               "id": 702,
               "lesson_id": 138,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ؟ (المعرب: «إسوؤو إن شكيلكيل»)",
-              "coptic_display": "ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ",
-              "audio_text": "إسوؤو إن شكيلكيل",
+              "question": "ما معنى الكلمة القبطية: ⲋ̅ ⲛ̀ⲣⲱⲙⲓ؟ (المعرب: «سوآوو إن رومي»)",
+              "coptic_display": "ⲋ̅ ⲛ̀ⲣⲱⲙⲓ",
+              "audio_text": "سوآوو إن رومي",
               "audio_url": "audio_coptic/6sow.mp3",
               "correct_word": null,
               "tiles": null,
@@ -1218,7 +1218,7 @@
                 {
                   "id": 4384,
                   "challenge_id": 702,
-                  "text": "6 أجراس",
+                  "text": "6 رجال",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -1226,7 +1226,7 @@
                 {
                   "id": 4385,
                   "challenge_id": 702,
-                  "text": "٥ أجراس",
+                  "text": "٥ رجال",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1234,7 +1234,7 @@
                 {
                   "id": 4386,
                   "challenge_id": 702,
-                  "text": "٦ شموع",
+                  "text": "٦ نساء",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1242,7 +1242,7 @@
                 {
                   "id": 4387,
                   "challenge_id": 702,
-                  "text": "٧ كؤوس",
+                  "text": "٧ رجال",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1253,26 +1253,20 @@
               "id": 703,
               "lesson_id": 138,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: 6 أجراس (المعرب: «إسوؤو إن شكيلكيل»)",
-              "coptic_display": "ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ",
-              "audio_text": "إسوؤو إن شكيلكيل",
+              "question": "رتب حروف الكلمة القبطية لتكوين: 6 رجال (المعرب: «سوآوو إن رومي»)",
+              "coptic_display": "ⲋ̅ ⲛ̀ⲣⲱⲙⲓ",
+              "audio_text": "سوآوو إن رومي",
               "audio_url": "audio_coptic/6sow.mp3",
-              "correct_word": "ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ",
+              "correct_word": "ⲋ̅ ⲛ̀ⲣⲱⲙⲓ",
               "tiles": [
-                "ⲥ",
-                "ⲟ",
-                "ⲟ",
-                "ⲩ",
+                "ⲋ̅",
                 " ",
                 "ⲛ",
                 "̀",
-                "ϣ",
-                "ⲕ",
-                "ⲉ",
-                "ⲗ",
-                "ⲕ",
-                "ⲓ",
-                "ⲗ"
+                "ⲣ",
+                "ⲱ",
+                "ⲙ",
+                "ⲓ"
               ],
               "pairs": null,
               "is_correct": true,
@@ -1298,7 +1292,7 @@
               "coptic_display": "Ⲍ ⲍ",
               "audio_text": "زاتا",
               "audio_url": "audio_coptic/7zeta.mp3",
-              "correct_word": "• اسم الحرف: زاتا\n• نطق الحرف بالعربي: ز\n• قواعد النطق: الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف \"ز\" مثل حرف (Z) في الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲍⲱⲙⲟⲥ\n  - القبطي المعرب (نطقها): «أزموس»\n  - المعنى بالعربية: شوربة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
+              "correct_word": "• اسم الحرف: زاتا\n• نطق الحرف بالعربي: ز\n• قواعد النطق: الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف \"ز\" مثل حرف (Z) في الإنجليزية.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: Ⲍⲱⲏ\n  - القبطي المعرب (نطقها): «زوي»\n  - المعنى بالعربية: حياة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
               "tiles": null,
               "pairs": null,
               "is_correct": true,
@@ -1387,9 +1381,9 @@
               "id": 708,
               "lesson_id": 139,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲍⲱⲙⲟⲥ؟ (المعرب: «أزموس»)",
-              "coptic_display": "ⲍⲱⲙⲟⲥ",
-              "audio_text": "أزموس",
+              "question": "ما معنى الكلمة القبطية: Ⲍⲱⲏ؟ (المعرب: «زوي»)",
+              "coptic_display": "Ⲍⲱⲏ",
+              "audio_text": "زوي",
               "audio_url": "audio_coptic/7zeta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -1400,7 +1394,7 @@
                 {
                   "id": 4393,
                   "challenge_id": 708,
-                  "text": "طعام",
+                  "text": "نور",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1408,7 +1402,7 @@
                 {
                   "id": 4394,
                   "challenge_id": 708,
-                  "text": "شوربة",
+                  "text": "حياة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -1416,7 +1410,7 @@
                 {
                   "id": 4395,
                   "challenge_id": 708,
-                  "text": "زيت",
+                  "text": "سلام",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1424,7 +1418,7 @@
                 {
                   "id": 4392,
                   "challenge_id": 708,
-                  "text": "ماء",
+                  "text": "حق",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1435,17 +1429,15 @@
               "id": 709,
               "lesson_id": 139,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: شوربة (المعرب: «أزموس»)",
-              "coptic_display": "ⲍⲱⲙⲟⲥ",
-              "audio_text": "أزموس",
+              "question": "رتب حروف الكلمة القبطية لتكوين: حياة (المعرب: «زوي»)",
+              "coptic_display": "Ⲍⲱⲏ",
+              "audio_text": "زوي",
               "audio_url": "audio_coptic/7zeta.mp3",
-              "correct_word": "ⲍⲱⲙⲟⲥ",
+              "correct_word": "Ⲍⲱⲏ",
               "tiles": [
-                "ⲍ",
+                "Ⲍ",
                 "ⲱ",
-                "ⲙ",
-                "ⲟ",
-                "ⲥ"
+                "ⲏ"
               ],
               "pairs": null,
               "is_correct": true,
@@ -1471,7 +1463,7 @@
               "coptic_display": "Ⲏ ⲏ",
               "audio_text": "هيتا",
               "audio_url": "audio_coptic/8eta.mp3",
-              "correct_word": "• اسم الحرف: هيتا\n• نطق الحرف بالعربي: ياء طويلة ممدودة\n• قواعد النطق: الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲏ̀ⲡⲓ\n  - القبطي المعرب (نطقها): «إيبي»\n  - المعنى بالعربية: قبة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
+              "correct_word": "• اسم الحرف: هيتا\n• نطق الحرف بالعربي: ياء طويلة ممدودة\n• قواعد النطق: الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: Ⲏⲓ\n  - القبطي المعرب (نطقها): «إي»\n  - المعنى بالعربية: بيت\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
               "tiles": null,
               "pairs": null,
               "is_correct": true,
@@ -1560,9 +1552,9 @@
               "id": 714,
               "lesson_id": 140,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲏ̀ⲡⲓ؟ (المعرب: «إيبي»)",
-              "coptic_display": "ⲏ̀ⲡⲓ",
-              "audio_text": "إيبي",
+              "question": "ما معنى الكلمة القبطية: Ⲏⲓ؟ (المعرب: «إي»)",
+              "coptic_display": "Ⲏⲓ",
+              "audio_text": "إي",
               "audio_url": "audio_coptic/8eta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -1571,18 +1563,18 @@
               "order_index": 5,
               "options": [
                 {
-                  "id": 4400,
-                  "challenge_id": 714,
-                  "text": "قبة",
-                  "is_correct": true,
-                  "image_url": null,
-                  "audio_url": null
-                },
-                {
                   "id": 4402,
                   "challenge_id": 714,
                   "text": "كنيسة",
                   "is_correct": false,
+                  "image_url": null,
+                  "audio_url": null
+                },
+                {
+                  "id": 4400,
+                  "challenge_id": 714,
+                  "text": "بيت",
+                  "is_correct": true,
                   "image_url": null,
                   "audio_url": null
                 },
@@ -1608,15 +1600,13 @@
               "id": 715,
               "lesson_id": 140,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: قبة (المعرب: «إيبي»)",
-              "coptic_display": "ⲏ̀ⲡⲓ",
-              "audio_text": "إيبي",
+              "question": "رتب حروف الكلمة القبطية لتكوين: بيت (المعرب: «إي»)",
+              "coptic_display": "Ⲏⲓ",
+              "audio_text": "إي",
               "audio_url": "audio_coptic/8eta.mp3",
-              "correct_word": "ⲏ̀ⲡⲓ",
+              "correct_word": "Ⲏⲓ",
               "tiles": [
-                "ⲏ",
-                "̀",
-                "ⲡ",
+                "Ⲏ",
                 "ⲓ"
               ],
               "pairs": null,
@@ -1643,7 +1633,7 @@
               "coptic_display": "Ⲑ ⲑ",
               "audio_text": "ثيتا",
               "audio_url": "audio_coptic/9seta.mp3",
-              "correct_word": "• اسم الحرف: ثيتا\n• نطق الحرف بالعربي: ث أو ت\n• قواعد النطق: الحرف التاسع. يُنطق \"ث\" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق \"ت\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: ⲕⲓⲑⲁⲣⲁ\n  - القبطي المعرب (نطقها): «كيثارا»\n  - المعنى بالعربية: قيثارة\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
+              "correct_word": "• اسم الحرف: ثيتا\n• نطق الحرف بالعربي: ث أو ت\n• قواعد النطق: الحرف التاسع. يُنطق \"ث\" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق \"ت\".\n────────────────────\n• كلمة تطبيقية على الحرف:\n  - الكلمة بالقبطية: Ⲑⲁⲙⲓⲟ\n  - القبطي المعرب (نطقها): «ثاميو»\n  - المعنى بالعربية: يخلق\n\n(اضغط على زر الصوت للاستماع لنطق الحرف)",
               "tiles": null,
               "pairs": null,
               "is_correct": true,
@@ -1732,9 +1722,9 @@
               "id": 720,
               "lesson_id": 141,
               "type": "select",
-              "question": "ما معنى الكلمة القبطية: ⲕⲓⲑⲁⲣⲁ؟ (المعرب: «كيثارا»)",
-              "coptic_display": "ⲕⲓⲑⲁⲣⲁ",
-              "audio_text": "كيثارا",
+              "question": "ما معنى الكلمة القبطية: Ⲑⲁⲙⲓⲟ؟ (المعرب: «ثاميو»)",
+              "coptic_display": "Ⲑⲁⲙⲓⲟ",
+              "audio_text": "ثاميو",
               "audio_url": "audio_coptic/9seta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -1745,7 +1735,7 @@
                 {
                   "id": 4409,
                   "challenge_id": 720,
-                  "text": "مزمار",
+                  "text": "يبني",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1753,7 +1743,7 @@
                 {
                   "id": 4410,
                   "challenge_id": 720,
-                  "text": "ناي",
+                  "text": "يعمل",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1761,7 +1751,7 @@
                 {
                   "id": 4411,
                   "challenge_id": 720,
-                  "text": "قيثارة",
+                  "text": "يخلق",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null
@@ -1769,7 +1759,7 @@
                 {
                   "id": 4408,
                   "challenge_id": 720,
-                  "text": "دف",
+                  "text": "يصنع",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -1780,18 +1770,17 @@
               "id": 721,
               "lesson_id": 141,
               "type": "write",
-              "question": "رتب حروف الكلمة القبطية لتكوين: قيثارة (المعرب: «كيثارا»)",
-              "coptic_display": "ⲕⲓⲑⲁⲣⲁ",
-              "audio_text": "كيثارا",
+              "question": "رتب حروف الكلمة القبطية لتكوين: يخلق (المعرب: «ثاميو»)",
+              "coptic_display": "Ⲑⲁⲙⲓⲟ",
+              "audio_text": "ثاميو",
               "audio_url": "audio_coptic/9seta.mp3",
-              "correct_word": "ⲕⲓⲑⲁⲣⲁ",
+              "correct_word": "Ⲑⲁⲙⲓⲟ",
               "tiles": [
-                "ⲕ",
-                "ⲓ",
-                "ⲑ",
+                "Ⲑ",
                 "ⲁ",
-                "ⲣ",
-                "ⲁ"
+                "ⲙ",
+                "ⲓ",
+                "ⲟ"
               ],
               "pairs": null,
               "is_correct": true,
@@ -2064,9 +2053,9 @@
               "id": 867,
               "lesson_id": 166,
               "type": "select",
-              "question": "ما معنى الكلمة: ⲍⲱⲙⲟⲥ؟ (المعرب: «أزموس»)",
-              "coptic_display": "ⲍⲱⲙⲟⲥ",
-              "audio_text": "أزموس",
+              "question": "ما معنى الكلمة: Ⲍⲱⲏ؟ (المعرب: «زوي»)",
+              "coptic_display": "Ⲍⲱⲏ",
+              "audio_text": "زوي",
               "audio_url": "audio_coptic/7zeta.mp3",
               "correct_word": null,
               "tiles": null,
@@ -2077,7 +2066,7 @@
                 {
                   "id": 4613,
                   "challenge_id": 867,
-                  "text": "طعام",
+                  "text": "نور",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2085,7 +2074,7 @@
                 {
                   "id": 4614,
                   "challenge_id": 867,
-                  "text": "ماء",
+                  "text": "حق",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2093,7 +2082,7 @@
                 {
                   "id": 4615,
                   "challenge_id": 867,
-                  "text": "زيت",
+                  "text": "سلام",
                   "is_correct": false,
                   "image_url": null,
                   "audio_url": null
@@ -2101,7 +2090,7 @@
                 {
                   "id": 4612,
                   "challenge_id": 867,
-                  "text": "شوربة",
+                  "text": "حياة",
                   "is_correct": true,
                   "image_url": null,
                   "audio_url": null

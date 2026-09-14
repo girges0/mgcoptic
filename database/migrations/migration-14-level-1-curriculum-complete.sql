@@ -239,85 +239,24 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, xp_reward = EXCLUDED.xp_reward, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (770, 150, 'text_view', 'نبذة عن حرف رو (Ⲣ ⲣ)', 'Ⲣ ⲣ', 'رو', 'audio_coptic/18roo.mp3', '• اسم الحرف: رو
-• نطق الحرف بالعربي: ر
-• قواعد النطق: الحرف الثامن عشر. يُنطق حرف "ر" دائماً.
+    VALUES (740, 145, 'text_view', 'نبذة عن حرف مي (Ⲙ ⲙ)', 'Ⲙ ⲙ', 'مي', 'audio_coptic/13mi.mp3', '• اسم الحرف: مي
+• نطق الحرف بالعربي: م
+• قواعد النطق: الحرف الثالث عشر. يُنطق حرف "م" دائماً.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲣⲏ
-  - القبطي المعرب (نطقها): «ري»
-  - المعنى بالعربية: شمس
+  - الكلمة بالقبطية: ⲙⲁⲛϩⲟⲛ
+  - القبطي المعرب (نطقها): «مانهون»
+  - المعنى بالعربية: برتقال
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (842, 162, 'text_view', 'نبذة عن حرف جانجا (Ϫ ϫ)', 'Ϫ ϫ', 'جانجا', 'audio_coptic/30ganga.mp3', '• اسم الحرف: جانجا
-• نطق الحرف بالعربي: ج (معطشة أو غير معطشة)
-• قواعد النطق: الحرف الثلاثون. حرف مصري ديموطيقي أصيل. يُنطق "ج" معطشة قبل المتحرك للكسر، و"ج" غير معطشة في الحالات الأخرى.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϫⲉⲙⲫⲉϩ
-  - القبطي المعرب (نطقها): «جيمفيه»
-  - المعنى بالعربية: تفاح
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    VALUES (890, 171, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ϭ ϭ","right":"تشيما (تش)"},{"left":"Ϯ ϯ","right":"تي (تـ + ي)"}]'::jsonb, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (758, 148, 'text_view', 'نبذة عن حرف أُو (قصيرة) (Ⲟ ⲟ)', 'Ⲟ ⲟ', 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', '• اسم الحرف: أُو (قصيرة)
-• نطق الحرف بالعربي: واو قصيرة مضمومة
-• قواعد النطق: الحرف السادس عشر. حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲟⲩⲱⲙ
-  - القبطي المعرب (نطقها): «أوؤم»
-  - المعنى بالعربية: يأكل
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (686, 136, 'text_view', 'نبذة عن حرف دلدا (Ⲇ ⲇ)', 'Ⲇ ⲇ', 'دلدا', 'audio_coptic/4delta.mp3', '• اسم الحرف: دلدا
-• نطق الحرف بالعربي: د أو ذ
-• قواعد النطق: الحرف الرابع. يُنطق "د" في أسماء الأعلام والكلمات القبطية، و"ذ" في الكلمات اليونانية.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲁⲇⲁⲙ
-  - القبطي المعرب (نطقها): «آدام»
-  - المعنى بالعربية: آدم
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (860, 165, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲁ ⲁ","right":"ألفا (ألف مفتوحة (أ))"},{"left":"Ⲃ ⲃ","right":"فيدا (ف أو ب)"},{"left":"Ⲅ ⲅ","right":"غاما (غ أو ج أو ن)"},{"left":"Ⲇ ⲇ","right":"دلدا (د أو ذ)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (680, 135, 'text_view', 'نبذة عن حرف غاما (Ⲅ ⲅ)', 'Ⲅ ⲅ', 'غاما', 'audio_coptic/3ghamma.mp3', '• اسم الحرف: غاما
-• نطق الحرف بالعربي: غ أو ج أو ن
-• قواعد النطق: الحرف الثالث. ينطق "غ" في الكلمات القبطية، و"ن" قبل الحلقيات، و"ج" معطشة قبل المتحرك للكسر في اليونانية.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲅⲁⲗⲁ
-  - القبطي المعرب (نطقها): «غالا»
-  - المعنى بالعربية: لبن
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (698, 138, 'text_view', 'نبذة عن حرف سو (رقم ٦) (Ⲋ ⲋ)', 'Ⲋ ⲋ', 'سو (رقم ٦)', 'audio_coptic/6sow.mp3', '• اسم الحرف: سو (رقم ٦)
-• نطق الحرف بالعربي: سو (الرقم 6)
-• قواعد النطق: رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق "سو".
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ
-  - القبطي المعرب (نطقها): «إسوؤو إن شكيلكيل»
-  - المعنى بالعربية: 6 أجراس
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    VALUES (880, 169, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲩ ⲩ","right":"إبسيلون (ي أو ڤ أو و)"},{"left":"Ⲫ ⲫ","right":"في (ف)"},{"left":"Ⲭ ⲭ","right":"خي (خ أو ك أو ش)"},{"left":"Ⲯ ⲯ","right":"إبسي (بـ + س)"}]'::jsonb, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -334,169 +273,14 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (668, 133, 'text_view', 'نبذة عن حرف ألفا (Ⲁ ⲁ)', 'Ⲁ ⲁ', 'ألفا', 'audio_coptic/1alfa.mp3', '• اسم الحرف: ألفا
-• نطق الحرف بالعربي: ألف مفتوحة (أ)
-• قواعد النطق: الحرف الأول في الأبجدية القبطية. يُنطق دائماً مثل حرف الألف المفتوحة في العربية أو (A) في الإنجليزية.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲁⲗⲱⲙ
-  - القبطي المعرب (نطقها): «آلوم»
-  - المعنى بالعربية: جبنة
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (880, 169, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲩ ⲩ","right":"إبسيلون (ي أو ڤ أو و)"},{"left":"Ⲫ ⲫ","right":"في (ف)"},{"left":"Ⲭ ⲭ","right":"خي (خ أو ك أو ش)"},{"left":"Ⲯ ⲯ","right":"إبسي (بـ + س)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (854, 164, 'text_view', 'نبذة عن حرف تي (Ϯ ϯ)', 'Ϯ ϯ', 'تي', 'audio_coptic/32tee.mp3', '• اسم الحرف: تي
-• نطق الحرف بالعربي: تـ + ي
-• قواعد النطق: الحرف الثاني والثلاثون والأخير في الأبجدية القبطية. مقطع صوتي مركب ينطق تاء وياء معاً (تـ + ي = Ti).
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϯⲙⲓ
-  - القبطي المعرب (نطقها): «تيمي»
-  - المعنى بالعربية: قرية
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (848, 163, 'text_view', 'نبذة عن حرف تشيما (Ϭ ϭ)', 'Ϭ ϭ', 'تشيما', 'audio_coptic/31chema.mp3', '• اسم الحرف: تشيما
-• نطق الحرف بالعربي: تش
-• قواعد النطق: الحرف الحادي والثلاثون. الحرف السادس من الحروف المصرية الديموطيقية، يُنطق تاء وشين معاً (تش) دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϭⲁϫ
-  - القبطي المعرب (نطقها): «تشاج»
-  - المعنى بالعربية: عصفور
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (794, 154, 'text_view', 'نبذة عن حرف في (Ⲫ ⲫ)', 'Ⲫ ⲫ', 'في', 'audio_coptic/22fi.mp3', '• اسم الحرف: في
-• نطق الحرف بالعربي: ف
-• قواعد النطق: الحرف الثاني والعشرون. يُنطق حرف "ف" دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲫⲉⲃ
-  - القبطي المعرب (نطقها): «أفيغ»
-  - المعنى بالعربية: بطيخ
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (870, 167, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"Ⲗ ⲗ","right":"لابدا (ل)"},{"left":"Ⲙ ⲙ","right":"مي (م)"},{"left":"Ⲛ ⲛ","right":"ني (ن)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (716, 141, 'text_view', 'نبذة عن حرف ثيتا (Ⲑ ⲑ)', 'Ⲑ ⲑ', 'ثيتا', 'audio_coptic/9seta.mp3', '• اسم الحرف: ثيتا
-• نطق الحرف بالعربي: ث أو ت
-• قواعد النطق: الحرف التاسع. يُنطق "ث" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق "ت".
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲕⲓⲑⲁⲣⲁ
-  - القبطي المعرب (نطقها): «كيثارا»
-  - المعنى بالعربية: قيثارة
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (830, 160, 'text_view', 'نبذة عن حرف خاي (Ϧ ϧ)', 'Ϧ ϧ', 'خاي', 'audio_coptic/28khay.mp3', '• اسم الحرف: خاي
-• نطق الحرف بالعربي: خ
-• قواعد النطق: الحرف الثامن والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "خ" دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϧⲏⲃⲥ
-  - القبطي المعرب (نطقها): «خيبس»
-  - المعنى بالعربية: مصباح
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (728, 143, 'text_view', 'نبذة عن حرف كابا (Ⲕ ⲕ)', 'Ⲕ ⲕ', 'كابا', 'audio_coptic/11kapa.mp3', '• اسم الحرف: كابا
-• نطق الحرف بالعربي: ك
-• قواعد النطق: الحرف الحادي عشر في الأبجدية القبطية. يُنطق "ك" دائماً في جميع المواضع.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲕⲁϣ
-  - القبطي المعرب (نطقها): «كاش»
-  - المعنى بالعربية: قلم
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (875, 168, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲟ ⲟ","right":"أُو (قصيرة) (واو قصيرة مضمومة)"},{"left":"Ⲡ ⲡ","right":"بي (ب ثقيلة مشددة)"},{"left":"Ⲣ ⲣ","right":"رو (ر)"},{"left":"Ⲥ ⲥ","right":"سيما (س)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (818, 158, 'text_view', 'نبذة عن حرف شاي (Ϣ ϣ)', 'Ϣ ϣ', 'شاي', 'audio_coptic/26shay.mp3', '• اسم الحرف: شاي
-• نطق الحرف بالعربي: ش
-• قواعد النطق: الحرف السادس والعشرون. أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم. يُنطق حرف "ش" دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϣⲁⲩ
-  - القبطي المعرب (نطقها): «شاف»
-  - المعنى بالعربية: قطة
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (836, 161, 'text_view', 'نبذة عن حرف هوري (Ϩ ϩ)', 'Ϩ ϩ', 'هوري', 'audio_coptic/29hory.mp3', '• اسم الحرف: هوري
-• نطق الحرف بالعربي: هـ
-• قواعد النطق: الحرف التاسع والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "هـ" دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϩ̀ⲑⲟ
-  - القبطي المعرب (نطقها): «إهثو»
-  - المعنى بالعربية: حصان
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (722, 142, 'text_view', 'نبذة عن حرف إيوتا (Ⲓ ⲓ)', 'Ⲓ ⲓ', 'إيوتا', 'audio_coptic/10yota.mp3', '• اسم الحرف: إيوتا
-• نطق الحرف بالعربي: ياء قصيرة
-• قواعد النطق: الحرف العاشر. حرف متحرك يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في الإنجليزية.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲓⲁⲗ
-  - القبطي المعرب (نطقها): «إيال»
-  - المعنى بالعربية: مراية
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (746, 146, 'text_view', 'نبذة عن حرف ني (Ⲛ ⲛ)', 'Ⲛ ⲛ', 'ني', 'audio_coptic/14ni.mp3', '• اسم الحرف: ني
-• نطق الحرف بالعربي: ن
-• قواعد النطق: الحرف الرابع عشر. يُنطق حرف "ن" دائماً.
-────────────────────
-• كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲉⲛ̀ⲕⲟⲧ
-  - القبطي المعرب (نطقها): «إنكوت»
-  - المعنى بالعربية: ينام
-
-(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (710, 140, 'text_view', 'نبذة عن حرف هيتا (Ⲏ ⲏ)', 'Ⲏ ⲏ', 'هيتا', 'audio_coptic/8eta.mp3', '• اسم الحرف: هيتا
 • نطق الحرف بالعربي: ياء طويلة ممدودة
 • قواعد النطق: الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲏ̀ⲡⲓ
-  - القبطي المعرب (نطقها): «إيبي»
-  - المعنى بالعربية: قبة
+  - الكلمة بالقبطية: Ⲏⲓ
+  - القبطي المعرب (نطقها): «إي»
+  - المعنى بالعربية: بيت
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
@@ -515,16 +299,28 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (782, 152, 'text_view', 'نبذة عن حرف تاف (Ⲧ ⲧ)', 'Ⲧ ⲧ', 'تاف', 'audio_coptic/20tav.mp3', '• اسم الحرف: تاف
-• نطق الحرف بالعربي: ت
-• قواعد النطق: الحرف العشرون في الأبجدية القبطية. يُنطق حرف "ت" دائماً.
+    VALUES (728, 143, 'text_view', 'نبذة عن حرف كابا (Ⲕ ⲕ)', 'Ⲕ ⲕ', 'كابا', 'audio_coptic/11kapa.mp3', '• اسم الحرف: كابا
+• نطق الحرف بالعربي: ك
+• قواعد النطق: الحرف الحادي عشر في الأبجدية القبطية. يُنطق "ك" دائماً في جميع المواضع.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲧⲁⲙⲁⲩ
-  - القبطي المعرب (نطقها): «تاماف»
-  - المعنى بالعربية: أمي
+  - الكلمة بالقبطية: ⲕⲁϣ
+  - القبطي المعرب (نطقها): «كاش»
+  - المعنى بالعربية: قلم
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (870, 167, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"Ⲗ ⲗ","right":"لابدا (ل)"},{"left":"Ⲙ ⲙ","right":"مي (م)"},{"left":"Ⲛ ⲛ","right":"ني (ن)"}]'::jsonb, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (875, 168, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲟ ⲟ","right":"أُو (قصيرة) (واو قصيرة مضمومة)"},{"left":"Ⲡ ⲡ","right":"بي (ب ثقيلة مشددة)"},{"left":"Ⲣ ⲣ","right":"رو (ر)"},{"left":"Ⲥ ⲥ","right":"سيما (س)"}]'::jsonb, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (895, 172, 'match', 'صل الحرف بنطقه الصحيح بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲁ ⲁ","right":"ألفا (أ)"},{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"ⲭ ⲭ","right":"خي (خ/ك/ش)"},{"left":"Ϯ ϯ","right":"تي (تـ+ي)"}]'::jsonb, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -541,7 +337,107 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (890, 171, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ϭ ϭ","right":"تشيما (تش)"},{"left":"Ϯ ϯ","right":"تي (تـ + ي)"}]'::jsonb, TRUE, 1)
+    VALUES (704, 139, 'text_view', 'نبذة عن حرف زاتا (Ⲍ ⲍ)', 'Ⲍ ⲍ', 'زاتا', 'audio_coptic/7zeta.mp3', '• اسم الحرف: زاتا
+• نطق الحرف بالعربي: ز
+• قواعد النطق: الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف "ز" مثل حرف (Z) في الإنجليزية.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: Ⲍⲱⲏ
+  - القبطي المعرب (نطقها): «زوي»
+  - المعنى بالعربية: حياة
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (854, 164, 'text_view', 'نبذة عن حرف تي (Ϯ ϯ)', 'Ϯ ϯ', 'تي', 'audio_coptic/32tee.mp3', '• اسم الحرف: تي
+• نطق الحرف بالعربي: تـ + ي
+• قواعد النطق: الحرف الثاني والثلاثون والأخير في الأبجدية القبطية. مقطع صوتي مركب ينطق تاء وياء معاً (تـ + ي = Ti).
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ϯⲙⲓ
+  - القبطي المعرب (نطقها): «تيمي»
+  - المعنى بالعربية: قرية
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (746, 146, 'text_view', 'نبذة عن حرف ني (Ⲛ ⲛ)', 'Ⲛ ⲛ', 'ني', 'audio_coptic/14ni.mp3', '• اسم الحرف: ني
+• نطق الحرف بالعربي: ن
+• قواعد النطق: الحرف الرابع عشر. يُنطق حرف "ن" دائماً.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲉⲛ̀ⲕⲟⲧ
+  - القبطي المعرب (نطقها): «إنكوت»
+  - المعنى بالعربية: ينام
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (692, 137, 'text_view', 'نبذة عن حرف إي (Ⲉ ⲉ)', 'Ⲉ ⲉ', 'إي', 'audio_coptic/5ei.mp3', '• اسم الحرف: إي
+• نطق الحرف بالعربي: إي خفيفة
+• قواعد النطق: الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲉ̀ⲣϣⲱ
+  - القبطي المعرب (نطقها): «إرجو»
+  - المعنى بالعربية: دجاجة
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (842, 162, 'text_view', 'نبذة عن حرف جانجا (Ϫ ϫ)', 'Ϫ ϫ', 'جانجا', 'audio_coptic/30ganga.mp3', '• اسم الحرف: جانجا
+• نطق الحرف بالعربي: ج (معطشة أو غير معطشة)
+• قواعد النطق: الحرف الثلاثون. حرف مصري ديموطيقي أصيل. يُنطق "ج" معطشة قبل المتحرك للكسر، و"ج" غير معطشة في الحالات الأخرى.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ϫⲉⲙⲫⲉϩ
+  - القبطي المعرب (نطقها): «جيمفيه»
+  - المعنى بالعربية: تفاح
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (668, 133, 'text_view', 'نبذة عن حرف ألفا (Ⲁ ⲁ)', 'Ⲁ ⲁ', 'ألفا', 'audio_coptic/1alfa.mp3', '• اسم الحرف: ألفا
+• نطق الحرف بالعربي: ألف مفتوحة (أ)
+• قواعد النطق: الحرف الأول في الأبجدية القبطية. يُنطق دائماً مثل حرف الألف المفتوحة في العربية أو (A) في الإنجليزية.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲁⲗⲱⲙ
+  - القبطي المعرب (نطقها): «آلوم»
+  - المعنى بالعربية: جبنة
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (716, 141, 'text_view', 'نبذة عن حرف ثيتا (Ⲑ ⲑ)', 'Ⲑ ⲑ', 'ثيتا', 'audio_coptic/9seta.mp3', '• اسم الحرف: ثيتا
+• نطق الحرف بالعربي: ث أو ت
+• قواعد النطق: الحرف التاسع. يُنطق "ث" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق "ت".
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: Ⲑⲁⲙⲓⲟ
+  - القبطي المعرب (نطقها): «ثاميو»
+  - المعنى بالعربية: يخلق
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (830, 160, 'text_view', 'نبذة عن حرف خاي (Ϧ ϧ)', 'Ϧ ϧ', 'خاي', 'audio_coptic/28khay.mp3', '• اسم الحرف: خاي
+• نطق الحرف بالعربي: خ
+• قواعد النطق: الحرف الثامن والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "خ" دائماً.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ϧⲏⲃⲥ
+  - القبطي المعرب (نطقها): «خيبس»
+  - المعنى بالعربية: مصباح
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -558,26 +454,18 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (885, 170, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ϣ ϣ","right":"شاي (ش)"},{"left":"Ϥ ϥ","right":"فاي (ف)"},{"left":"Ϧ ϧ","right":"خاي (خ)"},{"left":"Ϩ ϩ","right":"هوري (هـ)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (865, 166, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲋ ⲋ","right":"سو (رقم ٦) (سو (الرقم 6))"},{"left":"Ⲍ ⲍ","right":"زاتا (ز)"},{"left":"Ⲏ ⲏ","right":"هيتا (ياء طويلة ممدودة)"},{"left":"Ⲑ ⲑ","right":"ثيتا (ث أو ت)"}]'::jsonb, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (895, 172, 'match', 'صل الحرف بنطقه الصحيح بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲁ ⲁ","right":"ألفا (أ)"},{"left":"Ⲕ ⲕ","right":"كابا (ك)"},{"left":"ⲭ ⲭ","right":"خي (خ/ك/ش)"},{"left":"Ϯ ϯ","right":"تي (تـ+ي)"}]'::jsonb, TRUE, 1)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (674, 134, 'text_view', 'نبذة عن حرف فيدا (Ⲃ ⲃ)', 'Ⲃ ⲃ', 'فيدا', 'audio_coptic/2veta.mp3', '• اسم الحرف: فيدا
-• نطق الحرف بالعربي: ف أو ب
-• قواعد النطق: الحرف الثاني. يُنطق "ف" إذا جاء بعده حرف متحرك، ويُنطق "ب" إذا لم يأتِ بعده متحرك أو في نهاية الكلمة.
+    VALUES (818, 158, 'text_view', 'نبذة عن حرف شاي (Ϣ ϣ)', 'Ϣ ϣ', 'شاي', 'audio_coptic/26shay.mp3', '• اسم الحرف: شاي
+• نطق الحرف بالعربي: ش
+• قواعد النطق: الحرف السادس والعشرون. أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم. يُنطق حرف "ش" دائماً.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲃⲱ
-  - القبطي المعرب (نطقها): «ڤو»
-  - المعنى بالعربية: شجرة
+  - الكلمة بالقبطية: ϣⲁⲩ
+  - القبطي المعرب (نطقها): «شاف»
+  - المعنى بالعربية: قطة
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
@@ -622,27 +510,27 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (692, 137, 'text_view', 'نبذة عن حرف إي (Ⲉ ⲉ)', 'Ⲉ ⲉ', 'إي', 'audio_coptic/5ei.mp3', '• اسم الحرف: إي
-• نطق الحرف بالعربي: إي خفيفة
-• قواعد النطق: الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).
+    VALUES (824, 159, 'text_view', 'نبذة عن حرف فاي (Ϥ ϥ)', 'Ϥ ϥ', 'فاي', 'audio_coptic/27fay.mp3', '• اسم الحرف: فاي
+• نطق الحرف بالعربي: ف
+• قواعد النطق: الحرف السابع والعشرون. حرف مصري ديموطيقي أصيل يُنطق "ف".
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲉ̀ⲣϣⲱ
-  - القبطي المعرب (نطقها): «إرجو»
-  - المعنى بالعربية: دجاجة
+  - الكلمة بالقبطية: ϥⲱⲓ
+  - القبطي المعرب (نطقها): «فوي»
+  - المعنى بالعربية: شعر
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (704, 139, 'text_view', 'نبذة عن حرف زاتا (Ⲍ ⲍ)', 'Ⲍ ⲍ', 'زاتا', 'audio_coptic/7zeta.mp3', '• اسم الحرف: زاتا
-• نطق الحرف بالعربي: ز
-• قواعد النطق: الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف "ز" مثل حرف (Z) في الإنجليزية.
+    VALUES (680, 135, 'text_view', 'نبذة عن حرف غاما (Ⲅ ⲅ)', 'Ⲅ ⲅ', 'غاما', 'audio_coptic/3ghamma.mp3', '• اسم الحرف: غاما
+• نطق الحرف بالعربي: غ أو ج أو ن
+• قواعد النطق: الحرف الثالث. ينطق "غ" في الكلمات القبطية، و"ن" قبل الحلقيات، و"ج" معطشة قبل المتحرك للكسر في اليونانية.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲍⲱⲙⲟⲥ
-  - القبطي المعرب (نطقها): «أزموس»
-  - المعنى بالعربية: شوربة
+  - الكلمة بالقبطية: ⲅⲁⲗⲁ
+  - القبطي المعرب (نطقها): «غالا»
+  - المعنى بالعربية: لبن
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
@@ -661,65 +549,145 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (824, 159, 'text_view', 'نبذة عن حرف فاي (Ϥ ϥ)', 'Ϥ ϥ', 'فاي', 'audio_coptic/27fay.mp3', '• اسم الحرف: فاي
+    VALUES (686, 136, 'text_view', 'نبذة عن حرف دلدا (Ⲇ ⲇ)', 'Ⲇ ⲇ', 'دلدا', 'audio_coptic/4delta.mp3', '• اسم الحرف: دلدا
+• نطق الحرف بالعربي: د أو ذ
+• قواعد النطق: الحرف الرابع. يُنطق "د" في أسماء الأعلام والكلمات القبطية، و"ذ" في الكلمات اليونانية.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: Ⲇⲟⲝⲁ
+  - القبطي المعرب (نطقها): «ذوكسا»
+  - المعنى بالعربية: مجد
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (794, 154, 'text_view', 'نبذة عن حرف في (Ⲫ ⲫ)', 'Ⲫ ⲫ', 'في', 'audio_coptic/22fi.mp3', '• اسم الحرف: في
 • نطق الحرف بالعربي: ف
-• قواعد النطق: الحرف السابع والعشرون. حرف مصري ديموطيقي أصيل يُنطق "ف".
+• قواعد النطق: الحرف الثاني والعشرون. يُنطق حرف "ف" دائماً.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ϥⲱⲓ
-  - القبطي المعرب (نطقها): «فوي»
-  - المعنى بالعربية: شعر
+  - الكلمة بالقبطية: ⲫⲉⲃ
+  - القبطي المعرب (نطقها): «أفيغ»
+  - المعنى بالعربية: بطيخ
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (740, 145, 'text_view', 'نبذة عن حرف مي (Ⲙ ⲙ)', 'Ⲙ ⲙ', 'مي', 'audio_coptic/13mi.mp3', '• اسم الحرف: مي
-• نطق الحرف بالعربي: م
-• قواعد النطق: الحرف الثالث عشر. يُنطق حرف "م" دائماً.
+    VALUES (836, 161, 'text_view', 'نبذة عن حرف هوري (Ϩ ϩ)', 'Ϩ ϩ', 'هوري', 'audio_coptic/29hory.mp3', '• اسم الحرف: هوري
+• نطق الحرف بالعربي: هـ
+• قواعد النطق: الحرف التاسع والعشرون. حرف مصري ديموطيقي أصيل يُنطق حرف "هـ" دائماً.
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲙⲁⲛϩⲟⲛ
-  - القبطي المعرب (نطقها): «مانهون»
-  - المعنى بالعربية: برتقال
+  - الكلمة بالقبطية: ϩ̀ⲑⲟ
+  - القبطي المعرب (نطقها): «إهثو»
+  - المعنى بالعربية: حصان
 
 (اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (813, 157, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲱ واستمع لنطقه', 'Ⲱ', 'أوميغا (أو طويلة) كابيتال', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (698, 138, 'text_view', 'نبذة عن حرف سو (رقم ٦) (Ⲋ ⲋ)', 'Ⲋ ⲋ', 'سو (رقم ٦)', 'audio_coptic/6sow.mp3', '• اسم الحرف: سو (رقم ٦)
+• نطق الحرف بالعربي: سو (الرقم 6)
+• قواعد النطق: رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق "سو".
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲋ̅ ⲛ̀ⲣⲱⲙⲓ
+  - القبطي المعرب (نطقها): «سوآوو إن رومي»
+  - المعنى بالعربية: 6 رجال
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (681, 135, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲅ واستمع لنطقه', 'Ⲅ', 'غاما كابيتال', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (758, 148, 'text_view', 'نبذة عن حرف أُو (قصيرة) (Ⲟ ⲟ)', 'Ⲟ ⲟ', 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', '• اسم الحرف: أُو (قصيرة)
+• نطق الحرف بالعربي: واو قصيرة مضمومة
+• قواعد النطق: الحرف السادس عشر. حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲟⲩⲱⲙ
+  - القبطي المعرب (نطقها): «أوؤم»
+  - المعنى بالعربية: يأكل
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (669, 133, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲁ واستمع لنطقه', 'Ⲁ', 'ألفا كابيتال', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (770, 150, 'text_view', 'نبذة عن حرف رو (Ⲣ ⲣ)', 'Ⲣ ⲣ', 'رو', 'audio_coptic/18roo.mp3', '• اسم الحرف: رو
+• نطق الحرف بالعربي: ر
+• قواعد النطق: الحرف الثامن عشر. يُنطق حرف "ر" دائماً.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲣⲏ
+  - القبطي المعرب (نطقها): «ري»
+  - المعنى بالعربية: شمس
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (871, 167, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'كابا', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (782, 152, 'text_view', 'نبذة عن حرف تاف (Ⲧ ⲧ)', 'Ⲧ ⲧ', 'تاف', 'audio_coptic/20tav.mp3', '• اسم الحرف: تاف
+• نطق الحرف بالعربي: ت
+• قواعد النطق: الحرف العشرون في الأبجدية القبطية. يُنطق حرف "ت" دائماً.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲧⲁⲙⲁⲩ
+  - القبطي المعرب (نطقها): «تاماف»
+  - المعنى بالعربية: أمي
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (795, 154, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲫ واستمع لنطقه', 'Ⲫ', 'في كابيتال', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (848, 163, 'text_view', 'نبذة عن حرف تشيما (Ϭ ϭ)', 'Ϭ ϭ', 'تشيما', 'audio_coptic/31chema.mp3', '• اسم الحرف: تشيما
+• نطق الحرف بالعربي: تش
+• قواعد النطق: الحرف الحادي والثلاثون. الحرف السادس من الحروف المصرية الديموطيقية، يُنطق تاء وشين معاً (تش) دائماً.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ϭⲁϫ
+  - القبطي المعرب (نطقها): «تشاج»
+  - المعنى بالعربية: عصفور
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (855, 164, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϯ واستمع لنطقه', 'Ϯ', 'تي كابيتال', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (722, 142, 'text_view', 'نبذة عن حرف إيوتا (Ⲓ ⲓ)', 'Ⲓ ⲓ', 'إيوتا', 'audio_coptic/10yota.mp3', '• اسم الحرف: إيوتا
+• نطق الحرف بالعربي: ياء قصيرة
+• قواعد النطق: الحرف العاشر. حرف متحرك يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف (I) في الإنجليزية.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲓⲁⲗ
+  - القبطي المعرب (نطقها): «إيال»
+  - المعنى بالعربية: مراية
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (843, 162, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϫ واستمع لنطقه', 'Ϫ', 'جانجا كابيتال', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (674, 134, 'text_view', 'نبذة عن حرف فيدا (Ⲃ ⲃ)', 'Ⲃ ⲃ', 'فيدا', 'audio_coptic/2veta.mp3', '• اسم الحرف: فيدا
+• نطق الحرف بالعربي: ف أو ب
+• قواعد النطق: الحرف الثاني. يُنطق "ف" إذا جاء بعده حرف متحرك، ويُنطق "ب" إذا لم يأتِ بعده متحرك أو في نهاية الكلمة.
+────────────────────
+• كلمة تطبيقية على الحرف:
+  - الكلمة بالقبطية: ⲃⲱ
+  - القبطي المعرب (نطقها): «ڤو»
+  - المعنى بالعربية: شجرة
+
+(اضغط على زر الصوت للاستماع لنطق الحرف)', NULL, NULL, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (831, 160, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϧ واستمع لنطقه', 'Ϧ', 'خاي كابيتال', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (860, 165, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ⲁ ⲁ","right":"ألفا (ألف مفتوحة (أ))"},{"left":"Ⲃ ⲃ","right":"فيدا (ف أو ب)"},{"left":"Ⲅ ⲅ","right":"غاما (غ أو ج أو ن)"},{"left":"Ⲇ ⲇ","right":"دلدا (د أو ذ)"}]'::jsonb, TRUE, 1)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (819, 158, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϣ واستمع لنطقه', 'Ϣ', 'شاي كابيتال', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (885, 170, 'match', 'صل بين كل حرف قبطي ونطقه بالعربية', NULL, NULL, NULL, NULL, NULL, '[{"left":"Ϣ ϣ","right":"شاي (ش)"},{"left":"Ϥ ϥ","right":"فاي (ف)"},{"left":"Ϧ ϧ","right":"خاي (خ)"},{"left":"Ϩ ϩ","right":"هوري (هـ)"}]'::jsonb, TRUE, 1)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (693, 137, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲉ واستمع لنطقه', 'Ⲉ', 'إي كابيتال', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -727,19 +695,35 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (807, 156, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲯ واستمع لنطقه', 'Ⲯ', 'إبسي كابيتال', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (813, 157, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲱ واستمع لنطقه', 'Ⲱ', 'أوميغا (أو طويلة) كابيتال', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (741, 145, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲙ واستمع لنطقه', 'Ⲙ', 'مي كابيتال', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (831, 160, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϧ واستمع لنطقه', 'Ϧ', 'خاي كابيتال', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (886, 170, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'شاي', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (801, 155, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲭ واستمع لنطقه', 'Ⲭ', 'خي كابيتال', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (876, 168, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (759, 148, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲟ واستمع لنطقه', 'Ⲟ', 'أُو (قصيرة) كابيتال', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (795, 154, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲫ واستمع لنطقه', 'Ⲫ', 'في كابيتال', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (843, 162, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϫ واستمع لنطقه', 'Ϫ', 'جانجا كابيتال', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (771, 150, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲣ واستمع لنطقه', 'Ⲣ', 'رو كابيتال', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (783, 152, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲧ واستمع لنطقه', 'Ⲧ', 'تاف كابيتال', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -747,11 +731,47 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (675, 134, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲃ واستمع لنطقه', 'Ⲃ', 'فيدا كابيتال', 'audio_coptic/2veta.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (881, 169, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'إبسيلون', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (747, 146, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲛ واستمع لنطقه', 'Ⲛ', 'ني كابيتال', 'audio_coptic/14ni.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (855, 164, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϯ واستمع لنطقه', 'Ϯ', 'تي كابيتال', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (871, 167, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'كابا', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (669, 133, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲁ واستمع لنطقه', 'Ⲁ', 'ألفا كابيتال', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (681, 135, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲅ واستمع لنطقه', 'Ⲅ', 'غاما كابيتال', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (876, 168, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (723, 142, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲓ واستمع لنطقه', 'Ⲓ', 'إيوتا كابيتال', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (886, 170, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'شاي', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (891, 171, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (675, 134, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲃ واستمع لنطقه', 'Ⲃ', 'فيدا كابيتال', 'audio_coptic/2veta.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -763,23 +783,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (837, 161, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϩ واستمع لنطقه', 'Ϩ', 'هوري كابيتال', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (849, 163, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϭ واستمع لنطقه', 'Ϭ', 'تشيما كابيتال', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (711, 140, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲏ واستمع لنطقه', 'Ⲏ', 'هيتا كابيتال', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (693, 137, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲉ واستمع لنطقه', 'Ⲉ', 'إي كابيتال', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (705, 139, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲍ واستمع لنطقه', 'Ⲍ', 'زاتا كابيتال', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (729, 143, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲕ واستمع لنطقه', 'Ⲕ', 'كابا كابيتال', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -803,27 +807,15 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (723, 142, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲓ واستمع لنطقه', 'Ⲓ', 'إيوتا كابيتال', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (705, 139, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲍ واستمع لنطقه', 'Ⲍ', 'زاتا كابيتال', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (729, 143, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲕ واستمع لنطقه', 'Ⲕ', 'كابا كابيتال', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (819, 158, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϣ واستمع لنطقه', 'Ϣ', 'شاي كابيتال', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (881, 169, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'إبسيلون', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (783, 152, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲧ واستمع لنطقه', 'Ⲧ', 'تاف كابيتال', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (771, 150, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲣ واستمع لنطقه', 'Ⲣ', 'رو كابيتال', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (759, 148, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲟ واستمع لنطقه', 'Ⲟ', 'أُو (قصيرة) كابيتال', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (711, 140, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲏ واستمع لنطقه', 'Ⲏ', 'هيتا كابيتال', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -831,15 +823,23 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (891, 171, 'listen', 'استمع إلى نطق الحرف ثم اختر الحرف المطابق', NULL, 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 2)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (896, 172, 'listen', 'استمع واختر الحرف الصحيح', NULL, 'ألفا', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (801, 155, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲭ واستمع لنطقه', 'Ⲭ', 'خي كابيتال', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 2)
+    VALUES (849, 163, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϭ واستمع لنطقه', 'Ϭ', 'تشيما كابيتال', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (741, 145, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲙ واستمع لنطقه', 'Ⲙ', 'مي كابيتال', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (837, 161, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ϩ واستمع لنطقه', 'Ϩ', 'هوري كابيتال', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 2)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (807, 156, 'trace', 'تتبّع كتابة الحرف الكبير (كابيتال): Ⲯ واستمع لنطقه', 'Ⲯ', 'إبسي كابيتال', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 2)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -847,15 +847,103 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (778, 151, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲥ واستمع لنطقه', 'ⲥ', 'سيما سمول', 'audio_coptic/19sema.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (850, 163, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ϭ واستمع لنطقه', 'ϭ', 'تشيما سمول', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (872, 167, 'select', 'ما معنى الكلمة: ⲗⲁⲃⲟ؟ (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (892, 171, 'select', 'ما معنى الكلمة: ϯⲙⲓ؟ (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (862, 165, 'select', 'ما معنى الكلمة: ⲃⲱ؟ (المعرب: «ڤو»)', 'ⲃⲱ', 'ڤو', 'audio_coptic/2veta.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (742, 145, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲙ واستمع لنطقه', 'ⲙ', 'مي سمول', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (760, 148, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲟ واستمع لنطقه', 'ⲟ', 'أُو (قصيرة) سمول', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (772, 150, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲣ واستمع لنطقه', 'ⲣ', 'رو سمول', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (784, 152, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲧ واستمع لنطقه', 'ⲧ', 'تاف سمول', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (877, 168, 'select', 'ما معنى الكلمة: ⲡⲓⲱⲧ؟ (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (748, 146, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲛ واستمع لنطقه', 'ⲛ', 'ني سمول', 'audio_coptic/14ni.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (796, 154, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲫ واستمع لنطقه', 'ⲫ', 'في سمول', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (882, 169, 'select', 'ما معنى الكلمة: ⲫⲉⲃ؟ (المعرب: «أفيغ»)', 'ⲫⲉⲃ', 'أفيغ', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (688, 136, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲇ واستمع لنطقه', 'ⲇ', 'دلدا سمول', 'audio_coptic/4delta.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (700, 138, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲋ واستمع لنطقه', 'ⲋ', 'سو (رقم ٦) سمول', 'audio_coptic/6sow.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (712, 140, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲏ واستمع لنطقه', 'ⲏ', 'هيتا سمول', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (718, 141, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲑ واستمع لنطقه', 'ⲑ', 'ثيتا سمول', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 3)
+    VALUES (724, 142, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲓ واستمع لنطقه', 'ⲓ', 'إيوتا سمول', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (790, 153, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲩ واستمع لنطقه', 'ⲩ', 'إبسيلون سمول', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (838, 161, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ϩ واستمع لنطقه', 'ϩ', 'هوري سمول', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (766, 149, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲡ واستمع لنطقه', 'ⲡ', 'بي سمول', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (754, 147, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲝ واستمع لنطقه', 'ⲝ', 'كسي سمول', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (897, 172, 'select', 'ما معنى الكلمة القبطية: ⲁⲗⲱⲙ؟ (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (736, 144, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲗ واستمع لنطقه', 'ⲗ', 'لابدا سمول', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (676, 134, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲃ واستمع لنطقه', 'ⲃ', 'فيدا سمول', 'audio_coptic/2veta.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (682, 135, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲅ واستمع لنطقه', 'ⲅ', 'غاما سمول', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -879,15 +967,27 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (706, 139, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲍ واستمع لنطقه', 'ⲍ', 'زاتا سمول', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 3)
+    VALUES (670, 133, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲁ واستمع لنطقه', 'ⲁ', 'ألفا سمول', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (867, 166, 'select', 'ما معنى الكلمة: ⲍⲱⲙⲟⲥ؟ (المعرب: «أزموس»)', 'ⲍⲱⲙⲟⲥ', 'أزموس', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 3)
+    VALUES (867, 166, 'select', 'ما معنى الكلمة: Ⲍⲱⲏ؟ (المعرب: «زوي»)', 'Ⲍⲱⲏ', 'زوي', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (694, 137, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲉ واستمع لنطقه', 'ⲉ', 'إي سمول', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (706, 139, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲍ واستمع لنطقه', 'ⲍ', 'زاتا سمول', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (718, 141, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲑ واستمع لنطقه', 'ⲑ', 'ثيتا سمول', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 3)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (730, 143, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲕ واستمع لنطقه', 'ⲕ', 'كابا سمول', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 3)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -903,167 +1003,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (838, 161, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ϩ واستمع لنطقه', 'ϩ', 'هوري سمول', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (850, 163, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ϭ واستمع لنطقه', 'ϭ', 'تشيما سمول', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (790, 153, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲩ واستمع لنطقه', 'ⲩ', 'إبسيلون سمول', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (778, 151, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲥ واستمع لنطقه', 'ⲥ', 'سيما سمول', 'audio_coptic/19sema.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (766, 149, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲡ واستمع لنطقه', 'ⲡ', 'بي سمول', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (754, 147, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲝ واستمع لنطقه', 'ⲝ', 'كسي سمول', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (748, 146, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲛ واستمع لنطقه', 'ⲛ', 'ني سمول', 'audio_coptic/14ni.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (897, 172, 'select', 'ما معنى الكلمة القبطية: ⲁⲗⲱⲙ؟ (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (682, 135, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲅ واستمع لنطقه', 'ⲅ', 'غاما سمول', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (796, 154, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲫ واستمع لنطقه', 'ⲫ', 'في سمول', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (670, 133, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲁ واستمع لنطقه', 'ⲁ', 'ألفا سمول', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (872, 167, 'select', 'ما معنى الكلمة: ⲗⲁⲃⲟ؟ (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (882, 169, 'select', 'ما معنى الكلمة: ⲫⲉⲃ؟ (المعرب: «أفيغ»)', 'ⲫⲉⲃ', 'أفيغ', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (688, 136, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲇ واستمع لنطقه', 'ⲇ', 'دلدا سمول', 'audio_coptic/4delta.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (700, 138, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲋ واستمع لنطقه', 'ⲋ', 'سو (رقم ٦) سمول', 'audio_coptic/6sow.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (730, 143, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲕ واستمع لنطقه', 'ⲕ', 'كابا سمول', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (724, 142, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲓ واستمع لنطقه', 'ⲓ', 'إيوتا سمول', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (784, 152, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲧ واستمع لنطقه', 'ⲧ', 'تاف سمول', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (772, 150, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲣ واستمع لنطقه', 'ⲣ', 'رو سمول', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (760, 148, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲟ واستمع لنطقه', 'ⲟ', 'أُو (قصيرة) سمول', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (742, 145, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲙ واستمع لنطقه', 'ⲙ', 'مي سمول', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (862, 165, 'select', 'ما معنى الكلمة: ⲃⲱ؟ (المعرب: «ڤو»)', 'ⲃⲱ', 'ڤو', 'audio_coptic/2veta.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (877, 168, 'select', 'ما معنى الكلمة: ⲡⲓⲱⲧ؟ (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (892, 171, 'select', 'ما معنى الكلمة: ϯⲙⲓ؟ (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (736, 144, 'trace', 'تتبّع كتابة الحرف الصغير (سمول): ⲗ واستمع لنطقه', 'ⲗ', 'لابدا سمول', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (887, 170, 'select', 'ما معنى الكلمة: ϥⲱⲓ؟ (المعرب: «فوي»)', 'ϥⲱⲓ', 'فوي', 'audio_coptic/27fay.mp3', NULL, NULL, NULL, TRUE, 3)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (791, 153, 'read_select', 'ما هو نطق الحرف Ⲩ بالعربية؟', 'Ⲩ', 'إبسيلون', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (695, 137, 'read_select', 'ما هو نطق الحرف Ⲉ بالعربية؟', 'Ⲉ', 'إي', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (707, 139, 'read_select', 'ما هو نطق الحرف Ⲍ بالعربية؟', 'Ⲍ', 'زاتا', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (888, 170, 'write', 'رتب حروف الكلمة: تفاح (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', 'ϫⲉⲙⲫⲉϩ', '["ϫ","ⲉ","ⲙ","ⲫ","ⲉ","ϩ"]'::jsonb, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (713, 140, 'read_select', 'ما هو نطق الحرف Ⲏ بالعربية؟', 'Ⲏ', 'هيتا', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (725, 142, 'read_select', 'ما هو نطق الحرف Ⲓ بالعربية؟', 'Ⲓ', 'إيوتا', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (797, 154, 'read_select', 'ما هو نطق الحرف Ⲫ بالعربية؟', 'Ⲫ', 'في', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (803, 155, 'read_select', 'ما هو نطق الحرف Ⲭ بالعربية؟', 'Ⲭ', 'خي', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (815, 157, 'read_select', 'ما هو نطق الحرف Ⲱ بالعربية؟', 'Ⲱ', 'أوميغا (أو طويلة)', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (827, 159, 'read_select', 'ما هو نطق الحرف Ϥ بالعربية؟', 'Ϥ', 'فاي', 'audio_coptic/27fay.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (839, 161, 'read_select', 'ما هو نطق الحرف Ϩ بالعربية؟', 'Ϩ', 'هوري', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (851, 163, 'read_select', 'ما هو نطق الحرف Ϭ بالعربية؟', 'Ϭ', 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (898, 172, 'select', 'كم عدد حروف الأبجدية القبطية كاملة؟', NULL, NULL, NULL, NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (755, 147, 'read_select', 'ما هو نطق الحرف Ⲝ بالعربية؟', 'Ⲝ', 'كسي', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (767, 149, 'read_select', 'ما هو نطق الحرف Ⲡ بالعربية؟', 'Ⲡ', 'بي', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1071,19 +1011,91 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (809, 156, 'read_select', 'ما هو نطق الحرف Ⲯ بالعربية؟', 'Ⲯ', 'إبسي', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 4)
+    VALUES (767, 149, 'read_select', 'ما هو نطق الحرف Ⲡ بالعربية؟', 'Ⲡ', 'بي', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (821, 158, 'read_select', 'ما هو نطق الحرف Ϣ بالعربية؟', 'Ϣ', 'شاي', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 4)
+    VALUES (755, 147, 'read_select', 'ما هو نطق الحرف Ⲝ بالعربية؟', 'Ⲝ', 'كسي', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (833, 160, 'read_select', 'ما هو نطق الحرف Ϧ بالعربية؟', 'Ϧ', 'خاي', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 4)
+    VALUES (898, 172, 'select', 'كم عدد حروف الأبجدية القبطية كاملة؟', NULL, NULL, NULL, NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (845, 162, 'read_select', 'ما هو نطق الحرف Ϫ بالعربية؟', 'Ϫ', 'جانجا', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 4)
+    VALUES (851, 163, 'read_select', 'ما هو نطق الحرف Ϭ بالعربية؟', 'Ϭ', 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (731, 143, 'read_select', 'ما هو نطق الحرف Ⲕ بالعربية؟', 'Ⲕ', 'كابا', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (863, 165, 'write', 'رتب حروف الكلمة: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (743, 145, 'read_select', 'ما هو نطق الحرف Ⲙ بالعربية؟', 'Ⲙ', 'مي', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (839, 161, 'read_select', 'ما هو نطق الحرف Ϩ بالعربية؟', 'Ϩ', 'هوري', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (713, 140, 'read_select', 'ما هو نطق الحرف Ⲏ بالعربية؟', 'Ⲏ', 'هيتا', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (827, 159, 'read_select', 'ما هو نطق الحرف Ϥ بالعربية؟', 'Ϥ', 'فاي', 'audio_coptic/27fay.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (815, 157, 'read_select', 'ما هو نطق الحرف Ⲱ بالعربية؟', 'Ⲱ', 'أوميغا (أو طويلة)', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (888, 170, 'write', 'رتب حروف الكلمة: تفاح (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', 'ϫⲉⲙⲫⲉϩ', '["ϫ","ⲉ","ⲙ","ⲫ","ⲉ","ϩ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (868, 166, 'write', 'رتب حروف الكلمة: مراية (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', 'ⲓⲁⲗ', '["ⲓ","ⲁ","ⲗ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (873, 167, 'write', 'رتب حروف الكلمة: مسطرة (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', 'ⲝⲟⲩⲏ', '["ⲝ","ⲟ","ⲩ","ⲏ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (719, 141, 'read_select', 'ما هو نطق الحرف Ⲑ بالعربية؟', 'Ⲑ', 'ثيتا', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (878, 168, 'write', 'رتب حروف الكلمة: أمي (المعرب: «تاماف»)', 'ⲧⲁⲙⲁⲩ', 'تاماف', 'audio_coptic/20tav.mp3', 'ⲧⲁⲙⲁⲩ', '["ⲧ","ⲁ","ⲙ","ⲁ","ⲩ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (803, 155, 'read_select', 'ما هو نطق الحرف Ⲭ بالعربية؟', 'Ⲭ', 'خي', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (695, 137, 'read_select', 'ما هو نطق الحرف Ⲉ بالعربية؟', 'Ⲉ', 'إي', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (797, 154, 'read_select', 'ما هو نطق الحرف Ⲫ بالعربية؟', 'Ⲫ', 'في', 'audio_coptic/22fi.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (893, 171, 'write', 'رتب حروف الكلمة: قرية (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', 'ϯⲙⲓ', '["ϯ","ⲙ","ⲓ"]'::jsonb, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (725, 142, 'read_select', 'ما هو نطق الحرف Ⲓ بالعربية؟', 'Ⲓ', 'إيوتا', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (883, 169, 'write', 'رتب حروف الكلمة: أختي (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', 'ⲧⲁⲥⲱⲛⲓ', '["ⲧ","ⲁ","ⲥ","ⲱ","ⲛ","ⲓ"]'::jsonb, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1095,55 +1107,11 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (845, 162, 'read_select', 'ما هو نطق الحرف Ϫ بالعربية؟', 'Ϫ', 'جانجا', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (701, 138, 'read_select', 'ما هو نطق الحرف Ⲋ بالعربية؟', 'Ⲋ', 'سو (رقم ٦)', 'audio_coptic/6sow.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (761, 148, 'read_select', 'ما هو نطق الحرف Ⲟ بالعربية؟', 'Ⲟ', 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (773, 150, 'read_select', 'ما هو نطق الحرف Ⲣ بالعربية؟', 'Ⲣ', 'رو', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (785, 152, 'read_select', 'ما هو نطق الحرف Ⲧ بالعربية؟', 'Ⲧ', 'تاف', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (863, 165, 'write', 'رتب حروف الكلمة: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (737, 144, 'read_select', 'ما هو نطق الحرف Ⲗ بالعربية؟', 'Ⲗ', 'لابدا', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (868, 166, 'write', 'رتب حروف الكلمة: مراية (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', 'ⲓⲁⲗ', '["ⲓ","ⲁ","ⲗ"]'::jsonb, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (719, 141, 'read_select', 'ما هو نطق الحرف Ⲑ بالعربية؟', 'Ⲑ', 'ثيتا', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (731, 143, 'read_select', 'ما هو نطق الحرف Ⲕ بالعربية؟', 'Ⲕ', 'كابا', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (878, 168, 'write', 'رتب حروف الكلمة: أمي (المعرب: «تاماف»)', 'ⲧⲁⲙⲁⲩ', 'تاماف', 'audio_coptic/20tav.mp3', 'ⲧⲁⲙⲁⲩ', '["ⲧ","ⲁ","ⲙ","ⲁ","ⲩ"]'::jsonb, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (873, 167, 'write', 'رتب حروف الكلمة: مسطرة (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', 'ⲝⲟⲩⲏ', '["ⲝ","ⲟ","ⲩ","ⲏ"]'::jsonb, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (743, 145, 'read_select', 'ما هو نطق الحرف Ⲙ بالعربية؟', 'Ⲙ', 'مي', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 4)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (883, 169, 'write', 'رتب حروف الكلمة: أختي (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', 'ⲧⲁⲥⲱⲛⲓ', '["ⲧ","ⲁ","ⲥ","ⲱ","ⲛ","ⲓ"]'::jsonb, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1151,7 +1119,31 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (737, 144, 'read_select', 'ما هو نطق الحرف Ⲗ بالعربية؟', 'Ⲗ', 'لابدا', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (833, 160, 'read_select', 'ما هو نطق الحرف Ϧ بالعربية؟', 'Ϧ', 'خاي', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (671, 133, 'read_select', 'ما هو نطق الحرف Ⲁ بالعربية؟', 'Ⲁ', 'ألفا', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (761, 148, 'read_select', 'ما هو نطق الحرف Ⲟ بالعربية؟', 'Ⲟ', 'أُو (قصيرة)', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (821, 158, 'read_select', 'ما هو نطق الحرف Ϣ بالعربية؟', 'Ϣ', 'شاي', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (707, 139, 'read_select', 'ما هو نطق الحرف Ⲍ بالعربية؟', 'Ⲍ', 'زاتا', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (773, 150, 'read_select', 'ما هو نطق الحرف Ⲣ بالعربية؟', 'Ⲣ', 'رو', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1159,7 +1151,15 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (893, 171, 'write', 'رتب حروف الكلمة: قرية (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', 'ϯⲙⲓ', '["ϯ","ⲙ","ⲓ"]'::jsonb, NULL, TRUE, 4)
+    VALUES (809, 156, 'read_select', 'ما هو نطق الحرف Ⲯ بالعربية؟', 'Ⲯ', 'إبسي', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (785, 152, 'read_select', 'ما هو نطق الحرف Ⲧ بالعربية؟', 'Ⲧ', 'تاف', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 4)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (791, 153, 'read_select', 'ما هو نطق الحرف Ⲩ بالعربية؟', 'Ⲩ', 'إبسيلون', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1167,79 +1167,27 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (816, 157, 'select', 'ما معنى الكلمة القبطية: ⲧⲁⲥⲱⲛⲓ؟ (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (780, 151, 'select', 'ما معنى الكلمة القبطية: ⲡⲁⲥⲟⲛ؟ (المعرب: «باصون»)', 'ⲡⲁⲥⲟⲛ', 'باصون', 'audio_coptic/19sema.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (869, 166, 'read_select', 'ما هو نطق الحرف القبطي: Ⲏ؟', 'Ⲏ', 'هيتا', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (738, 144, 'select', 'ما معنى الكلمة القبطية: ⲗⲁⲃⲟ؟ (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (768, 149, 'select', 'ما معنى الكلمة القبطية: ⲡⲓⲱⲧ؟ (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (690, 136, 'select', 'ما معنى الكلمة القبطية: Ⲇⲟⲝⲁ؟ (المعرب: «ذوكسا»)', 'Ⲇⲟⲝⲁ', 'ذوكسا', 'audio_coptic/4delta.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (828, 159, 'select', 'ما معنى الكلمة القبطية: ϥⲱⲓ؟ (المعرب: «فوي»)', 'ϥⲱⲓ', 'فوي', 'audio_coptic/27fay.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (792, 153, 'select', 'ما معنى الكلمة القبطية: ⲩⲥⲓⲥ؟ (المعرب: «إيسيس»)', 'ⲩⲥⲓⲥ', 'إيسيس', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (804, 155, 'select', 'ما معنى الكلمة القبطية: ⲭ̀ⲗⲓⲗ؟ (المعرب: «إخليل»)', 'ⲭ̀ⲗⲓⲗ', 'إخليل', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (864, 165, 'read_select', 'ما هو نطق الحرف القبطي: Ⲅ؟', 'Ⲅ', 'غاما', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (786, 152, 'select', 'ما معنى الكلمة القبطية: ⲧⲁⲙⲁⲩ؟ (المعرب: «تاماف»)', 'ⲧⲁⲙⲁⲩ', 'تاماف', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (702, 138, 'select', 'ما معنى الكلمة القبطية: ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ؟ (المعرب: «إسوؤو إن شكيلكيل»)', 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ', 'إسوؤو إن شكيلكيل', 'audio_coptic/6sow.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (879, 168, 'read_select', 'ما هو نطق الحرف القبطي: Ⲣ؟', 'Ⲣ', 'رو', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (774, 150, 'select', 'ما معنى الكلمة القبطية: ⲣⲏ؟ (المعرب: «ري»)', 'ⲣⲏ', 'ري', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (762, 148, 'select', 'ما معنى الكلمة القبطية: ⲟⲩⲱⲙ؟ (المعرب: «أوؤم»)', 'ⲟⲩⲱⲙ', 'أوؤم', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (750, 146, 'select', 'ما معنى الكلمة القبطية: ⲉⲛ̀ⲕⲟⲧ؟ (المعرب: «إنكوت»)', 'ⲉⲛ̀ⲕⲟⲧ', 'إنكوت', 'audio_coptic/14ni.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (858, 164, 'select', 'ما معنى الكلمة القبطية: ϯⲙⲓ؟ (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (846, 162, 'select', 'ما معنى الكلمة القبطية: ϫⲉⲙⲫⲉϩ؟ (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (894, 171, 'read_select', 'ما هو نطق الحرف القبطي: Ϭ؟', 'Ϭ', 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (834, 160, 'select', 'ما معنى الكلمة القبطية: ϧⲏⲃⲥ؟ (المعرب: «خيبس»)', 'ϧⲏⲃⲥ', 'خيبس', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (822, 158, 'select', 'ما معنى الكلمة القبطية: ϣⲁⲩ؟ (المعرب: «شاف»)', 'ϣⲁⲩ', 'شاف', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (810, 156, 'select', 'ما معنى الكلمة القبطية: ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ؟ (المعرب: «إبسيت إن كينكين»)', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', 'إبسيت إن كينكين', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (690, 136, 'select', 'ما معنى الكلمة القبطية: ⲁⲇⲁⲙ؟ (المعرب: «آدام»)', 'ⲁⲇⲁⲙ', 'آدام', 'audio_coptic/4delta.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (889, 170, 'read_select', 'ما هو نطق الحرف القبطي: Ϧ؟', 'Ϧ', 'خاي', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (732, 143, 'select', 'ما معنى الكلمة القبطية: ⲕⲁϣ؟ (المعرب: «كاش»)', 'ⲕⲁϣ', 'كاش', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1247,11 +1195,119 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (899, 172, 'write', 'رتب حروف الكلمة القبطية: جبنة (المعرب: «آلوم») [ⲁⲗⲱⲙ]', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', 'ⲁⲗⲱⲙ', '["ⲁ","ⲗ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 5)
+    VALUES (810, 156, 'select', 'ما معنى الكلمة القبطية: ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ؟ (المعرب: «إبسيت إن كينكين»)', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', 'إبسيت إن كينكين', 'audio_coptic/24psi.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (672, 133, 'select', 'ما معنى الكلمة القبطية: ⲁⲗⲱⲙ؟ (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (822, 158, 'select', 'ما معنى الكلمة القبطية: ϣⲁⲩ؟ (المعرب: «شاف»)', 'ϣⲁⲩ', 'شاف', 'audio_coptic/26shay.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (834, 160, 'select', 'ما معنى الكلمة القبطية: ϧⲏⲃⲥ؟ (المعرب: «خيبس»)', 'ϧⲏⲃⲥ', 'خيبس', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (846, 162, 'select', 'ما معنى الكلمة القبطية: ϫⲉⲙⲫⲉϩ؟ (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (858, 164, 'select', 'ما معنى الكلمة القبطية: ϯⲙⲓ؟ (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (720, 141, 'select', 'ما معنى الكلمة القبطية: Ⲑⲁⲙⲓⲟ؟ (المعرب: «ثاميو»)', 'Ⲑⲁⲙⲓⲟ', 'ثاميو', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (750, 146, 'select', 'ما معنى الكلمة القبطية: ⲉⲛ̀ⲕⲟⲧ؟ (المعرب: «إنكوت»)', 'ⲉⲛ̀ⲕⲟⲧ', 'إنكوت', 'audio_coptic/14ni.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (762, 148, 'select', 'ما معنى الكلمة القبطية: ⲟⲩⲱⲙ؟ (المعرب: «أوؤم»)', 'ⲟⲩⲱⲙ', 'أوؤم', 'audio_coptic/16oo.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (774, 150, 'select', 'ما معنى الكلمة القبطية: ⲣⲏ؟ (المعرب: «ري»)', 'ⲣⲏ', 'ري', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (786, 152, 'select', 'ما معنى الكلمة القبطية: ⲧⲁⲙⲁⲩ؟ (المعرب: «تاماف»)', 'ⲧⲁⲙⲁⲩ', 'تاماف', 'audio_coptic/20tav.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (804, 155, 'select', 'ما معنى الكلمة القبطية: ⲭ̀ⲗⲓⲗ؟ (المعرب: «إخليل»)', 'ⲭ̀ⲗⲓⲗ', 'إخليل', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (816, 157, 'select', 'ما معنى الكلمة القبطية: ⲧⲁⲥⲱⲛⲓ؟ (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (828, 159, 'select', 'ما معنى الكلمة القبطية: ϥⲱⲓ؟ (المعرب: «فوي»)', 'ϥⲱⲓ', 'فوي', 'audio_coptic/27fay.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (840, 161, 'select', 'ما معنى الكلمة القبطية: ϩ̀ⲑⲟ؟ (المعرب: «إهثو»)', 'ϩ̀ⲑⲟ', 'إهثو', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (852, 163, 'select', 'ما معنى الكلمة القبطية: ϭⲁϫ؟ (المعرب: «تشاج»)', 'ϭⲁϫ', 'تشاج', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (696, 137, 'select', 'ما معنى الكلمة القبطية: ⲉ̀ⲣϣⲱ؟ (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (756, 147, 'select', 'ما معنى الكلمة القبطية: ⲝⲟⲩⲏ؟ (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (768, 149, 'select', 'ما معنى الكلمة القبطية: ⲡⲓⲱⲧ؟ (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (702, 138, 'select', 'ما معنى الكلمة القبطية: ⲋ̅ ⲛ̀ⲣⲱⲙⲓ؟ (المعرب: «سوآوو إن رومي»)', 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', 'سوآوو إن رومي', 'audio_coptic/6sow.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (874, 167, 'read_select', 'ما هو نطق الحرف القبطي: Ⲙ؟', 'Ⲙ', 'مي', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (726, 142, 'select', 'ما معنى الكلمة القبطية: ⲓⲁⲗ؟ (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (869, 166, 'read_select', 'ما هو نطق الحرف القبطي: Ⲏ؟', 'Ⲏ', 'هيتا', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (708, 139, 'select', 'ما معنى الكلمة القبطية: Ⲍⲱⲏ؟ (المعرب: «زوي»)', 'Ⲍⲱⲏ', 'زوي', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (714, 140, 'select', 'ما معنى الكلمة القبطية: Ⲏⲓ؟ (المعرب: «إي»)', 'Ⲏⲓ', 'إي', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (884, 169, 'read_select', 'ما هو نطق الحرف القبطي: Ⲭ؟', 'Ⲭ', 'خي', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (879, 168, 'read_select', 'ما هو نطق الحرف القبطي: Ⲣ؟', 'Ⲣ', 'رو', 'audio_coptic/18roo.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (894, 171, 'read_select', 'ما هو نطق الحرف القبطي: Ϭ؟', 'Ϭ', 'تشيما', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (889, 170, 'read_select', 'ما هو نطق الحرف القبطي: Ϧ؟', 'Ϧ', 'خاي', 'audio_coptic/28khay.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (899, 172, 'write', 'رتب حروف الكلمة القبطية: جبنة (المعرب: «آلوم») [ⲁⲗⲱⲙ]', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', 'ⲁⲗⲱⲙ', '["ⲁ","ⲗ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1263,179 +1319,11 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (672, 133, 'select', 'ما معنى الكلمة القبطية: ⲁⲗⲱⲙ؟ (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', NULL, NULL, NULL, TRUE, 5)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
     VALUES (684, 135, 'select', 'ما معنى الكلمة القبطية: ⲅⲁⲗⲁ؟ (المعرب: «غالا»)', 'ⲅⲁⲗⲁ', 'غالا', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (732, 143, 'select', 'ما معنى الكلمة القبطية: ⲕⲁϣ؟ (المعرب: «كاش»)', 'ⲕⲁϣ', 'كاش', 'audio_coptic/11kapa.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (720, 141, 'select', 'ما معنى الكلمة القبطية: ⲕⲓⲑⲁⲣⲁ؟ (المعرب: «كيثارا»)', 'ⲕⲓⲑⲁⲣⲁ', 'كيثارا', 'audio_coptic/9seta.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (780, 151, 'select', 'ما معنى الكلمة القبطية: ⲡⲁⲥⲟⲛ؟ (المعرب: «باصون»)', 'ⲡⲁⲥⲟⲛ', 'باصون', 'audio_coptic/19sema.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (864, 165, 'read_select', 'ما هو نطق الحرف القبطي: Ⲅ؟', 'Ⲅ', 'غاما', 'audio_coptic/3ghamma.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (874, 167, 'read_select', 'ما هو نطق الحرف القبطي: Ⲙ؟', 'Ⲙ', 'مي', 'audio_coptic/13mi.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (708, 139, 'select', 'ما معنى الكلمة القبطية: ⲍⲱⲙⲟⲥ؟ (المعرب: «أزموس»)', 'ⲍⲱⲙⲟⲥ', 'أزموس', 'audio_coptic/7zeta.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (714, 140, 'select', 'ما معنى الكلمة القبطية: ⲏ̀ⲡⲓ؟ (المعرب: «إيبي»)', 'ⲏ̀ⲡⲓ', 'إيبي', 'audio_coptic/8eta.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (792, 153, 'select', 'ما معنى الكلمة القبطية: ⲩⲥⲓⲥ؟ (المعرب: «إيسيس»)', 'ⲩⲥⲓⲥ', 'إيسيس', 'audio_coptic/21epselon.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (726, 142, 'select', 'ما معنى الكلمة القبطية: ⲓⲁⲗ؟ (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (738, 144, 'select', 'ما معنى الكلمة القبطية: ⲗⲁⲃⲟ؟ (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (756, 147, 'select', 'ما معنى الكلمة القبطية: ⲝⲟⲩⲏ؟ (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (696, 137, 'select', 'ما معنى الكلمة القبطية: ⲉ̀ⲣϣⲱ؟ (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (884, 169, 'read_select', 'ما هو نطق الحرف القبطي: Ⲭ؟', 'Ⲭ', 'خي', 'audio_coptic/23ki.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (852, 163, 'select', 'ما معنى الكلمة القبطية: ϭⲁϫ؟ (المعرب: «تشاج»)', 'ϭⲁϫ', 'تشاج', 'audio_coptic/31chema.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (840, 161, 'select', 'ما معنى الكلمة القبطية: ϩ̀ⲑⲟ؟ (المعرب: «إهثو»)', 'ϩ̀ⲑⲟ', 'إهثو', 'audio_coptic/29hory.mp3', NULL, NULL, NULL, TRUE, 5)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (763, 148, 'write', 'رتب حروف الكلمة القبطية لتكوين: يأكل (المعرب: «أوؤم»)', 'ⲟⲩⲱⲙ', 'أوؤم', 'audio_coptic/16oo.mp3', 'ⲟⲩⲱⲙ', '["ⲟ","ⲩ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (679, 134, 'write', 'رتب حروف الكلمة القبطية لتكوين: شجرة (المعرب: «ڤو»)', 'ⲃⲱ', 'ڤو', 'audio_coptic/2veta.mp3', 'ⲃⲱ', '["ⲃ","ⲱ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (751, 146, 'write', 'رتب حروف الكلمة القبطية لتكوين: ينام (المعرب: «إنكوت»)', 'ⲉⲛ̀ⲕⲟⲧ', 'إنكوت', 'audio_coptic/14ni.mp3', 'ⲉⲛ̀ⲕⲟⲧ', '["ⲉ","ⲛ","̀","ⲕ","ⲟ","ⲧ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (703, 138, 'write', 'رتب حروف الكلمة القبطية لتكوين: 6 أجراس (المعرب: «إسوؤو إن شكيلكيل»)', 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ', 'إسوؤو إن شكيلكيل', 'audio_coptic/6sow.mp3', 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ', '["ⲥ","ⲟ","ⲟ","ⲩ"," ","ⲛ","̀","ϣ","ⲕ","ⲉ","ⲗ","ⲕ","ⲓ","ⲗ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (841, 161, 'write', 'رتب حروف الكلمة القبطية لتكوين: حصان (المعرب: «إهثو»)', 'ϩ̀ⲑⲟ', 'إهثو', 'audio_coptic/29hory.mp3', 'ϩ̀ⲑⲟ', '["ϩ","̀","ⲑ","ⲟ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (733, 143, 'write', 'رتب حروف الكلمة القبطية لتكوين: قلم (المعرب: «كاش»)', 'ⲕⲁϣ', 'كاش', 'audio_coptic/11kapa.mp3', 'ⲕⲁϣ', '["ⲕ","ⲁ","ϣ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (721, 141, 'write', 'رتب حروف الكلمة القبطية لتكوين: قيثارة (المعرب: «كيثارا»)', 'ⲕⲓⲑⲁⲣⲁ', 'كيثارا', 'audio_coptic/9seta.mp3', 'ⲕⲓⲑⲁⲣⲁ', '["ⲕ","ⲓ","ⲑ","ⲁ","ⲣ","ⲁ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (691, 136, 'write', 'رتب حروف الكلمة القبطية لتكوين: آدم (المعرب: «آدام»)', 'ⲁⲇⲁⲙ', 'آدام', 'audio_coptic/4delta.mp3', 'ⲁⲇⲁⲙ', '["ⲁ","ⲇ","ⲁ","ⲙ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (859, 164, 'write', 'رتب حروف الكلمة القبطية لتكوين: قرية (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', 'ϯⲙⲓ', '["ϯ","ⲙ","ⲓ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (697, 137, 'write', 'رتب حروف الكلمة القبطية لتكوين: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (847, 162, 'write', 'رتب حروف الكلمة القبطية لتكوين: تفاح (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', 'ϫⲉⲙⲫⲉϩ', '["ϫ","ⲉ","ⲙ","ⲫ","ⲉ","ϩ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (745, 145, 'write', 'رتب حروف الكلمة القبطية لتكوين: برتقال (المعرب: «مانهون»)', 'ⲙⲁⲛϩⲟⲛ', 'مانهون', 'audio_coptic/13mi.mp3', 'ⲙⲁⲛϩⲟⲛ', '["ⲙ","ⲁ","ⲛ","ϩ","ⲟ","ⲛ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (835, 160, 'write', 'رتب حروف الكلمة القبطية لتكوين: مصباح (المعرب: «خيبس»)', 'ϧⲏⲃⲥ', 'خيبس', 'audio_coptic/28khay.mp3', 'ϧⲏⲃⲥ', '["ϧ","ⲏ","ⲃ","ⲥ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (829, 159, 'write', 'رتب حروف الكلمة القبطية لتكوين: شعر (المعرب: «فوي»)', 'ϥⲱⲓ', 'فوي', 'audio_coptic/27fay.mp3', 'ϥⲱⲓ', '["ϥ","ⲱ","ⲓ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (823, 158, 'write', 'رتب حروف الكلمة القبطية لتكوين: قطة (المعرب: «شاف»)', 'ϣⲁⲩ', 'شاف', 'audio_coptic/26shay.mp3', 'ϣⲁⲩ', '["ϣ","ⲁ","ⲩ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (775, 150, 'write', 'رتب حروف الكلمة القبطية لتكوين: شمس (المعرب: «ري»)', 'ⲣⲏ', 'ري', 'audio_coptic/18roo.mp3', 'ⲣⲏ', '["ⲣ","ⲏ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (811, 156, 'write', 'رتب حروف الكلمة القبطية لتكوين: 9 دفوف (المعرب: «إبسيت إن كينكين»)', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', 'إبسيت إن كينكين', 'audio_coptic/24psi.mp3', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', '["ⲯ","ⲓ","ⲧ"," ","ⲛ","̀","ⲕ","ⲉ","ⲛ","ⲕ","ⲉ","ⲛ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (673, 133, 'write', 'رتب حروف الكلمة القبطية لتكوين: جبنة (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', 'ⲁⲗⲱⲙ', '["ⲁ","ⲗ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (799, 154, 'write', 'رتب حروف الكلمة القبطية لتكوين: بطيخ (المعرب: «أفيغ»)', 'ⲫⲉⲃ', 'أفيغ', 'audio_coptic/22fi.mp3', 'ⲫⲉⲃ', '["ⲫ","ⲉ","ⲃ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (685, 135, 'write', 'رتب حروف الكلمة القبطية لتكوين: لبن (المعرب: «غالا»)', 'ⲅⲁⲗⲁ', 'غالا', 'audio_coptic/3ghamma.mp3', 'ⲅⲁⲗⲁ', '["ⲅ","ⲁ","ⲗ","ⲁ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (817, 157, 'write', 'رتب حروف الكلمة القبطية لتكوين: أختي (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', 'ⲧⲁⲥⲱⲛⲓ', '["ⲧ","ⲁ","ⲥ","ⲱ","ⲛ","ⲓ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (793, 153, 'write', 'رتب حروف الكلمة القبطية لتكوين: مطر (المعرب: «إيسيس»)', 'ⲩⲥⲓⲥ', 'إيسيس', 'audio_coptic/21epselon.mp3', 'ⲩⲥⲓⲥ', '["ⲩ","ⲥ","ⲓ","ⲥ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (715, 140, 'write', 'رتب حروف الكلمة القبطية لتكوين: قبة (المعرب: «إيبي»)', 'ⲏ̀ⲡⲓ', 'إيبي', 'audio_coptic/8eta.mp3', 'ⲏ̀ⲡⲓ', '["ⲏ","̀","ⲡ","ⲓ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (781, 151, 'write', 'رتب حروف الكلمة القبطية لتكوين: أخي (المعرب: «باصون»)', 'ⲡⲁⲥⲟⲛ', 'باصون', 'audio_coptic/19sema.mp3', 'ⲡⲁⲥⲟⲛ', '["ⲡ","ⲁ","ⲥ","ⲟ","ⲛ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (805, 155, 'write', 'رتب حروف الكلمة القبطية لتكوين: عقد (المعرب: «إخليل»)', 'ⲭ̀ⲗⲓⲗ', 'إخليل', 'audio_coptic/23ki.mp3', 'ⲭ̀ⲗⲓⲗ', '["ⲭ","̀","ⲗ","ⲓ","ⲗ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (769, 149, 'write', 'رتب حروف الكلمة القبطية لتكوين: أبي (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', 'ⲡⲓⲱⲧ', '["ⲡ","ⲓ","ⲱ","ⲧ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (739, 144, 'write', 'رتب حروف الكلمة القبطية لتكوين: أسد (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', 'ⲗⲁⲃⲟ', '["ⲗ","ⲁ","ⲃ","ⲟ"]'::jsonb, NULL, TRUE, 6)
-    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
-
-    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (757, 147, 'write', 'رتب حروف الكلمة القبطية لتكوين: مسطرة (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', 'ⲝⲟⲩⲏ', '["ⲝ","ⲟ","ⲩ","ⲏ"]'::jsonb, NULL, TRUE, 6)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1443,7 +1331,83 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (709, 139, 'write', 'رتب حروف الكلمة القبطية لتكوين: شوربة (المعرب: «أزموس»)', 'ⲍⲱⲙⲟⲥ', 'أزموس', 'audio_coptic/7zeta.mp3', 'ⲍⲱⲙⲟⲥ', '["ⲍ","ⲱ","ⲙ","ⲟ","ⲥ"]'::jsonb, NULL, TRUE, 6)
+    VALUES (685, 135, 'write', 'رتب حروف الكلمة القبطية لتكوين: لبن (المعرب: «غالا»)', 'ⲅⲁⲗⲁ', 'غالا', 'audio_coptic/3ghamma.mp3', 'ⲅⲁⲗⲁ', '["ⲅ","ⲁ","ⲗ","ⲁ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (775, 150, 'write', 'رتب حروف الكلمة القبطية لتكوين: شمس (المعرب: «ري»)', 'ⲣⲏ', 'ري', 'audio_coptic/18roo.mp3', 'ⲣⲏ', '["ⲣ","ⲏ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (793, 153, 'write', 'رتب حروف الكلمة القبطية لتكوين: مطر (المعرب: «إيسيس»)', 'ⲩⲥⲓⲥ', 'إيسيس', 'audio_coptic/21epselon.mp3', 'ⲩⲥⲓⲥ', '["ⲩ","ⲥ","ⲓ","ⲥ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (763, 148, 'write', 'رتب حروف الكلمة القبطية لتكوين: يأكل (المعرب: «أوؤم»)', 'ⲟⲩⲱⲙ', 'أوؤم', 'audio_coptic/16oo.mp3', 'ⲟⲩⲱⲙ', '["ⲟ","ⲩ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (751, 146, 'write', 'رتب حروف الكلمة القبطية لتكوين: ينام (المعرب: «إنكوت»)', 'ⲉⲛ̀ⲕⲟⲧ', 'إنكوت', 'audio_coptic/14ni.mp3', 'ⲉⲛ̀ⲕⲟⲧ', '["ⲉ","ⲛ","̀","ⲕ","ⲟ","ⲧ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (859, 164, 'write', 'رتب حروف الكلمة القبطية لتكوين: قرية (المعرب: «تيمي»)', 'ϯⲙⲓ', 'تيمي', 'audio_coptic/32tee.mp3', 'ϯⲙⲓ', '["ϯ","ⲙ","ⲓ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (727, 142, 'write', 'رتب حروف الكلمة القبطية لتكوين: مراية (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', 'ⲓⲁⲗ', '["ⲓ","ⲁ","ⲗ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (847, 162, 'write', 'رتب حروف الكلمة القبطية لتكوين: تفاح (المعرب: «جيمفيه»)', 'ϫⲉⲙⲫⲉϩ', 'جيمفيه', 'audio_coptic/30ganga.mp3', 'ϫⲉⲙⲫⲉϩ', '["ϫ","ⲉ","ⲙ","ⲫ","ⲉ","ϩ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (733, 143, 'write', 'رتب حروف الكلمة القبطية لتكوين: قلم (المعرب: «كاش»)', 'ⲕⲁϣ', 'كاش', 'audio_coptic/11kapa.mp3', 'ⲕⲁϣ', '["ⲕ","ⲁ","ϣ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (835, 160, 'write', 'رتب حروف الكلمة القبطية لتكوين: مصباح (المعرب: «خيبس»)', 'ϧⲏⲃⲥ', 'خيبس', 'audio_coptic/28khay.mp3', 'ϧⲏⲃⲥ', '["ϧ","ⲏ","ⲃ","ⲥ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (823, 158, 'write', 'رتب حروف الكلمة القبطية لتكوين: قطة (المعرب: «شاف»)', 'ϣⲁⲩ', 'شاف', 'audio_coptic/26shay.mp3', 'ϣⲁⲩ', '["ϣ","ⲁ","ⲩ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (673, 133, 'write', 'رتب حروف الكلمة القبطية لتكوين: جبنة (المعرب: «آلوم»)', 'ⲁⲗⲱⲙ', 'آلوم', 'audio_coptic/1alfa.mp3', 'ⲁⲗⲱⲙ', '["ⲁ","ⲗ","ⲱ","ⲙ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (679, 134, 'write', 'رتب حروف الكلمة القبطية لتكوين: شجرة (المعرب: «ڤو»)', 'ⲃⲱ', 'ڤو', 'audio_coptic/2veta.mp3', 'ⲃⲱ', '["ⲃ","ⲱ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (697, 137, 'write', 'رتب حروف الكلمة القبطية لتكوين: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (811, 156, 'write', 'رتب حروف الكلمة القبطية لتكوين: 9 دفوف (المعرب: «إبسيت إن كينكين»)', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', 'إبسيت إن كينكين', 'audio_coptic/24psi.mp3', 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', '["ⲯ","ⲓ","ⲧ"," ","ⲛ","̀","ⲕ","ⲉ","ⲛ","ⲕ","ⲉ","ⲛ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (799, 154, 'write', 'رتب حروف الكلمة القبطية لتكوين: بطيخ (المعرب: «أفيغ»)', 'ⲫⲉⲃ', 'أفيغ', 'audio_coptic/22fi.mp3', 'ⲫⲉⲃ', '["ⲫ","ⲉ","ⲃ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (781, 151, 'write', 'رتب حروف الكلمة القبطية لتكوين: أخي (المعرب: «باصون»)', 'ⲡⲁⲥⲟⲛ', 'باصون', 'audio_coptic/19sema.mp3', 'ⲡⲁⲥⲟⲛ', '["ⲡ","ⲁ","ⲥ","ⲟ","ⲛ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (769, 149, 'write', 'رتب حروف الكلمة القبطية لتكوين: أبي (المعرب: «بايوت»)', 'ⲡⲓⲱⲧ', 'بايوت', 'audio_coptic/17pee.mp3', 'ⲡⲓⲱⲧ', '["ⲡ","ⲓ","ⲱ","ⲧ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (757, 147, 'write', 'رتب حروف الكلمة القبطية لتكوين: مسطرة (المعرب: «إكسومي»)', 'ⲝⲟⲩⲏ', 'إكسومي', 'audio_coptic/15axsy.mp3', 'ⲝⲟⲩⲏ', '["ⲝ","ⲟ","ⲩ","ⲏ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (715, 140, 'write', 'رتب حروف الكلمة القبطية لتكوين: بيت (المعرب: «إي»)', 'Ⲏⲓ', 'إي', 'audio_coptic/8eta.mp3', 'Ⲏⲓ', '["Ⲏ","ⲓ"]'::jsonb, NULL, TRUE, 6)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1451,7 +1415,43 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (727, 142, 'write', 'رتب حروف الكلمة القبطية لتكوين: مراية (المعرب: «إيال»)', 'ⲓⲁⲗ', 'إيال', 'audio_coptic/10yota.mp3', 'ⲓⲁⲗ', '["ⲓ","ⲁ","ⲗ"]'::jsonb, NULL, TRUE, 6)
+    VALUES (841, 161, 'write', 'رتب حروف الكلمة القبطية لتكوين: حصان (المعرب: «إهثو»)', 'ϩ̀ⲑⲟ', 'إهثو', 'audio_coptic/29hory.mp3', 'ϩ̀ⲑⲟ', '["ϩ","̀","ⲑ","ⲟ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (829, 159, 'write', 'رتب حروف الكلمة القبطية لتكوين: شعر (المعرب: «فوي»)', 'ϥⲱⲓ', 'فوي', 'audio_coptic/27fay.mp3', 'ϥⲱⲓ', '["ϥ","ⲱ","ⲓ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (817, 157, 'write', 'رتب حروف الكلمة القبطية لتكوين: أختي (المعرب: «تاسوني»)', 'ⲧⲁⲥⲱⲛⲓ', 'تاسوني', 'audio_coptic/25oo.mp3', 'ⲧⲁⲥⲱⲛⲓ', '["ⲧ","ⲁ","ⲥ","ⲱ","ⲛ","ⲓ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (721, 141, 'write', 'رتب حروف الكلمة القبطية لتكوين: يخلق (المعرب: «ثاميو»)', 'Ⲑⲁⲙⲓⲟ', 'ثاميو', 'audio_coptic/9seta.mp3', 'Ⲑⲁⲙⲓⲟ', '["Ⲑ","ⲁ","ⲙ","ⲓ","ⲟ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (709, 139, 'write', 'رتب حروف الكلمة القبطية لتكوين: حياة (المعرب: «زوي»)', 'Ⲍⲱⲏ', 'زوي', 'audio_coptic/7zeta.mp3', 'Ⲍⲱⲏ', '["Ⲍ","ⲱ","ⲏ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (805, 155, 'write', 'رتب حروف الكلمة القبطية لتكوين: عقد (المعرب: «إخليل»)', 'ⲭ̀ⲗⲓⲗ', 'إخليل', 'audio_coptic/23ki.mp3', 'ⲭ̀ⲗⲓⲗ', '["ⲭ","̀","ⲗ","ⲓ","ⲗ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (739, 144, 'write', 'رتب حروف الكلمة القبطية لتكوين: أسد (المعرب: «لاڤو»)', 'ⲗⲁⲃⲟ', 'لاڤو', 'audio_coptic/12lavla.mp3', 'ⲗⲁⲃⲟ', '["ⲗ","ⲁ","ⲃ","ⲟ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (703, 138, 'write', 'رتب حروف الكلمة القبطية لتكوين: 6 رجال (المعرب: «سوآوو إن رومي»)', 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', 'سوآوو إن رومي', 'audio_coptic/6sow.mp3', 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ', '["ⲋ̅"," ","ⲛ","̀","ⲣ","ⲱ","ⲙ","ⲓ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (691, 136, 'write', 'رتب حروف الكلمة القبطية لتكوين: مجد (المعرب: «ذوكسا»)', 'Ⲇⲟⲝⲁ', 'ذوكسا', 'audio_coptic/4delta.mp3', 'Ⲇⲟⲝⲁ', '["Ⲇ","ⲟ","ⲝ","ⲁ"]'::jsonb, NULL, TRUE, 6)
+    ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
+
+    INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
+    VALUES (745, 145, 'write', 'رتب حروف الكلمة القبطية لتكوين: برتقال (المعرب: «مانهون»)', 'ⲙⲁⲛϩⲟⲛ', 'مانهون', 'audio_coptic/13mi.mp3', 'ⲙⲁⲛϩⲟⲛ', '["ⲙ","ⲁ","ⲛ","ϩ","ⲟ","ⲛ"]'::jsonb, NULL, TRUE, 6)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1464,10 +1464,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4380, 701, 'ك', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4393, 708, 'طعام', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1484,10 +1480,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4356, 683, 'ز', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4409, 720, 'مزمار', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1591,10 +1583,6 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4613, 867, 'طعام', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4626, 872, 'أسد', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
@@ -1612,6 +1600,18 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4676, 894, 'جانجا (ج)', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4393, 708, 'نور', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4613, 867, 'نور', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4409, 720, 'يبني', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1636,10 +1636,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4381, 701, 'ث أو ت', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4400, 714, 'قبة', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1767,10 +1763,6 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4614, 867, 'ماء', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4627, 872, 'نمر', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
@@ -1792,6 +1784,14 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4682, 897, 'جبنة', TRUE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4614, 867, 'حق', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4400, 714, 'بيت', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1823,15 +1823,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4394, 708, 'شوربة', TRUE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4398, 713, 'ل', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4410, 720, 'ناي', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1935,10 +1927,6 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4615, 867, 'زيت', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4632, 876, 'Ⲟ ⲟ (أُو (قصيرة))', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
@@ -1964,6 +1952,18 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4683, 897, 'لبن', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4394, 708, 'حياة', TRUE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4615, 867, 'سلام', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4410, 720, 'يعمل', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -1995,15 +1995,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4395, 708, 'زيت', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4399, 713, 'ياء طويلة ممدودة', TRUE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4411, 720, 'قيثارة', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2155,7 +2147,11 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4368, 690, 'ملاك', FALSE)
+    VALUES (4395, 708, 'سلام', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4411, 720, 'يخلق', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2172,10 +2168,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4360, 684, 'زيت', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4384, 702, '6 أجراس', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2327,6 +2319,14 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4368, 690, 'كرامة', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4384, 702, '6 رجال', TRUE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4345, 672, 'شجرة', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
@@ -2339,15 +2339,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4369, 690, 'آدم', TRUE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4373, 695, 'ف أو ب', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4385, 702, '٥ أجراس', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2355,15 +2347,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4392, 708, 'ماء', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4396, 713, 'ز', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4408, 720, 'دف', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2495,7 +2479,19 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4370, 690, 'إنسان', FALSE)
+    VALUES (4369, 690, 'مجد', TRUE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4385, 702, '٥ رجال', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4392, 708, 'حق', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4408, 720, 'يصنع', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2512,10 +2508,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4374, 695, 'أ', FALSE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4386, 702, '٦ شموع', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2655,7 +2647,11 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4371, 690, 'نوح', FALSE)
+    VALUES (4370, 690, 'بركة', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4386, 702, '٦ نساء', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2672,10 +2668,6 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4375, 695, 'إي خفيفة', TRUE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4387, 702, '٧ كؤوس', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
@@ -2787,10 +2779,6 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
-    VALUES (4612, 867, 'شوربة', TRUE)
-    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
-
-    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4621, 871, 'Ⲗ ⲗ (لابدا)', FALSE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
@@ -2852,6 +2840,18 @@ BEGIN
 
     INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
     VALUES (4689, 898, '٣٠ حرفاً', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4371, 690, 'نعمة', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4387, 702, '٧ رجال', FALSE)
+    ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
+
+    INSERT INTO public.challenge_options (id, challenge_id, text, is_correct)
+    VALUES (4612, 867, 'حياة', TRUE)
     ON CONFLICT (id) DO UPDATE SET text = EXCLUDED.text, is_correct = EXCLUDED.is_correct;
 
     INSERT INTO public.chests (id, level_id, unit_id, title, description, placement_type, after_lesson_id, xp_mode, xp_min, xp_max, hearts, has_badge, badge_title, badge_icon, badge_desc)

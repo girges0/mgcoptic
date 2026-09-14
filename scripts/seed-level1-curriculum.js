@@ -76,10 +76,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'د أو ذ',
     soundFile: 'audio_coptic/4delta.mp3',
     info: 'الحرف الرابع. يُنطق "د" في أسماء الأعلام والكلمات القبطية، و"ذ" في الكلمات اليونانية.',
-    wordCoptic: 'ⲁⲇⲁⲙ',
-    wordPhoneticAr: 'آدام',
-    wordMeaning: 'آدم',
-    wrongMeanings: ['إنسان', 'نوح', 'ملاك'],
+    wordCoptic: 'Ⲇⲟⲝⲁ',
+    wordPhoneticAr: 'ذوكسا',
+    wordMeaning: 'مجد',
+    wrongMeanings: ['كرامة', 'بركة', 'نعمة'],
     wrongLetterPron: ['غاما (غ أو ج)', 'إي (إي)', 'هيتا (ياء طويلة)']
   },
   {
@@ -106,10 +106,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'سو (الرقم 6)',
     soundFile: 'audio_coptic/6sow.mp3',
     info: 'رمز ورقم عددي قبطي يدل على الرقم ستة (6). يوضع فوقه شرطة أفقية لتمييزه كرقم، وينطق "سو".',
-    wordCoptic: 'ⲥⲟⲟⲩ ⲛ̀ϣⲕⲉⲗⲕⲓⲗ',
-    wordPhoneticAr: 'إسوؤو إن شكيلكيل',
-    wordMeaning: '6 أجراس',
-    wrongMeanings: ['٥ أجراس', '٦ شموع', '٧ كؤوس'],
+    wordCoptic: 'ⲋ̅ ⲛ̀ⲣⲱⲙⲓ',
+    wordPhoneticAr: 'سوآوو إن رومي',
+    wordMeaning: '6 رجال',
+    wrongMeanings: ['٥ رجال', '٦ نساء', '٧ رجال'],
     wrongLetterPron: ['زاتا (ز)', 'ثيتا (ث أو ت)', 'كابا (ك)']
   },
   {
@@ -120,10 +120,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ز',
     soundFile: 'audio_coptic/7zeta.mp3',
     info: 'الحرف السابع في الأبجدية القبطية. يُنطق دائماً حرف "ز" مثل حرف (Z) في الإنجليزية.',
-    wordCoptic: 'ⲍⲱⲙⲟⲥ',
-    wordPhoneticAr: 'أزموس',
-    wordMeaning: 'شوربة',
-    wrongMeanings: ['طعام', 'ماء', 'زيت'],
+    wordCoptic: 'Ⲍⲱⲏ',
+    wordPhoneticAr: 'زوي',
+    wordMeaning: 'حياة',
+    wrongMeanings: ['نور', 'حق', 'سلام'],
     wrongLetterPron: ['سو (٦)', 'هيتا (ياء طويلة)', 'إيوتا (ياء قصيرة)']
   },
   {
@@ -134,9 +134,9 @@ const LETTERS_DATA = [
     pronunciationAr: 'ياء طويلة ممدودة',
     soundFile: 'audio_coptic/8eta.mp3',
     info: 'الحرف الثامن. حرف متحرك للكسر يُنطق ياء ممدودة وطويلة مثل (ee) في كلمة meet.',
-    wordCoptic: 'ⲏ̀ⲡⲓ',
-    wordPhoneticAr: 'إيبي',
-    wordMeaning: 'قبة',
+    wordCoptic: 'Ⲏⲓ',
+    wordPhoneticAr: 'إي',
+    wordMeaning: 'بيت',
     wrongMeanings: ['كنيسة', 'مدرسة', 'هيكل'],
     wrongLetterPron: ['زاتا (ز)', 'ثيتا (ث أو ت)', 'لابدا (ل)']
   },
@@ -148,10 +148,10 @@ const LETTERS_DATA = [
     pronunciationAr: 'ث أو ت',
     soundFile: 'audio_coptic/9seta.mp3',
     info: 'الحرف التاسع. يُنطق "ث" دائماً، إلا إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) فيُنطق "ت".',
-    wordCoptic: 'ⲕⲓⲑⲁⲣⲁ',
-    wordPhoneticAr: 'كيثارا',
-    wordMeaning: 'قيثارة',
-    wrongMeanings: ['دف', 'مزمار', 'ناي'],
+    wordCoptic: 'Ⲑⲁⲙⲓⲟ',
+    wordPhoneticAr: 'ثاميو',
+    wordMeaning: 'يخلق',
+    wrongMeanings: ['يصنع', 'يبني', 'يعمل'],
     wrongLetterPron: ['هيتا (ياء طويلة)', 'إيوتا (ياء قصيرة)', 'مي (م)']
   },
   {

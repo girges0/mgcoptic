@@ -526,30 +526,169 @@
   }
 
   // ============================================================================
-  // مركز الإشعارات الفاخر (Notification Center Manager - 100% SVG Only)
+  // مركز الإشعارات الفاخر والاحترافي (Pro Notification Center - 100% SVG & Luxury)
   // ============================================================================
   let cachedNotificationsList = [];
   let isNotificationsCenterOpen = false;
+  let currentNotifFilter = 'all'; // 'all' | 'unread' | 'gifts'
+  let lastDeletedNotification = null; // { item, index } or { isBulk: true, items: [...] }
+  let undoDismissTimer = null;
 
-  function getDismissedNotifIds(userId) {
+  function getActiveUserId() {
     try {
-      const key = 'mg_coptic_dismissed_notifs_' + (userId || 'guest');
-      return JSON.parse(localStorage.getItem(key) || '[]');
-    } catch (_) {
-      return [];
-    }
-  }
-
-  function markNotifAsDismissed(notifId, userId) {
-    if (!notifId) return;
-    try {
-      const key = 'mg_coptic_dismissed_notifs_' + (userId || 'guest');
-      const list = JSON.parse(localStorage.getItem(key) || '[]');
-      if (!list.includes(notifId)) {
-        list.push(notifId);
-        localStorage.setItem(key, JSON.stringify(list));
+      if (window.currentAuthUser && window.currentAuthUser.id) return String(window.currentAuthUser.id);
+      const rawUser = localStorage.getItem('mg_coptic_user');
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (u && u.id) return String(u.id);
+      }
+      const rawSession = localStorage.getItem('sb-kdoanxzpfiscprjjzzic-auth-token');
+      if (rawSession) {
+        const s = JSON.parse(rawSession);
+        if (s?.user?.id) return String(s.user.id);
       }
     } catch (_) {}
+    return 'guest';
+  }
+
+  // مجموعة المعرفات المحذوفة متعددة الطبقات (Multi-Tier Dismissal Set)
+  function getDismissedNotifSet(uid) {
+    const set = new Set();
+    const currentId = uid || getActiveUserId();
+    const keys = [
+      'mg_coptic_dismissed_notifs_all',
+      'mg_coptic_dismissed_notifs_guest'
+    ];
+    if (currentId && currentId !== 'guest') {
+      keys.push(`mg_coptic_dismissed_notifs_${currentId}`);
+    }
+    keys.forEach(k => {
+      try {
+        const arr = JSON.parse(localStorage.getItem(k) || '[]');
+        if (Array.isArray(arr)) arr.forEach(id => set.add(String(id)));
+      } catch (_) {}
+    });
+    return set;
+  }
+
+  function markNotifAsDismissed(notifId, uid) {
+    if (!notifId) return;
+    const strId = String(notifId);
+    const currentId = uid || getActiveUserId();
+    const keys = [
+      'mg_coptic_dismissed_notifs_all',
+      'mg_coptic_dismissed_notifs_guest'
+    ];
+    if (currentId && currentId !== 'guest') {
+      keys.push(`mg_coptic_dismissed_notifs_${currentId}`);
+    }
+    keys.forEach(k => {
+      try {
+        const list = JSON.parse(localStorage.getItem(k) || '[]');
+        if (!list.includes(strId)) {
+          list.push(strId);
+          localStorage.setItem(k, JSON.stringify(list));
+        }
+      } catch (_) {}
+    });
+  }
+
+  function unmarkNotifAsDismissed(notifId, uid) {
+    if (!notifId) return;
+    const strId = String(notifId);
+    const currentId = uid || getActiveUserId();
+    const keys = [
+      'mg_coptic_dismissed_notifs_all',
+      'mg_coptic_dismissed_notifs_guest'
+    ];
+    if (currentId && currentId !== 'guest') {
+      keys.push(`mg_coptic_dismissed_notifs_${currentId}`);
+    }
+    keys.forEach(k => {
+      try {
+        let list = JSON.parse(localStorage.getItem(k) || '[]');
+        list = list.filter(id => String(id) !== strId);
+        localStorage.setItem(k, JSON.stringify(list));
+      } catch (_) {}
+    });
+  }
+
+  function getClearedBeforeTimestamp(uid) {
+    let maxTs = 0;
+    const currentId = uid || getActiveUserId();
+    try {
+      const g = Number(localStorage.getItem('mg_coptic_notifs_cleared_before_all') || 0);
+      if (g > maxTs) maxTs = g;
+      const u = Number(localStorage.getItem(`mg_coptic_notifs_cleared_before_${currentId}`) || 0);
+      if (u > maxTs) maxTs = u;
+    } catch (_) {}
+    return maxTs;
+  }
+
+  function setClearedBeforeTimestamp(uid) {
+    const now = Date.now();
+    const currentId = uid || getActiveUserId();
+    try {
+      localStorage.setItem('mg_coptic_notifs_cleared_before_all', String(now));
+      if (currentId && currentId !== 'guest') {
+        localStorage.setItem(`mg_coptic_notifs_cleared_before_${currentId}`, String(now));
+      }
+    } catch (_) {}
+    return now;
+  }
+
+  function clearClearedBeforeTimestamp(uid) {
+    const currentId = uid || getActiveUserId();
+    try {
+      localStorage.removeItem('mg_coptic_notifs_cleared_before_all');
+      if (currentId && currentId !== 'guest') {
+        localStorage.removeItem(`mg_coptic_notifs_cleared_before_${currentId}`);
+      }
+    } catch (_) {}
+  }
+
+  // تتبع حالة القراءة (Read / Unread State Tracking)
+  function getReadNotifSet(uid) {
+    const set = new Set();
+    const currentId = uid || getActiveUserId();
+    const keys = [
+      'mg_coptic_read_notifs_all',
+      `mg_coptic_read_notifs_${currentId}`
+    ];
+    keys.forEach(k => {
+      try {
+        const arr = JSON.parse(localStorage.getItem(k) || '[]');
+        if (Array.isArray(arr)) arr.forEach(id => set.add(String(id)));
+      } catch (_) {}
+    });
+    return set;
+  }
+
+  function markNotifAsRead(notifId, uid) {
+    if (!notifId) return;
+    const strId = String(notifId);
+    const currentId = uid || getActiveUserId();
+    const keys = ['mg_coptic_read_notifs_all'];
+    if (currentId && currentId !== 'guest') {
+      keys.push(`mg_coptic_read_notifs_${currentId}`);
+    }
+    keys.forEach(k => {
+      try {
+        const list = JSON.parse(localStorage.getItem(k) || '[]');
+        if (!list.includes(strId)) {
+          list.push(strId);
+          localStorage.setItem(k, JSON.stringify(list));
+        }
+      } catch (_) {}
+    });
+  }
+
+  function isGiftNotification(item) {
+    if (!item) return false;
+    const t = (item.title || '').toLowerCase();
+    const b = (item.body || '').toLowerCase();
+    const l = (item.deep_link || '').toLowerCase();
+    return item.event_type === 'gift' || t.includes('هدية') || t.includes('مكافأة') || b.includes('هدية') || l.includes('gift');
   }
 
   function formatArabicRelativeTime(dateStr) {
@@ -572,82 +711,98 @@
     }
   }
 
-  function getNotificationSvgIcon(eventType, deepLink, title) {
-    const link = (deepLink || '').toLowerCase();
-    const t = (title || '').toLowerCase();
+  function getNotificationBadgeMeta(item) {
+    const link = (item?.deep_link || '').toLowerCase();
+    const t = (item?.title || '').toLowerCase();
+    const ev = item?.event_type || '';
 
-    // 1. Gift
-    if (link.includes('gift') || t.includes('هدية') || t.includes('مكافأة') || eventType === 'gift') {
-      return `
-        <div class="mg-notif-type-icon mg-notif-type-gift" title="هدية تقديرية">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    if (isGiftNotification(item)) {
+      return {
+        badgeText: 'هدية ومكافأة',
+        badgeClass: 'mg-tag-gift',
+        iconClass: 'mg-notif-type-gift',
+        iconSvg: `
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 12 20 22 4 22 4 12" />
             <rect x="2" y="7" width="20" height="5" rx="1.5" />
             <line x1="12" y1="22" x2="12" y2="7" />
             <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
             <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
-          </svg>
-        </div>`;
+          </svg>`
+      };
     }
 
-    // 2. Hearts
-    if (eventType === 'hearts_refilled' || link.includes('heart') || t.includes('قلب') || t.includes('قلوب')) {
-      return `
-        <div class="mg-notif-type-icon mg-notif-type-hearts" title="قلوب">
+    if (ev === 'hearts_refilled' || link.includes('heart') || t.includes('قلب') || t.includes('قلوب')) {
+      return {
+        badgeText: 'طاقة وقلوب',
+        badgeClass: 'mg-tag-hearts',
+        iconClass: 'mg-notif-type-hearts',
+        iconSvg: `
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </div>`;
+          </svg>`
+      };
     }
 
-    // 3. Streak / Flame
-    if (eventType === 'daily_reminder' || link.includes('streak') || t.includes('استمرارية') || t.includes('حماسة')) {
-      return `
-        <div class="mg-notif-type-icon mg-notif-type-streak" title="استمرارية ونشاط">
+    if (ev === 'daily_reminder' || link.includes('streak') || t.includes('استمرارية') || t.includes('حماسة')) {
+      return {
+        badgeText: 'حماسة ونشاط',
+        badgeClass: 'mg-tag-streak',
+        iconClass: 'mg-notif-type-streak',
+        iconSvg: `
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
-          </svg>
-        </div>`;
+          </svg>`
+      };
     }
 
-    // 4. XP / Rank / Trophy
-    if (eventType === 'rank_change' || eventType === 'achievement' || t.includes('ترتيب') || t.includes('صدارة') || t.includes('xp')) {
-      return `
-        <div class="mg-notif-type-icon mg-notif-type-xp" title="إنجاز ونقاط">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    if (ev === 'rank_change' || ev === 'achievement' || t.includes('ترتيب') || t.includes('صدارة') || t.includes('xp') || t.includes('نقطة')) {
+      return {
+        badgeText: 'إنجاز وترتيب',
+        badgeClass: 'mg-tag-xp',
+        iconClass: 'mg-notif-type-xp',
+        iconSvg: `
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2" />
             <path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
             <path d="M4 22h16" />
             <path d="M10 14.66V17c0 .55-.45 1-1 1H8v4h8v-4h-1c-.55 0-1-.45-1-1v-2.34" />
             <path d="M6 3h12a2 2 0 0 1 2 2v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6V5a2 2 0 0 1 2-2z" />
-          </svg>
-        </div>`;
+          </svg>`
+      };
     }
 
-    // 5. Welcome / New Content
-    if (eventType === 'welcome' || eventType === 'new_content' || t.includes('أهلاً') || t.includes('مرحباً') || t.includes('درس')) {
-      return `
-        <div class="mg-notif-type-icon mg-notif-type-welcome" title="مرحباً بك">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-        </div>`;
+    if (ev === 'welcome' || ev === 'new_content' || t.includes('أهلاً') || t.includes('مرحباً') || t.includes('درس')) {
+      return {
+        badgeText: 'درس وتحديث',
+        badgeClass: 'mg-tag-lesson',
+        iconClass: 'mg-notif-type-lesson',
+        iconSvg: `
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <line x1="9" y1="7" x2="15" y2="7"/>
+            <line x1="9" y1="11" x2="13" y2="11"/>
+          </svg>`
+      };
     }
 
-    // 6. Default Broadcast / Bell
-    return `
-      <div class="mg-notif-type-icon mg-notif-type-broadcast" title="تنبيه عام">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    return {
+      badgeText: 'تنبيه عام',
+      badgeClass: 'mg-tag-broadcast',
+      iconClass: 'mg-notif-type-broadcast',
+      iconSvg: `
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-      </div>`;
+        </svg>`
+    };
   }
 
   async function fetchUserNotificationsList() {
-    const myId = window.currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
-    const dismissed = getDismissedNotifIds(myId);
+    const myId = getActiveUserId();
+    const dismissedSet = getDismissedNotifSet(myId);
+    const clearedBefore = getClearedBeforeTimestamp(myId);
     let items = [];
 
     const sb = window.sbClient || window.sb;
@@ -656,9 +811,9 @@
         let query = sb.from('notification_events')
           .select('id, event_type, title, body, deep_link, created_at, target_user_id')
           .order('created_at', { ascending: false })
-          .limit(40);
+          .limit(50);
 
-        if (myId) {
+        if (myId && myId !== 'guest') {
           query = query.or(`target_user_id.eq.${myId},target_user_id.is.null`);
         } else {
           query = query.is('target_user_id', null);
@@ -674,7 +829,7 @@
     }
 
     // Default introductory welcome notification if no events exist yet
-    if (items.length === 0 && !dismissed.includes('welcome-intro-default')) {
+    if (items.length === 0 && !dismissedSet.has('welcome-intro-default') && clearedBefore === 0) {
       items.push({
         id: 'welcome-intro-default',
         event_type: 'welcome',
@@ -685,77 +840,162 @@
       });
     }
 
-    // Filter out dismissed
-    const filtered = items.filter(n => !dismissed.includes(n.id));
+    // Filter out dismissed and cleared before
+    const filtered = items.filter(n => {
+      const strId = String(n.id);
+      if (dismissedSet.has(strId)) return false;
+      if (clearedBefore > 0 && n.created_at) {
+        const itemTs = new Date(n.created_at).getTime();
+        if (!isNaN(itemTs) && itemTs <= clearedBefore) return false;
+      }
+      return true;
+    });
+
     cachedNotificationsList = filtered;
+    updateNotificationBadges();
     return filtered;
   }
 
-  function updateNotificationBadges(count) {
+  function updateNotificationBadges() {
+    const myId = getActiveUserId();
+    const readSet = getReadNotifSet(myId);
+    const unreadCount = cachedNotificationsList.filter(n => !readSet.has(String(n.id))).length;
+    const totalCount = cachedNotificationsList.length;
+    const giftsCount = cachedNotificationsList.filter(n => isGiftNotification(n)).length;
+
+    // 1. Topbar Bell Badge
     const badgeEl = document.getElementById('topbar-notif-badge');
-    const countPill = document.getElementById('mg-notif-count-pill');
-    const clearBtn = document.getElementById('mg-notif-clear-all-btn');
-
-    if (countPill) {
-      countPill.textContent = String(count);
-      countPill.style.display = count > 0 ? 'inline-block' : 'none';
-    }
-
     if (badgeEl) {
-      if (count > 0) {
-        badgeEl.textContent = count > 99 ? '99+' : String(count);
+      if (unreadCount > 0) {
+        badgeEl.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
         badgeEl.style.display = 'flex';
       } else {
         badgeEl.style.display = 'none';
       }
     }
 
+    // 2. Panel Header Count Pill
+    const countPill = document.getElementById('mg-notif-count-pill');
+    if (countPill) {
+      if (unreadCount > 0) {
+        countPill.textContent = `${unreadCount} جديد`;
+        countPill.style.display = 'inline-block';
+      } else {
+        countPill.style.display = 'none';
+      }
+    }
+
+    // 3. Unread Subtext
+    const subtext = document.getElementById('mg-notif-unread-subtext');
+    if (subtext) {
+      if (unreadCount > 0) {
+        subtext.textContent = `لديك ${unreadCount} ${unreadCount === 1 ? 'إشعار جديد غير مقروء' : unreadCount === 2 ? 'إشعاران جديدان غير مقروءين' : 'إشعارات جديدة غير مقروءة'}`;
+      } else {
+        subtext.textContent = 'كافة الإشعارات مقروءة ومحدّثة';
+      }
+    }
+
+    // 4. Tab Badges
+    const tabAll = document.getElementById('tab-count-all');
+    if (tabAll) tabAll.textContent = String(totalCount);
+
+    const tabUnread = document.getElementById('tab-count-unread');
+    if (tabUnread) {
+      tabUnread.textContent = String(unreadCount);
+      tabUnread.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    }
+
+    const tabGifts = document.getElementById('tab-count-gifts');
+    if (tabGifts) {
+      tabGifts.textContent = String(giftsCount);
+      tabGifts.style.display = giftsCount > 0 ? 'inline-block' : 'none';
+    }
+
+    // 5. Header Action Buttons
+    const clearBtn = document.getElementById('mg-notif-clear-all-btn');
     if (clearBtn) {
-      clearBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+      clearBtn.style.display = totalCount > 0 ? 'inline-flex' : 'none';
+    }
+
+    const markReadBtn = document.getElementById('mg-notif-mark-read-btn');
+    if (markReadBtn) {
+      markReadBtn.style.display = unreadCount > 0 ? 'inline-flex' : 'none';
     }
   }
 
-  function renderNotificationsBody(items) {
+  function setNotificationFilter(filter) {
+    currentNotifFilter = filter || 'all';
+    document.querySelectorAll('.mg-notif-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.id === `tab-btn-${currentNotifFilter}`);
+    });
+    renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
+  }
+
+  function renderNotificationsBody(items, filter = currentNotifFilter) {
     const bodyEl = document.getElementById('mg-notif-panel-body');
     if (!bodyEl) return;
 
-    if (!items || items.length === 0) {
+    updateNotificationBadges();
+
+    const myId = getActiveUserId();
+    const readSet = getReadNotifSet(myId);
+
+    // Filter items based on active tab
+    let displayItems = items || [];
+    if (filter === 'unread') {
+      displayItems = displayItems.filter(n => !readSet.has(String(n.id)));
+    } else if (filter === 'gifts') {
+      displayItems = displayItems.filter(n => isGiftNotification(n));
+    }
+
+    if (displayItems.length === 0) {
+      let emptyTitle = 'لا توجد إشعارات حالياً';
+      let emptyDesc = 'ستظهر هنا التنبيهات والهدايا والمكافآت التقديرية فور صدورها.';
+
+      if (filter === 'unread') {
+        emptyTitle = 'رائع! لا توجد إشعارات غير مقروءة';
+        emptyDesc = 'لقد قمت بقراءة جميع الإشعارات الواردة، حسابك محدّث بالكامل.';
+      } else if (filter === 'gifts') {
+        emptyTitle = 'لا توجد هدايا مسجلة حالياً';
+        emptyDesc = 'استمر في تقدمك بالدروس والتمارين وستصلك الهدايا والمكافآت هنا.';
+      }
+
       bodyEl.innerHTML = `
         <div class="mg-notif-empty-box">
           <div class="mg-notif-empty-svg">
-            <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="rgba(168, 130, 58, 0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="rgba(168, 130, 58, 0.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M32 10a14 14 0 0 0-14 14c0 14-6 18-6 18h40s-6-4-6-18a14 14 0 0 0-14-14z" />
               <path d="M26.5 48a5.5 5.5 0 0 0 11 0" />
-              <line x1="12" y1="52" x2="52" y2="52" stroke="#6B1530" stroke-width="2" stroke-linecap="round" />
+              <line x1="12" y1="52" x2="52" y2="52" stroke="#6B1530" stroke-width="2.2" stroke-linecap="round" />
               <circle cx="48" cy="16" r="3" fill="#A8823A" stroke="none" />
-              <circle cx="16" cy="20" r="2" fill="#A8823A" stroke="none" />
+              <circle cx="16" cy="20" r="2.2" fill="#A8823A" stroke="none" />
             </svg>
           </div>
-          <div class="mg-notif-empty-title">لا توجد إشعارات حالياً</div>
-          <div class="mg-notif-empty-desc">ستظهر هنا التنبيهات والهدايا والمكافآت التقديرية فور صدورها.</div>
+          <div class="mg-notif-empty-title">${emptyTitle}</div>
+          <div class="mg-notif-empty-desc">${emptyDesc}</div>
         </div>
       `;
-      updateNotificationBadges(0);
       return;
     }
 
-    updateNotificationBadges(items.length);
-
     let html = '';
-    items.forEach(item => {
-      const iconSvg = getNotificationSvgIcon(item.event_type, item.deep_link, item.title);
+    displayItems.forEach(item => {
+      const isRead = readSet.has(String(item.id));
+      const meta = getNotificationBadgeMeta(item);
       const timeAgo = formatArabicRelativeTime(item.created_at);
       const hasAction = item.deep_link && item.deep_link.trim().length > 0;
-      const isGift = (item.deep_link && item.deep_link.includes('gift')) || (item.title && (item.title.includes('هدية') || item.title.includes('مكافأة')));
-      const actionText = isGift ? 'استلام الهدية' : 'عرض والتنقل';
+      const isGift = isGiftNotification(item);
+      const actionText = isGift ? 'استلام الهدية 🎁' : 'عرض والتنقل ←';
 
       html += `
-        <div class="mg-notif-item" id="notif-item-${item.id}" data-id="${item.id}">
-          ${iconSvg}
+        <div class="mg-notif-item ${isRead ? 'is-read' : 'is-unread'}" id="notif-item-${item.id}" data-id="${item.id}" onclick="window.handleNotificationCardClick && window.handleNotificationCardClick('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
+          ${!isRead ? '<span class="mg-notif-unread-dot" title="إشعار جديد"></span>' : ''}
+          <div class="mg-notif-type-icon ${meta.iconClass}">
+            ${meta.iconSvg}
+          </div>
           <div class="mg-notif-content">
-            <div class="mg-notif-item-title">${item.title || 'إشعار'}</div>
-            <div class="mg-notif-item-body">${item.body || ''}</div>
-            <div class="mg-notif-item-meta">
+            <div class="mg-notif-item-header">
+              <span class="mg-notif-tag ${meta.badgeClass}">${meta.badgeText}</span>
               <span class="mg-notif-time">
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10" />
@@ -763,18 +1003,19 @@
                 </svg>
                 <span>${timeAgo}</span>
               </span>
-              ${hasAction ? `
-                <button type="button" class="mg-notif-action-btn" onclick="window.handleNotificationAction && window.handleNotificationAction('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
-                  <span>${actionText}</span>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6" />
-                  </svg>
-                </button>
-              ` : ''}
             </div>
+            <div class="mg-notif-item-title">${item.title || 'إشعار جديد'}</div>
+            <div class="mg-notif-item-body">${item.body || ''}</div>
+            ${hasAction ? `
+              <div class="mg-notif-item-actions">
+                <button type="button" class="mg-notif-action-btn ${isGift ? 'gift-action' : ''}" onclick="event.stopPropagation(); window.handleNotificationAction && window.handleNotificationAction('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
+                  <span>${actionText}</span>
+                </button>
+              </div>
+            ` : ''}
           </div>
-          <button type="button" class="mg-notif-delete-single-btn" onclick="window.deleteSingleNotification && window.deleteSingleNotification('${item.id}', this)" title="حذف هذا الإشعار" aria-label="حذف هذا الإشعار">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <button type="button" class="mg-notif-delete-single-btn" onclick="event.stopPropagation(); window.deleteSingleNotification && window.deleteSingleNotification('${item.id}', this, event)" title="حذف هذا الإشعار" aria-label="حذف هذا الإشعار">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
@@ -788,7 +1029,7 @@
 
   async function refreshNotificationsCenter() {
     const items = await fetchUserNotificationsList();
-    renderNotificationsBody(items);
+    renderNotificationsBody(items, currentNotifFilter);
   }
 
   function toggleNotificationsCenter(e) {
@@ -816,6 +1057,10 @@
     isNotificationsCenterOpen = true;
 
     refreshNotificationsCenter();
+
+    if (window.Sound && typeof window.Sound.playPop === 'function') {
+      try { window.Sound.playPop(); } catch (_) {}
+    }
   }
 
   function closeNotificationsCenter() {
@@ -832,75 +1077,146 @@
     }
     if (btn) btn.setAttribute('aria-expanded', 'false');
     isNotificationsCenterOpen = false;
+    hideUndoToast();
   }
 
-  async function deleteSingleNotification(notifId, btnEl) {
+  async function deleteSingleNotification(notifId, btnEl, event) {
+    if (event && typeof event.stopPropagation === 'function') event.stopPropagation();
     if (!notifId) return;
-    const itemEl = btnEl ? btnEl.closest('.mg-notif-item') : document.getElementById(`notif-item-${notifId}`);
 
-    if (itemEl) {
-      itemEl.classList.add('removing');
+    const uid = getActiveUserId();
+    const item = cachedNotificationsList.find(n => String(n.id) === String(notifId));
+    if (!item) return;
+
+    const itemEl = btnEl ? btnEl.closest('.mg-notif-item') : document.getElementById(`notif-item-${notifId}`);
+    if (itemEl) itemEl.classList.add('removing');
+
+    const itemIndex = cachedNotificationsList.findIndex(n => String(n.id) === String(notifId));
+    lastDeletedNotification = { isBulk: false, item: { ...item }, index: itemIndex >= 0 ? itemIndex : 0 };
+
+    markNotifAsDismissed(notifId, uid);
+    cachedNotificationsList = cachedNotificationsList.filter(n => String(n.id) !== String(notifId));
+
+    if (window.Sound && typeof window.Sound.playWhoosh === 'function') {
+      try { window.Sound.playWhoosh(); } catch (_) {}
     }
 
-    const myId = window.currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
-    markNotifAsDismissed(notifId, myId);
-
-    // If connected to Supabase and not a local demo, attempt server delete
     const sb = window.sbClient || window.sb;
-    if (sb && notifId.length > 20) {
+    if (sb && notifId.length > 20 && uid && uid !== 'guest') {
       try {
-        if (myId) {
-          sb.from('notification_events').delete().eq('id', notifId).eq('target_user_id', myId).then(() => {}).catch(() => {});
-        }
+        sb.from('notification_events').delete().eq('id', notifId).eq('target_user_id', uid).then(() => {}).catch(() => {});
       } catch (_) {}
     }
 
-    cachedNotificationsList = cachedNotificationsList.filter(n => n.id !== notifId);
-
     setTimeout(() => {
-      if (itemEl) itemEl.remove();
-      updateNotificationBadges(cachedNotificationsList.length);
-
-      const bodyEl = document.getElementById('mg-notif-panel-body');
-      if (bodyEl && cachedNotificationsList.length === 0) {
-        renderNotificationsBody([]);
-      }
-    }, 250);
+      renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
+      showUndoToast('تم حذف الإشعار بنجاح');
+    }, 220);
   }
 
   async function clearAllNotifications() {
-    const myId = window.currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
-    const bodyEl = document.getElementById('mg-notif-panel-body');
+    const uid = getActiveUserId();
+    if (cachedNotificationsList.length === 0) return;
 
+    const bodyEl = document.getElementById('mg-notif-panel-body');
     if (bodyEl) {
-      const items = bodyEl.querySelectorAll('.mg-notif-item');
-      items.forEach(el => el.classList.add('removing'));
+      bodyEl.querySelectorAll('.mg-notif-item').forEach(el => el.classList.add('removing'));
     }
 
-    cachedNotificationsList.forEach(n => {
-      markNotifAsDismissed(n.id, myId);
-    });
+    const previousList = cachedNotificationsList.map(n => ({ ...n }));
+    lastDeletedNotification = { isBulk: true, items: previousList };
+
+    setClearedBeforeTimestamp(uid);
+    previousList.forEach(n => markNotifAsDismissed(n.id, uid));
+
+    if (window.Sound && typeof window.Sound.playWhoosh === 'function') {
+      try { window.Sound.playWhoosh(); } catch (_) {}
+    }
 
     const sb = window.sbClient || window.sb;
-    if (sb && myId) {
+    if (sb && uid && uid !== 'guest') {
       try {
-        sb.from('notification_events').delete().eq('target_user_id', myId).then(() => {}).catch(() => {});
+        sb.from('notification_events').delete().eq('target_user_id', uid).then(() => {}).catch(() => {});
       } catch (_) {}
     }
 
     cachedNotificationsList = [];
 
     setTimeout(() => {
-      renderNotificationsBody([]);
-    }, 250);
+      renderNotificationsBody([], currentNotifFilter);
+      showUndoToast('تم مسح جميع الإشعارات بنجاح');
+    }, 220);
+  }
+
+  function undoNotificationDismiss() {
+    hideUndoToast();
+    if (!lastDeletedNotification) return;
+
+    const uid = getActiveUserId();
+    if (lastDeletedNotification.isBulk) {
+      clearClearedBeforeTimestamp(uid);
+      (lastDeletedNotification.items || []).forEach(item => {
+        unmarkNotifAsDismissed(item.id, uid);
+        if (!cachedNotificationsList.some(n => String(n.id) === String(item.id))) {
+          cachedNotificationsList.push(item);
+        }
+      });
+      cachedNotificationsList.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (lastDeletedNotification.item) {
+      const item = lastDeletedNotification.item;
+      unmarkNotifAsDismissed(item.id, uid);
+      if (!cachedNotificationsList.some(n => String(n.id) === String(item.id))) {
+        const insertIdx = Math.min(lastDeletedNotification.index || 0, cachedNotificationsList.length);
+        cachedNotificationsList.splice(insertIdx, 0, item);
+      }
+    }
+
+    lastDeletedNotification = null;
+    renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
+
+    if (window.Sound && typeof window.Sound.playVictory === 'function') {
+      try { window.Sound.playVictory(); } catch (_) {}
+    }
+    if (typeof toast === 'function') toast('تمت استعادة الإشعار بنجاح');
+  }
+
+  function markAllNotificationsAsRead() {
+    const uid = getActiveUserId();
+    cachedNotificationsList.forEach(item => {
+      markNotifAsRead(item.id, uid);
+    });
+    renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
+    if (typeof toast === 'function') toast('تم تحديد كافة الإشعارات كمقروءة');
+  }
+
+  function handleNotificationCardClick(notifId, encodedDeepLink) {
+    const uid = getActiveUserId();
+    markNotifAsRead(notifId, uid);
+    updateNotificationBadges();
+
+    const card = document.getElementById(`notif-item-${notifId}`);
+    if (card) {
+      card.classList.remove('is-unread');
+      card.classList.add('is-read');
+      const dot = card.querySelector('.mg-notif-unread-dot');
+      if (dot) dot.remove();
+    }
+
+    const deepLink = decodeURIComponent(encodedDeepLink || '');
+    if (deepLink && deepLink.trim().length > 0) {
+      handleNotificationAction(notifId, encodedDeepLink);
+    }
   }
 
   function handleNotificationAction(notifId, encodedDeepLink) {
+    const uid = getActiveUserId();
+    markNotifAsRead(notifId, uid);
+
     closeNotificationsCenter();
     const deepLink = decodeURIComponent(encodedDeepLink || '');
 
     if (deepLink.includes('gift')) {
-      const item = cachedNotificationsList.find(n => n.id === notifId);
+      const item = cachedNotificationsList.find(n => String(n.id) === String(notifId));
       if (typeof window.showStudentGiftCelebration === 'function') {
         let giftId = notifId;
         let xp = 0;
@@ -929,22 +1245,45 @@
     }
   }
 
+  function showUndoToast(msg) {
+    const toastEl = document.getElementById('mg-notif-undo-toast');
+    const textEl = document.getElementById('mg-undo-text');
+    if (!toastEl) return;
+    if (textEl) textEl.textContent = msg || 'تم حذف الإشعار';
+    toastEl.style.display = 'flex';
+    toastEl.classList.remove('active');
+    void toastEl.offsetWidth;
+    toastEl.classList.add('active');
+
+    if (undoDismissTimer) clearTimeout(undoDismissTimer);
+    undoDismissTimer = setTimeout(() => {
+      hideUndoToast();
+    }, 4500);
+  }
+
+  function hideUndoToast() {
+    const toastEl = document.getElementById('mg-notif-undo-toast');
+    if (!toastEl) return;
+    toastEl.classList.remove('active');
+    setTimeout(() => { toastEl.style.display = 'none'; }, 200);
+  }
+
   function onNewNotificationReceived(ev) {
     const btn = document.getElementById('topbar-notif-btn');
     if (btn) {
       btn.classList.remove('has-new-alert');
-      void btn.offsetWidth; // trigger reflow
+      void btn.offsetWidth;
       btn.classList.add('has-new-alert');
     }
 
     if (ev && ev.id) {
-      const exists = cachedNotificationsList.some(n => n.id === ev.id);
+      const exists = cachedNotificationsList.some(n => String(n.id) === String(ev.id));
       if (!exists) {
         cachedNotificationsList.unshift(ev);
         if (isNotificationsCenterOpen) {
-          renderNotificationsBody(cachedNotificationsList);
+          renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
         } else {
-          updateNotificationBadges(cachedNotificationsList.length);
+          updateNotificationBadges();
         }
       }
     } else {
@@ -968,13 +1307,17 @@
     }
   });
 
-  // Export to window for global access
+  // Window Exports
   window.toggleNotificationsCenter = toggleNotificationsCenter;
   window.openNotificationsCenter = openNotificationsCenter;
   window.closeNotificationsCenter = closeNotificationsCenter;
   window.refreshNotificationsCenter = refreshNotificationsCenter;
   window.deleteSingleNotification = deleteSingleNotification;
   window.clearAllNotifications = clearAllNotifications;
+  window.undoNotificationDismiss = undoNotificationDismiss;
+  window.markAllNotificationsAsRead = markAllNotificationsAsRead;
+  window.setNotificationFilter = setNotificationFilter;
+  window.handleNotificationCardClick = handleNotificationCardClick;
   window.handleNotificationAction = handleNotificationAction;
   window.onNewNotificationReceived = onNewNotificationReceived;
 

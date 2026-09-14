@@ -66,6 +66,8 @@
     .unit-banner-info { flex: 1; text-align: right; }
     .unit-banner-badge {
       font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
+      white-space: nowrap !important;
+      word-break: keep-all !important;
       font-size: 1.6rem;
       min-width: 52px;
       width: auto;
@@ -97,9 +99,19 @@
     .unit-banner-title {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: 1.18rem;
+      font-size: clamp(1rem, 3.8vw, 1.18rem);
       color: var(--ink);
       margin: 0 0 4px;
+      line-height: 1.35;
+      unicode-bidi: isolate;
+      word-break: keep-all;
+    }
+    .unit-banner-title bdi,
+    .unit-banner-title .coptic-title-range {
+      white-space: nowrap !important;
+      display: inline-block;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
     }
     .unit-banner-sub {
       font-size: .85rem;
@@ -1862,6 +1874,18 @@
       transition: all .15s;
       flex-shrink: 0;
     }
+    .runner-footer .btn-check-answer.btn-full-action {
+      flex: 1;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 24px;
+      font-size: 1.15rem;
+    }
     .btn-check-answer:disabled {
       background: #D4C9B5;
       color: #8C8070;
@@ -2646,11 +2670,16 @@
     }
 
     .cell-coptic-val {
-      font-size: 1.7rem;
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
       color: #6F1737;
       font-weight: 800;
-      font-family: 'coptic_font', 'girges', 'Segoe UI Historic', 'Noto Sans Coptic', sans-serif;
+      font-family: var(--font-coptic), 'girges', 'Coptic Girges', sans-serif !important;
       line-height: 1.2;
+      direction: ltr !important;
+      unicode-bidi: isolate;
+      white-space: nowrap;
+      word-break: keep-all;
+      letter-spacing: 0.5px;
     }
 
     .cell-phonetic-val {

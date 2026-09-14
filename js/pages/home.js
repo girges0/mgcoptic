@@ -36,14 +36,15 @@
         }
         updateUserRankUI(rankNum);
 
-        const tagText = document.getElementById('home-curriculum-tag-text');
-        if (tagText) tagText.textContent = `تابع التعلّم • ${tierLevel}`;
-
         // 2. استعادة بيانات كارت المسار المحفوظة مسبقاً لمنع ظهور الديفولت
         const heroCacheRaw = localStorage.getItem('mg_coptic_cached_hero_card');
+        let curriculumLvlTag = null;
         if (heroCacheRaw) {
           try {
             const heroCache = JSON.parse(heroCacheRaw);
+            if (heroCache && heroCache.levelTag) {
+              curriculumLvlTag = heroCache.levelTag;
+            }
             if (heroCache && heroCache.version === 3 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
               if (heroCache.lessonTitle) {
                 const lTitleEl = document.getElementById('home-lesson-title');
@@ -80,6 +81,9 @@
             localStorage.removeItem('mg_coptic_cached_hero_card');
           }
         }
+
+        const tagText = document.getElementById('home-curriculum-tag-text');
+        if (tagText) tagText.textContent = `تابع التعلّم • ${curriculumLvlTag || 'المستوى 1'}`;
 
         // 3. هدف اليوم الفوري الحقيقي
         updateDailyGoalUI();
@@ -123,7 +127,7 @@
 
         const curriculum = await game.getCurriculum();
         const userProg = (await game.getProgress(userId)) || getUserProgressData();
-        const progressMap = await game.getLessonProgress(userId, (userProg?.points || 0) === 0);
+        const progressMap = await game.getLessonProgress(userId, false);
 
         const xp = userProg.points ?? userProg.total_points ?? 0;
         const streak = userProg.streak_days ?? 1;
@@ -251,6 +255,7 @@
           try {
             localStorage.setItem('mg_coptic_cached_hero_card', JSON.stringify({
               version: 3,
+              levelTag: lvlTag,
               lessonTitle: activeStep.title,
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),

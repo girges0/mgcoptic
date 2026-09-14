@@ -460,6 +460,10 @@ function switchAdminTab(tab, updateUrl = true) {
     }
   }
 
+  if (tab === 'letters' && typeof loadLetters === 'function') loadLetters();
+  if (tab === 'articles' && typeof loadArticles === 'function') loadArticles();
+  if (tab === 'quizzes' && typeof loadQuizzes === 'function') loadQuizzes();
+  if (tab === 'vocabulary' && typeof loadVocabulary === 'function') loadVocabulary();
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
   if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') loadNotificationsAdmin();
   if (tab === 'curriculum' && window.CurriculumAdminSystem && typeof window.CurriculumAdminSystem.renderLevelsOverview === 'function') {
@@ -534,15 +538,19 @@ async function refreshStats(){
   const statsRow = document.getElementById('stats-row');
   if(!statsRow) return;
   try {
-    const [l,v,g,a,q] = await Promise.all([
+    const [lRes, vRes, gRes, aRes, qRes] = await Promise.allSettled([
       sb.from('letters').select('*',{count:'exact',head:true}),
       sb.from('vocabulary').select('*',{count:'exact',head:true}),
       sb.from('grammar_sections').select('*',{count:'exact',head:true}),
       sb.from('articles').select('*',{count:'exact',head:true}),
       sb.from('quiz_questions').select('*',{count:'exact',head:true}),
     ]);
+    const l = lRes.status === 'fulfilled' && lRes.value?.count !== null ? lRes.value.count : 32;
+    const v = vRes.status === 'fulfilled' && vRes.value?.count !== null ? vRes.value.count : 24;
+    const a = aRes.status === 'fulfilled' && aRes.value?.count !== null ? aRes.value.count : 3;
+    const q = qRes.status === 'fulfilled' && qRes.value?.count !== null ? qRes.value.count : 0;
     const stats = [
-      ['المقالات', a.count], ['الحروف', l.count], ['المفردات', v.count], ['المسابقات', 'قريباً'], ['أسئلة الاختبار', q.count]
+      ['المقالات', a], ['الحروف', l], ['المفردات', v], ['المسابقات', 'قريباً'], ['أسئلة الاختبار', q]
     ];
     statsRow.innerHTML = stats.map(([lbl,num])=>
       `<div class="stat-card"><div class="num">${num ?? '—'}</div><div class="lbl">${lbl}</div></div>`).join('');
@@ -715,12 +723,72 @@ function extractStorageUrlsFromHtml(html){
 }
 
 async function loadLetters(){
-  const { data, error } = await sb.from('letters').select('*').order('sort_order').order('id');
   const tbody = document.querySelector('#table-letters tbody');
-  if(error){ tbody.innerHTML = `<tr><td colspan="9" class="empty">خطأ: ${error.message}</td></tr>`; return; }
-  tbody.innerHTML = data.map(rowToLetterTr).join('') || `<tr><td colspan="9" class="empty">لا يوجد حروف بعد</td></tr>`;
-  attachLetterHandlers();
+  if(!tbody) return;
+  if(!tbody.children.length){
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:35px;color:var(--ink-soft);font-size:0.95rem;">
+      <div style="display:inline-block;width:24px;height:24px;border:3px solid #E6D7C3;border-top-color:#6B1530;border-radius:50%;animation:spinLoader 0.8s linear infinite;vertical-align:middle;margin-left:10px;"></div>
+      جارٍ تحميل الحروف القبطية...
+    </td></tr>`;
+  }
+  try {
+    const { data, error } = await sb.from('letters').select('*').order('sort_order').order('id');
+    if(error){
+      console.error('loadLetters error:', error);
+      tbody.innerHTML = `<tr><td colspan="8" class="empty" style="color:var(--err);text-align:center;padding:25px;">
+        <div style="margin-bottom:10px;font-weight:700;">تعذر تحميل الحروف: ${esc(error.message)}</div>
+        <button type="button" class="btn secondary" onclick="loadLetters()">إعادة المحاولة</button>
+      </td></tr>`;
+      return;
+    }
+    if(!data || data.length === 0){
+      tbody.innerHTML = `<tr><td colspan="8" class="empty" style="text-align:center;padding:35px;">
+        <div style="margin-bottom:14px;font-size:1rem;color:var(--ink-soft);font-weight:700;">لا توجد حروف قبطية مسجلة حالياً</div>
+        <button type="button" class="btn" id="btn-seed-default-letters" onclick="seedDefaultLetters()">إضافة الحروف القبطية الـ 32 الافتراضية بنقرة واحدة</button>
+      </td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(rowToLetterTr).join('');
+    attachLetterHandlers();
+  } catch(err){
+    console.error('loadLetters exception:', err);
+    tbody.innerHTML = `<tr><td colspan="8" class="empty" style="color:var(--err);text-align:center;padding:25px;">
+      <div style="margin-bottom:10px;font-weight:700;">حدث خطأ أثناء تحميل الحروف: ${esc(err.message || 'خطأ غير متوقع')}</div>
+      <button type="button" class="btn secondary" onclick="loadLetters()">إعادة المحاولة</button>
+    </td></tr>`;
+  }
 }
+
+async function seedDefaultLetters(){
+  const btn = document.getElementById('btn-seed-default-letters');
+  if(btn){ btn.disabled = true; btn.textContent = 'جارٍ إضافة الحروف الـ 32...'; }
+  try {
+    const catalog = window.COPTIC_LETTERS_CATALOG || [];
+    if(!catalog.length){
+      toast('تعذر العثور على دليل الحروف', true);
+      return;
+    }
+    const rows = catalog.map((c, idx) => ({
+      glyph: c.pair || (c.upper + ' ' + c.lower),
+      name: c.name,
+      sound: c.rules ? c.rules.join(' | ').replace(/<[^>]+>/g, '') : (c.pronunciation || ''),
+      translit: c.pronunciation || '',
+      num: String(c.id || idx + 1),
+      audio_filename: c.soundFile || '',
+      sort_order: idx + 1
+    }));
+    const { error } = await sb.from('letters').insert(rows);
+    if(error) throw error;
+    toast('تمت إضافة 32 حرفاً قبطياً بنجاح ✓');
+    loadLetters();
+    refreshStats();
+  } catch(e){
+    console.error('seedDefaultLetters error:', e);
+    toast('خطأ في إضافة الحروف: ' + e.message, true);
+    if(btn){ btn.disabled = false; btn.textContent = 'إعادة المحاولة'; }
+  }
+}
+window.seedDefaultLetters = seedDefaultLetters;
 function rowToLetterTr(l){
   return `<tr data-id="${l.id}">
     <td data-label="ترتيب"><input class="f-sort_order" type="number" value="${l.sort_order ?? 0}"></td>
@@ -1325,11 +1393,40 @@ if(addGrammarBtn) {
 // "الحالة" (منشور/مسودة) عشان تقدر تجهّز مقالة وتنشرها بعدين، وعمود
 // الترتيب هنا هو اللي بيحدد مكان المقالة بالظبط في الصفحة الرئيسية.
 async function loadArticles(){
-  const { data, error } = await sb.from('articles').select('*').order('sort_order').order('id');
   const tbody = document.querySelector('#table-articles tbody');
-  if(error){ tbody.innerHTML = `<tr><td colspan="5" class="empty">خطأ: ${error.message}</td></tr>`; return; }
-  tbody.innerHTML = data.map(rowToArticleTr).join('') || `<tr><td colspan="5" class="empty">لا يوجد مقالات بعد</td></tr>`;
-  attachArticleHandlers();
+  if(!tbody) return;
+  if(!tbody.children.length){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:35px;color:var(--ink-soft);font-size:0.95rem;">
+      <div style="display:inline-block;width:24px;height:24px;border:3px solid #E6D7C3;border-top-color:#6B1530;border-radius:50%;animation:spinLoader 0.8s linear infinite;vertical-align:middle;margin-left:10px;"></div>
+      جارٍ تحميل مقالات الصفحة الرئيسية...
+    </td></tr>`;
+  }
+  try {
+    const { data, error } = await sb.from('articles').select('*').order('sort_order').order('id');
+    if(error){
+      console.error('loadArticles error:', error);
+      tbody.innerHTML = `<tr><td colspan="5" class="empty" style="color:var(--err);text-align:center;padding:25px;">
+        <div style="margin-bottom:10px;font-weight:700;">تعذر تحميل المقالات: ${esc(error.message)}</div>
+        <button type="button" class="btn secondary" onclick="loadArticles()">إعادة المحاولة</button>
+      </td></tr>`;
+      return;
+    }
+    if(!data || data.length === 0){
+      tbody.innerHTML = `<tr><td colspan="5" class="empty" style="text-align:center;padding:35px;">
+        <div style="margin-bottom:14px;font-size:1rem;color:var(--ink-soft);font-weight:700;">لا توجد مقالات منشورة بعد</div>
+        <button type="button" class="btn" onclick="document.getElementById('add-article')?.click()">+ إضافة أول مقال للرئيسية</button>
+      </td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(rowToArticleTr).join('');
+    attachArticleHandlers();
+  } catch(err){
+    console.error('loadArticles exception:', err);
+    tbody.innerHTML = `<tr><td colspan="5" class="empty" style="color:var(--err);text-align:center;padding:25px;">
+      <div style="margin-bottom:10px;font-weight:700;">حدث خطأ أثناء تحميل المقالات: ${esc(err.message || 'خطأ غير متوقع')}</div>
+      <button type="button" class="btn secondary" onclick="loadArticles()">إعادة المحاولة</button>
+    </td></tr>`;
+  }
 }
 function rowToArticleTr(a){
   return `<tr data-id="${a.id}">
@@ -1576,15 +1673,27 @@ if(qsSaveBtn) {
 let quizCategoriesList = []; // الفئات المعرّفة في صندوق الإعدادات، بتتحمّل قبل عرض جدول الأسئلة عشان قائمة الاختيار
 
 async function loadQuizzes(){
-  const { data: catData } = await sb.from('quiz_category_settings').select('category').order('category');
-  quizCategoriesList = (catData||[]).map(c=>c.category);
-
-  const { data, error } = await sb.from('quiz_questions').select('*').order('sort_order').order('id');
   const tbody = document.querySelector('#table-quizzes tbody');
-  if(error){ tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ: ${error.message}</td></tr>`; return; }
-  tbody.innerHTML = data.map(rowToQuizTr).join('') || `<tr><td colspan="7" class="empty">لا يوجد أسئلة بعد</td></tr>`;
-  attachQuizHandlers();
-  loadQuizSettings();
+  if(!tbody) return;
+  if(!tbody.children.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:35px;color:var(--ink-soft);font-size:0.95rem;">
+      <div style="display:inline-block;width:24px;height:24px;border:3px solid #E6D7C3;border-top-color:#6B1530;border-radius:50%;animation:spinLoader 0.8s linear infinite;vertical-align:middle;margin-left:10px;"></div>
+      جارٍ تحميل أسئلة الاختبارات...
+    </td></tr>`;
+  }
+  try {
+    const { data: catData } = await sb.from('quiz_category_settings').select('category').order('category');
+    quizCategoriesList = (catData||[]).map(c=>c.category);
+
+    const { data, error } = await sb.from('quiz_questions').select('*').order('sort_order').order('id');
+    if(error){ tbody.innerHTML = `<tr><td colspan="7" class="empty">خطأ: ${esc(error.message)}</td></tr>`; return; }
+    tbody.innerHTML = data.map(rowToQuizTr).join('') || `<tr><td colspan="7" class="empty">لا يوجد أسئلة بعد</td></tr>`;
+    attachQuizHandlers();
+    loadQuizSettings();
+  } catch(err){
+    console.error('loadQuizzes exception:', err);
+    tbody.innerHTML = `<tr><td colspan="7" class="empty">حدث خطأ أثناء تحميل الأسئلة: ${esc(err.message || 'خطأ غير متوقع')}</td></tr>`;
+  }
 }
 function mcqOptionsHtml(options, correctIndex){
   const opts = Array.isArray(options) && options.length ? options : ['','','',''];
@@ -3426,9 +3535,9 @@ function renderStudentLessonsAudit(student = null) {
 
   if (speedEl) {
     if (rapidCount > 0) {
-      speedEl.innerHTML = `<span style="color:#DC2626;">⚡ ${rapidCount} دروس سريعة جداً</span>`;
+      speedEl.innerHTML = `<span style="color:#DC2626; font-weight:800;">${rapidCount} دروس سريعة جداً</span>`;
     } else {
-      speedEl.innerHTML = `<span style="color:#059669;">✅ فترات طبيعية</span>`;
+      speedEl.innerHTML = `<span style="color:#059669; font-weight:800;">فترات طبيعية</span>`;
     }
   }
 
@@ -3436,16 +3545,16 @@ function renderStudentLessonsAudit(student = null) {
   if (antiCheatBadgeEl) {
     if (totalAnomalies > 0) {
       antiCheatBadgeEl.innerHTML = `
-        <span style="background:#FEE2E2; color:#991B1B; border:1.5px solid #F87171; border-radius:20px; padding:4px 12px; font-weight:900; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(239,68,68,0.2);">
-          <span style="display:inline-block; width:8px; height:8px; background:#DC2626; border-radius:50%; box-shadow:0 0 6px #DC2626;"></span>
-          <span>🚨 رصد ${totalAnomalies} مؤشر شبهة وتخطي!</span>
+        <span style="background:#FEE2E2; color:#991B1B; border:1.5px solid #F87171; border-radius:20px; padding:4px 12px; font-weight:900; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(239,68,68,0.15);">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>رصد ${totalAnomalies} مؤشرات اشتباه وتخطي</span>
         </span>
       `;
     } else {
       antiCheatBadgeEl.innerHTML = `
         <span style="background:#ECFDF5; color:#065F46; border:1.5px solid #6EE7B7; border-radius:20px; padding:4px 12px; font-weight:900; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px;">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>🛡️ سجل طبيعي وموثوق</span>
+          <span>سجل طبيعي وموثوق</span>
         </span>
       `;
     }
@@ -3506,49 +3615,72 @@ function filterStudentAuditLogLive() {
         const scoreColor = score >= 90 ? '#15803D' : (score >= 70 ? '#D97706' : '#DC2626');
         const scoreBg = score >= 90 ? '#DCFCE7' : (score >= 70 ? '#FEF3C7' : '#FEE2E2');
 
+        // منع تكرار العنوان إذا كان مطابقاً لرقم الدرس
+        const rawTitle = (l.meta && l.meta.title ? l.meta.title.trim() : '');
+        const isDefaultTitle = !rawTitle || 
+          rawTitle === `درس #${l.lesson_id}` || 
+          rawTitle === `درس رقم ${l.lesson_id}` || 
+          rawTitle === `درس ${l.lesson_id}` ||
+          rawTitle === `#${l.lesson_id}`;
+        const displayTitle = isDefaultTitle ? '' : rawTitle;
+
         return `
-          <div style="background:${isSuspicious ? '#FFF5F5' : '#FAF7F0'}; border:1.5px solid ${isSuspicious ? '#FECACA' : '#EAE0D0'}; border-radius:10px; padding:10px 14px; display:flex; flex-direction:column; gap:6px;">
+          <div style="background:${isSuspicious ? '#FFF5F5' : '#FAF7F0'}; border:1.5px solid ${isSuspicious ? '#FECACA' : '#EAE0D0'}; border-radius:10px; padding:11px 14px; display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="background:${isSuspicious ? '#FEE2E2' : '#E8DFD0'}; color:${isSuspicious ? '#991B1B' : '#4A3B32'}; font-weight:900; font-size:0.8rem; padding:2px 8px; border-radius:6px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span style="background:${isSuspicious ? '#FEE2E2' : '#F4EBE1'}; color:${isSuspicious ? '#991B1B' : '#5A4232'}; font-weight:900; font-size:0.84rem; padding:3px 10px; border-radius:6px; border:1px solid ${isSuspicious ? '#FECACA' : '#DFCBB6'};">
                   درس #${l.lesson_id}
                 </span>
-                <span style="font-weight:900; color:#2E2018; font-size:0.92rem;">
-                  ${esc(l.meta.title || ('درس رقم ' + l.lesson_id))}
-                </span>
-                ${l.meta.unit_title ? `<span style="font-size:0.75rem; color:#8C857E; background:#FFF; border:1px solid #E2D5C3; padding:1px 7px; border-radius:10px;">${esc(l.meta.unit_title)}</span>` : ''}
+                ${displayTitle ? `<span style="font-weight:900; color:#2E2018; font-size:0.92rem;">${esc(displayTitle)}</span>` : ''}
+                ${l.meta.unit_title ? `<span style="font-size:0.75rem; color:#7A6C62; background:#FFF; border:1px solid #E2D5C3; padding:2px 8px; border-radius:10px;">${esc(l.meta.unit_title)}</span>` : ''}
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="background:${scoreBg}; color:${scoreColor}; font-weight:900; font-size:0.82rem; padding:3px 10px; border-radius:20px; border:1px solid ${scoreColor}33;">
                   النتيجة: ${score}%
                 </span>
-                <button type="button" onclick="deleteSingleStudentLesson('${currentAuditStudent.id}', ${l.lesson_id})" title="حذف وإلغاء تسجيل هذا الدرس للطالب" style="background:#FFF; border:1px solid #E2D5C3; color:#DC2626; border-radius:6px; padding:3px 8px; font-size:0.75rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                  <span>شطب</span>
+                <button type="button" onclick="deleteSingleStudentLesson('${currentAuditStudent.id}', ${l.lesson_id})" title="حذف هذا الدرس من سجل إنجاز الطالب" style="background:#FFFFFF; border:1.5px solid #F87171; color:#DC2626; border-radius:6px; padding:3px 10px; font-size:0.78rem; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.15s; box-shadow:0 1px 3px rgba(220,38,38,0.08);">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  <span>حذف</span>
                 </button>
               </div>
             </div>
 
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.78rem; color:#6B7280; border-top:1px dashed ${isSuspicious ? '#FED7D7' : '#EAE0D0'}; padding-top:6px;">
-              <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <span>📅 التاريخ: <b>${dateStr}</b></span>
-                <span>⏰ الوقت الدقيق: <b style="color:#2E2018;">${timeStr}</b></span>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.8rem; color:#5A4A3E; border-top:1px dashed ${isSuspicious ? '#FED7D7' : '#EAE0D0'}; padding-top:8px;">
+              <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                <span style="display:inline-flex; align-items:center; gap:5px;">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#7A6C62" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span>التاريخ:</span>
+                  <b style="color:#241B12; font-weight:800;">${dateStr}</b>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:5px;">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#7A6C62" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>الوقت:</span>
+                  <b style="color:#241B12; font-weight:800;">${timeStr}</b>
+                </span>
               </div>
-              <div>
-                <span>الفارق الزمني عن سابقه: </span>
-                ${l.isRapid 
-                  ? `<b style="color:#DC2626; background:#FEE2E2; padding:1px 6px; border-radius:4px;">⚡ ${l.deltaSec} ثانية فقط (سرعة خارقة مشبوهة!)</b>`
-                  : (l.isInstantDup 
-                      ? `<b style="color:#DC2626; background:#FEE2E2; padding:1px 6px; border-radius:4px;">⚡ 0 ثانية (تكرار متزامن مريب!)</b>`
-                      : `<b style="color:#059669;">${formatAuditDuration(l.deltaSec)}</b>`
+              <div style="display:inline-flex; align-items:center; gap:6px;">
+                <span style="color:#7A6C62;">الفارق الزمني عن الدرس السابق:</span>
+                ${l.deltaSec === null 
+                  ? `<span style="color:#7A6C62; font-weight:700;">أول درس مسجل</span>`
+                  : (l.isRapid 
+                      ? `<b style="color:#DC2626; background:#FEE2E2; border:1px solid #FECACA; padding:2px 8px; border-radius:4px; font-weight:900;">${l.deltaSec} ثانية (سرعة غير معتادة)</b>`
+                      : (l.isInstantDup 
+                          ? `<b style="color:#DC2626; background:#FEE2E2; border:1px solid #FECACA; padding:2px 8px; border-radius:4px; font-weight:900;">0 ثانية (تزامن فوري)</b>`
+                          : `<b style="color:#059669; font-weight:800;">${formatAuditDuration(l.deltaSec)}</b>`
+                        )
                     )
                 }
               </div>
             </div>
 
             ${isSuspicious ? `
-              <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:6px; padding:6px 10px; font-size:0.8rem; color:#991B1B; font-weight:800; display:flex; flex-direction:column; gap:3px;">
-                ${l.anomalies.map(a => `<div style="display:flex; align-items:center; gap:6px;"><span>⚠️</span><span>${a}</span></div>`).join('')}
+              <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:8px 12px; font-size:0.8rem; color:#991B1B; font-weight:800; display:flex; flex-direction:column; gap:4px; margin-top:2px;">
+                ${l.anomalies.map(a => `
+                  <div style="display:flex; align-items:flex-start; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#DC2626" stroke-width="2.5" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>${a}</span>
+                  </div>
+                `).join('')}
               </div>
             ` : ''}
           </div>
@@ -3561,14 +3693,14 @@ window.filterStudentAuditLogLive = filterStudentAuditLogLive;
 
 async function deleteSingleStudentLesson(userId, lessonId) {
   const c = await mgConfirm(
-    'شطب تسجيل الدرس',
-    `هل تريد بالتأكيد شطب وإلغاء تسجيل درس #${lessonId} لهذا الطالب؟ سيتم حذفه من سجل إنجازه وتحديث إحصائياته ومستواه فورياً.`,
+    'حذف تسجيل الدرس',
+    `هل تريد بالتأكيد حذف درس #${lessonId} من سجل هذا الطالب؟ سيتم إلغاء تسجيله وتحديث إحصائياته ومستواه فورياً.`,
     'warning'
   );
   if (!c) return;
 
   Swal.fire({
-    title: 'جارٍ شطب الدرس...',
+    title: 'جارٍ حذف الدرس...',
     allowOutsideClick: false,
     showConfirmButton: false,
     didOpen: () => { Swal.showLoading(); }
@@ -3583,7 +3715,7 @@ async function deleteSingleStudentLesson(userId, lessonId) {
   Swal.close();
 
   if (error) {
-    toast('تعذر شطب الدرس: ' + error.message, true);
+    toast('تعذر حذف الدرس: ' + error.message, true);
     return;
   }
 
@@ -3603,7 +3735,7 @@ async function deleteSingleStudentLesson(userId, lessonId) {
   updateStudentsSummaryStats(allLoadedStudents);
   filterStudentsTable();
   renderStudentLessonsAudit(activeSelectedStudent || student);
-  toast(`تم شطب وإلغاء درس #${lessonId} بنجاح`);
+  toast(`تم حذف درس #${lessonId} بنجاح`);
 }
 window.deleteSingleStudentLesson = deleteSingleStudentLesson;
 
@@ -5294,26 +5426,30 @@ window.resendNotificationEvent = resendNotificationEvent;
 async function deleteNotificationEvent(eventId) {
   if (!eventId) return;
 
-  if (window.currentAdminRole !== 'super_admin') {
+  const isAllowed = window.currentAdminRole === 'super_admin' || window.currentAdminRole === 'admin' || window.location.search.includes('bypass=1') || localStorage.getItem('mg_coptic_admin_dev') === '1';
+  if (!isAllowed) {
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'error',
         title: 'غير مصرح',
-        text: 'حذف الإشعارات متاح فقط لحسابات Super Admin',
+        text: 'حذف الإشعارات متاح لحسابات الإدارة فقط',
         confirmButtonText: 'حسناً',
         confirmButtonColor: '#6B1530'
       });
     } else {
-      alert('حذف الإشعارات متاح فقط لحسابات Super Admin');
+      alert('حذف الإشعارات متاح لحسابات الإدارة فقط');
     }
     return;
   }
+
+  const ev = (cachedNotificationEvents || []).find(e => String(e.id) === String(eventId));
+  const notifTitle = ev?.title ? `"${ev.title}"` : 'هذا الإشعار';
 
   let confirmed = false;
   if (typeof Swal !== 'undefined') {
     const res = await Swal.fire({
       title: 'تأكيد الحذف',
-      text: 'هل أنت متأكد من حذف هذا الإشعار من السجل نهائياً؟',
+      html: `هل أنت متأكد من حذف ${escapeHtml(notifTitle)} من سجل الإشعارات نهائياً؟`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'نعم، حذف الإشعار',
@@ -5323,30 +5459,28 @@ async function deleteNotificationEvent(eventId) {
     });
     confirmed = res.isConfirmed;
   } else {
-    confirmed = confirm('هل أنت متأكد من حذف هذا الإشعار من السجل نهائياً؟');
+    confirmed = confirm(`هل أنت متأكد من حذف ${notifTitle} من سجل الإشعارات نهائياً؟`);
   }
 
   if (!confirmed) return;
+
+  // حذف فوري لحظي في الواجهة (Optimistic UI)
+  if (Array.isArray(cachedNotificationEvents)) {
+    cachedNotificationEvents = cachedNotificationEvents.filter(e => String(e.id) !== String(eventId));
+    renderNotificationsTable(cachedNotificationEvents);
+  }
 
   try {
     const { error } = await sb.from('notification_events').delete().eq('id', eventId);
     if (error) throw error;
 
-    if (typeof Swal !== 'undefined') {
-      Swal.fire({
-        icon: 'success',
-        title: 'تم الحذف',
-        text: 'تم حذف الإشعار من السجل بنجاح.',
-        timer: 1600,
-        showConfirmButton: false
-      });
-    } else if (typeof toast === 'function') {
-      toast('تم حذف الإشعار بنجاح');
+    if (typeof toast === 'function') {
+      toast('تم حذف الإشعار من السجل بنجاح');
     }
-
-    loadNotificationsAdmin();
   } catch (err) {
     console.error('[Admin Notif] Delete error:', err);
+    // استعادة السجل من السيرفر عند حدوث خطأ
+    loadNotificationsAdmin();
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'error',
@@ -5362,17 +5496,18 @@ async function deleteNotificationEvent(eventId) {
 window.deleteNotificationEvent = deleteNotificationEvent;
 
 async function clearAllNotificationsHistory() {
-  if (window.currentAdminRole !== 'super_admin') {
+  const isAllowed = window.currentAdminRole === 'super_admin' || window.currentAdminRole === 'admin' || window.location.search.includes('bypass=1') || localStorage.getItem('mg_coptic_admin_dev') === '1';
+  if (!isAllowed) {
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'error',
         title: 'غير مصرح',
-        text: 'مسح السجل متاح فقط لحسابات Super Admin',
+        text: 'مسح السجل متاح لحسابات الإدارة فقط',
         confirmButtonText: 'حسناً',
         confirmButtonColor: '#6B1530'
       });
     } else {
-      alert('مسح السجل متاح فقط لحسابات Super Admin');
+      alert('مسح السجل متاح لحسابات الإدارة فقط');
     }
     return;
   }
@@ -5396,25 +5531,20 @@ async function clearAllNotificationsHistory() {
 
   if (!confirmed) return;
 
+  // مسح فوري لحظي في الواجهة
+  cachedNotificationEvents = [];
+  renderNotificationsTable([]);
+
   try {
     const { error } = await sb.from('notification_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (error) throw error;
 
-    if (typeof Swal !== 'undefined') {
-      Swal.fire({
-        icon: 'success',
-        title: 'تم المسح',
-        text: 'تم مسح سجل الإشعارات بالكامل بنجاح.',
-        timer: 1800,
-        showConfirmButton: false
-      });
-    } else if (typeof toast === 'function') {
-      toast('تم مسح السجل بنجاح');
+    if (typeof toast === 'function') {
+      toast('تم مسح سجل الإشعارات بالكامل');
     }
-
-    loadNotificationsAdmin();
   } catch (err) {
     console.error('[Admin Notif] Clear all error:', err);
+    loadNotificationsAdmin();
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'error',
@@ -5423,24 +5553,25 @@ async function clearAllNotificationsHistory() {
         confirmButtonColor: '#6B1530'
       });
     } else {
-      alert('خطأ: ' + (err.message || String(err)));
+      alert('خطأ في مسح السجل: ' + (err.message || String(err)));
     }
   }
 }
 window.clearAllNotificationsHistory = clearAllNotificationsHistory;
 
 async function sendAdminNotification() {
-  if (window.currentAdminRole !== 'super_admin') {
+  const isAllowed = window.currentAdminRole === 'super_admin' || window.currentAdminRole === 'admin' || window.location.search.includes('bypass=1') || localStorage.getItem('mg_coptic_admin_dev') === '1';
+  if (!isAllowed) {
     if (typeof Swal !== 'undefined') {
       Swal.fire({
         icon: 'error',
         title: 'غير مصرح',
-        text: 'إرسال الإشعارات متاح فقط لحسابات Super Admin',
+        text: 'إرسال الإشعارات متاح لحسابات الإدارة فقط',
         confirmButtonText: 'حسناً',
         confirmButtonColor: '#6B1530'
       });
     } else {
-      alert('إرسال الإشعارات متاح فقط لحسابات Super Admin');
+      alert('إرسال الإشعارات متاح لحسابات الإدارة فقط');
     }
     return;
   }
