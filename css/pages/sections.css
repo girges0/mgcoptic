@@ -2151,19 +2151,6 @@
       display: inline-block;
     }
 
-    .footer-spark {
-      color: #C5A059;
-      font-size: 0.82rem;
-      line-height: 1;
-      opacity: 0.85;
-      animation: pulseSpark 3s ease-in-out infinite;
-    }
-
-    @keyframes pulseSpark {
-      0%, 100% { opacity: 0.45; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.15); }
-    }
-
     @media (max-width: 1024px) {
       .site-footer {
         padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
