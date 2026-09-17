@@ -4277,6 +4277,7 @@ const CurriculumAdminSystem = (function(){
       const wordCopticVal = (ov && ov.word && ov.word.coptic) || '';
       const wordPhoneticVal = (ov && ov.word && ov.word.phoneticAr) || '';
       const wordMeaningVal = (ov && ov.word && ov.word.meaning) || '';
+      const wordSoundVal = (ov && ov.word && (ov.word.soundFile || ov.word.audioFile)) || '';
 
       const cDisp = document.getElementById('challenge-input-coptic');
       if (cDisp && !cDisp.value.trim() && pairVal) cDisp.value = pairVal;
@@ -4410,17 +4411,33 @@ const CurriculumAdminSystem = (function(){
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
               <div class="curriculum-field">
                 <label style="font-weight:700;">الكلمة بالقبطية *</label>
-                <input type="text" id="tv-word-coptic" class="coptic-input" value="${escapeHtml(wordCopticVal)}" placeholder="مثال: ⲃⲉⲣⲧ" dir="ltr" style="font-size:1.3rem; font-weight:800;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                <input type="text" id="tv-word-coptic" class="coptic-input" value="${escapeHtml(wordCopticVal)}" placeholder="مثال: ⲃⲱ" dir="ltr" style="font-size:1.3rem; font-weight:800;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
               </div>
 
               <div class="curriculum-field">
-                <label style="font-weight:700;">القبطي المعرب (النطق) *</label>
-                <input type="text" id="tv-word-phonetic" value="${escapeHtml(wordPhoneticVal)}" placeholder="مثال: فيرت" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                <label style="font-weight:700;">القبطي المعرب (النطق بالتشكيل) *</label>
+                <input type="text" id="tv-word-phonetic" value="${escapeHtml(wordPhoneticVal)}" placeholder="مثال: ڤُـو (مشكل بدقة)" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
               </div>
 
               <div class="curriculum-field">
                 <label style="font-weight:700;">المعنى بالعربية *</label>
-                <input type="text" id="tv-word-meaning" value="${escapeHtml(wordMeaningVal)}" placeholder="مثال: وردة" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                <input type="text" id="tv-word-meaning" value="${escapeHtml(wordMeaningVal)}" placeholder="مثال: شجرة" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+              </div>
+            </div>
+
+            <div style="margin-top:12px; background:#fff; border:1px solid #E0D4C3; border-radius:10px; padding:10px 14px;">
+              <div class="curriculum-field">
+                <label style="font-weight:700; display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                  <span style="color:#6F1737;">🎙️ نطق الكلمة الصوتي (ملف صوت MP3 أو رابط صوتي):</span>
+                  <span style="font-size:0.75rem; color:#856404; font-weight:600;">إذا تُرك فارغاً سينطق النظام النص المعرب المشكل تلقائياً</span>
+                </label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="tv-word-sound" dir="ltr" value="${escapeHtml(wordSoundVal)}" placeholder="مثال: assets/sounds/2vo.mp3 أو رابط mp3 خارجي" style="flex:1;" oninput="CurriculumAdminSystem.updateOverviewLivePreview()">
+                  <button type="button" class="curriculum-btn curriculum-btn-secondary" style="padding:5px 14px; display:inline-flex; align-items:center; gap:6px;" onclick="CurriculumAdminSystem.playAudioSnippet(document.getElementById('tv-word-sound').value, document.getElementById('tv-word-phonetic').value, this)" title="تشغيل وتجربة نطق الكلمة">
+                    <span style="font-size:0.9rem;">▶</span>
+                    <span style="font-weight:700; font-size:0.8rem;">تجربة نطق الكلمة</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -5108,6 +5125,7 @@ const CurriculumAdminSystem = (function(){
       const wordCoptic = document.getElementById('tv-word-coptic')?.value.trim() || '';
       const wordPhonetic = document.getElementById('tv-word-phonetic')?.value.trim() || '';
       const wordMeaning = document.getElementById('tv-word-meaning')?.value.trim() || '';
+      const wordSound = (document.getElementById('tv-word-sound')?.value || '').trim();
 
       const colors = {
         titleColor: document.getElementById('tv-col-title')?.value || '',
@@ -5147,7 +5165,7 @@ const CurriculumAdminSystem = (function(){
           coptic: wordCoptic,
           phoneticAr: wordPhonetic,
           meaning: wordMeaning,
-          soundFile: soundFile
+          soundFile: wordSound
         },
         colors: colors
       };
@@ -7028,6 +7046,7 @@ const CurriculumAdminSystem = (function(){
     const wordCoptic = document.getElementById('tv-word-coptic')?.value.trim() || '';
     const wordPhonetic = document.getElementById('tv-word-phonetic')?.value.trim() || '';
     const wordMeaning = document.getElementById('tv-word-meaning')?.value.trim() || '';
+    const wordSound = (document.getElementById('tv-word-sound')?.value || '').trim();
 
     const colors = {
       titleColor: document.getElementById('tv-col-title')?.value || '',
@@ -7072,7 +7091,7 @@ const CurriculumAdminSystem = (function(){
           coptic: wordCoptic,
           phoneticAr: wordPhonetic,
           meaning: wordMeaning,
-          soundFile: soundFile
+          soundFile: wordSound
         },
         colors: colors
       }

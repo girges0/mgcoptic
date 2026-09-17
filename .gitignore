@@ -20,6 +20,7 @@ supabase/.temp/
 
 # Excluded by user request
 level-1-curriculum-32-letters-final.md
+*.pdf
 مراجع/
 مراجع
 *مراجع*

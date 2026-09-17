@@ -121,10 +121,10 @@
           // التحقق من صلاحية وتحديث خيارات التمارين
           try {
             const curVer = localStorage.getItem('mg_coptic_curriculum_v_tag');
-            if (curVer !== 'v3_challenging_options') {
+            if (curVer !== 'v7_strict_2_or_4_options') {
               localStorage.removeItem('mg_coptic_curriculum_v2');
               localStorage.removeItem('mg_coptic_curriculum_v1');
-              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v3_challenging_options');
+              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v7_strict_2_or_4_options');
             }
           } catch(e) {}
           const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');
@@ -805,16 +805,16 @@
 
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = parseInt(foundLesson.practice_xp, 10) || 20;
+          lessonCopy.xp_reward = lessonCopy.challenges.length;
           const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = parseInt(foundLesson.challenge_xp, 10) || 30;
+          lessonCopy.xp_reward = lessonCopy.challenges.length;
           lessonCopy.challenges = realChallenges;
         } else {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = parseInt(foundLesson.xp_reward, 10) || 20;
+          lessonCopy.xp_reward = lessonCopy.challenges.length;
           lessonCopy.challenges = realChallenges;
         }
 
@@ -2356,7 +2356,7 @@
         const accuracy = Math.round((correctAnswersCount / Math.max(1, currentChallenges.length)) * 100);
         const uid = getAuthUserId();
         // ضمان تطابق الـ XP المكتسب بنسبة 100% مع الرقم المعروض والمضبوط من الداشبورد
-        const fullConfiguredXp = selectedLesson ? (parseInt(selectedLesson.xp_reward, 10) || 20) : 20;
+        const fullConfiguredXp = selectedLesson ? (Array.isArray(selectedLesson.challenges) ? selectedLesson.challenges.length : (parseInt(selectedLesson.xp_reward, 10) || 1)) : 1;
         const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;
 
         const vXp = document.getElementById('v-xp-gained');
