@@ -145,7 +145,7 @@
       rules: [
         'حرف متحرك للكسر يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف <strong>(I)</strong> في كلمة (sit) أو (pin).'
       ],
-      word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إِيَـالْ', meaning: 'مراية' },
+      word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إِيَـالْ', meaning: 'مراية', soundFile: 'assets/sounds/10ial.mp3' },
       soundFile: 'audio_coptic/10yota.mp3'
     },
 
@@ -160,7 +160,7 @@
       rules: [
         'يُنطق دائماً حرف كاف <strong>"ك"</strong> في جميع المواضع والكلمات دون استثناء.'
       ],
-      word: { coptic: 'ⲕⲁϣ', phoneticAr: 'كَـاشْ', meaning: 'قلم' },
+      word: { coptic: 'ⲕⲁϣ', phoneticAr: 'كَـاشْ', meaning: 'قلم', soundFile: 'assets/sounds/11kash.mp3' },
       soundFile: 'audio_coptic/11kapa.mp3'
     },
     {
@@ -173,7 +173,7 @@
       rules: [
         'يُنطق دائماً حرف لام <strong>"ل"</strong> مثل حرف <strong>(L)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لَاڤُـو', meaning: 'أسد' },
+      word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لَاڤُـو', meaning: 'أسد', soundFile: 'assets/sounds/12lavo.mp3' },
       soundFile: 'audio_coptic/12lavla.mp3'
     },
     {
@@ -186,7 +186,7 @@
       rules: [
         'يُنطق دائماً حرف ميم <strong>"م"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲙⲁⲛϩⲟⲛ', phoneticAr: 'مَانْهُـونْ', meaning: 'برتقال' },
+      word: { coptic: 'ⲙⲁⲛϩⲟⲛ', phoneticAr: 'مَانْهُـونْ', meaning: 'برتقال', soundFile: 'assets/sounds/13manhon.mp3' },
       soundFile: 'audio_coptic/13mi.mp3'
     },
     {
@@ -199,7 +199,7 @@
       rules: [
         'يُنطق دائماً حرف نون <strong>"ن"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲉⲛ̀ⲕⲟⲧ', phoneticAr: 'إِنْكُـوتْ', meaning: 'ينام' },
+      word: { coptic: 'ⲉⲛ̀ⲕⲟⲧ', phoneticAr: 'إِنْكُـوتْ', meaning: 'ينام', soundFile: 'assets/sounds/14enkot.mp3' },
       soundFile: 'audio_coptic/14ni.mp3'
     },
     {
@@ -212,7 +212,7 @@
       rules: [
         'حرف مركب يُنطق كاف وسين معاً <strong>(كـ + س = X)</strong> في مقطع صوتي واحد.'
       ],
-      word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إِكْسُـويْ', meaning: 'مسطرة' },
+      word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إِكْسُـويْ', meaning: 'مسطرة', soundFile: 'assets/sounds/15ksooy.mp3' },
       soundFile: 'audio_coptic/15axsy.mp3'
     },
 
@@ -227,7 +227,7 @@
       rules: [
         'حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف <strong>(O)</strong> في كلمة (not) أو (hot).'
       ],
-      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أُوؤْم', meaning: 'يأكل' },
+      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أُوؤْم', meaning: 'يأكل', soundFile: 'assets/sounds/16o'om.mp3' },
       soundFile: 'audio_coptic/16oo.mp3'
     },
     {
@@ -240,7 +240,7 @@
       rules: [
         'يُنطق باء شديدة تخرج بحبس الهواء ثم إطلاقه بقوة مثل حرف <strong>(P)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بَايُـوتْ', meaning: 'أبي' },
+      word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بَايُـوتْ', meaning: 'أبي', soundFile: 'assets/sounds/17bayot.mp3' },
       soundFile: 'audio_coptic/17pee.mp3'
     },
     {
@@ -253,7 +253,7 @@
       rules: [
         'يُنطق دائماً حرف راء <strong>"ر"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲣⲏ', phoneticAr: 'رِي', meaning: 'شمس' },
+      word: { coptic: 'ⲣⲏ', phoneticAr: 'رِي', meaning: 'شمس', soundFile: 'assets/sounds/18ree.mp3' },
       soundFile: 'audio_coptic/18roo.mp3'
     },
     {
@@ -279,7 +279,7 @@
       rules: [
         'يُنطق دائماً حرف تاء <strong>"ت"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـافْ', meaning: 'أمي' },
+      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـاڤْ', meaning: 'أمي', soundFile: 'assets/sounds/20tamav.mp3' },
       soundFile: 'audio_coptic/20tav.mp3'
     },
 
