@@ -550,7 +550,7 @@
             const currentHearts = Number(prog.hearts ?? 5);
             if (currentHearts < 1) {
               if (game.sound) game.sound.playWrong();
-              showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+              showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
               handleOutOfHearts();
               return;
             }
@@ -798,7 +798,7 @@
         const currentHearts = Number(prog.hearts ?? 5);
         if (currentHearts < 1) {
           if (game.sound) game.sound.playWrong();
-          showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+          showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
           handleOutOfHearts();
           return;
         }
@@ -945,7 +945,7 @@
               lessonModal.style.display = 'none';
               currentRunnerHearts = 0;
               if (game.sound) game.sound.playWrong();
-              showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+              showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
               handleOutOfHearts();
               return;
             }
@@ -984,7 +984,7 @@
               closeChestModal();
 
               if (claimed) {
-                showFloatingXpBadge('+30 XP ⭐  +1 ❤️');
+                showFloatingXpBadge('+30 XP  +1 قلب');
                 if (game.sound && typeof game.sound.playChestReward === 'function') {
                   game.sound.playChestReward();
                 } else if (game.sound && typeof game.sound.playVictory === 'function') {
@@ -1093,7 +1093,7 @@
         if (currentRunnerHearts < 1) {
           closeRunner();
           if (game.sound) game.sound.playWrong();
-          showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+          showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
           handleOutOfHearts();
           return;
         }
@@ -2738,12 +2738,11 @@
             <h2 class="ooh-title">نفدت محاولاتك!</h2>
             <p class="ooh-subtitle">تحتاج إلى قلوب لمواصلة التمارين في هذا المستوى</p>
 
-            <div class="ooh-hearts-track" title="0 من 5 قلوب">
-              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f43f5e" class="ooh-heart-pulse-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+            <div class="ooh-hearts-track" title="${hearts} من 5 قلوب">
+              ${Array.from({length: 5}, (_, i) => i < hearts
+                ? `<span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f43f5e" class="ooh-heart-pulse-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>`
+                : `<span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>`
+              ).join('')}
             </div>
 
             <div class="ooh-recharge-card">

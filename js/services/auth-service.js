@@ -2344,7 +2344,7 @@
               ` : ''}
               ${hearts > 0 ? `
                 <div style="background:linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 100%); border:2px solid #F43F5E; border-radius:14px; padding:10px 18px; display:inline-flex; align-items:center; gap:10px; box-shadow:0 4px 14px rgba(244,63,94,0.25);">
-                  <span style="font-size:1.6rem;">❤️</span>
+                  <span style="display:inline-flex;align-items:center;"><svg viewBox="0 0 24 24" width="28" height="28" fill="#F43F5E"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
                   <div style="text-align:right;">
                     <div style="font-size:0.75rem; color:#9F1239; font-weight:800;">قلوب إضافية</div>
                     <div style="font-size:1.25rem; color:#881337; font-weight:900;">+${hearts} قلوب</div>
