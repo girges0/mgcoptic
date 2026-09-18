@@ -26,3 +26,6 @@ level-1-curriculum-32-letters-final.md
 *مراجع*
 files/
 review-coptic-words.html
+scripts/local-sync-server.mjs
+database/approved-coptic-words.json
+www/database/approved-coptic-words.json

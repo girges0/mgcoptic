@@ -6060,7 +6060,40 @@ const CurriculumAdminSystem = (function(){
     previewState = {
       active: true,
       lessonId: lessonId,
-      challenges: JSON.parse(JSON.stringify(targetLesson.challenges)),
+      challenges: (function(){
+        let arr = JSON.parse(JSON.stringify(targetLesson.challenges || []));
+        try {
+          const firstCh = arr[0];
+          if (firstCh && (firstCh.type === 'text_view' || firstCh.type === 'letter_overview') && typeof window.findLetterCatalogItem === 'function') {
+            const item = window.findLetterCatalogItem(firstCh);
+            if (item && item.word && item.word.coptic) {
+              const letterCh = {
+                ...firstCh,
+                id: `${firstCh.id || 'intro'}_letter`,
+                type: 'letter_overview',
+                overview_item: item,
+                question: `نبذة عن حرف ${item.name} (${item.pair || item.upper})`,
+                audio_url: item.soundFile || firstCh.audio_url,
+                audio_text: item.name,
+                xp_reward: 0,
+                xp: 0
+              };
+              const wordCh = {
+                ...firstCh,
+                id: `${firstCh.id || 'intro'}_word`,
+                type: 'word_overview',
+                overview_item: item,
+                question: `نبذة عن الكلمة التطبيقية على حرف ${item.name}`,
+                audio_url: item.word.soundFile || item.word.audioFile || '',
+                audio_text: item.word.phoneticAr || item.word.meaning,
+                xp_reward: 0
+              };
+              arr = [letterCh, wordCh, ...arr.slice(1)];
+            }
+          }
+        } catch(e){}
+        return arr;
+      })(),
       currentIndex: 0,
       score: 0,
       correctCount: 0,
@@ -6253,7 +6286,19 @@ const CurriculumAdminSystem = (function(){
 
     let challengeContent = '';
 
-    if(challenge.type === 'text_view'){
+    if(challenge.type === 'letter_overview'){
+      if(typeof window.renderLetterOnlyCardHtml === 'function'){
+        challengeContent = window.renderLetterOnlyCardHtml(challenge);
+      } else if(typeof window.renderLetterOverviewCardHtml === 'function'){
+        challengeContent = window.renderLetterOverviewCardHtml(challenge);
+      }
+    } else if(challenge.type === 'word_overview'){
+      if(typeof window.renderWordOnlyCardHtml === 'function'){
+        challengeContent = window.renderWordOnlyCardHtml(challenge);
+      } else if(typeof window.renderLetterOverviewCardHtml === 'function'){
+        challengeContent = window.renderLetterOverviewCardHtml(challenge);
+      }
+    } else if(challenge.type === 'text_view'){
       if(typeof window.renderLetterOverviewCardHtml === 'function'){
         challengeContent = window.renderLetterOverviewCardHtml(challenge);
       } else {
@@ -6518,7 +6563,7 @@ const CurriculumAdminSystem = (function(){
     let canCheck = false;
     if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'true_false' || challenge.type === 'image_select'){
       canCheck = previewState.selectedAnswerIndex !== null;
-    } else if(challenge.type === 'image_view' || challenge.type === 'text_view'){
+    } else if(challenge.type === 'image_view' || challenge.type === 'text_view' || challenge.type === 'letter_overview' || challenge.type === 'word_overview'){
       canCheck = true;
     } else if(challenge.type === 'listen_write'){
       canCheck = Boolean((previewState.listenWriteValue || '').trim());
@@ -6564,7 +6609,11 @@ const CurriculumAdminSystem = (function(){
         </div>
 
         <div>
-          ${(challenge.type === 'text_view' || challenge.type === 'image_view') ? `
+          ${(challenge.type === 'letter_overview') ? `
+            <button type="button" class="btn-check-answer btn-continue-ok ready" onclick="CurriculumAdminSystem.nextPreviewChallenge()">التالي: نبذة عن الكلمة ${SVG.arrowLeft}</button>
+          ` : (challenge.type === 'word_overview') ? `
+            <button type="button" class="btn-check-answer btn-continue-ok ready" onclick="CurriculumAdminSystem.nextPreviewChallenge()">ابدأ التمارين ${SVG.arrowLeft}</button>
+          ` : (challenge.type === 'text_view' || challenge.type === 'image_view') ? `
             <button type="button" class="btn-check-answer btn-continue-ok ready" onclick="CurriculumAdminSystem.nextPreviewChallenge()">فهمت ومتابعة ${SVG.arrowLeft}</button>
           ` : (
             isMatchingType ? (
@@ -6776,7 +6825,9 @@ const CurriculumAdminSystem = (function(){
     const challenge = previewState.challenges[previewState.currentIndex];
     let isCorrect = false;
 
-    if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'image_select'){
+    if(challenge.type === 'image_view' || challenge.type === 'text_view' || challenge.type === 'letter_overview' || challenge.type === 'word_overview'){
+      isCorrect = true;
+    } else if(challenge.type === 'select' || challenge.type === 'listen' || challenge.type === 'read_select' || challenge.type === 'image_select'){
       if(previewState.selectedAnswerIndex === null) return;
       const selectedOpt = challenge.options[previewState.selectedAnswerIndex];
       isCorrect = selectedOpt ? !!selectedOpt.is_correct : false;

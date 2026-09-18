@@ -227,7 +227,7 @@
       rules: [
         'حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف <strong>(O)</strong> في كلمة (not) أو (hot).'
       ],
-      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أُوؤْم', meaning: 'يأكل', soundFile: 'assets/sounds/16o'om.mp3' },
+      word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أُوؤْم', meaning: 'يأكل', soundFile: "assets/sounds/16o'om.mp3" },
       soundFile: 'audio_coptic/16oo.mp3'
     },
     {
@@ -266,7 +266,7 @@
       rules: [
         'يُنطق دائماً حرف سين <strong>"س"</strong> في جميع المواضع.'
       ],
-      word: { coptic: 'ⲡⲁⲥⲟⲛ', phoneticAr: 'بَاصُـونْ', meaning: 'أخي' },
+      word: { coptic: 'ⲡⲁⲥⲟⲛ', phoneticAr: 'بَاصُـونْ', meaning: 'أخي', soundFile: 'assets/sounds/19pason.mp3'},
       soundFile: 'audio_coptic/19sema.mp3'
     },
     {
@@ -279,7 +279,7 @@
       rules: [
         'يُنطق دائماً حرف تاء <strong>"ت"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـاڤْ', meaning: 'أمي' },
+      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـاڤْ', meaning: 'أمي', soundFile: 'assets/sounds/20tamav.mp3'},
       soundFile: 'audio_coptic/20tav.mp3'
     },
 
@@ -296,7 +296,7 @@
         'يُنطق <strong>(و ممدودة)</strong>: إذا سبقه حرف Ⲟ (أو قصيرة) في المقطع (ⲞⲨ).',
         'يُنطق <strong>(ي)</strong>: في باقي الحالات إذا لم يسبقه (Ⲁ أو Ⲉ أو Ⲟ).'
       ],
-      word: { coptic: 'ⲩⲥⲓⲥ', phoneticAr: 'إِيسِـيسْ', meaning: 'مطر' },
+      word: { coptic: 'ⲩⲥⲓⲥ', phoneticAr: 'إِيسِـيسْ', meaning: 'مطر', soundFile: 'assets/sounds/21usis.mp3'},
       soundFile: 'audio_coptic/21epselon.mp3'
     },
     {
@@ -490,6 +490,176 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  // 1. توليد HTML المخصص لشاشة نبذة الحرف فقط
+  function renderLetterOnlyCardHtml(ch) {
+    let item = (ch && ch.overview_item) || null;
+    if (!item) {
+      if (ch && ch.overview_data && typeof ch.overview_data === 'object' && (ch.overview_data.name || ch.overview_data.word)) {
+        item = ch.overview_data;
+      } else if (ch && ch.explanation && typeof ch.explanation === 'string' && ch.explanation.trim().startsWith('{')) {
+        try {
+          const parsed = JSON.parse(ch.explanation);
+          if (parsed && (parsed.name || parsed.word)) item = parsed;
+        } catch (e) {}
+      }
+    }
+    if (!item) item = findLetterCatalogItem(ch);
+    if (!item) return renderLetterOverviewCardHtml(ch);
+
+    const pair = item.pair || `${item.upper || ''} ${item.lower || ''}`.trim();
+    const badgeClass = item.badgeClass || (item.isVowel ? 'badge-vowel' : 'badge-consonant');
+    const typeBadge = item.letterTypeBadge || (item.isVowel ? 'حرف متحرك' : 'حرف ساكن');
+    const hasMulti = item.hasMultiple || (item.multipleCountText ? true : false);
+    const multiText = item.multipleCountText || '';
+    const pron = item.pronunciation || '';
+    const soundFile = item.soundFile || ch.audio_url || '';
+    const rulesTitle = item.rulesTitle || (hasMulti ? 'حالات وقواعد نطق الحرف بالتفصيل:' : 'قاعدة نطق الحرف:');
+    const rules = Array.isArray(item.rules) ? item.rules : (item.rules ? [item.rules] : []);
+
+    const colors = item.colors || {};
+    const titleStyle = colors.titleColor ? `style="color:${colors.titleColor} !important;"` : '';
+
+    return `
+      <div class="overview-step-pill-wrapper">
+        <span class="overview-step-pill step-letter">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          الخطوة ١ من ٢ • استكشاف الحرف
+        </span>
+      </div>
+
+      <div class="question-heading overview-screen-title" ${titleStyle}>
+        نبذة عن حرف ${escapeHtml(item.name)} (${escapeHtml(pair)})
+      </div>
+
+      <div class="coptic-overview-wrap single-view">
+        <div class="letter-overview-card hero-letter-card">
+          <div class="letter-overview-header">
+            <div class="letter-header-top-row">
+              <div class="letter-glyph-box">
+                <span class="letter-glyph-val">${escapeHtml(pair)}</span>
+              </div>
+
+              <div class="letter-meta-col">
+                <div class="letter-title-row">
+                  <span class="letter-name-title">حرف ${escapeHtml(item.name)}</span>
+                </div>
+                <div class="letter-badges-row">
+                  <span class="coptic-badge ${badgeClass}">${escapeHtml(typeBadge)}</span>
+                  ${hasMulti && multiText ? `<span class="coptic-badge badge-multi">${escapeHtml(multiText)}</span>` : ''}
+                </div>
+                <div class="letter-pron-preview">
+                  <span class="letter-pron-label">النطق بالعربي:</span>
+                  <span class="letter-pron-val">« ${escapeHtml(pron)} »</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="letter-audio-action">
+              <button type="button" class="btn-listen-letter hero-audio-btn" aria-label="استمع لنطق الحرف" title="استمع لنطق الحرف" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('${soundFile}', '${item.name}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('${soundFile}', '${item.name}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio('${soundFile}', '${item.name}'); }">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                <span>استمع لنطق الحرف (${escapeHtml(item.name)})</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="letter-rules-box">
+            <div class="letter-rules-title">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              <span>${escapeHtml(rulesTitle)}</span>
+            </div>
+            <ol class="letter-rules-list ${rules.length <= 1 ? 'single-rule' : ''}">
+              ${rules.map(r => `<li>${r}</li>`).join('')}
+            </ol>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 2. توليد HTML المخصص لشاشة نبذة الكلمة التطبيقية فقط
+  function renderWordOnlyCardHtml(ch) {
+    let item = (ch && ch.overview_item) || null;
+    if (!item) {
+      if (ch && ch.overview_data && typeof ch.overview_data === 'object' && (ch.overview_data.name || ch.overview_data.word)) {
+        item = ch.overview_data;
+      } else if (ch && ch.explanation && typeof ch.explanation === 'string' && ch.explanation.trim().startsWith('{')) {
+        try {
+          const parsed = JSON.parse(ch.explanation);
+          if (parsed && (parsed.name || parsed.word)) item = parsed;
+        } catch (e) {}
+      }
+    }
+    if (!item) item = findLetterCatalogItem(ch);
+    if (!item || !item.word) return renderLetterOverviewCardHtml(ch);
+
+    const pair = item.pair || `${item.upper || ''} ${item.lower || ''}`.trim();
+    const wordObj = item.word || {};
+    const copticWord = wordObj.coptic || '';
+    const phoneticAr = wordObj.phoneticAr || '';
+    const meaning = wordObj.meaning || '';
+    const soundFile = wordObj.soundFile || wordObj.audioFile || '';
+
+    const colors = item.colors || {};
+    const titleStyle = colors.wordTitleColor ? `style="color:${colors.wordTitleColor} !important;"` : '';
+
+    return `
+      <div class="overview-step-pill-wrapper">
+        <span class="overview-step-pill step-word">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          الخطوة ٢ من ٢ • الكلمة التطبيقية
+        </span>
+      </div>
+
+      <div class="question-heading overview-screen-title" ${titleStyle}>
+        نبذة عن الكلمة التطبيقية على حرف ${escapeHtml(item.name)}
+      </div>
+
+      <div class="coptic-overview-wrap single-view">
+        <div class="word-overview-card hero-word-card">
+          <div class="word-card-hero-banner">
+            <div class="word-card-letter-tag">
+              <span class="tag-label">الحرف المدروس:</span>
+              <span class="tag-letter">${escapeHtml(pair)} (${escapeHtml(item.name)})</span>
+            </div>
+            <div class="word-card-coptic-huge">${escapeHtml(copticWord)}</div>
+          </div>
+
+          <div class="word-card-details-row">
+            <div class="word-detail-block">
+              <span class="word-detail-label">القبطي المعرب (النطق)</span>
+              <span class="word-detail-val phonetic">« ${escapeHtml(phoneticAr)} »</span>
+            </div>
+            <div class="word-detail-divider"></div>
+            <div class="word-detail-block">
+              <span class="word-detail-label">المعنى بالعربية</span>
+              <span class="word-detail-val meaning">${escapeHtml(meaning)}</span>
+            </div>
+          </div>
+
+          <div class="word-audio-action-row">
+            <button type="button" class="btn-listen-word-hero" aria-label="استمع لنطق الكلمة" title="استمع لنطق الكلمة" onclick="const _wAudio = '${soundFile}'; if(window.playChallengeAudio){ window.playChallengeAudio(_wAudio, '${phoneticAr}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet(_wAudio, '${phoneticAr}', this); } else if(window.Sound && window.Sound.playChallengeAudio){ window.Sound.playChallengeAudio(_wAudio, '${phoneticAr}'); }">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+              <span>استمع لنطق الكلمة (${escapeHtml(phoneticAr)})</span>
+            </button>
+          </div>
+
+          <div class="overview-exercise-hint">
+            <span class="hint-icon">💡</span>
+            <span class="hint-text">تلميح: احفظ شكل الكلمة ونطقها جيداً، ستتدرب على قراءتها وتكوين حروفها في التمارين التالية!</span>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   // توليد HTML الكامل للنبذة الشاملة
@@ -780,6 +950,8 @@
     window.COPTIC_LETTERS_CATALOG = CATALOG;
     window.findLetterCatalogItem = findLetterCatalogItem;
     window.renderLetterOverviewCardHtml = renderLetterOverviewCardHtml;
+    window.renderLetterOnlyCardHtml = renderLetterOnlyCardHtml;
+    window.renderWordOnlyCardHtml = renderWordOnlyCardHtml;
     window.formatPronunciationOption = formatPronunciationOption;
     window.extractWordMeaningAndPhonetic = extractWordMeaningAndPhonetic;
   }
@@ -789,6 +961,8 @@
       COPTIC_LETTERS_CATALOG: CATALOG,
       findLetterCatalogItem,
       renderLetterOverviewCardHtml,
+      renderLetterOnlyCardHtml,
+      renderWordOnlyCardHtml,
       formatPronunciationOption,
       extractWordMeaningAndPhonetic
     };

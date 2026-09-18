@@ -7998,6 +7998,221 @@
       transform: translateY(-1px);
     }
 
+    /* ============================================================
+       أنماط الشاشات المستقلة للنبذة (Letter & Word Dedicated Overviews)
+       ============================================================ */
+    .overview-step-pill-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 4px auto 10px;
+      width: 100%;
+    }
+
+    .overview-step-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      animation: pulseStepPill 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseStepPill {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .overview-step-pill.step-letter {
+      background: linear-gradient(135deg, #6F1737 0%, #8E1B3A 100%);
+      color: #FFF6E5;
+      border: 1px solid #D6A856;
+    }
+
+    .overview-step-pill.step-word {
+      background: linear-gradient(135deg, #0F4C81 0%, #1976D2 100%);
+      color: #FFFFFF;
+      border: 1px solid #82B1FF;
+    }
+
+    .overview-screen-title {
+      font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
+      font-weight: 900 !important;
+      color: #3A2315 !important;
+      margin-bottom: 12px !important;
+    }
+
+    .coptic-overview-wrap.single-view {
+      max-width: 580px;
+      margin: 8px auto 20px;
+      width: 100%;
+      padding-bottom: 20px;
+    }
+
+    .hero-letter-card {
+      border: 2px solid #DCC9AF !important;
+      box-shadow: 0 8px 26px rgba(111, 23, 55, 0.08) !important;
+    }
+
+    .hero-audio-btn {
+      padding: 13px 20px !important;
+      font-size: 1rem !important;
+      border-radius: 16px !important;
+    }
+
+    .hero-word-card {
+      border: 2px solid #DCC9AF !important;
+      box-shadow: 0 8px 26px rgba(15, 76, 129, 0.08) !important;
+      padding: 22px 20px !important;
+    }
+
+    .word-card-hero-banner {
+      background: linear-gradient(135deg, #FFF9EE 0%, #F5ECE0 100%);
+      border: 2px dashed #D6C3A5;
+      border-radius: 18px;
+      padding: 18px 14px;
+      text-align: center;
+      margin-bottom: 16px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .word-card-letter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 1px solid #DAC8B1;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #6F1737;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .word-card-letter-tag .tag-label {
+      color: #8D725C;
+      font-weight: 700;
+    }
+
+    .word-card-coptic-huge {
+      font-size: clamp(2.4rem, 8.5vw, 3.5rem);
+      color: #6F1737;
+      font-weight: 900;
+      font-family: var(--font-coptic), 'girges', 'Coptic Girges', 'Segoe UI Historic', sans-serif !important;
+      line-height: 1.15;
+      direction: ltr !important;
+      unicode-bidi: isolate;
+      letter-spacing: 1px;
+      margin: 4px 0 2px;
+      text-shadow: 0 2px 4px rgba(111, 23, 55, 0.08);
+    }
+
+    .word-card-details-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 1.5px solid #EBDDC9;
+      border-radius: 16px;
+      padding: 14px 16px;
+      gap: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+    }
+
+    .word-detail-block {
+      flex: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .word-detail-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #8C6D52;
+    }
+
+    .word-detail-val.phonetic {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #9C1F45;
+    }
+
+    .word-detail-val.meaning {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #2D1B12;
+    }
+
+    .word-detail-divider {
+      width: 1.5px;
+      background: #E8DAC6;
+      margin: 4px 0;
+    }
+
+    .word-audio-action-row {
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    .btn-listen-word-hero {
+      width: 100%;
+      background: linear-gradient(135deg, #0F4C81 0%, #1976D2 100%);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 16px;
+      padding: 13px 20px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(15, 76, 129, 0.28);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .btn-listen-word-hero:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(15, 76, 129, 0.38);
+      background: linear-gradient(135deg, #135894 0%, #1E88E5 100%);
+    }
+
+    .btn-listen-word-hero:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 8px rgba(15, 76, 129, 0.22);
+    }
+
+    .overview-exercise-hint {
+      background: #FFFDF7;
+      border: 1.5px solid #F0DEB8;
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #5D4327;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .overview-exercise-hint .hint-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
     @media (max-width: 480px) {
       .coptic-overview-wrap {
         margin: 6px auto 20px;
@@ -8036,6 +8251,16 @@
       }
       .cell-meaning-val {
         font-size: 0.96rem;
+      }
+      .word-card-details-row {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+      .word-detail-divider {
+        width: 100%;
+        height: 1.5px;
+        margin: 0;
       }
     }
 
@@ -10580,6 +10805,29 @@
           } catch(_) {}
         }
       });
+
+      // تحميل مسبق فوري للكلمات المعتمدة (1 إلى 21) لضمان أعلى سرعة استجابة (0ms)
+      const approvedWordAudios = [
+        'assets/sounds/1alom.mp3', 'assets/sounds/2vo.mp3', 'assets/sounds/3ghala.mp3',
+        'assets/sounds/4zoksa.mp3', 'assets/sounds/5ergoh.mp3', 'assets/sounds/6soohinrpmy.mp3',
+        'assets/sounds/7zowy.mp3', 'assets/sounds/8ei.mp3', 'assets/sounds/9samyo.mp3',
+        'assets/sounds/10ial.mp3', 'assets/sounds/11kash.mp3', 'assets/sounds/12lavo.mp3',
+        'assets/sounds/13manhon.mp3', 'assets/sounds/14enkot.mp3', 'assets/sounds/15ksooy.mp3',
+        'assets/sounds/16o\'om.mp3', 'assets/sounds/17bayot.mp3', 'assets/sounds/18ree.mp3',
+        'assets/sounds/19pason.mp3', 'assets/sounds/20tamav.mp3', 'assets/sounds/21usis.mp3'
+      ];
+      approvedWordAudios.forEach(src => {
+        if (!_letterAudioCache.has(src)) {
+          try {
+            const a = new Audio();
+            a.preload = 'auto';
+            a.src = src;
+            _letterAudioCache.set(src, a);
+            const fn = src.split('/').pop();
+            _letterAudioCache.set(fn, a);
+          } catch(_) {}
+        }
+      });
     }
 
     // تفعيل فوري لكاش الصوت والمحرك مع أول لمسة أو نقرة للمستخدم
@@ -12012,6 +12260,8 @@
       let correctAnswersCount = 0;
       let sessionXpEarned = 0;
       let runnerState = 'answering';
+      let currentRunnerHearts = 5;
+      let isOutOfHeartsModalOpen = false;
       let currentSelection = null;
       let wordTilesBuilt = [];
       let selectedMatchLeft = null;
@@ -12533,6 +12783,17 @@
               return;
             }
 
+            // يلزم وجود قلب واحد على الأقل لدخول أي تمرين
+            const uid = getAuthUserId();
+            const prog = (game.getProgressLocal ? game.getProgressLocal(uid) : null) || {};
+            const currentHearts = Number(prog.hearts ?? 5);
+            if (currentHearts < 1) {
+              if (game.sound) game.sound.playWrong();
+              showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+              handleOutOfHearts();
+              return;
+            }
+
             openLessonDetails(lessonId);
           });
         });
@@ -12770,6 +13031,17 @@
       }
 
       window.openLessonDetails = function(lessonId) {
+        // التحقق من توفر قلب واحد على الأقل قبل فتح تفاصيل التمرين
+        const uid = getAuthUserId();
+        const prog = (game.getProgressLocal ? game.getProgressLocal(uid) : null) || {};
+        const currentHearts = Number(prog.hearts ?? 5);
+        if (currentHearts < 1) {
+          if (game.sound) game.sound.playWrong();
+          showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+          handleOutOfHearts();
+          return;
+        }
+
         let foundLesson = null;
         let foundUnit = null;
 
@@ -12796,16 +13068,16 @@
 
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
           const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         } else {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         }
 
@@ -12859,7 +13131,7 @@
             modalDesc.textContent = foundUnit.description ? `تدريبات وتمارين على: ${foundUnit.description}` : 'أجب عن الأسئلة بدقة لكسب النقاط وفتح المستوى التالي.';
           }
         }
-        if (modalXp) modalXp.textContent = isAlreadyDone ? '+0 XP (إعادة مراجعة)' : `+${lessonCopy.xp_reward} XP`;
+        if (modalXp) modalXp.textContent = `+${lessonCopy.xp_reward} XP`;
         const count = lessonCopy.challenges.length;
         if (modalCount) {
           modalCount.textContent = count === 0 ? 'لا توجد تمارين بعد' : (count === 1 ? 'تمرين واحد' : (count === 2 ? 'تمرينان' : (count >= 3 && count <= 10 ? `${count} تمارين` : `${count} تمرين`)));
@@ -12887,11 +13159,33 @@
           lessonModal.onclick = (e) => { if (e.target === lessonModal) lessonModal.style.display = 'none'; };
         }
 
+                const tbHeartsBadge = document.getElementById('topbar-hearts-badge');
+        if (tbHeartsBadge) {
+          tbHeartsBadge.style.cursor = 'pointer';
+          tbHeartsBadge.onclick = () => { handleOutOfHearts(); };
+        }
+
         if (btnModalStart && lessonModal) {
-          btnModalStart.onclick = () => {
+          btnModalStart.onclick = async () => {
             if (!selectedLesson || !selectedLesson.challenges || selectedLesson.challenges.length === 0) {
               if (game.sound) game.sound.playWrong();
               showToast('هذا الدرس قيد الإعداد ولا يحتوي على تمارين حالياً.');
+              return;
+            }
+            const uid = getAuthUserId();
+            let prog = {};
+            if (game.getProgress) {
+              prog = await game.getProgress(uid);
+            } else if (game.getProgressLocal) {
+              prog = game.getProgressLocal(uid) || {};
+            }
+            const hearts = Number(prog.hearts ?? 5);
+            if (hearts < 1) {
+              lessonModal.style.display = 'none';
+              currentRunnerHearts = 0;
+              if (game.sound) game.sound.playWrong();
+              showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+              handleOutOfHearts();
               return;
             }
             lessonModal.style.display = 'none';
@@ -12967,10 +13261,45 @@
         if (btnCheckAction) {
           btnCheckAction.onclick = async () => {
             if (btnCheckAction.disabled) return;
+            const currentCh = currentChallenges[currentChallengeIndex];
+
+            // للشاشات التمهيدية (نبذة الحرف ونبذة الكلمة)، انتقال فوري ومريح للدارس بنقرة واحدة
+            if (currentCh && (currentCh.type === 'letter_overview' || currentCh.type === 'word_overview')) {
+              if (currentRunnerHearts <= 0) {
+                handleOutOfHearts();
+                return;
+              }
+              btnCheckAction.disabled = true;
+              correctAnswersCount++;
+              if (currentCh.type === 'letter_overview' && !isReplayingLesson) {
+                const uid = getAuthUserId();
+                const chId = currentCh.id || `ch_letter_${selectedLesson?.id}`;
+                if (!sessionAnsweredChallenges.has(chId)) {
+                  sessionAnsweredChallenges.add(chId);
+                  sessionXpEarned += 1;
+                  if (game.updateProgress) await game.updateProgress(uid, { addPoints: 1 });
+                  showFloatingXpBadge('+1 XP ⭐');
+                  if (window.addTodayEarnedXP) window.addTodayEarnedXP(1);
+                }
+              }
+              currentChallengeIndex++;
+              loadChallenge(currentChallengeIndex);
+              return;
+            }
+
+            if (currentRunnerHearts < 1 || runnerState === 'out_of_hearts') {
+              handleOutOfHearts();
+              return;
+            }
+
             if (runnerState === 'answering') {
               btnCheckAction.disabled = true;
               await evaluateAnswer();
             } else if (runnerState === 'checked') {
+              if (currentRunnerHearts <= 0) {
+                handleOutOfHearts();
+                return;
+              }
               btnCheckAction.disabled = true;
               currentChallengeIndex++;
               loadChallenge(currentChallengeIndex);
@@ -12990,11 +13319,60 @@
         }
       });
 
-      function startLessonRunner(lesson) {
+      async function startLessonRunner(lesson) {
+        const uid = getAuthUserId();
+        let prog = {};
+        if (game.getProgress) {
+          prog = await game.getProgress(uid);
+        } else if (game.getProgressLocal) {
+          prog = game.getProgressLocal(uid) || {};
+        }
+        currentRunnerHearts = Number(prog.hearts ?? 5);
+
+        if (currentRunnerHearts < 1) {
+          closeRunner();
+          if (game.sound) game.sound.playWrong();
+          showToast('تحتاج إلى قلب واحد على الأقل (❤️ 1+) لبدء التمارين!');
+          handleOutOfHearts();
+          return;
+        }
+
         currentChallenges = [...(lesson.challenges || [])];
         if (currentChallenges.length === 0) {
           mgAlert('لا توجد تمارين', 'لا توجد تمارين مسجلة لهذا الدرس حالياً.', 'info');
           return;
+        }
+
+        // تحضير تمارين المستوى الأول لتبدأ بنبذة الحرف أولاً ثم نبذة الكلمة ثم باقي التمارين
+        try {
+          const firstCh = currentChallenges[0];
+          if (firstCh && (firstCh.type === 'text_view' || firstCh.type === 'letter_overview') && typeof window.findLetterCatalogItem === 'function') {
+            const item = window.findLetterCatalogItem(firstCh);
+            if (item && item.word && item.word.coptic) {
+              const letterCh = {
+                ...firstCh,
+                id: `${firstCh.id || 'intro'}_letter`,
+                type: 'letter_overview',
+                overview_item: item,
+                question: `نبذة عن حرف ${item.name} (${item.pair || item.upper})`,
+                audio_url: item.soundFile || firstCh.audio_url,
+                audio_text: item.name, xp_reward: 0, xp: 0
+              };
+              const wordCh = {
+                ...firstCh,
+                id: `${firstCh.id || 'intro'}_word`,
+                type: 'word_overview',
+                overview_item: item,
+                question: `نبذة عن الكلمة التطبيقية على حرف ${item.name}`,
+                audio_url: item.word.soundFile || item.word.audioFile || '',
+                audio_text: item.word.phoneticAr || item.word.meaning,
+                xp_reward: 0
+              };
+              currentChallenges = [letterCh, wordCh, ...currentChallenges.slice(1)];
+            }
+          }
+        } catch (e) {
+          console.warn('Error expanding letter/word overview:', e);
         }
 
         // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً لمنع تكرار المكافآت
@@ -13012,19 +13390,8 @@
         const currentProg = (activeLessonProgress && activeLessonProgress[String(lesson.id)]) || {};
         isReplayingLesson = (currentProg.status === 'completed');
 
-        // استعادة قائمة التمارين المُجاب عليها مسبقاً لهذا الدرس (لمنع تكرار XP عند الخروج والعودة)
+        // تهيئة قائمة التمارين المُجاب عليها للجلسة الحالية
         sessionAnsweredChallenges = new Set();
-        if (!isReplayingLesson) {
-          try {
-            const uid = getAuthUserId();
-            const answeredKey = `mg_coptic_answered_${uid || 'guest'}_${lesson.id}`;
-            const savedAnswered = localStorage.getItem(answeredKey);
-            if (savedAnswered) {
-              const arr = JSON.parse(savedAnswered);
-              if (Array.isArray(arr)) arr.forEach(id => sessionAnsweredChallenges.add(id));
-            }
-          } catch(e) {}
-        }
 
         initialChallengesCount = currentChallenges.length;
         currentChallengeIndex = 0;
@@ -13065,6 +13432,10 @@
           try { window.activeRunnerTracer.destroy(); } catch (_) {}
           window.activeRunnerTracer = null;
         }
+        if (currentRunnerHearts < 1) {
+          handleOutOfHearts();
+          return;
+        }
         if (index >= currentChallenges.length) {
           finishLessonSuccess();
           return;
@@ -13089,9 +13460,15 @@
         const ch = currentChallenges[index];
         renderChallengeContent(ch);
 
-        if (ch && (ch.type === 'image_view' || ch.type === 'text_view') && btnCheck) {
+        if (ch && (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') && btnCheck) {
           btnCheck.disabled = false;
-          btnCheck.textContent = 'فهمت ومتابعة';
+          if (ch.type === 'letter_overview') {
+            btnCheck.textContent = 'التالي: نبذة عن الكلمة ←';
+          } else if (ch.type === 'word_overview') {
+            btnCheck.textContent = 'ابدأ التمارين ←';
+          } else {
+            btnCheck.textContent = 'فهمت ومتابعة';
+          }
           btnCheck.classList.add('ready');
         }
       }
@@ -13101,7 +13478,19 @@
         if (!runnerBody) return;
         let html = '';
 
-        if (ch.type === 'image_view') {
+        if (ch.type === 'letter_overview') {
+          if (typeof window.renderLetterOnlyCardHtml === 'function') {
+            html += window.renderLetterOnlyCardHtml(ch);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
+            html += window.renderLetterOverviewCardHtml(ch);
+          }
+        } else if (ch.type === 'word_overview') {
+          if (typeof window.renderWordOnlyCardHtml === 'function') {
+            html += window.renderWordOnlyCardHtml(ch);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
+            html += window.renderLetterOverviewCardHtml(ch);
+          }
+        } else if (ch.type === 'image_view') {
           html += `
             <div class="question-heading">${escapeHtml(ch.question || 'انظر إلى الصورة وتأملها')}</div>
             ${ch.image_url ? `
@@ -14067,7 +14456,7 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'image_view' || ch.type === 'text_view') {
+        if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const selectedOpt = ch.options[currentSelection];
@@ -14149,27 +14538,24 @@
 
         if (isCorrect) {
           correctAnswersCount++;
-          // كل تمرين في الدرس بـ 1 XP
-          const challengeXp = 1;
+          // تمارين النبذة 0 XP، وكل التمارين الأخرى 1 XP
+          const isOverviewCh = (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'text_view' || ch.type === 'image_view');
+          const challengeXp = isOverviewCh ? 0 : 1;
 
           // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو التمرين المُجاب عليه مسبقاً
           const challengeUniqueId = ch.id || `ch_${currentChallengeIndex}_${(ch.question || ch.coptic_display || '').substring(0,20)}`;
           const alreadyAnsweredThisChallenge = sessionAnsweredChallenges.has(challengeUniqueId);
 
-          if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
+          if (!alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
             if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           }
 
-          // تسجيل التمرين كمُجاب عليه وحفظه محلياً
-          if (!isReplayingLesson && !alreadyAnsweredThisChallenge) {
+          // تسجيل التمرين كمُجاب عليه في الجلسة
+          if (!alreadyAnsweredThisChallenge) {
             sessionAnsweredChallenges.add(challengeUniqueId);
-            try {
-              const answeredKey = `mg_coptic_answered_${uid || 'guest'}_${selectedLesson.id}`;
-              localStorage.setItem(answeredKey, JSON.stringify([...sessionAnsweredChallenges]));
-            } catch(e) {}
           }
 
           if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
@@ -14178,7 +14564,7 @@
             feedbackBox.className = 'feedback-msg correct';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
-              feedbackText.textContent = isReplayingLesson ? 'إجابة صحيحة وممتازة! (وضع المراجعة)' : 'إجابة صحيحة وممتازة! (+1 XP)';
+              feedbackText.textContent = (challengeXp > 0) ? 'إجابة صحيحة وممتازة! (+1 XP)' : 'إجابة صحيحة وممتازة!';
             }
             feedbackBox.style.visibility = 'visible';
           }
@@ -14191,13 +14577,14 @@
         } else {
           currentChallenges.push(ch);
 
-          let currentHearts = 5;
           if (game.loseHeart) {
             const prog = await game.loseHeart(uid);
-            currentHearts = prog.hearts;
+            currentRunnerHearts = Number(prog.hearts ?? 0);
+          } else {
+            currentRunnerHearts = Math.max(0, currentRunnerHearts - 1);
           }
           const runnerHearts = document.getElementById('runner-hearts-count');
-          if (runnerHearts) runnerHearts.textContent = currentHearts;
+          if (runnerHearts) runnerHearts.textContent = currentRunnerHearts;
           if (game.sound) game.sound.playWrong();
 
           if (feedbackBox) {
@@ -14223,19 +14610,39 @@
             feedbackBox.style.visibility = 'visible';
           }
 
-          if (btnCheck) {
-            btnCheck.textContent = 'متابعة';
-            btnCheck.className = 'btn-check-answer btn-continue-err';
-            btnCheck.disabled = false;
-          }
-
-          if (currentHearts <= 0) {
-            setTimeout(() => handleOutOfHearts(), 1100);
+          if (currentRunnerHearts <= 0) {
+            runnerState = 'out_of_hearts';
+            if (btnCheck) {
+              btnCheck.textContent = 'نفدت المحاولات 💔';
+              btnCheck.className = 'btn-check-answer btn-continue-err';
+              btnCheck.disabled = true;
+              btnCheck.style.pointerEvents = 'none';
+              btnCheck.onclick = (e) => {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                handleOutOfHearts();
+              };
+            }
+            setTimeout(() => handleOutOfHearts(), 350);
+          } else {
+            if (btnCheck) {
+              btnCheck.textContent = 'متابعة';
+              btnCheck.className = 'btn-check-answer btn-continue-err';
+              btnCheck.disabled = false;
+              btnCheck.style.pointerEvents = 'auto';
+            }
           }
         }
       }
 
       async function handleOutOfHearts() {
+        if (isOutOfHeartsModalOpen) return;
+        isOutOfHeartsModalOpen = true;
+
+        const runnerOverlay = document.getElementById('challenge-runner-overlay');
+        if (runnerOverlay) {
+          runnerOverlay.style.pointerEvents = 'none';
+        }
+
         const uid = getAuthUserId();
         let currentXP = 0;
         let hearts = 0;
@@ -14249,89 +14656,465 @@
         const fullCost = heartsNeeded * costPerHeart;
 
         // حساب وقت شحن القلب التلقائي القادم
-        let timeRemainingText = '';
+        let timeRemainingFormatted = '';
         if (game.getTimeUntilNextHeart) {
           const timeInfo = game.getTimeUntilNextHeart(uid);
-          if (timeInfo && !timeInfo.isFull) {
-            timeRemainingText = `❤️ القلب القادم يتشحن تلقائياً خلال: <b>${timeInfo.formatted}</b>`;
+          if (timeInfo && !timeInfo.isFull && timeInfo.formatted) {
+            timeRemainingFormatted = timeInfo.formatted;
           }
         }
-        if (!timeRemainingText) {
-          timeRemainingText = 'تتشحن القلوب تلقائياً حتى 5 قلوب كل 24 ساعة (قلب كل ٤.٨ ساعات)';
+        if (!timeRemainingFormatted) {
+          timeRemainingFormatted = 'خلال دقائق معدودة';
         }
 
-        if (currentXP >= costPerHeart) {
-          const canFull = currentXP >= fullCost;
-          const htmlContent = `
-            <div style="text-align:center;line-height:1.7;padding:6px 0;">
-              <p style="font-size:1.15rem;font-weight:800;color:var(--madder);margin-bottom:6px;">نفدت محاولاتك! 💔</p>
-              <p style="font-size:.92rem;color:var(--ink-soft);margin-bottom:8px;">سعر القلب الواحد = <b>${costPerHeart} XP</b> ⭐ (رصيدك: <b>${currentXP} XP</b>)</p>
-              <p style="font-size:.82rem;color:#0077CC;background:#F0F9FF;padding:6px 12px;border-radius:10px;margin-bottom:14px;display:inline-block;">⏱️ ${timeRemainingText}</p>
-              <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
-                <button type="button" id="swal-buy-1-heart" style="padding:12px 18px;font-size:.96rem;background:linear-gradient(135deg,#00A3FF,#0077CC);border:none;border-radius:14px;color:#fff;cursor:pointer;font-weight:800;box-shadow:0 4px 14px rgba(0,163,255,0.35);">
-                  شراء 1 قلب (+1 ❤️) بـ ${costPerHeart} XP
+        const canBuySingle = currentXP >= costPerHeart;
+        const canBuyFull = currentXP >= fullCost;
+
+        const htmlContent = `
+          <div class="ooh-modal-wrap">
+            <style>
+              .swal2-popup.mg-ooh-popup {
+                font-family: 'Tajawal', 'Cairo', 'Segoe UI', sans-serif !important;
+                direction: rtl !important;
+                border-radius: 28px !important;
+                background: #FFFFFF !important;
+                padding: 24px 20px 20px !important;
+                border: 1.5px solid rgba(244, 63, 94, 0.22) !important;
+                box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(244, 63, 94, 0.08) !important;
+                max-width: 440px !important;
+                width: 92% !important;
+                position: relative !important;
+                overflow: hidden !important;
+              }
+              .swal2-popup.mg-ooh-popup::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(90deg, #f43f5e, #fb7185, #f43f5e);
+              }
+              .swal2-popup.mg-ooh-popup .swal2-html-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+              }
+              .swal2-popup.mg-ooh-popup .swal2-actions {
+                width: 100% !important;
+                margin: 12px 0 0 !important;
+              }
+              .swal2-popup.mg-ooh-popup .mg-ooh-back-btn {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 13px 20px !important;
+                background: #f8fafc !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 16px !important;
+                color: #475569 !important;
+                font-family: 'Tajawal', 'Cairo', sans-serif !important;
+                font-weight: 800 !important;
+                font-size: 0.96rem !important;
+                cursor: pointer !important;
+                box-shadow: none !important;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+              }
+              .swal2-popup.mg-ooh-popup .mg-ooh-back-btn:hover {
+                background: #f1f5f9 !important;
+                border-color: #94a3b8 !important;
+                color: #0f172a !important;
+                transform: translateY(-1px) !important;
+              }
+              .swal2-popup.mg-ooh-popup .mg-ooh-back-btn:active {
+                transform: scale(0.98) !important;
+              }
+              .ooh-badge-wrap {
+                position: relative;
+                width: 76px;
+                height: 76px;
+                margin: 0 auto 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              .ooh-badge-glow {
+                position: absolute;
+                inset: 0;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(244, 63, 94, 0.3) 0%, rgba(244, 63, 94, 0.05) 70%, transparent 100%);
+                animation: oohPulse 2.2s infinite ease-in-out;
+              }
+              @keyframes oohPulse {
+                0% { transform: scale(0.92); opacity: 0.6; }
+                50% { transform: scale(1.18); opacity: 1; }
+                100% { transform: scale(0.92); opacity: 0.6; }
+              }
+              .ooh-badge-circle {
+                position: relative;
+                width: 66px;
+                height: 66px;
+                border-radius: 50%;
+                background: linear-gradient(145deg, #fff1f2, #ffe4e6);
+                border: 2px solid rgba(244, 63, 94, 0.35);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.2rem;
+                box-shadow: 0 8px 24px rgba(244, 63, 94, 0.22);
+              }
+              .ooh-title {
+                font-size: 1.4rem;
+                font-weight: 900;
+                color: #0f172a;
+                margin: 0 0 4px;
+                font-family: 'Tajawal', 'Cairo', sans-serif;
+              }
+              .ooh-subtitle {
+                font-size: 0.88rem;
+                color: #64748b;
+                margin: 0 0 12px;
+                font-weight: 600;
+              }
+              .ooh-hearts-track {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                margin: 0 auto 14px;
+                padding: 6px 14px;
+                background: #f8fafc;
+                border-radius: 14px;
+                width: fit-content;
+                border: 1px dashed #cbd5e1;
+              }
+              .ooh-heart-slot {
+                font-size: 1.25rem;
+                filter: grayscale(100%) opacity(0.35);
+                line-height: 1;
+              }
+              .ooh-heart-slot.charging {
+                filter: none;
+                animation: oohHeartBlink 1.8s infinite ease-in-out;
+              }
+              @keyframes oohHeartBlink {
+                0%, 100% { transform: scale(0.9); opacity: 0.5; }
+                50% { transform: scale(1.15); opacity: 1; }
+              }
+              .ooh-recharge-card {
+                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                border: 1.5px solid #bae6fd;
+                border-radius: 18px;
+                padding: 12px 14px;
+                margin-bottom: 12px;
+                text-align: right;
+                box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+              }
+              .ooh-recharge-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 6px;
+              }
+              .ooh-recharge-badge {
+                font-weight: 800;
+                font-size: 0.88rem;
+                color: #0369a1;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+              }
+              .ooh-recharge-max {
+                background: #0284c7;
+                color: #ffffff;
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 0.72rem;
+                font-weight: 800;
+              }
+              .ooh-recharge-desc {
+                font-size: 0.82rem;
+                color: #0c4a6e;
+                line-height: 1.5;
+                margin-bottom: 8px;
+                font-weight: 600;
+              }
+              .ooh-recharge-timer {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                background: rgba(255, 255, 255, 0.9);
+                padding: 6px 12px;
+                border-radius: 12px;
+                border: 1px solid #7dd3fc;
+                font-size: 0.82rem;
+                color: #0369a1;
+                font-weight: 700;
+              }
+              .ooh-recharge-timer b {
+                color: #0284c7;
+                font-weight: 900;
+              }
+              .ooh-wallet-strip {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #fffbeb;
+                border: 1px solid #fef3c7;
+                border-radius: 14px;
+                padding: 8px 14px;
+                margin-bottom: 12px;
+                font-size: 0.86rem;
+                font-weight: 700;
+              }
+              .ooh-wallet-label {
+                color: #92400e;
+              }
+              .ooh-wallet-val {
+                color: #b45309;
+                font-size: 0.96rem;
+                font-weight: 900;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+              }
+              .ooh-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              }
+              .ooh-btn-buy {
+                width: 100%;
+                border: none;
+                border-radius: 16px;
+                padding: 12px 16px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-sizing: border-box;
+                font-family: inherit;
+                transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s;
+              }
+              .ooh-btn-buy:active {
+                transform: scale(0.98);
+              }
+              .ooh-btn-single {
+                background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+              }
+              .ooh-btn-single:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+              }
+              .ooh-btn-all {
+                background: linear-gradient(135deg, #059669 0%, #047857 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+              }
+              .ooh-btn-all:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45);
+              }
+              .ooh-btn-text-side {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: right;
+                gap: 2px;
+              }
+              .ooh-btn-main-text {
+                font-size: 0.95rem;
+                font-weight: 800;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+              }
+              .ooh-btn-sub-text {
+                font-size: 0.74rem;
+                opacity: 0.88;
+                font-weight: 600;
+              }
+              .ooh-tag-best {
+                background: #fef08a;
+                color: #854d0e;
+                font-size: 0.68rem;
+                font-weight: 900;
+                padding: 2px 7px;
+                border-radius: 10px;
+                margin-left: 4px;
+              }
+              .ooh-btn-price-pill {
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 5px 12px;
+                border-radius: 12px;
+                font-size: 0.88rem;
+                font-weight: 900;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+              }
+              .ooh-insufficient-card {
+                background: #fef2f2;
+                border: 1.5px solid #fecaca;
+                border-radius: 16px;
+                padding: 12px 14px;
+                text-align: right;
+                color: #991b1b;
+              }
+              .ooh-insufficient-title {
+                font-weight: 800;
+                font-size: 0.88rem;
+                margin-bottom: 4px;
+              }
+              .ooh-insufficient-desc {
+                font-size: 0.8rem;
+                color: #b91c1c;
+                line-height: 1.5;
+                margin: 0;
+                font-weight: 600;
+              }
+            </style>
+
+            <div class="ooh-badge-wrap">
+              <div class="ooh-badge-glow"></div>
+              <div class="ooh-badge-circle">💔</div>
+            </div>
+
+            <h2 class="ooh-title">نفدت محاولاتك!</h2>
+            <p class="ooh-subtitle">تحتاج إلى قلوب لمواصلة التمارين في هذا المستوى</p>
+
+            <div class="ooh-hearts-track" title="0 من 5 قلوب">
+              <div class="ooh-heart-slot">🤍</div>
+              <div class="ooh-heart-slot">🤍</div>
+              <div class="ooh-heart-slot">🤍</div>
+              <div class="ooh-heart-slot">🤍</div>
+              <div class="ooh-heart-slot charging" title="جارٍ شحن هذا القلب">❤️</div>
+            </div>
+
+            <div class="ooh-recharge-card">
+              <div class="ooh-recharge-header">
+                <span class="ooh-recharge-badge">🔄 شحن القلوب كل 24 ساعة</span>
+                <span class="ooh-recharge-max">حتى 5 قلوب</span>
+              </div>
+              <div class="ooh-recharge-desc">
+                يتم شحن القلوب تلقائياً كل 24 ساعة حتى تكتمل إلى 5 قلوب كاملة (قلب جديد كل 4.8 ساعة).
+              </div>
+              <div class="ooh-recharge-timer">
+                <span>⏱️ القلب القادم يتشحن خلال:</span>
+                <b>${timeRemainingFormatted}</b>
+              </div>
+            </div>
+
+            <div class="ooh-wallet-strip">
+              <span class="ooh-wallet-label">رصيدك الحالي:</span>
+              <span class="ooh-wallet-val">⭐ <b>${currentXP} XP</b></span>
+            </div>
+
+            ${canBuySingle ? `
+              <div class="ooh-actions">
+                <button type="button" id="swal-buy-1-heart" class="ooh-btn-buy ooh-btn-single">
+                  <div class="ooh-btn-text-side">
+                    <span class="ooh-btn-main-text">شراء 1 قلب (+1 ❤️)</span>
+                    <span class="ooh-btn-sub-text">مواصلة التمرين فوراً</span>
+                  </div>
+                  <span class="ooh-btn-price-pill">${costPerHeart} XP</span>
                 </button>
-                ${canFull ? `
-                  <button type="button" id="swal-buy-all-hearts" style="padding:11px 18px;font-size:.92rem;background:#E7F5FF;border:1.5px solid #00A3FF;border-radius:14px;color:#0077CC;cursor:pointer;font-weight:800;">
-                    ملء كل القلوب (${heartsNeeded} ❤️) بـ ${fullCost} XP
+                ${canBuyFull ? `
+                  <button type="button" id="swal-buy-all-hearts" class="ooh-btn-buy ooh-btn-all">
+                    <div class="ooh-btn-text-side">
+                      <span class="ooh-btn-main-text">
+                        ملء كل القلوب (${heartsNeeded} ❤️)
+                        <span class="ooh-tag-best">الأوفر ⭐</span>
+                      </span>
+                      <span class="ooh-btn-sub-text">استعادة 5 قلوب كاملة فوراً</span>
+                    </div>
+                    <span class="ooh-btn-price-pill">${fullCost} XP</span>
                   </button>
                 ` : ''}
               </div>
-            </div>
-          `;
+            ` : `
+              <div class="ooh-insufficient-card">
+                <div class="ooh-insufficient-title">💡 رصيد الـ XP لا يكفي للشراء حالياً</div>
+                <p class="ooh-insufficient-desc">
+                  سعر القلب الواحد <b>${costPerHeart} XP</b> ورصيدك <b>${currentXP} XP</b>.<br>
+                  يمكنك الانتظار حتى اكتمال شحن القلوب كل 24 ساعة، أو مراجعة الدروس السابقة لكسب المزيد من الـ XP!
+                </p>
+              </div>
+            `}
+          </div>
+        `;
 
-          const result = await Swal.fire({
-            html: htmlContent,
-            showCancelButton: true,
-            showConfirmButton: false,
-            cancelButtonText: 'الخروج إلى الخريطة',
-            customClass: {
-              popup: 'coptic-swal-popup',
-              cancelButton: 'coptic-swal-cancel'
-            },
-            didOpen: () => {
-              const b1 = document.getElementById('swal-buy-1-heart');
-              if (b1) {
-                b1.onclick = async () => {
-                  Swal.close();
-                  if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
-                    if (buyRes.success) {
-                      await refreshStatsDisplay();
-                      if (game.sound) game.sound.playCorrect();
-                      showToast('تم شراء 1 قلب بنجاح! (+1 ❤️)');
-                      loadChallenge(currentChallengeIndex);
-                    }
+        let boughtHearts = false;
+
+        const result = await Swal.fire({
+          html: htmlContent,
+          showCancelButton: true,
+          showConfirmButton: false,
+          cancelButtonText: 'العودة لمسار التعلم',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+          backdrop: 'rgba(15, 23, 42, 0.75)',
+          customClass: {
+            popup: 'mg-ooh-popup',
+            cancelButton: 'mg-ooh-back-btn'
+          },
+          didOpen: () => {
+            const b1 = document.getElementById('swal-buy-1-heart');
+            if (b1) {
+              b1.onclick = async () => {
+                boughtHearts = true;
+                Swal.close();
+                if (game.buyHeartsWithXp) {
+                  const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
+                  if (buyRes.success) {
+                    currentRunnerHearts = Number(buyRes.hearts ?? 1);
+                    await refreshStatsDisplay();
+                    if (game.sound) game.sound.playCorrect();
+                    showToast('تم شراء 1 قلب بنجاح! (+1 ❤️)');
+                    if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
+                    runnerState = 'answering';
+                    isOutOfHeartsModalOpen = false;
+                    loadChallenge(currentChallengeIndex);
                   }
-                };
-              }
-              const bAll = document.getElementById('swal-buy-all-hearts');
-              if (bAll) {
-                bAll.onclick = async () => {
-                  Swal.close();
-                  if (game.buyHeartsWithXp) {
-                    const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
-                    if (buyRes.success) {
-                      await refreshStatsDisplay();
-                      if (game.sound) game.sound.playCorrect();
-                      showToast(`تم ملء جميع القلوب (${heartsNeeded} ❤️) بنجاح!`);
-                      loadChallenge(currentChallengeIndex);
-                    }
-                  }
-                };
-              }
+                }
+              };
             }
-          });
-
-                    if (result.dismiss === Swal.DismissReason.cancel) {
-            closeRunner();
+            const bAll = document.getElementById('swal-buy-all-hearts');
+            if (bAll) {
+              bAll.onclick = async () => {
+                boughtHearts = true;
+                Swal.close();
+                if (game.buyHeartsWithXp) {
+                  const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
+                  if (buyRes.success) {
+                    currentRunnerHearts = Number(buyRes.hearts ?? 5);
+                    await refreshStatsDisplay();
+                    if (game.sound) game.sound.playCorrect();
+                    showToast(`تم ملء جميع القلوب (${heartsNeeded} ❤️) بنجاح!`);
+                    if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
+                    runnerState = 'answering';
+                    isOutOfHeartsModalOpen = false;
+                    loadChallenge(currentChallengeIndex);
+                  }
+                }
+              };
+            }
           }
-        } else {
-          await mgAlert(
-            'نفدت المحاولات! 💔',
-            `ليس لديك رصيد كافٍ من الـ XP لشراء قلوب جديدة.<br>سعر القلب الواحد = <b>${costPerHeart} XP</b> ورصيدك الحالي: <b>${currentXP} XP</b>.<br><br>⏱️ ${timeRemainingText}<br><br>يمكنك مراجعة الدروس السابقة لكسب المزيد من النقاط أو الانتظار حتى تتشحن القلوب تلقائياً!`,
-            'error'
-          );
+        });
+
+        isOutOfHeartsModalOpen = false;
+        if (runnerOverlay) {
+          runnerOverlay.style.pointerEvents = 'auto';
+        }
+
+        if (!boughtHearts) {
           closeRunner();
         }
       }
@@ -14347,14 +15130,17 @@
         const accuracy = Math.round((correctAnswersCount / Math.max(1, currentChallenges.length)) * 100);
         const uid = getAuthUserId();
         // ضمان تطابق الـ XP المكتسب بنسبة 100% مع الرقم المعروض والمضبوط من الداشبورد
-        const fullConfiguredXp = selectedLesson ? (Array.isArray(selectedLesson.challenges) ? selectedLesson.challenges.length : (parseInt(selectedLesson.xp_reward, 10) || 1)) : 1;
-        const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;
+        const earnableCount = (selectedLesson && Array.isArray(selectedLesson.challenges))
+          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length
+          : (parseInt(selectedLesson?.xp_reward, 10) || 1);
+        const fullConfiguredXp = Math.max(1, earnableCount);
+        const earnedXp = fullConfiguredXp;
 
         const vXp = document.getElementById('v-xp-gained');
         const vAcc = document.getElementById('v-accuracy');
         const victoryModal = document.getElementById('victory-modal');
 
-        if (vXp) vXp.textContent = isReplayingLesson ? '+0 XP (إعادة مراجعة)' : `+${earnedXp} XP`;
+        if (vXp) vXp.textContent = `+${earnedXp} XP`;
         if (vAcc) vAcc.textContent = `${accuracy}%`;
 
         // إظهار شاشة النصر فوراً بدون أي تعليق أو تأخير (0 ميلي ثانية)
