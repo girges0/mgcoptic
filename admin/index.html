@@ -355,6 +355,10 @@
           <div class="num" id="stat-completed-lessons" style="font-size:1.8rem; font-weight:900; color:#1A4A4A;">0</div>
           <div class="lbl" style="font-size:0.85rem; color:#746B6F; font-weight:700; margin-top:4px;">إجمالي الدروس المنجزة</div>
         </div>
+        <div class="stat-card" style="padding:14px 16px; background:#FFFDF8; border:1.5px solid #E7DCC8; border-radius:14px;">
+          <div class="num" id="stat-deleted-students" style="font-size:1.8rem; font-weight:900; color:#991B1B;">0</div>
+          <div class="lbl" style="font-size:0.85rem; color:#746B6F; font-weight:700; margin-top:4px;">حسابات محذوفة من المستخدمين</div>
+        </div>
       </div>
 
       <!-- شريط البحث والتصفية المتقدم -->
@@ -369,6 +373,7 @@
             <option value="online_now">🟢 نشطون الآن فقط (Live)</option>
             <option value="student">طلاب فقط</option>
             <option value="admin">مدراء فقط</option>
+            <option value="deleted">🗑️ حسابات محذوفة</option>
           </select>
           <select id="select-sort-students" onchange="filterStudentsTable()" style="padding:9px 12px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer;">
             <option value="points_desc">الأعلى نقاطاً (XP)</option>

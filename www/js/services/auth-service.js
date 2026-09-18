@@ -478,7 +478,27 @@
           // فحص حالة الحظر للطالب قبل السماح له بالدخول
           if (data && data.user) {
             try {
-              const { data: banProfile } = await sb.from('users').select('id, full_name, email, is_banned, ban_reason, banned_until, banned_at').eq('id', data.user.id).maybeSingle();
+              const { data: banProfile } = await sb.from('users').select('id, full_name, email, is_banned, ban_reason, banned_until, banned_at, is_deleted, deleted_at').eq('id', data.user.id).maybeSingle();
+              if (banProfile && (banProfile.is_deleted || (banProfile.ban_reason && banProfile.ban_reason.includes('حساب محذوف')))) {
+                await sb.auth.signOut();
+                localStorage.removeItem('mg_coptic_student_auth_token');
+                localStorage.removeItem('mg_coptic_user');
+                resetFormUI();
+                Swal.fire({
+                  icon: 'info',
+                  title: 'حساب محذوف',
+                  html: `لقد تم حذف هذا الحساب سابقاً بناءً على طلبك.<br><br>إذا كنت ترغب في استعادة حسابك بكافة نقاطك وإنجازاتك، يُسعدنا تواصلك مع خدمة العملاء.`,
+                  showCancelButton: true,
+                  confirmButtonText: 'تواصل عبر واتساب (@ggirges)',
+                  confirmButtonColor: '#25D366',
+                  cancelButtonText: 'إغلاق'
+                }).then((res) => {
+                  if (res.isConfirmed && typeof openWhatsAppSupport === 'function') {
+                    openWhatsAppSupport('مرحباً الدعم الفني لمنصة MG Coptic 👋\nأود طلب استعادة حسابي المحذوف:\n• البريد: ' + email);
+                  }
+                });
+                return;
+              }
               if (banProfile && banProfile.is_banned) {
                 const now = new Date();
                 if (banProfile.banned_until && new Date(banProfile.banned_until) <= now) {
@@ -495,7 +515,7 @@
                 }
               }
             } catch (banErr) {
-              console.warn('Sign-in ban check error:', banErr);
+              console.warn('Sign-in ban/deleted check error:', banErr);
             }
           }
 
@@ -571,6 +591,70 @@
       }
     }
 
+    async function deleteCurrentUserAccount() {
+      if (!currentAuthUser || !currentAuthUser.id) {
+        mgToast('يجب تسجيل الدخول أولاً لتتمكن من حذف الحساب', 'warning');
+        return;
+      }
+
+      const confirmed = await mgConfirm(
+        'حذف الحساب نهائياً',
+        'هل أنت متأكد تماماً من رغبتك في حذف حسابك؟\nسيتم إيقاف حسابك وتسجيل خروجك فوراً، وستظل بياناتك وسجلاتك محفوظة لدينا في السجلات الإدارية.',
+        'warning',
+        { confirmButtonText: 'نعم، احذف حسابي', cancelButtonText: 'تراجع' }
+      );
+      if (!confirmed) return;
+
+      try {
+        const uid = currentAuthUser.id;
+        const nowIso = new Date().toISOString();
+
+        // تحديث حالة الحذف في قاعدة البيانات (Soft Delete)
+        let updatePayload = {
+          is_deleted: true,
+          deleted_at: nowIso,
+          deleted_by: 'user'
+        };
+
+        let { error } = await sb.from('users').update(updatePayload).eq('id', uid);
+        if (error) {
+          console.warn('Direct is_deleted update failed, using fallback:', error);
+          await sb.from('users').update({
+            is_banned: true,
+            ban_reason: 'حساب محذوف بناءً على طلب المستخدم (Deleted Account)'
+          }).eq('id', uid);
+        }
+
+        // تسجيل الخروج وتنظيف الجلسة
+        if (window.MGCopticGame && typeof window.MGCopticGame.signOut === 'function') {
+          await window.MGCopticGame.signOut();
+        } else {
+          await sb.auth.signOut();
+        }
+        localStorage.removeItem('mg_coptic_user');
+        localStorage.removeItem('mg_coptic_progress');
+        localStorage.removeItem('mg_coptic_student_auth_token');
+        currentAuthUser = null;
+        currentAuthSession = null;
+
+        if (typeof initUserSession === 'function') initUserSession();
+        if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
+
+        await Swal.fire({
+          icon: 'success',
+          title: 'تم حذف الحساب',
+          text: 'تم حذف حسابك بنجاح وتسجيل خروجك. يمكنك التواصل مع الدعم الفني في أي وقت إذا رغبت في استعادة حسابك.',
+          confirmButtonText: 'حسناً',
+          confirmButtonColor: '#6B1530'
+        });
+
+        window.location.reload();
+      } catch (err) {
+        console.error('deleteCurrentUserAccount error:', err);
+        mgToast('حدث خطأ أثناء محاولة حذف الحساب. يرجى المحاولة لاحقاً أو التواصل مع الدعم.', 'error');
+      }
+    }
+
     function handleUserChipClick() {
       if (currentAuthUser) {
         switchTab('settings');
@@ -614,6 +698,20 @@
         if (activeSession && activeSession.user) {
           currentAuthSession = activeSession;
           const { data: profile } = await sb.from('users').select('*').eq('id', activeSession.user.id).maybeSingle();
+
+          // فحص ما إذا كان الحساب محذوفاً
+          if (profile && (profile.is_deleted || (profile.ban_reason && profile.ban_reason.includes('حساب محذوف')))) {
+            await sb.auth.signOut();
+            localStorage.removeItem('mg_coptic_student_auth_token');
+            localStorage.removeItem('mg_coptic_user');
+            localStorage.removeItem('mg_coptic_progress');
+            currentAuthUser = null;
+            currentAuthSession = null;
+            if (window.MGPreloader && typeof window.MGPreloader.dismiss === 'function') {
+              window.MGPreloader.dismiss();
+            }
+            return;
+          }
 
           // فحص حالة الحظر للطالب في الجلسة النشطة
           if (profile && profile.is_banned) {
@@ -2613,6 +2711,7 @@
     window.switchAuthTab = switchAuthTab;
     window.initUserSession = initUserSession;
     window.signOutStudent = signOutStudent;
+    window.deleteCurrentUserAccount = deleteCurrentUserAccount;
     window.getUserProfileData = getUserProfileData;
     window.getUserProgressData = getUserProgressData;
     window.saveUserProfileName = saveUserProfileName;

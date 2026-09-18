@@ -2879,7 +2879,10 @@ async function loadUsers(isSilent = false) {
         is_banned: !!u.is_banned,
         ban_reason: u.ban_reason || null,
         banned_until: u.banned_until || null,
-        banned_at: u.banned_at || null
+        banned_at: u.banned_at || null,
+        is_deleted: !!(u.is_deleted || (u.ban_reason && u.ban_reason.includes('حساب محذوف'))),
+        deleted_at: u.deleted_at || null,
+        deleted_by: u.deleted_by || (u.ban_reason && u.ban_reason.includes('حساب محذوف') ? 'user' : null)
       };
     });
 
@@ -2906,6 +2909,7 @@ function updateStudentsSummaryStats(list) {
   const onlineNowEl = document.getElementById('stat-online-now');
   const totalXpEl = document.getElementById('stat-total-xp');
   const lessonsEl = document.getElementById('stat-completed-lessons');
+  const deletedEl = document.getElementById('stat-deleted-students');
 
   const todayStr = new Date().toISOString().split('T')[0];
   const totalStudents = list.length;
@@ -2913,12 +2917,14 @@ function updateStudentsSummaryStats(list) {
   const onlineNow = window.currentOnlineUserIds ? window.currentOnlineUserIds.size : 0;
   const totalXp = list.reduce((sum, s) => sum + (s.points || 0), 0);
   const totalLessons = list.reduce((sum, s) => sum + (s.completed_lessons || 0), 0);
+  const deletedCount = list.filter(s => s.is_deleted).length;
 
   if (totalEl) totalEl.textContent = totalStudents;
   if (activeTodayEl) activeTodayEl.textContent = activeToday;
   if (onlineNowEl) onlineNowEl.textContent = onlineNow;
   if (totalXpEl) totalXpEl.textContent = totalXp.toLocaleString() + ' XP';
   if (lessonsEl) lessonsEl.textContent = totalLessons;
+  if (deletedEl) deletedEl.textContent = deletedCount;
 }
 
 function filterStudentsTable() {
@@ -2932,10 +2938,12 @@ function filterStudentsTable() {
 
   let filtered = allLoadedStudents.filter(s => {
     let matchRole = true;
-    if (roleFilter === 'online_now') {
-      matchRole = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(s.id));
+    if (roleFilter === 'deleted') {
+      matchRole = !!s.is_deleted;
+    } else if (roleFilter === 'online_now') {
+      matchRole = window.currentOnlineUserIds && window.currentOnlineUserIds.has(String(s.id)) && !s.is_deleted;
     } else if (roleFilter !== 'all') {
-      matchRole = (s.role === roleFilter);
+      matchRole = (s.role === roleFilter) && !s.is_deleted;
     }
     const matchQuery = !query ||
       (s.full_name && s.full_name.toLowerCase().includes(query)) ||
@@ -3032,9 +3040,10 @@ function renderStudentsTable(list) {
               ${u.avatar_url ? `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;">` : initial}
             </div>
             <div>
-              <div style="font-weight:900; color:#2E2018; font-size:0.96rem; display:flex; align-items:center; gap:6px;">
+              <div style="font-weight:900; color:#2E2018; font-size:0.96rem; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                 <span>${esc(u.full_name)}</span>
-                ${isStudentCurrentlyBanned(u) ? '<span class="badge" style="background:#FFE4E6; color:#9F1239; border:1px solid #FDA4AF; font-size:0.7rem; font-weight:900; padding:1px 6px;">⛔ محظور</span>' : ''}
+                ${u.is_deleted ? '<span class="badge" style="background:#FEE2E2; color:#991B1B; border:1px solid #FCA5A5; font-size:0.72rem; font-weight:900; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> حساب محذوف</span>' : ''}
+                ${isStudentCurrentlyBanned(u) && !u.is_deleted ? '<span class="badge" style="background:#FFE4E6; color:#9F1239; border:1px solid #FDA4AF; font-size:0.7rem; font-weight:900; padding:1px 6px;">⛔ محظور</span>' : ''}
               </div>
               <div style="font-size:0.75rem; color:#8C857E; font-family:monospace;">${u.id.substring(0, 8)}...</div>
             </div>
@@ -3089,10 +3098,16 @@ function renderStudentsTable(list) {
             <button type="button" class="action-btn-sm" style="background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C; padding:6px 10px;" onclick="refillUserHearts('${u.id}')" title="شحن القلوب إلى 5">
               ${ICONS_SVG.heart}
             </button>
-            <button type="button" class="action-btn-sm" style="${isStudentCurrentlyBanned(u) ? 'background:#ECFDF5; border:1.5px solid #A7F3D0; color:#047857;' : 'background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C;'} font-weight:800; padding:6px 10px;" onclick="quickToggleBanStudent('${u.id}')" title="${isStudentCurrentlyBanned(u) ? 'فك حظر الطالب' : 'حظر حساب الطالب'}">
-              ${isStudentCurrentlyBanned(u) ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'}
-            </button>
-            <button type="button" class="action-btn-sm" style="background:#FEE2E2; border:1.5px solid #FCA5A5; color:#991B1B; padding:6px 10px;" onclick="deleteUser('${u.id}', '${esc(u.full_name)}')" title="حذف الحساب نهائياً">
+            ${u.is_deleted ? `
+              <button type="button" class="action-btn-sm" style="background:#ECFDF5; border:1.5px solid #10B981; color:#065F46; font-weight:800; padding:6px 10px;" onclick="restoreUserAccount('${u.id}', '${esc(u.full_name)}')" title="استعادة وتفعيل الحساب المحذوف">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> <span>استعادة</span>
+              </button>
+            ` : `
+              <button type="button" class="action-btn-sm" style="${isStudentCurrentlyBanned(u) ? 'background:#ECFDF5; border:1.5px solid #A7F3D0; color:#047857;' : 'background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C;'} font-weight:800; padding:6px 10px;" onclick="quickToggleBanStudent('${u.id}')" title="${isStudentCurrentlyBanned(u) ? 'فك حظر الطالب' : 'حظر حساب الطالب'}">
+                ${isStudentCurrentlyBanned(u) ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'}
+              </button>
+            `}
+            <button type="button" class="action-btn-sm" style="background:#FEE2E2; border:1.5px solid #FCA5A5; color:#991B1B; padding:6px 10px;" onclick="deleteUser('${u.id}', '${esc(u.full_name)}')" title="حذف السجل نهائياً">
               ${ICONS_SVG.trash}
             </button>
           </div>
@@ -3252,6 +3267,38 @@ function viewStudentDetails(userId) {
       banActionBtn.title = 'حظر حساب الطالب وتحديد المدة والسبب';
     }
     if (banActionText) banActionText.textContent = 'حظر الحساب';
+  }
+
+  // تنبيه الحساب المحذوف مع إمكانية استعادته
+  let delBanner = document.getElementById('m-student-deleted-banner');
+  if (student.is_deleted) {
+    if (!delBanner) {
+      delBanner = document.createElement('div');
+      delBanner.id = 'm-student-deleted-banner';
+      delBanner.style.cssText = 'background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:12px; padding:12px 16px; margin:0 0 16px 0; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;';
+      delBanner.innerHTML = `
+        <div style="flex:1; min-width:220px;">
+          <div style="font-weight:900; color:#991B1B; font-size:0.95rem; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#DC2626" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>حساب محذوف من قِبل المستخدم</span>
+          </div>
+          <div style="font-size:0.84rem; color:#7F1D1D; margin-top:3px;" id="m-student-deleted-date-text"></div>
+        </div>
+        <button type="button" class="btn" style="background:#059669; color:#FFF; font-weight:800; font-size:0.84rem; padding:7px 16px; border-radius:8px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;" onclick="restoreUserAccount('${student.id}', '${esc(student.full_name)}')">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>استعادة وتفعيل الحساب</span>
+        </button>
+      `;
+      const modalBody = modal.querySelector('.modal-body') || modal.querySelector('.modal-content') || modal.children[0];
+      if (modalBody) modalBody.insertBefore(delBanner, modalBody.firstChild);
+    }
+    const delDateText = document.getElementById('m-student-deleted-date-text');
+    if (delDateText) {
+      delDateText.textContent = `تاريخ الحذف: ${student.deleted_at ? new Date(student.deleted_at).toLocaleString('ar-EG') : 'غير مسجل'} | كافة بيانات وسجلات وXP الطالب محفوظة.`;
+    }
+    delBanner.style.display = 'flex';
+  } else if (delBanner) {
+    delBanner.style.display = 'none';
   }
 
   modal.style.display = 'flex';
@@ -4633,6 +4680,43 @@ async function deleteUser(userId, userName) {
   loadUsers(true);
 }
 window.deleteUser = deleteUser;
+
+async function restoreUserAccount(userId, userName) {
+  const c = await mgConfirm(
+    'استعادة وتفعيل الحساب',
+    `هل تريد بالتأكيد استعادة وتفعيل حساب «${userName || 'المستخدم'}»؟\nسيتمكن المستخدم من تسجيل الدخول مجدداً مع الحفاظ على كافة نقاطه وسجلاته السابقة.`,
+    'question',
+    { confirmText: 'نعم، استعد الحساب', cancelText: 'إلغاء' }
+  );
+  if (!c) return;
+
+  try {
+    const { error } = await sb.from('users').update({
+      is_deleted: false,
+      deleted_at: null,
+      deleted_by: null,
+      is_banned: false,
+      ban_reason: null
+    }).eq('id', userId);
+
+    if (error) {
+      toast('تعذر استعادة الحساب: ' + error.message, true);
+      return;
+    }
+
+    toast('تمت استعادة وتفعيل الحساب بنجاح');
+    if (activeSelectedStudent && activeSelectedStudent.id === userId) {
+      activeSelectedStudent.is_deleted = false;
+      activeSelectedStudent.deleted_at = null;
+    }
+    loadUsers(true);
+    closeStudentModal();
+  } catch (e) {
+    console.error('restoreUserAccount error:', e);
+    toast('حدث خطأ أثناء استعادة الحساب: ' + e.message, true);
+  }
+}
+window.restoreUserAccount = restoreUserAccount;
 
 function deleteUserFromModal() {
   if (!activeSelectedStudent) return;
