@@ -2374,7 +2374,7 @@
           if (currentRunnerHearts <= 0) {
             runnerState = 'out_of_hearts';
             if (btnCheck) {
-              btnCheck.textContent = 'نفدت المحاولات 💔';
+              btnCheck.textContent = 'نفدت المحاولات';
               btnCheck.className = 'btn-check-answer btn-continue-err';
               btnCheck.disabled = true;
               btnCheck.style.pointerEvents = 'none';
@@ -2412,21 +2412,10 @@
           currentXP = prog.points || 0;
           hearts = prog.hearts || 0;
         }
+        currentRunnerHearts = hearts;
         const heartsNeeded = Math.max(1, 5 - hearts);
         const costPerHeart = 100;
         const fullCost = heartsNeeded * costPerHeart;
-
-        // حساب وقت شحن القلب التلقائي القادم
-        let timeRemainingFormatted = '';
-        if (game.getTimeUntilNextHeart) {
-          const timeInfo = game.getTimeUntilNextHeart(uid);
-          if (timeInfo && !timeInfo.isFull && timeInfo.formatted) {
-            timeRemainingFormatted = timeInfo.formatted;
-          }
-        }
-        if (!timeRemainingFormatted) {
-          timeRemainingFormatted = 'خلال دقائق معدودة';
-        }
 
         const canBuySingle = currentXP >= costPerHeart;
         const canBuyFull = currentXP >= fullCost;
@@ -2482,7 +2471,7 @@
                 display: inline-flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                gap: 8px !important;
+                gap: 6px !important;
               }
               .swal2-popup.mg-ooh-popup .mg-ooh-back-btn:hover {
                 background: #f1f5f9 !important;
@@ -2524,7 +2513,6 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 2.2rem;
                 box-shadow: 0 8px 24px rgba(244, 63, 94, 0.22);
               }
               .ooh-title {
@@ -2553,16 +2541,17 @@
                 border: 1px dashed #cbd5e1;
               }
               .ooh-heart-slot {
-                font-size: 1.25rem;
-                filter: grayscale(100%) opacity(0.35);
-                line-height: 1;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 26px;
+                height: 26px;
               }
-              .ooh-heart-slot.charging {
-                filter: none;
+              .ooh-heart-pulse-svg {
                 animation: oohHeartBlink 1.8s infinite ease-in-out;
               }
               @keyframes oohHeartBlink {
-                0%, 100% { transform: scale(0.9); opacity: 0.5; }
+                0%, 100% { transform: scale(0.9); opacity: 0.6; }
                 50% { transform: scale(1.15); opacity: 1; }
               }
               .ooh-recharge-card {
@@ -2607,18 +2596,14 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 6px;
-                background: rgba(255, 255, 255, 0.9);
-                padding: 6px 12px;
+                gap: 8px;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 8px 14px;
                 border-radius: 12px;
                 border: 1px solid #7dd3fc;
-                font-size: 0.82rem;
+                font-size: 0.84rem;
                 color: #0369a1;
                 font-weight: 700;
-              }
-              .ooh-recharge-timer b {
-                color: #0284c7;
-                font-weight: 900;
               }
               .ooh-wallet-strip {
                 display: flex;
@@ -2641,7 +2626,7 @@
                 font-weight: 900;
                 display: inline-flex;
                 align-items: center;
-                gap: 4px;
+                gap: 6px;
               }
               .ooh-actions {
                 display: flex;
@@ -2732,6 +2717,9 @@
                 font-weight: 800;
                 font-size: 0.88rem;
                 margin-bottom: 4px;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
               }
               .ooh-insufficient-desc {
                 font-size: 0.8rem;
@@ -2744,44 +2732,44 @@
 
             <div class="ooh-badge-wrap">
               <div class="ooh-badge-glow"></div>
-              <div class="ooh-badge-circle">💔</div>
+              <div class="ooh-badge-circle"><svg viewBox="0 0 24 24" width="38" height="38" fill="#f43f5e"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09L12 10.5l1.5-2.5L12 5.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 5l-1.5 3 2 2.5-2 3.5 2 3-1 2" stroke="#ffffff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             </div>
 
             <h2 class="ooh-title">نفدت محاولاتك!</h2>
             <p class="ooh-subtitle">تحتاج إلى قلوب لمواصلة التمارين في هذا المستوى</p>
 
             <div class="ooh-hearts-track" title="0 من 5 قلوب">
-              <div class="ooh-heart-slot">🤍</div>
-              <div class="ooh-heart-slot">🤍</div>
-              <div class="ooh-heart-slot">🤍</div>
-              <div class="ooh-heart-slot">🤍</div>
-              <div class="ooh-heart-slot charging" title="جارٍ شحن هذا القلب">❤️</div>
+              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f43f5e" class="ooh-heart-pulse-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+              <span class="ooh-heart-slot"><svg viewBox="0 0 24 24" width="22" height="22" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
             </div>
 
             <div class="ooh-recharge-card">
               <div class="ooh-recharge-header">
-                <span class="ooh-recharge-badge">🔄 شحن القلوب كل 24 ساعة</span>
+                <span class="ooh-recharge-badge"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg> شحن القلوب كل 24 ساعة</span>
                 <span class="ooh-recharge-max">حتى 5 قلوب</span>
               </div>
               <div class="ooh-recharge-desc">
                 يتم شحن القلوب تلقائياً كل 24 ساعة حتى تكتمل إلى 5 قلوب كاملة (قلب جديد كل 4.8 ساعة).
               </div>
               <div class="ooh-recharge-timer">
-                <span>⏱️ القلب القادم يتشحن خلال:</span>
-                <b>${timeRemainingFormatted}</b>
+                <span style="display:inline-flex;align-items:center;gap:5px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M12 2v3M9 2h6M19 6l1.5-1.5"/></svg> القلب القادم يتشحن خلال:</span>
+                <span id="ooh-live-timer" style="font-weight:900;color:#0284c7;">جارٍ الحساب...</span>
               </div>
             </div>
 
             <div class="ooh-wallet-strip">
               <span class="ooh-wallet-label">رصيدك الحالي:</span>
-              <span class="ooh-wallet-val">⭐ <b>${currentXP} XP</b></span>
+              <span class="ooh-wallet-val"><svg viewBox="0 0 24 24" width="17" height="17" fill="#f59e0b" stroke="#d97706" stroke-width="1.2" style="vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <b>${currentXP} XP</b></span>
             </div>
 
             ${canBuySingle ? `
               <div class="ooh-actions">
                 <button type="button" id="swal-buy-1-heart" class="ooh-btn-buy ooh-btn-single">
                   <div class="ooh-btn-text-side">
-                    <span class="ooh-btn-main-text">شراء 1 قلب (+1 ❤️)</span>
+                    <span class="ooh-btn-main-text">شراء 1 قلب <svg viewBox="0 0 24 24" width="16" height="16" fill="#ffffff" style="vertical-align:middle;display:inline-block;margin:0 2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
                     <span class="ooh-btn-sub-text">مواصلة التمرين فوراً</span>
                   </div>
                   <span class="ooh-btn-price-pill">${costPerHeart} XP</span>
@@ -2790,8 +2778,8 @@
                   <button type="button" id="swal-buy-all-hearts" class="ooh-btn-buy ooh-btn-all">
                     <div class="ooh-btn-text-side">
                       <span class="ooh-btn-main-text">
-                        ملء كل القلوب (${heartsNeeded} ❤️)
-                        <span class="ooh-tag-best">الأوفر ⭐</span>
+                        ملء كل القلوب (${heartsNeeded} قلوب)
+                        <span class="ooh-tag-best">الأوفر</span>
                       </span>
                       <span class="ooh-btn-sub-text">استعادة 5 قلوب كاملة فوراً</span>
                     </div>
@@ -2801,7 +2789,7 @@
               </div>
             ` : `
               <div class="ooh-insufficient-card">
-                <div class="ooh-insufficient-title">💡 رصيد الـ XP لا يكفي للشراء حالياً</div>
+                <div class="ooh-insufficient-title"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18h6m-4 3h2m-1-18a7 7 0 0 0-4.9 12c.7.7 1.1 1.6 1.1 2.5v.5h7.6v-.5c0-.9.4-1.8 1.1-2.5A7 7 0 0 0 12 3z"/></svg> رصيد الـ XP لا يكفي للشراء حالياً</div>
                 <p class="ooh-insufficient-desc">
                   سعر القلب الواحد <b>${costPerHeart} XP</b> ورصيدك <b>${currentXP} XP</b>.<br>
                   يمكنك الانتظار حتى اكتمال شحن القلوب كل 24 ساعة، أو مراجعة الدروس السابقة لكسب المزيد من الـ XP!
@@ -2812,6 +2800,7 @@
         `;
 
         let boughtHearts = false;
+        let countdownInterval = null;
 
         const result = await Swal.fire({
           html: htmlContent,
@@ -2827,10 +2816,35 @@
             cancelButton: 'mg-ooh-back-btn'
           },
           didOpen: () => {
+            const timerValEl = document.getElementById('ooh-live-timer');
+            const updateLiveTimer = () => {
+              if (!timerValEl) return;
+              let timeInfo = null;
+              if (game.getTimeUntilNextHeart) {
+                timeInfo = game.getTimeUntilNextHeart(uid);
+              }
+              if (timeInfo && !timeInfo.isFull) {
+                const sec = Number(timeInfo.secondsRemaining || 0);
+                const h = Math.floor(sec / 3600);
+                const m = Math.floor((sec % 3600) / 60);
+                const s = sec % 60;
+                const pad = (n) => (n < 10 ? '0' + n : String(n));
+                const hStr = h > 0 ? `${h} ساعة و ` : '';
+                const mStr = `${m} دقيقة و `;
+                const sStr = `${pad(s)} ثانية`;
+                timerValEl.innerHTML = `<b style="color:#0284c7;font-weight:900;">${hStr}${mStr}${sStr}</b>`;
+              } else {
+                timerValEl.innerHTML = `<b style="color:#0284c7;font-weight:900;">مكتمل بالكامل</b>`;
+              }
+            };
+            updateLiveTimer();
+            countdownInterval = setInterval(updateLiveTimer, 1000);
+
             const b1 = document.getElementById('swal-buy-1-heart');
             if (b1) {
               b1.onclick = async () => {
                 boughtHearts = true;
+                if (countdownInterval) clearInterval(countdownInterval);
                 Swal.close();
                 if (game.buyHeartsWithXp) {
                   const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
@@ -2838,7 +2852,7 @@
                     currentRunnerHearts = Number(buyRes.hearts ?? 1);
                     await refreshStatsDisplay();
                     if (game.sound) game.sound.playCorrect();
-                    showToast('تم شراء 1 قلب بنجاح! (+1 ❤️)');
+                    showToast('تم شراء 1 قلب بنجاح! (+1)');
                     if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
                     runnerState = 'answering';
                     isOutOfHeartsModalOpen = false;
@@ -2851,6 +2865,7 @@
             if (bAll) {
               bAll.onclick = async () => {
                 boughtHearts = true;
+                if (countdownInterval) clearInterval(countdownInterval);
                 Swal.close();
                 if (game.buyHeartsWithXp) {
                   const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
@@ -2858,7 +2873,7 @@
                     currentRunnerHearts = Number(buyRes.hearts ?? 5);
                     await refreshStatsDisplay();
                     if (game.sound) game.sound.playCorrect();
-                    showToast(`تم ملء جميع القلوب (${heartsNeeded} ❤️) بنجاح!`);
+                    showToast(`تم ملء جميع القلوب (${heartsNeeded} قلوب) بنجاح!`);
                     if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
                     runnerState = 'answering';
                     isOutOfHeartsModalOpen = false;
@@ -2867,9 +2882,13 @@
                 }
               };
             }
+          },
+          willClose: () => {
+            if (countdownInterval) clearInterval(countdownInterval);
           }
         });
 
+        if (countdownInterval) clearInterval(countdownInterval);
         isOutOfHeartsModalOpen = false;
         if (runnerOverlay) {
           runnerOverlay.style.pointerEvents = 'auto';
