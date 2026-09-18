@@ -279,7 +279,7 @@
       rules: [
         'يُنطق دائماً حرف تاء <strong>"ت"</strong> في جميع المواضع والكلمات.'
       ],
-      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـاڤْ', meaning: 'أمي', soundFile: 'assets/sounds/20tamav.mp3' },
+      word: { coptic: 'ⲧⲁⲙⲁⲩ', phoneticAr: 'تَامَـاڤْ', meaning: 'أمي' },
       soundFile: 'audio_coptic/20tav.mp3'
     },
 
