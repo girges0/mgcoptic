@@ -12,19 +12,19 @@
 
   // الشهور القبطية الـ 13 — الاسم بالعربي والقبطي وعدد الأيام فقط
   const DEFAULT_COPTIC_MONTHS = [
-    { id: 1, order_index: 1, name_ar: 'توت', name_coptic: 'Ⲑⲱⲟⲩⲧ', days_count: 30, audio_url: '' },
-    { id: 2, order_index: 2, name_ar: 'بابه', name_coptic: 'Ⲡⲁⲱⲡⲉ', days_count: 30, audio_url: '' },
-    { id: 3, order_index: 3, name_ar: 'هاتور', name_coptic: 'Ϩⲁⲑⲱⲣ', days_count: 30, audio_url: '' },
-    { id: 4, order_index: 4, name_ar: 'كيهك', name_coptic: 'Ⲕⲟⲓⲁϩⲕ', days_count: 30, audio_url: '' },
-    { id: 5, order_index: 5, name_ar: 'طوبة', name_coptic: 'Ⲧⲱⲃⲉ', days_count: 30, audio_url: '' },
-    { id: 6, order_index: 6, name_ar: 'أمشير', name_coptic: 'Ⲙⲉϣⲓⲣ', days_count: 30, audio_url: '' },
-    { id: 7, order_index: 7, name_ar: 'برمهات', name_coptic: 'Ⲡⲁⲣⲉⲙϩⲁⲧ', days_count: 30, audio_url: '' },
-    { id: 8, order_index: 8, name_ar: 'برمودة', name_coptic: 'Ⲡⲁⲣⲙⲟⲩⲧⲉ', days_count: 30, audio_url: '' },
-    { id: 9, order_index: 9, name_ar: 'بشنس', name_coptic: 'Ⲡⲁϣⲟⲛⲥ', days_count: 30, audio_url: '' },
-    { id: 10, order_index: 10, name_ar: 'بؤونة', name_coptic: 'Ⲡⲁⲱⲛⲓ', days_count: 30, audio_url: '' },
-    { id: 11, order_index: 11, name_ar: 'أبيب', name_coptic: 'Ⲉⲡⲏⲡ', days_count: 30, audio_url: '' },
-    { id: 12, order_index: 12, name_ar: 'مسرى', name_coptic: 'Ⲙⲉⲥⲱⲣⲏ', days_count: 30, audio_url: '' },
-    { id: 13, order_index: 13, name_ar: 'النسيء', name_coptic: 'Ⲡⲓⲕⲟⲩϫⲓ', days_count: 5, audio_url: '' }
+    { id: 1, order_index: 1, name_ar: 'توت', name_coptic: 'Ⲑⲱⲟⲩⲧ', phonetic_ar: 'تُـوتْ (ثُـوتْ)', days_count: 30, audio_url: 'assets/sounds/month1_thout.mp3' },
+    { id: 2, order_index: 2, name_ar: 'بابه', name_coptic: 'Ⲡⲁⲱⲡⲉ', phonetic_ar: 'بَـاوْبِـي', days_count: 30, audio_url: 'assets/sounds/month2_paopi.mp3' },
+    { id: 3, order_index: 3, name_ar: 'هاتور', name_coptic: 'Ϩⲁⲑⲱⲣ', phonetic_ar: 'هَـاثُـور', days_count: 30, audio_url: 'assets/sounds/month3_hathor.mp3' },
+    { id: 4, order_index: 4, name_ar: 'كيهك', name_coptic: 'Ⲕⲟⲓⲁϩⲕ', phonetic_ar: 'كِـيَهْـكْ', days_count: 30, audio_url: 'assets/sounds/month4_kiahk.mp3' },
+    { id: 5, order_index: 5, name_ar: 'طوبة', name_coptic: 'Ⲧⲱⲃⲉ', phonetic_ar: 'تُـوبِـي', days_count: 30, audio_url: 'assets/sounds/month5_tobi.mp3' },
+    { id: 6, order_index: 6, name_ar: 'أمشير', name_coptic: 'Ⲙⲉϣⲓⲣ', phonetic_ar: 'مِـشِـير', days_count: 30, audio_url: 'assets/sounds/month6_meshir.mp3' },
+    { id: 7, order_index: 7, name_ar: 'برمهات', name_coptic: 'Ⲡⲁⲣⲉⲙϩⲁⲧ', phonetic_ar: 'بَارِيمهَـاتْ', days_count: 30, audio_url: 'assets/sounds/month7_paremhat.mp3' },
+    { id: 8, order_index: 8, name_ar: 'برمودة', name_coptic: 'Ⲡⲁⲣⲙⲟⲩⲧⲉ', phonetic_ar: 'فَارمُـوثِي', days_count: 30, audio_url: 'assets/sounds/month8_pharmouthi.mp3' },
+    { id: 9, order_index: 9, name_ar: 'بشنس', name_coptic: 'Ⲡⲁϣⲟⲛⲥ', phonetic_ar: 'بَاشُـونْسْ', days_count: 30, audio_url: 'assets/sounds/month9_pashons.mp3' },
+    { id: 10, order_index: 10, name_ar: 'بؤونة', name_coptic: 'Ⲡⲁⲱⲛⲓ', phonetic_ar: 'بَـاوْنِي', days_count: 30, audio_url: 'assets/sounds/month10_paoni.mp3' },
+    { id: 11, order_index: 11, name_ar: 'أبيب', name_coptic: 'Ⲉⲡⲏⲡ', phonetic_ar: 'إِيبِـيبْ', days_count: 30, audio_url: 'assets/sounds/month11_epep.mp3' },
+    { id: 12, order_index: 12, name_ar: 'مسرى', name_coptic: 'Ⲙⲉⲥⲱⲣⲏ', phonetic_ar: 'مِيسُـورِي', days_count: 30, audio_url: 'assets/sounds/month12_mesori.mp3' },
+    { id: 13, order_index: 13, name_ar: 'النسيء', name_coptic: 'Ⲡⲓⲕⲟⲩϫⲓ', phonetic_ar: 'بِي كُـوجِي إِنْ آبُـوتْ', days_count: 5, audio_url: 'assets/sounds/month13_nasie.mp3' }
   ];
 
   const STORAGE_KEY = 'mg_coptic_calendar_data';

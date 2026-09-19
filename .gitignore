@@ -29,3 +29,11 @@ review-coptic-words.html
 scripts/local-sync-server.mjs
 database/approved-coptic-words.json
 www/database/approved-coptic-words.json
+
+# Audio Studio (separate internal tool - not part of website)
+coptic-audio-studio/
+.backups_months/
+scripts/generate_coptic_months.py
+scripts/generate_edge_sounds.py
+scripts/generate-remaining-coptic-audio.mjs
+scripts/regenerate_unapproved_months.py

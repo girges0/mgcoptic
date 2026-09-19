@@ -11121,7 +11121,7 @@
         }
       });
 
-      // تحميل مسبق فوري للكلمات المعتمدة (1 إلى 21) لضمان أعلى سرعة استجابة (0ms)
+      // تحميل مسبق فوري لجميع الكلمات المعتمدة الـ 32 لضمان أعلى سرعة استجابة (0ms)
       const approvedWordAudios = [
         'assets/sounds/1alom.mp3', 'assets/sounds/2vo.mp3', 'assets/sounds/3ghala.mp3',
         'assets/sounds/4zoksa.mp3', 'assets/sounds/5ergoh.mp3', 'assets/sounds/6soohinrpmy.mp3',
@@ -11129,7 +11129,11 @@
         'assets/sounds/10ial.mp3', 'assets/sounds/11kash.mp3', 'assets/sounds/12lavo.mp3',
         'assets/sounds/13manhon.mp3', 'assets/sounds/14enkot.mp3', 'assets/sounds/15ksooy.mp3',
         'assets/sounds/16o\'om.mp3', 'assets/sounds/17bayot.mp3', 'assets/sounds/18ree.mp3',
-        'assets/sounds/19pason.mp3', 'assets/sounds/20tamav.mp3', 'assets/sounds/21usis.mp3'
+        'assets/sounds/19pason.mp3', 'assets/sounds/20tamav.mp3', 'assets/sounds/21usis.mp3',
+        'assets/sounds/22fev.mp3', 'assets/sounds/23khlil.mp3', 'assets/sounds/24psit.mp3',
+        'assets/sounds/25tasoni.mp3', 'assets/sounds/26shau.mp3', 'assets/sounds/27foi.mp3',
+        'assets/sounds/28khevs.mp3', 'assets/sounds/29htho.mp3', 'assets/sounds/30zempheh.mp3',
+        'assets/sounds/31chaj.mp3', 'assets/sounds/32timi.mp3'
       ];
       approvedWordAudios.forEach(src => {
         if (!_letterAudioCache.has(src)) {

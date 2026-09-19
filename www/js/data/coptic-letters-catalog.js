@@ -309,7 +309,7 @@
       rules: [
         'يُنطق دائماً حرف فاء <strong>"ف"</strong> مثل حرف <strong>(F)</strong> في الإنجليزية.'
       ],
-      word: { coptic: 'ⲫⲉⲃ', phoneticAr: 'فِـڤْ', meaning: 'بطيخ' },
+      word: { coptic: 'ⲫⲉϧ', phoneticAr: 'فِيـخْ', meaning: 'بطيخ', soundFile: 'assets/sounds/22fev.mp3' },
       soundFile: 'audio_coptic/22fi.mp3'
     },
     {
@@ -324,7 +324,7 @@
         'يُنطق <strong>(ش)</strong>: في الكلمات ذات الأصل اليوناني إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).',
         'يُنطق <strong>(خ)</strong>: في الكلمات ذات الأصل اليوناني في باقي الحالات (إذا لم يأتِ بعده كسر).'
       ],
-      word: { coptic: 'ⲭ̀ⲗⲓⲗ', phoneticAr: 'إِخْلِيـلْ', meaning: 'عقد' },
+      word: { coptic: 'ⲭ̀ⲗⲓⲗ', phoneticAr: 'إِخْلِيـلْ', meaning: 'عقد', soundFile: 'assets/sounds/23khlil.mp3' },
       soundFile: 'audio_coptic/23ki.mp3'
     },
     {
@@ -337,7 +337,7 @@
       rules: [
         'حرف مركب يُنطق باء خفيفة وسين معاً <strong>(بـ + س = Ps)</strong> في مقطع صوتي واحد.'
       ],
-      word: { coptic: 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', phoneticAr: 'إِبْسِـيتْ إِنْ كِنْكِـنْ', meaning: '9 دفوف' },
+      word: { coptic: 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', phoneticAr: 'إِبْسِـيتْ إِنْ كِنْكِـنْ', meaning: '9 دفوف', soundFile: 'assets/sounds/24psit.mp3' },
       soundFile: 'audio_coptic/24psi.mp3'
     },
     {
@@ -350,7 +350,7 @@
       rules: [
         'آخر الحروف المأخوذة من الأبجدية اليونانية. حرف متحرك للضم يُنطق واواً طويلة مفتوحة مشبعة ممدودة <strong>(Ō)</strong>.'
       ],
-      word: { coptic: 'ⲧⲁⲥⲱⲛⲓ', phoneticAr: 'تَاسُـونِي', meaning: 'أختي' },
+      word: { coptic: 'ⲧⲁⲥⲱⲛⲓ', phoneticAr: 'تَاسُـونِي', meaning: 'أختي', soundFile: 'assets/sounds/25tasoni.mp3' },
       soundFile: 'audio_coptic/25oo.mp3'
     },
 
@@ -365,7 +365,7 @@
       rules: [
         'أول الحروف المصرية السبعة المأخوذة من الخط الديموطيقي القديم، يُنطق دائماً حرف شين <strong>"ش"</strong>.'
       ],
-      word: { coptic: 'ϣⲁⲩ', phoneticAr: 'شَـافْ', meaning: 'قطة' },
+      word: { coptic: 'ϣⲁⲩ', phoneticAr: 'شَـاڤْ', meaning: 'قطة', soundFile: 'assets/sounds/26shau.mp3' },
       soundFile: 'audio_coptic/26shay.mp3'
     },
     {
@@ -378,7 +378,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف فاء <strong>"ف"</strong>.'
       ],
-      word: { coptic: 'ϥⲱⲓ', phoneticAr: 'فُـويْ', meaning: 'شعر' },
+      word: { coptic: 'ϥⲱⲓ', phoneticAr: 'فُـويْ', meaning: 'شعر', soundFile: 'assets/sounds/27foi.mp3' },
       soundFile: 'audio_coptic/27fay.mp3'
     },
     {
@@ -391,7 +391,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف خاء <strong>"خ"</strong>.'
       ],
-      word: { coptic: 'Ϧⲏⲃⲥ', phoneticAr: 'خِيبْسْ', meaning: 'مصباح' },
+      word: { coptic: 'Ϧⲏⲃⲥ', phoneticAr: 'خِيبْسْ', meaning: 'مصباح', soundFile: 'assets/sounds/28khevs.mp3' },
       soundFile: 'audio_coptic/28khay.mp3'
     },
     {
@@ -404,7 +404,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف هاء <strong>"هـ"</strong>.'
       ],
-      word: { coptic: 'ϩ̀ⲑⲟ', phoneticAr: 'إِهْـثُـو', meaning: 'حصان' },
+      word: { coptic: 'ϩ̀ⲑⲟ', phoneticAr: 'إِهْـثُـو', meaning: 'حصان', soundFile: 'assets/sounds/29htho.mp3' },
       soundFile: 'audio_coptic/29hory.mp3'
     },
     {
@@ -418,7 +418,7 @@
         'يُنطق <strong>(جـ معطشة)</strong>: إذا جاء بعده حرف متحرك للكسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ).',
         'يُنطق <strong>(جـ غير معطشة)</strong>: مثل الجيم المصرية في باقي الحالات.'
       ],
-      word: { coptic: 'ϫⲉⲙⲫⲉϩ', phoneticAr: 'جِيمْفِـيهْ', meaning: 'تفاح' },
+      word: { coptic: 'ϫⲉⲙⲫⲉϩ', phoneticAr: 'جِمْفِـيهْ', meaning: 'تفاح', soundFile: 'assets/sounds/30zempheh.mp3' },
       soundFile: 'audio_coptic/30ganga.mp3'
     },
 
@@ -433,7 +433,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً تاء وشين معاً <strong>(تش)</strong> مثل <strong>(Ch)</strong> في كلمة (church).'
       ],
-      word: { coptic: 'ϭⲁϫ', phoneticAr: 'تْشَـاجْ', meaning: 'عصفور' },
+      word: { coptic: 'ϭⲁϫ', phoneticAr: 'تْشَـاجْ', meaning: 'عصفور', soundFile: 'assets/sounds/31chaj.mp3' },
       soundFile: 'audio_coptic/31chema.mp3'
     },
     {
@@ -446,7 +446,7 @@
       rules: [
         'الحرف الثاني والثلاثون، آخر حروف الأبجدية القبطية. مقطع صوتي ديموطيقي مركب يُنطق تاء متبوعة بكسرة ياء <strong>(تـ + ي = Ti)</strong>.'
       ],
-      word: { coptic: 'ϯⲙⲓ', phoneticAr: 'تِيـمِي', meaning: 'قرية' },
+      word: { coptic: 'ϯⲙⲓ', phoneticAr: 'تِيـمِي', meaning: 'قرية', soundFile: 'assets/sounds/32timi.mp3' },
       soundFile: 'audio_coptic/32tee.mp3'
     }
   ];
