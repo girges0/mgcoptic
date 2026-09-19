@@ -115,14 +115,9 @@
       }
       window.refreshStatsDisplay = refreshStatsDisplay;
 
-      
-      // ============================================================
-      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
-      // طراز MG Coptic الملكي - خالي من الملصقات والرموز التعبيرية مع أيقونات SVG
-      // ============================================================
-      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
-      // شرط إلزامي صارم: لا يمكن فتح أو دخول أي مستوى إلا بعد إكمال المستوى السابق بالكامل
-      // طراز MG Coptic الملكي - خالي تماماً من الملصقات والرموز التعبيرية مع أيقونات SVG نقية
+// ============================================================
+      // مبدّل المستويات المصغر والأنيق (Compact Professional Level Bar)
+      // بدون أي شعار ضخم - صغير وملخص واحترافي وبسيط
       // ============================================================
       let currentActiveLevelId = null;
 
@@ -227,35 +222,27 @@
         const order = Number(currentLvl.order_index) || 1;
         const stats = getLevelStats(activeLvlId, curriculum, progress);
         
-        let glyph = 'Ⲁ';
-        let badgeText = 'المستوى الأول • الأبجدية';
+        let levelName = 'المستوى الأول: الأبجدية القبطية';
         if (order === 2 || String(activeLvlId) === '6') {
-          glyph = 'Ⲻ';
-          badgeText = 'المستوى الثاني • قواعد القراءة';
+          levelName = 'المستوى الثاني: قواعد القراءة';
         }
 
         return `
           <div class="modern-level-switcher-wrapper">
-            <button type="button" class="modern-level-capsule-btn" onclick="openLevelSelectorModal()" aria-label="تبديل المستوى الدراسي" title="اضغط للتنقل بين المستويات الدراسية">
-              <div class="level-capsule-icon-box">
-                <span class="level-capsule-glyph">${glyph}</span>
+            <button type="button" class="compact-level-bar-btn" onclick="openLevelSelectorModal()" aria-label="تبديل المستوى الدراسي" title="اضغط للانتقال بين المستويات">
+              <div class="compact-level-title-group">
+                <span class="compact-level-name">${escapeHtml(levelName)}</span>
+                <span class="compact-level-stat">
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                </span>
               </div>
-              <div class="level-capsule-info">
-                <div class="level-capsule-tag-row">
-                  <span class="level-capsule-tag">${escapeHtml(badgeText)}</span>
-                  <span class="level-capsule-progress-badge">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                      <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                    <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
-                  </span>
-                </div>
-                <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
-              </div>
-              <div class="level-capsule-switch-pill">
-                <span>المستويات</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <div class="compact-level-switch-btn">
+                <span>تبديل المستوى</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </div>
@@ -283,12 +270,10 @@
           const isActive = lvlId === activeLvlId;
           const isUnlocked = isLevelUnlocked(lvlId, activeCurriculum, activeLessonProgress);
           
-          let glyph = 'Ⲁ';
           let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات والقواعد الأساسية';
           let tag = 'المستوى الأول • إتقان الحروف';
           
           if (order === 2 || lvlId === '6') {
-            glyph = 'Ⲻ';
             subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
           }
@@ -297,16 +282,16 @@
           if (!isUnlocked) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-locked-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                <span>مغلق • يتطلب إكمال المستوى السابق</span>
+                <span>مغلق</span>
               </span>`;
           } else if (isActive) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-active-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
                 <span>المستوى الحالي</span>
@@ -314,16 +299,16 @@
           } else if (stats.isCompleted) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-completed-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="16 10 11 15 8 12"/>
                 </svg>
-                <span>مكتمل بالكامل</span>
+                <span>مكتمل</span>
               </span>`;
           } else if (stats.completedLessons > 0) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-switch-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>
@@ -332,7 +317,7 @@
           } else {
             statusBadgeHtml = `
               <span class="level-card-badge badge-switch-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
                 <span>اضغط للانتقال</span>
@@ -345,7 +330,7 @@
             const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
             statsRowHtml = `
               <span class="stat-pill" style="color:#8C6517;font-weight:800;">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
@@ -355,26 +340,26 @@
           } else {
             statsRowHtml = `
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                 </svg>
                 <span>${stats.totalUnits} وحدات</span>
               </span>
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                 </svg>
                 <span>${stats.totalLessons} درساً</span>
               </span>
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
                 </svg>
                 <span>${stats.totalChallenges} تمريناً</span>
               </span>
               ${stats.completedLessons > 0 ? `
                 <span class="stat-pill stat-completed">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                   <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
@@ -384,17 +369,17 @@
 
           html += `
             <div class="modern-level-card ${isActive ? 'is-active' : ''} ${!isUnlocked ? 'is-locked' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
-              <div class="level-card-icon-col">
+              <div class="level-card-num-badge">
                 ${!isUnlocked ? `
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                   </svg>
-                ` : `<span>${glyph}</span>`}
+                ` : `<span>${order === 1 ? '١' : '٢'}</span>`}
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
-                  <span class="level-capsule-tag">${escapeHtml(tag)}</span>
+                  <span class="level-card-tag">${escapeHtml(tag)}</span>
                   ${statusBadgeHtml}
                 </div>
                 <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
@@ -417,7 +402,7 @@
 
       window.openLevelSelectorModal = function() {
         const modal = document.getElementById('level-selector-modal');
-        const btn = document.querySelector('.modern-level-capsule-btn');
+        const btn = document.querySelector('.compact-level-bar-btn') || document.querySelector('.modern-level-capsule-btn');
         if (!modal) return;
         renderLevelSelectorCards();
         modal.classList.add('show');
@@ -426,7 +411,7 @@
 
       window.closeLevelSelectorModal = function() {
         const modal = document.getElementById('level-selector-modal');
-        const btn = document.querySelector('.modern-level-capsule-btn');
+        const btn = document.querySelector('.compact-level-bar-btn') || document.querySelector('.modern-level-capsule-btn');
         if (modal) modal.classList.remove('show');
         if (btn) btn.classList.remove('active');
       };

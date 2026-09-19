@@ -8623,157 +8623,119 @@
        الألوان المعتمدة: العنابي الملكي (--madder: #6B1530)، الذهبي القبطي (--gold: #B8892E)، والورق البردي (--parchment-card: #FAF3E4)
        خالي تماماً من الألوان الدخيلة (لا أزرق، لا نيون)، ومعتمد 100% على أيقونات SVG الاحترافية
        ============================================================ */
+    /* ============================================================
+       مبدّل المستويات المصغر والأنيق (Compact Professional Level Bar)
+       تصميم مقتضب وبسيط واحترافي بدون أي شعار ضخم أو بطاقة كبيرة
+       ============================================================ */
+    /* ============================================================
+       مبدّل المستويات المصغر والأنيق (Compact Professional Level Bar)
+       تصميم مقتضب وبسيط واحترافي بدون أي شعار ضخم أو بطاقة كبيرة
+       ============================================================ */
     .modern-level-switcher-wrapper {
       width: 100%;
-      max-width: 580px;
-      margin: 16px auto 26px;
-      padding: 0 12px;
+      max-width: 540px;
+      margin: 8px auto 16px;
+      padding: 0 14px;
       box-sizing: border-box;
       position: relative;
       z-index: 10;
     }
 
-    .modern-level-capsule-btn {
+    .compact-level-bar-btn {
       width: 100%;
-      background: linear-gradient(180deg, #FFFFFF 0%, #FAF3E4 100%);
-      border: 2px solid rgba(184, 137, 46, 0.45);
-      border-radius: 20px;
-      padding: 12px 16px;
+      background: #FAF6EE;
+      border: 1.5px solid rgba(184, 137, 46, 0.38);
+      border-radius: 50px;
+      padding: 7px 14px 7px 10px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      gap: 10px;
       cursor: pointer;
       text-align: right;
-      box-shadow: 0 4px 16px rgba(46, 32, 24, 0.06);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(46, 32, 24, 0.05);
+      transition: all 0.22s ease;
       font-family: inherit;
     }
 
-    .modern-level-capsule-btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 5px;
-      background: linear-gradient(180deg, #B8892E 0%, #6B1530 100%);
-      border-radius: 0 20px 20px 0;
-    }
-
-    .modern-level-capsule-btn:hover {
-      transform: translateY(-2px);
+    .compact-level-bar-btn:hover {
       border-color: #B8892E;
-      box-shadow: 0 8px 24px rgba(107, 21, 48, 0.12);
       background: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(107, 21, 48, 0.09);
+      transform: translateY(-1px);
     }
 
-    .modern-level-capsule-btn:active {
+    .compact-level-bar-btn:active {
       transform: translateY(0);
     }
 
-    .level-capsule-icon-box {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #4A0E21 0%, #6B1530 100%);
-      border: 2px solid #C4A052;
-      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .level-capsule-glyph {
-      font-family: var(--font-coptic, 'girges', sans-serif);
-      font-size: 1.65rem;
-      font-weight: 900;
-      color: #FFDF6D;
-      line-height: 1;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .level-capsule-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .level-capsule-tag-row {
+    .compact-level-title-group {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 4px;
+      flex: 1;
+      min-width: 0;
       flex-wrap: wrap;
     }
 
-    .level-capsule-tag {
-      font-size: 0.74rem;
+    .compact-level-name {
+      font-family: var(--font-display, inherit);
+      font-size: 0.9rem;
       font-weight: 800;
-      color: #6B1530;
-      background: rgba(107, 21, 48, 0.08);
-      border: 1px solid rgba(107, 21, 48, 0.14);
-      padding: 2px 9px;
-      border-radius: 8px;
+      color: #4A0E21;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.1px;
     }
 
-    .level-capsule-progress-badge {
+    .compact-level-stat {
       font-size: 0.74rem;
       font-weight: 800;
       color: #8C6517;
       background: rgba(184, 137, 46, 0.12);
       border: 1px solid rgba(184, 137, 46, 0.22);
-      padding: 2px 9px;
-      border-radius: 8px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
 
-    .level-capsule-title {
-      font-family: var(--font-display, inherit);
-      font-size: 1.05rem;
-      font-weight: 900;
-      color: #2E2018;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .level-capsule-switch-pill {
+    .compact-level-switch-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 12px;
-      border-radius: 12px;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 20px;
       background: rgba(107, 21, 48, 0.06);
-      border: 1px solid rgba(107, 21, 48, 0.12);
+      border: 1px solid rgba(107, 21, 48, 0.14);
       color: #6B1530;
       font-weight: 800;
-      font-size: 0.8rem;
-      transition: all 0.25s ease;
+      font-size: 0.77rem;
+      transition: all 0.22s ease;
       flex-shrink: 0;
     }
 
-    .modern-level-capsule-btn:hover .level-capsule-switch-pill {
+    .compact-level-bar-btn:hover .compact-level-switch-btn {
       background: #6B1530;
       color: #FFFFFF;
       border-color: #6B1530;
     }
 
-    .modern-level-capsule-btn.active .level-capsule-switch-pill {
+    .compact-level-bar-btn.active .compact-level-switch-btn {
       background: #6B1530;
       color: #FFDF6D;
       border-color: #6B1530;
     }
 
-    .level-capsule-switch-pill svg {
-      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    .compact-level-switch-btn svg {
+      transition: transform 0.25s ease;
     }
 
-    .modern-level-capsule-btn.active .level-capsule-switch-pill svg {
+    .compact-level-bar-btn.active .compact-level-switch-btn svg {
       transform: rotate(180deg);
     }
 
@@ -8804,15 +8766,15 @@
 
     .level-selector-modal-sheet {
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       max-height: 85vh;
       overflow-y: auto;
       background: #FAF6EE;
-      border-radius: 24px;
+      border-radius: 22px;
       border: 2px solid rgba(184, 137, 46, 0.4);
       box-shadow: 0 20px 48px rgba(46, 32, 24, 0.25);
-      padding: 24px 20px 26px;
-      transform: translateY(24px) scale(0.97);
+      padding: 22px 18px 24px;
+      transform: translateY(22px) scale(0.97);
       transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
       position: relative;
     }
@@ -8825,14 +8787,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
       border-bottom: 1.5px solid rgba(184, 137, 46, 0.2);
     }
 
     .level-selector-sheet-title {
       font-family: var(--font-display, inherit);
-      font-size: 1.22rem;
+      font-size: 1.18rem;
       font-weight: 900;
       color: #4A0E21;
       margin: 0;
@@ -8844,8 +8806,8 @@
     .level-selector-sheet-close {
       background: rgba(46, 32, 24, 0.06);
       border: none;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       font-size: 1.25rem;
       color: #5A4A3E;
@@ -8866,37 +8828,37 @@
     .level-cards-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .modern-level-card {
       position: relative;
       background: #FFFFFF;
       border: 2px solid #E2D5BE;
-      border-radius: 18px;
-      padding: 16px 18px;
+      border-radius: 16px;
+      padding: 14px 16px;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.22s ease;
       display: flex;
-      gap: 16px;
+      gap: 14px;
       align-items: center;
       text-align: right;
-      box-shadow: 0 3px 12px rgba(46, 32, 24, 0.04);
+      box-shadow: 0 2px 10px rgba(46, 32, 24, 0.04);
       font-family: inherit;
     }
 
     .modern-level-card:hover {
       transform: translateY(-2px);
       border-color: #B8892E;
-      box-shadow: 0 8px 24px rgba(107, 21, 48, 0.1);
+      box-shadow: 0 6px 20px rgba(107, 21, 48, 0.09);
       background: #FFFFFF;
     }
 
     /* المستوى النشط الحالي */
     .modern-level-card.is-active {
       border-color: #6B1530 !important;
-      background: linear-gradient(135deg, rgba(107, 21, 48, 0.04) 0%, rgba(250, 243, 228, 0.95) 100%) !important;
-      box-shadow: 0 6px 20px rgba(107, 21, 48, 0.14) !important;
+      background: linear-gradient(135deg, rgba(107, 21, 48, 0.03) 0%, rgba(250, 243, 228, 0.95) 100%) !important;
+      box-shadow: 0 4px 16px rgba(107, 21, 48, 0.12) !important;
     }
 
     .modern-level-card.is-active::after {
@@ -8904,8 +8866,8 @@
       position: absolute;
       top: -2px;
       right: 18px;
-      width: 40px;
-      height: 4px;
+      width: 36px;
+      height: 3.5px;
       background: #B8892E;
       border-radius: 0 0 6px 6px;
     }
@@ -8927,39 +8889,34 @@
       background: #F6F1E7 !important;
     }
 
-    .modern-level-card.is-locked .level-card-icon-col {
+    .modern-level-card.is-locked .level-card-num-badge {
       background: linear-gradient(135deg, #7A695A 0%, #948272 100%) !important;
       border-color: #C5B8A8 !important;
       box-shadow: none !important;
       color: #FAF3E4 !important;
     }
 
-    .badge-locked-pill {
-      background: rgba(122, 105, 90, 0.12);
-      color: #6E5C4E;
-      border: 1px solid rgba(122, 105, 90, 0.25);
-    }
-
-    .level-card-icon-col {
-      width: 52px;
-      height: 52px;
-      min-width: 52px;
-      border-radius: 16px;
+    .level-card-num-badge {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      border-radius: 50%;
       background: linear-gradient(135deg, #4A0E21 0%, #6B1530 100%);
       border: 2px solid #C4A052;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #FFDF6D;
-      font-family: var(--font-coptic, 'girges', sans-serif);
-      font-size: 1.8rem;
+      font-family: var(--font-display, inherit);
+      font-size: 1.1rem;
       font-weight: 900;
-      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.22);
+      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.2);
     }
 
-    .modern-level-card.is-active .level-card-icon-col {
-      box-shadow: 0 4px 16px rgba(107, 21, 48, 0.35);
-      border-color: #FFDF6D;
+    .badge-locked-pill {
+      background: rgba(122, 105, 90, 0.12);
+      color: #6E5C4E;
+      border: 1px solid rgba(122, 105, 90, 0.25);
     }
 
     .level-card-main-col {
@@ -8971,19 +8928,29 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       flex-wrap: wrap;
       gap: 6px;
     }
 
-    .level-card-badge {
-      font-size: 0.74rem;
+    .level-card-tag {
+      font-size: 0.72rem;
       font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 8px;
+      color: #6B1530;
+      background: rgba(107, 21, 48, 0.08);
+      border: 1px solid rgba(107, 21, 48, 0.14);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .level-card-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .badge-active-pill {
@@ -9006,7 +8973,7 @@
 
     .level-card-title {
       font-family: var(--font-display, inherit);
-      font-size: 1.06rem;
+      font-size: 1.02rem;
       font-weight: 900;
       color: #2E2018;
       margin: 0 0 3px;
@@ -9014,9 +8981,9 @@
     }
 
     .level-card-desc {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #5A4A3E;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       line-height: 1.45;
       font-weight: 500;
     }
@@ -9024,8 +8991,8 @@
     .level-card-stats-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 0.78rem;
+      gap: 10px;
+      font-size: 0.76rem;
       color: #7A695A;
       font-weight: 700;
       flex-wrap: wrap;
@@ -9034,7 +9001,7 @@
     .stat-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .stat-pill svg {
@@ -9053,11 +9020,11 @@
 
     .level-card-progress-bar-wrap {
       width: 100%;
-      height: 6px;
+      height: 5px;
       background: rgba(46, 32, 24, 0.08);
       border-radius: 8px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .level-card-progress-fill {
@@ -13294,14 +13261,9 @@
       }
       window.refreshStatsDisplay = refreshStatsDisplay;
 
-      
-      // ============================================================
-      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
-      // طراز MG Coptic الملكي - خالي من الملصقات والرموز التعبيرية مع أيقونات SVG
-      // ============================================================
-      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
-      // شرط إلزامي صارم: لا يمكن فتح أو دخول أي مستوى إلا بعد إكمال المستوى السابق بالكامل
-      // طراز MG Coptic الملكي - خالي تماماً من الملصقات والرموز التعبيرية مع أيقونات SVG نقية
+// ============================================================
+      // مبدّل المستويات المصغر والأنيق (Compact Professional Level Bar)
+      // بدون أي شعار ضخم - صغير وملخص واحترافي وبسيط
       // ============================================================
       let currentActiveLevelId = null;
 
@@ -13406,35 +13368,27 @@
         const order = Number(currentLvl.order_index) || 1;
         const stats = getLevelStats(activeLvlId, curriculum, progress);
         
-        let glyph = 'Ⲁ';
-        let badgeText = 'المستوى الأول • الأبجدية';
+        let levelName = 'المستوى الأول: الأبجدية القبطية';
         if (order === 2 || String(activeLvlId) === '6') {
-          glyph = 'Ⲻ';
-          badgeText = 'المستوى الثاني • قواعد القراءة';
+          levelName = 'المستوى الثاني: قواعد القراءة';
         }
 
         return `
           <div class="modern-level-switcher-wrapper">
-            <button type="button" class="modern-level-capsule-btn" onclick="openLevelSelectorModal()" aria-label="تبديل المستوى الدراسي" title="اضغط للتنقل بين المستويات الدراسية">
-              <div class="level-capsule-icon-box">
-                <span class="level-capsule-glyph">${glyph}</span>
+            <button type="button" class="compact-level-bar-btn" onclick="openLevelSelectorModal()" aria-label="تبديل المستوى الدراسي" title="اضغط للانتقال بين المستويات">
+              <div class="compact-level-title-group">
+                <span class="compact-level-name">${escapeHtml(levelName)}</span>
+                <span class="compact-level-stat">
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                </span>
               </div>
-              <div class="level-capsule-info">
-                <div class="level-capsule-tag-row">
-                  <span class="level-capsule-tag">${escapeHtml(badgeText)}</span>
-                  <span class="level-capsule-progress-badge">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                      <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                    <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
-                  </span>
-                </div>
-                <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
-              </div>
-              <div class="level-capsule-switch-pill">
-                <span>المستويات</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <div class="compact-level-switch-btn">
+                <span>تبديل المستوى</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </div>
@@ -13462,12 +13416,10 @@
           const isActive = lvlId === activeLvlId;
           const isUnlocked = isLevelUnlocked(lvlId, activeCurriculum, activeLessonProgress);
           
-          let glyph = 'Ⲁ';
           let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات والقواعد الأساسية';
           let tag = 'المستوى الأول • إتقان الحروف';
           
           if (order === 2 || lvlId === '6') {
-            glyph = 'Ⲻ';
             subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
           }
@@ -13476,16 +13428,16 @@
           if (!isUnlocked) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-locked-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                <span>مغلق • يتطلب إكمال المستوى السابق</span>
+                <span>مغلق</span>
               </span>`;
           } else if (isActive) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-active-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
                 <span>المستوى الحالي</span>
@@ -13493,16 +13445,16 @@
           } else if (stats.isCompleted) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-completed-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="16 10 11 15 8 12"/>
                 </svg>
-                <span>مكتمل بالكامل</span>
+                <span>مكتمل</span>
               </span>`;
           } else if (stats.completedLessons > 0) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-switch-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>
@@ -13511,7 +13463,7 @@
           } else {
             statusBadgeHtml = `
               <span class="level-card-badge badge-switch-pill">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
                 <span>اضغط للانتقال</span>
@@ -13524,7 +13476,7 @@
             const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
             statsRowHtml = `
               <span class="stat-pill" style="color:#8C6517;font-weight:800;">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
@@ -13534,26 +13486,26 @@
           } else {
             statsRowHtml = `
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                 </svg>
                 <span>${stats.totalUnits} وحدات</span>
               </span>
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                 </svg>
                 <span>${stats.totalLessons} درساً</span>
               </span>
               <span class="stat-pill">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
                 </svg>
                 <span>${stats.totalChallenges} تمريناً</span>
               </span>
               ${stats.completedLessons > 0 ? `
                 <span class="stat-pill stat-completed">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                   <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
@@ -13563,17 +13515,17 @@
 
           html += `
             <div class="modern-level-card ${isActive ? 'is-active' : ''} ${!isUnlocked ? 'is-locked' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
-              <div class="level-card-icon-col">
+              <div class="level-card-num-badge">
                 ${!isUnlocked ? `
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                   </svg>
-                ` : `<span>${glyph}</span>`}
+                ` : `<span>${order === 1 ? '١' : '٢'}</span>`}
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
-                  <span class="level-capsule-tag">${escapeHtml(tag)}</span>
+                  <span class="level-card-tag">${escapeHtml(tag)}</span>
                   ${statusBadgeHtml}
                 </div>
                 <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
@@ -13596,7 +13548,7 @@
 
       window.openLevelSelectorModal = function() {
         const modal = document.getElementById('level-selector-modal');
-        const btn = document.querySelector('.modern-level-capsule-btn');
+        const btn = document.querySelector('.compact-level-bar-btn') || document.querySelector('.modern-level-capsule-btn');
         if (!modal) return;
         renderLevelSelectorCards();
         modal.classList.add('show');
@@ -13605,7 +13557,7 @@
 
       window.closeLevelSelectorModal = function() {
         const modal = document.getElementById('level-selector-modal');
-        const btn = document.querySelector('.modern-level-capsule-btn');
+        const btn = document.querySelector('.compact-level-bar-btn') || document.querySelector('.modern-level-capsule-btn');
         if (modal) modal.classList.remove('show');
         if (btn) btn.classList.remove('active');
       };
