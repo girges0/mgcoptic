@@ -920,11 +920,7 @@
           lessonModal.onclick = (e) => { if (e.target === lessonModal) lessonModal.style.display = 'none'; };
         }
 
-                const tbHeartsBadge = document.getElementById('topbar-hearts-badge');
-        if (tbHeartsBadge) {
-          tbHeartsBadge.style.cursor = 'pointer';
-          tbHeartsBadge.onclick = () => { handleOutOfHearts(); };
-        }
+                /* Heart badge click disabled – no modal on tap */
 
         if (btnModalStart && lessonModal) {
           btnModalStart.onclick = async () => {

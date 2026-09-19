@@ -99,8 +99,9 @@
   "sameAs": []
 }
 </script>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png?v=2">
+  <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="assets/images/favicon.png?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -4884,48 +4885,56 @@
 
     /* ============ SETTINGS / الإعدادات STYLES ============ */
     .settings-grid {
-      max-width: 580px;
+      max-width: 540px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
+      padding: 0 2px;
     }
 
     .settings-card {
       background: var(--parchment-card);
-      border: 1px solid rgba(168, 130, 58, 0.3);
-      border-radius: var(--radius);
-      padding: 22px 20px;
-      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(168, 130, 58, 0.18);
+      border-radius: 18px;
+      padding: 24px 22px;
+      box-shadow: 0 2px 12px rgba(107, 21, 48, 0.06), 0 1px 3px rgba(0,0,0,0.04);
       text-align: right;
+      transition: box-shadow .25s ease, transform .25s ease;
+    }
+    .settings-card:hover {
+      box-shadow: 0 4px 20px rgba(107, 21, 48, 0.10), 0 2px 6px rgba(0,0,0,0.06);
     }
 
     .settings-card-title {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 1.08rem;
+      font-size: 1.05rem;
       color: var(--ink);
-      margin: 0 0 18px;
+      margin: 0 0 20px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1.5px solid rgba(168, 130, 58, 0.15);
     }
 
     .settings-card-title svg {
       color: var(--madder);
+      flex-shrink: 0;
     }
 
     .avatar-edit-section {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 22px;
     }
 
     .avatar-preview-box {
-      width: 76px;
-      height: 76px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
-      background: rgba(168, 130, 58, 0.15);
+      background: linear-gradient(145deg, rgba(168, 130, 58, 0.12), rgba(107, 21, 48, 0.08));
       border: 3px solid var(--gold);
       display: flex;
       align-items: center;
@@ -4935,45 +4944,96 @@
       color: var(--madder);
       overflow: hidden;
       flex-shrink: 0;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 3px 14px rgba(168, 130, 58, 0.18);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .avatar-preview-box:hover {
+      transform: scale(1.06);
+      box-shadow: 0 5px 20px rgba(168, 130, 58, 0.28);
     }
 
     .avatar-actions {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 10px;
+    }
+
+    /* Settings-specific button overrides */
+    .settings-card .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: .88rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      border: none;
+      cursor: pointer;
+      transition: all .25s cubic-bezier(.34,1.56,.64,1);
+      background: linear-gradient(135deg, var(--madder) 0%, #8B1A3A 100%);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.22);
+    }
+    .settings-card .btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 5px 16px rgba(107, 21, 48, 0.32);
+    }
+    .settings-card .btn:active {
+      transform: scale(0.97);
+    }
+    .settings-card .btn svg {
+      stroke: #fff;
+    }
+
+    .settings-card .btn.secondary {
+      background: transparent;
+      color: var(--madder);
+      border: 1.5px solid rgba(107, 21, 48, 0.3);
+      box-shadow: none;
+    }
+    .settings-card .btn.secondary:hover {
+      background: rgba(107, 21, 48, 0.06);
+      border-color: var(--madder);
+      box-shadow: 0 2px 8px rgba(107, 21, 48, 0.12);
+    }
+    .settings-card .btn.secondary svg {
+      stroke: var(--madder);
     }
 
     .input-with-action {
       display: flex;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 10px;
+      margin-top: 8px;
+      align-items: stretch;
     }
 
     .settings-input {
       flex: 1;
       font-family: var(--font-body);
       font-size: .95rem;
-      padding: 10px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(168, 130, 58, 0.35);
-      background: var(--parchment-soft);
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(168, 130, 58, 0.25);
+      background: rgba(255, 255, 255, 0.5);
       color: var(--ink);
       outline: none;
-      transition: border-color .2s;
+      transition: border-color .25s, box-shadow .25s;
     }
 
     .settings-input:focus {
       border-color: var(--madder);
+      box-shadow: 0 0 0 3px rgba(107, 21, 48, 0.1);
     }
 
     .settings-select {
       font-family: var(--font-body);
       font-size: .9rem;
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(168, 130, 58, 0.35);
-      background: var(--parchment-soft);
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(168, 130, 58, 0.25);
+      background: rgba(255, 255, 255, 0.5);
       color: var(--ink);
     }
 
@@ -5048,7 +5108,7 @@
     .status-msg {
       font-size: .82rem;
       font-weight: 700;
-      margin-top: 6px;
+      margin-top: 8px;
       min-height: 18px;
     }
 
@@ -5063,26 +5123,26 @@
     .btn-logout-danger {
       background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
       color: #FFFFFF !important;
-      border: 1px solid #B91C1C !important;
+      border: none !important;
       font-family: var(--font-display) !important;
       font-weight: 700 !important;
-      font-size: .92rem !important;
-      padding: 10px 24px !important;
-      border-radius: 10px !important;
+      font-size: .88rem !important;
+      padding: 11px 22px !important;
+      border-radius: 12px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       gap: 8px !important;
       cursor: pointer !important;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28) !important;
+      box-shadow: 0 3px 12px rgba(220, 38, 38, 0.25) !important;
       transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 
     .btn-logout-danger:hover {
       background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%) !important;
       color: #FFFFFF !important;
-      transform: translateY(-2px) scale(1.02) !important;
-      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4) !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 5px 18px rgba(220, 38, 38, 0.35) !important;
     }
 
     .btn-logout-danger:active {
@@ -5094,28 +5154,29 @@
     }
 
     .btn-delete-account {
-      background: linear-gradient(135deg, #7F1D1D 0%, #450A0A 100%) !important;
-      color: #FEE2E2 !important;
-      border: 1px solid #991B1B !important;
+      background: transparent !important;
+      color: #991B1B !important;
+      border: 1.5px solid rgba(153, 27, 27, 0.3) !important;
       font-family: var(--font-display) !important;
       font-weight: 700 !important;
-      font-size: .92rem !important;
-      padding: 10px 20px !important;
-      border-radius: 10px !important;
+      font-size: .88rem !important;
+      padding: 11px 20px !important;
+      border-radius: 12px !important;
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       gap: 8px !important;
       cursor: pointer !important;
-      box-shadow: 0 4px 12px rgba(127, 29, 29, 0.3) !important;
+      box-shadow: none !important;
       transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 
     .btn-delete-account:hover {
-      background: linear-gradient(135deg, #991B1B 0%, #7F1D1D 100%) !important;
-      color: #FFFFFF !important;
-      transform: translateY(-2px) scale(1.02) !important;
-      box-shadow: 0 6px 16px rgba(153, 27, 27, 0.45) !important;
+      background: rgba(153, 27, 27, 0.06) !important;
+      color: #7F1D1D !important;
+      border-color: #991B1B !important;
+      transform: translateY(-2px) scale(1.03) !important;
+      box-shadow: 0 3px 12px rgba(153, 27, 27, 0.15) !important;
     }
 
     .btn-delete-account:active {
@@ -9626,9 +9687,8 @@
 
     <!-- ============ SETTINGS / الإعدادات ============ -->
     <section id="settings" class="tab-panel">
-      <div style="text-align:center;margin-bottom:20px;">
-        <h2 class="rubric" style="margin-bottom:4px;">الإعدادات والملف الشخصي</h2>
-        <p class="hint" style="margin:0;">خصّص بيانات حسابك وصورتك الرمزية</p>
+      <div style="text-align:center;margin-bottom:22px;">
+        <h2 class="rubric" style="margin-bottom:0;">الإعدادات</h2>
       </div>
 
       <div class="settings-grid">
@@ -9656,7 +9716,7 @@
               <input type="file" id="settings-avatar-input" accept="image/*" style="display:none;">
               <button type="button" class="btn" id="btn-upload-avatar"
                 onclick="document.getElementById('settings-avatar-input').click()">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
                   stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="17 8 12 3 7 8" />
@@ -9665,19 +9725,28 @@
                 <span>تغيير الصورة</span>
               </button>
               <button type="button" class="btn secondary" id="btn-remove-avatar" onclick="removeUserProfilePhoto()">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
                 <span>إزالة الصورة</span>
               </button>
             </div>
           </div>
 
-          <div style="margin-top:20px;">
+          <div style="margin-top:22px;">
             <label for="settings-name-input"
-              style="font-family:var(--font-display);font-size:.88rem;font-weight:700;color:var(--ink);display:block;margin-bottom:6px;">الاسم
+              style="font-family:var(--font-display);font-size:.86rem;font-weight:700;color:var(--ink);display:block;margin-bottom:8px;">الاسم
               المعروض في المنصة والتصنيف</label>
             <div class="input-with-action">
               <input type="text" id="settings-name-input" class="settings-input" placeholder="اكتب اسمك..."
                 maxlength="40">
               <button type="button" class="btn" id="btn-save-username" onclick="saveUserProfileName()">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
                 <span>حفظ</span>
               </button>
             </div>
@@ -13543,11 +13612,7 @@
           lessonModal.onclick = (e) => { if (e.target === lessonModal) lessonModal.style.display = 'none'; };
         }
 
-                const tbHeartsBadge = document.getElementById('topbar-hearts-badge');
-        if (tbHeartsBadge) {
-          tbHeartsBadge.style.cursor = 'pointer';
-          tbHeartsBadge.onclick = () => { handleOutOfHearts(); };
-        }
+        /* Heart badge click disabled – no modal on tap */
 
         if (btnModalStart && lessonModal) {
           btnModalStart.onclick = async () => {

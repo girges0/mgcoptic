@@ -37,3 +37,5 @@ scripts/generate_coptic_months.py
 scripts/generate_edge_sounds.py
 scripts/generate-remaining-coptic-audio.mjs
 scripts/regenerate_unapproved_months.py
+scratch_pdf/
+.backups_months_before_half_trim/

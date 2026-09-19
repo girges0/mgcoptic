@@ -19,7 +19,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'الحرف الأول في الأبجدية القبطية. يُنطق دائماً ألفاً مفتوحة مشبعة مثل <strong>(أَ)</strong> في العربية أو <strong>(A)</strong> في كلمة (Father).'
+        'الحرف الأول في الأبجدية القبطية. يُنطق دائماً ألفاً مفتوحة مشبعة ممدودة مثل حرف الألف في كلمتي <strong>(باب)</strong> و<strong>(قال)</strong>.'
       ],
       word: { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلُـومْ', meaning: 'جبنة', soundFile: 'assets/sounds/1alom.mp3' },
       soundFile: 'audio_coptic/1alfa.mp3'
@@ -32,8 +32,8 @@
       hasMultiple: true,
       multipleCountText: 'له نطقان (ڤ / ب)',
       rules: [
-        'يُنطق <strong>(ڤ / V)</strong>: إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ).',
-        'يُنطق <strong>(ب / B)</strong>: إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة.'
+        'يُنطق <strong>(ڤ)</strong>: إذا جاء بعده أي حرف متحرك (Ⲁ, Ⲉ, Ⲏ, Ⲓ, Ⲟ, Ⲱ, Ⲩ) مثل نطق الفاء بثلاث نقاط في كلمة <strong>(ڤيديو)</strong>.',
+        'يُنطق <strong>(ب)</strong>: إذا لم يأتِ بعده حرف متحرك، أو إذا جاء في نهاية الكلمة مثل حرف الباء في كلمة <strong>(كتاب)</strong>.'
       ],
       word: { coptic: 'ⲃⲱ', phoneticAr: 'ڤُـو', meaning: 'شجرة', soundFile: 'assets/sounds/2vo.mp3' },
       soundFile: 'audio_coptic/2veta.mp3'
@@ -75,7 +75,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'حرف متحرك للكسر يُنطق فتحة مائلة للكسر مثل حرف <strong>(E)</strong> في كلمة (pen) أو (bed).'
+        'حرف متحرك للكسر الخفيف، يُنطق فتحة مائلة للكسر (إمالة خفيفة كالياء اللينة) مثل حركة الياء في كلمتي <strong>(إلى)</strong> و<strong>(على)</strong>.'
       ],
       word: { coptic: 'ⲉ̀ⲣϣⲱ', phoneticAr: 'إِرْشُـو', meaning: 'دجاجة', soundFile: 'assets/sounds/5ergoh.mp3' },
       soundFile: 'audio_coptic/5ei.mp3'
@@ -103,7 +103,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'يُنطق دائماً حرف زين <strong>"ز"</strong> مثل حرف <strong>(Z)</strong> في الإنجليزية في جميع الكلمات والمواضع.'
+        'يُنطق دائماً حرف زين <strong>"ز"</strong> صريحاً في جميع الكلمات والمواضع مثل حرف الزاي في كلمة <strong>(زهرة)</strong>.'
       ],
       word: { coptic: 'Ⲍⲱⲏ', phoneticAr: 'زُوئِي', meaning: 'حياة', soundFile: 'assets/sounds/7zowy.mp3' },
       soundFile: 'audio_coptic/7zeta.mp3'
@@ -116,7 +116,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'حرف متحرك للكسر يُنطق ياء طويلة مشبعة ممدودة مثل <strong>(ee)</strong> في كلمة (meet) أو (see).'
+        'حرف متحرك للكسر، يُنطق ياءً طويلة مشبعة ممدودة مثل مد الياء في كلمتي <strong>(جميل)</strong> و<strong>(سرير)</strong>.'
       ],
       word: { coptic: 'Ⲏⲓ', phoneticAr: 'إِي', meaning: 'بيت', soundFile: 'assets/sounds/8ei.mp3' },
       soundFile: 'audio_coptic/8eta.mp3'
@@ -129,8 +129,8 @@
       hasMultiple: true,
       multipleCountText: 'له نطقان (ث / ت)',
       rules: [
-        'يُنطق <strong>(ت)</strong>: إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ).',
-        'يُنطق <strong>(ث)</strong>: في باقي الحالات الأخرى مثل حرف <strong>(Th)</strong> في الإنجليزية.'
+        'يُنطق <strong>(ت)</strong>: إذا سبقه حرف سيما (Ⲥ) أو حرف شاي (Ϣ) مثل حرف التاء في كلمة <strong>(تمثال)</strong>.',
+        'يُنطق <strong>(ث)</strong>: في باقي الحالات الأخرى مثل حرف الثاء في كلمتي <strong>(ثمار)</strong> و<strong>(ثابت)</strong>.'
       ],
       word: { coptic: 'Ⲑⲁⲙⲓⲟ', phoneticAr: 'ثَامِيـوْ', meaning: 'يخلق', soundFile: 'assets/sounds/9samyo.mp3' },
       soundFile: 'audio_coptic/9seta.mp3'
@@ -143,7 +143,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'حرف متحرك للكسر يُنطق ياء قصيرة أو كسرة خفيفة مثل حرف <strong>(I)</strong> في كلمة (sit) أو (pin).'
+        'حرف متحرك للكسر، يُنطق ياءً قصيرة صريحة أو كسرة واضحة مثل حرف الياء في كلمة <strong>(دين)</strong> أو الكسرة في كلمة <strong>(مِن)</strong>.'
       ],
       word: { coptic: 'ⲓⲁⲗ', phoneticAr: 'إِيَـالْ', meaning: 'مراية', soundFile: 'assets/sounds/10ial.mp3' },
       soundFile: 'audio_coptic/10yota.mp3'
@@ -171,7 +171,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'يُنطق دائماً حرف لام <strong>"ل"</strong> مثل حرف <strong>(L)</strong> في الإنجليزية.'
+        'يُنطق دائماً حرف لام <strong>"ل"</strong> في جميع الكلمات والمواضع مثل حرف اللام في كلمة <strong>(ليمون)</strong>.'
       ],
       word: { coptic: 'ⲗⲁⲃⲟ', phoneticAr: 'لَاڤُـو', meaning: 'أسد', soundFile: 'assets/sounds/12lavo.mp3' },
       soundFile: 'audio_coptic/12lavla.mp3'
@@ -210,7 +210,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق مركب مزدوج',
       rules: [
-        'حرف مركب يُنطق كاف وسين معاً <strong>(كـ + س = X)</strong> في مقطع صوتي واحد.'
+        'حرف مركب يُنطق كاف وسين معاً <strong>(كـ + س)</strong> في مقطع صوتي واحد مثل صوت الكاف والسين في كلمة <strong>(مَكْسَب)</strong>.'
       ],
       word: { coptic: 'ⲝⲟⲩⲏ', phoneticAr: 'إِكْسُـويْ', meaning: 'مسطرة', soundFile: 'assets/sounds/15ksooy.mp3' },
       soundFile: 'audio_coptic/15axsy.mp3'
@@ -225,7 +225,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'حرف متحرك للضم يُنطق واواً قصيرة مضمومة خفيفة مثل حرف <strong>(O)</strong> في كلمة (not) أو (hot).'
+        'حرف متحرك للضم، يُنطق واواً قصيرة خطافة كضمة حرف القاف في كلمة <strong>(قُل)</strong>.'
       ],
       word: { coptic: 'ⲟⲩⲱⲙ', phoneticAr: 'أُوؤْم', meaning: 'يأكل', soundFile: "assets/sounds/16o'om.mp3" },
       soundFile: 'audio_coptic/16oo.mp3'
@@ -238,7 +238,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'يُنطق باء شديدة تخرج بحبس الهواء ثم إطلاقه بقوة مثل حرف <strong>(P)</strong> في الإنجليزية.'
+        'يُنطق باءً شديدة صريحة تخرج بحبس الهواء وضغط الشفتين بقوة <strong>(پ)</strong> مثل الباء المشددة في <strong>(رَبّ)</strong>.'
       ],
       word: { coptic: 'ⲡⲓⲱⲧ', phoneticAr: 'بَايُـوتْ', meaning: 'أبي', soundFile: 'assets/sounds/17bayot.mp3' },
       soundFile: 'audio_coptic/17pee.mp3'
@@ -292,9 +292,9 @@
       hasMultiple: true,
       multipleCountText: 'له 3 حالات نطق (ڤ / و / ي)',
       rules: [
-        'يُنطق <strong>(ڤ / V)</strong>: إذا سبقه حرف Ⲁ (ألفا) أو Ⲉ (إي) مثل المقطعين (ⲀⲨ / ⲈⲨ).',
-        'يُنطق <strong>(و ممدودة)</strong>: إذا سبقه حرف Ⲟ (أو قصيرة) في المقطع (ⲞⲨ).',
-        'يُنطق <strong>(ي)</strong>: في باقي الحالات إذا لم يسبقه (Ⲁ أو Ⲉ أو Ⲟ).'
+        'يُنطق <strong>(ڤ)</strong>: إذا سبقه حرف Ⲁ (ألفا) أو Ⲉ (إي) مثل المقطعين (ⲀⲨ / ⲈⲨ) كما في نطق حرف (ڤ).',
+        'يُنطق <strong>(واو ممدودة)</strong>: إذا سبقه حرف Ⲟ (أو قصيرة) في المقطع (ⲞⲨ) مثل مد الواو في كلمة <strong>(نور)</strong>.',
+        'يُنطق <strong>(ياء خفيفة)</strong>: في باقي الحالات إذا جاء بعد ساكن في الكلمات ذات الأصل اليوناني مثل الياء في كلمة <strong>(تسبحة)</strong>.'
       ],
       word: { coptic: 'ⲩⲥⲓⲥ', phoneticAr: 'إِيسِـيسْ', meaning: 'مطر', soundFile: 'assets/sounds/21usis.mp3'},
       soundFile: 'audio_coptic/21epselon.mp3'
@@ -307,7 +307,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'يُنطق دائماً حرف فاء <strong>"ف"</strong> مثل حرف <strong>(F)</strong> في الإنجليزية.'
+        'يُنطق دائماً حرف فاء <strong>"ف"</strong> في جميع الكلمات والمواضع مثل حرف الفاء في كلمة <strong>(فرس)</strong>.'
       ],
       word: { coptic: 'ⲫⲉϧ', phoneticAr: 'فِيـخْ', meaning: 'بطيخ', soundFile: 'assets/sounds/22fev.mp3' },
       soundFile: 'audio_coptic/22fi.mp3'
@@ -335,7 +335,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق مركب مزدوج',
       rules: [
-        'حرف مركب يُنطق باء خفيفة وسين معاً <strong>(بـ + س = Ps)</strong> في مقطع صوتي واحد.'
+        'حرف مركب يُنطق باء وسين معاً <strong>(بـ + س)</strong> في مقطع صوتي واحد مثل صوت (بْسْ) في كلمة <strong>(كَبْس)</strong>.'
       ],
       word: { coptic: 'ⲯⲓⲧ ⲛ̀ⲕⲉⲛⲕⲉⲛ', phoneticAr: 'إِبْسِـيتْ إِنْ كِنْكِـنْ', meaning: '9 دفوف', soundFile: 'assets/sounds/24psit.mp3' },
       soundFile: 'audio_coptic/24psi.mp3'
@@ -348,7 +348,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق واحد ثابت',
       rules: [
-        'آخر الحروف المأخوذة من الأبجدية اليونانية. حرف متحرك للضم يُنطق واواً طويلة مفتوحة مشبعة ممدودة <strong>(Ō)</strong>.'
+        'آخر الحروف المأخوذة من الأبجدية اليونانية. حرف متحرك للضم، يُنطق واواً طويلة مفتوحة مفخمة ممدودة كمد الواو في كلمتي <strong>(صَوم)</strong> و<strong>(يَوم)</strong>.'
       ],
       word: { coptic: 'ⲧⲁⲥⲱⲛⲓ', phoneticAr: 'تَاسُـونِي', meaning: 'أختي', soundFile: 'assets/sounds/25tasoni.mp3' },
       soundFile: 'audio_coptic/25oo.mp3'
@@ -431,7 +431,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق مركب (ت + ش)',
       rules: [
-        'حرف مصري ديموطيقي أصيل، يُنطق دائماً تاء وشين معاً <strong>(تش)</strong> مثل <strong>(Ch)</strong> في كلمة (church).'
+        'حرف مصري ديموطيقي أصيل، يُنطق دائماً تاء وشين معاً <strong>(تش)</strong> في مقطع صوتي واحد مثل صوت (تْش) في كلمة <strong>(تْشيللو)</strong>.'
       ],
       word: { coptic: 'ϭⲁϫ', phoneticAr: 'تْشَـاجْ', meaning: 'عصفور', soundFile: 'assets/sounds/31chaj.mp3' },
       soundFile: 'audio_coptic/31chema.mp3'
@@ -444,7 +444,7 @@
       hasMultiple: false,
       multipleCountText: 'نطق مقطعي (تـ + ي)',
       rules: [
-        'الحرف الثاني والثلاثون، آخر حروف الأبجدية القبطية. مقطع صوتي ديموطيقي مركب يُنطق تاء متبوعة بكسرة ياء <strong>(تـ + ي = Ti)</strong>.'
+        'الحرف الثاني والثلاثون، آخر حروف الأبجدية القبطية. مقطع صوتي ديموطيقي مركب يُنطق تاء متبوعة بكسرة ياء صريحة <strong>(تـ + ي)</strong> مثل صوت (تي) في كلمة <strong>(تين)</strong>.'
       ],
       word: { coptic: 'ϯⲙⲓ', phoneticAr: 'تِيـمِي', meaning: 'قرية', soundFile: 'assets/sounds/32timi.mp3' },
       soundFile: 'audio_coptic/32tee.mp3'
