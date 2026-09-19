@@ -8611,53 +8611,66 @@
        VERY MODERN LEVEL SWITCHER & MODAL SHEET (DUOLINGO-CLASS UX)
        ============================================================ */
 
+    
+    /* ============================================================
+       مبدّل المستويات الدراسي الأصيل - طابع MG Coptic الملكي العريق
+       الألوان المعتمدة: العنابي الملكي (--madder: #6B1530)، الذهبي القبطي (--gold: #B8892E)، والورق البردي (--parchment-card: #FAF3E4)
+       خالي تماماً من الألوان الدخيلة (لا أزرق، لا نيون)، ومعتمد 100% على أيقونات SVG الاحترافية
+       ============================================================ */
+    
+    /* ============================================================
+       مبدّل المستويات الدراسي الأصيل - طابع MG Coptic الملكي العريق
+       الألوان المعتمدة: العنابي الملكي (--madder: #6B1530)، الذهبي القبطي (--gold: #B8892E)، والورق البردي (--parchment-card: #FAF3E4)
+       خالي تماماً من الألوان الدخيلة (لا أزرق، لا نيون)، ومعتمد 100% على أيقونات SVG الاحترافية
+       ============================================================ */
     .modern-level-switcher-wrapper {
+      width: 100%;
       max-width: 580px;
       margin: 16px auto 26px;
-      padding: 0 14px;
+      padding: 0 12px;
+      box-sizing: border-box;
       position: relative;
       z-index: 10;
     }
 
     .modern-level-capsule-btn {
       width: 100%;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1.5px solid rgba(196, 160, 82, 0.35);
-      border-radius: 22px;
-      padding: 12px 18px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FAF3E4 100%);
+      border: 2px solid rgba(184, 137, 46, 0.45);
+      border-radius: 20px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 14px;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(74, 13, 36, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       text-align: right;
+      box-shadow: 0 4px 16px rgba(46, 32, 24, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
+      font-family: inherit;
     }
 
     .modern-level-capsule-btn::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       right: 0;
-      width: 6px;
-      height: 100%;
-      background: linear-gradient(180deg, #C4A052 0%, #6B1530 100%);
-      border-radius: 0 22px 22px 0;
+      bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, #B8892E 0%, #6B1530 100%);
+      border-radius: 0 20px 20px 0;
     }
 
     .modern-level-capsule-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(74, 13, 36, 0.13), 0 4px 10px rgba(196, 160, 82, 0.16);
-      border-color: rgba(196, 160, 82, 0.65);
+      border-color: #B8892E;
+      box-shadow: 0 8px 24px rgba(107, 21, 48, 0.12);
+      background: #FFFFFF;
     }
 
     .modern-level-capsule-btn:active {
-      transform: scale(0.985);
+      transform: translateY(0);
     }
 
     .level-capsule-icon-box {
@@ -8665,9 +8678,9 @@
       height: 48px;
       min-width: 48px;
       border-radius: 14px;
-      background: linear-gradient(135deg, #4A0D24 0%, #6B1530 100%);
+      background: linear-gradient(135deg, #4A0E21 0%, #6B1530 100%);
       border: 2px solid #C4A052;
-      box-shadow: 0 4px 12px rgba(74, 13, 36, 0.25);
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -8677,9 +8690,9 @@
       font-family: var(--font-coptic, 'girges', sans-serif);
       font-size: 1.65rem;
       font-weight: 900;
-      color: #FFE066;
+      color: #FFDF6D;
       line-height: 1;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .level-capsule-info {
@@ -8696,71 +8709,91 @@
     }
 
     .level-capsule-tag {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
       color: #6B1530;
       background: rgba(107, 21, 48, 0.08);
-      padding: 2px 10px;
-      border-radius: 12px;
-      letter-spacing: -0.1px;
+      border: 1px solid rgba(107, 21, 48, 0.14);
+      padding: 2px 9px;
+      border-radius: 8px;
     }
 
     .level-capsule-progress-badge {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 800;
-      color: #00874F;
-      background: rgba(0, 179, 104, 0.12);
-      padding: 2px 8px;
-      border-radius: 12px;
+      color: #8C6517;
+      background: rgba(184, 137, 46, 0.12);
+      border: 1px solid rgba(184, 137, 46, 0.22);
+      padding: 2px 9px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .level-capsule-title {
       font-family: var(--font-display, inherit);
       font-size: 1.05rem;
       font-weight: 900;
-      color: var(--ink, #241B12);
+      color: #2E2018;
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: -0.2px;
     }
 
-    .level-capsule-chevron-box {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(196, 160, 82, 0.12);
-      display: flex;
+    .level-capsule-switch-pill {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 12px;
+      background: rgba(107, 21, 48, 0.06);
+      border: 1px solid rgba(107, 21, 48, 0.12);
       color: #6B1530;
+      font-weight: 800;
+      font-size: 0.8rem;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .modern-level-capsule-btn:hover .level-capsule-switch-pill {
+      background: #6B1530;
+      color: #FFFFFF;
+      border-color: #6B1530;
+    }
+
+    .modern-level-capsule-btn.active .level-capsule-switch-pill {
+      background: #6B1530;
+      color: #FFDF6D;
+      border-color: #6B1530;
+    }
+
+    .level-capsule-switch-pill svg {
       transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
     }
 
-    .modern-level-capsule-btn.active .level-capsule-chevron-box {
+    .modern-level-capsule-btn.active .level-capsule-switch-pill svg {
       transform: rotate(180deg);
-      background: #6B1530;
-      color: #FFE066;
     }
 
-    /* Modal Overlay & Bottom Sheet */
+    /* نافذة اختيار المستوى (Modal Overlay & Sheet) */
     .level-selector-modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(20, 10, 15, 0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(46, 32, 24, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 16px;
     }
 
@@ -8774,13 +8807,13 @@
       max-width: 520px;
       max-height: 85vh;
       overflow-y: auto;
-      background: #FFFFFF;
-      border-radius: 28px;
-      border: 2px solid rgba(196, 160, 82, 0.3);
-      box-shadow: 0 25px 50px -12px rgba(74, 13, 36, 0.35);
-      padding: 24px 20px 28px;
-      transform: translateY(30px) scale(0.96);
-      transition: all 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      background: #FAF6EE;
+      border-radius: 24px;
+      border: 2px solid rgba(184, 137, 46, 0.4);
+      box-shadow: 0 20px 48px rgba(46, 32, 24, 0.25);
+      padding: 24px 20px 26px;
+      transform: translateY(24px) scale(0.97);
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
       position: relative;
     }
 
@@ -8794,14 +8827,14 @@
       justify-content: space-between;
       margin-bottom: 20px;
       padding-bottom: 14px;
-      border-bottom: 1.5px solid rgba(196, 160, 82, 0.18);
+      border-bottom: 1.5px solid rgba(184, 137, 46, 0.2);
     }
 
     .level-selector-sheet-title {
       font-family: var(--font-display, inherit);
       font-size: 1.22rem;
       font-weight: 900;
-      color: #4A0D24;
+      color: #4A0E21;
       margin: 0;
       display: flex;
       align-items: center;
@@ -8809,13 +8842,13 @@
     }
 
     .level-selector-sheet-close {
-      background: rgba(0, 0, 0, 0.05);
+      background: rgba(46, 32, 24, 0.06);
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      font-size: 1.3rem;
-      color: #706354;
+      font-size: 1.25rem;
+      color: #5A4A3E;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -8825,11 +8858,11 @@
 
     .level-selector-sheet-close:hover {
       background: #6B1530;
-      color: #FFF;
+      color: #FFFFFF;
       transform: rotate(90deg);
     }
 
-    /* Modern Level Cards */
+    /* بطاقات المستويات (Level Cards) */
     .level-cards-list {
       display: flex;
       flex-direction: column;
@@ -8838,9 +8871,9 @@
 
     .modern-level-card {
       position: relative;
-      background: #FFFDF9;
-      border: 2px solid #EADBCE;
-      border-radius: 20px;
+      background: #FFFFFF;
+      border: 2px solid #E2D5BE;
+      border-radius: 18px;
       padding: 16px 18px;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -8848,27 +8881,33 @@
       gap: 16px;
       align-items: center;
       text-align: right;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 3px 12px rgba(46, 32, 24, 0.04);
+      font-family: inherit;
     }
 
     .modern-level-card:hover {
       transform: translateY(-2px);
-      border-color: #C4A052;
-      box-shadow: 0 8px 22px rgba(107, 21, 48, 0.1);
+      border-color: #B8892E;
+      box-shadow: 0 8px 24px rgba(107, 21, 48, 0.1);
       background: #FFFFFF;
     }
 
+    /* المستوى النشط الحالي - عنابي ملكي أصيل مع إطار ذهبي دافئ */
     .modern-level-card.is-active {
-      border-color: #00A3FF !important;
-      background: linear-gradient(135deg, rgba(0, 163, 255, 0.05) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
-      box-shadow: 0 6px 20px rgba(0, 163, 255, 0.18) !important;
+      border-color: #6B1530 !important;
+      background: linear-gradient(135deg, rgba(107, 21, 48, 0.04) 0%, rgba(250, 243, 228, 0.95) 100%) !important;
+      box-shadow: 0 6px 20px rgba(107, 21, 48, 0.14) !important;
     }
 
-    .modern-level-card.is-locked {
-      opacity: 0.65;
-      background: #F8F6F2;
-      cursor: not-allowed;
-      border-style: dashed;
+    .modern-level-card.is-active::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: 18px;
+      width: 40px;
+      height: 4px;
+      background: #B8892E;
+      border-radius: 0 0 6px 6px;
     }
 
     .level-card-icon-col {
@@ -8876,30 +8915,21 @@
       height: 52px;
       min-width: 52px;
       border-radius: 16px;
-      background: linear-gradient(135deg, #4A0D24 0%, #6B1530 100%);
+      background: linear-gradient(135deg, #4A0E21 0%, #6B1530 100%);
       border: 2px solid #C4A052;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #FFE066;
+      color: #FFDF6D;
       font-family: var(--font-coptic, 'girges', sans-serif);
       font-size: 1.8rem;
       font-weight: 900;
-      box-shadow: 0 4px 12px rgba(74, 13, 36, 0.2);
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.22);
     }
 
     .modern-level-card.is-active .level-card-icon-col {
-      background: linear-gradient(135deg, #0077CC 0%, #00A3FF 100%);
-      border-color: #70D6FF;
-      box-shadow: 0 4px 14px rgba(0, 163, 255, 0.35);
-      color: #FFFFFF;
-    }
-
-    .modern-level-card.is-locked .level-card-icon-col {
-      background: #D9D2C7;
-      border-color: #BDB4A5;
-      color: #706354;
-      box-shadow: none;
+      box-shadow: 0 4px 16px rgba(107, 21, 48, 0.35);
+      border-color: #FFDF6D;
     }
 
     .level-card-main-col {
@@ -8911,45 +8941,53 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .level-card-badge {
       font-size: 0.74rem;
       font-weight: 800;
-      padding: 2px 9px;
-      border-radius: 10px;
+      padding: 3px 9px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .badge-active-pill {
-      background: rgba(0, 163, 255, 0.12);
-      color: #0077CC;
+      background: rgba(107, 21, 48, 0.1);
+      color: #6B1530;
+      border: 1px solid rgba(107, 21, 48, 0.2);
     }
 
     .badge-completed-pill {
-      background: rgba(0, 179, 104, 0.12);
-      color: #00874F;
+      background: rgba(46, 107, 62, 0.12);
+      color: #2E6B3E;
+      border: 1px solid rgba(46, 107, 62, 0.25);
     }
 
-    .badge-upcoming-pill {
-      background: rgba(196, 160, 82, 0.15);
-      color: #8C6F2D;
+    .badge-switch-pill {
+      background: rgba(184, 137, 46, 0.12);
+      color: #8C6517;
+      border: 1px solid rgba(184, 137, 46, 0.25);
     }
 
     .level-card-title {
       font-family: var(--font-display, inherit);
-      font-size: 1.04rem;
+      font-size: 1.06rem;
       font-weight: 900;
-      color: var(--ink, #241B12);
+      color: #2E2018;
       margin: 0 0 3px;
       line-height: 1.35;
     }
 
     .level-card-desc {
       font-size: 0.82rem;
-      color: var(--ink-soft, #706354);
+      color: #5A4A3E;
       margin: 0 0 8px;
-      line-height: 1.4;
+      line-height: 1.45;
       font-weight: 500;
     }
 
@@ -8958,31 +8996,51 @@
       align-items: center;
       gap: 12px;
       font-size: 0.78rem;
-      color: #8C7A6B;
+      color: #7A695A;
       font-weight: 700;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .stat-pill svg {
+      color: #B8892E;
+    }
+
+    .stat-pill.stat-completed {
+      margin-right: auto;
+      color: #2E6B3E;
+      font-weight: 800;
+    }
+
+    .stat-pill.stat-completed svg {
+      color: #2E6B3E;
     }
 
     .level-card-progress-bar-wrap {
       width: 100%;
       height: 6px;
-      background: rgba(0, 0, 0, 0.06);
-      border-radius: 10px;
+      background: rgba(46, 32, 24, 0.08);
+      border-radius: 8px;
       overflow: hidden;
-      margin-top: 6px;
+      margin-top: 8px;
     }
 
     .level-card-progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #00A3FF, #00E5FF);
-      border-radius: 10px;
+      background: linear-gradient(90deg, #B8892E 0%, #6B1530 100%);
+      border-radius: 8px;
       transition: width 0.4s ease;
     }
 
     .level-card-progress-fill.completed {
-      background: linear-gradient(90deg, #00B368, #2CE58E);
+      background: #2E6B3E;
     }
-
-  </style>
+</style>
 </head>
 
 <body>
@@ -9401,23 +9459,26 @@
 
     <!-- نافذة تفاصيل الدرس -->
     
-    <!-- ==================== نافذة اختيار المستوى الدراسي العصري (Modern Level Selector) ==================== -->
+    <!-- ==================== نافذة اختيار المستوى الدراسي (MG Coptic Level Selector) ==================== -->
+    <!-- ==================== نافذة اختيار المستوى الدراسي (MG Coptic Level Selector) ==================== -->
     <div class="level-selector-modal-overlay" id="level-selector-modal" onclick="if(event.target === this) closeLevelSelectorModal()">
       <div class="level-selector-modal-sheet">
         <div class="level-selector-sheet-header">
           <div class="level-selector-sheet-title">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C4A052" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#B8892E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
             </svg>
             <span>اختر المستوى الدراسي</span>
           </div>
           <button type="button" class="level-selector-sheet-close" onclick="closeLevelSelectorModal()" aria-label="إغلاق">&times;</button>
         </div>
         <div class="level-cards-list" id="level-cards-container">
-          <!-- يُولد ديناميكياً بواسطة JavaScript بأحدث البيانات ونسب الإنجاز -->
+          <!-- يتم ملؤها ديناميكياً بالمستويين الأول والثاني فقط بدون أي ملصقات -->
         </div>
       </div>
+    </div>
+    </div>
     </div>
 
     <div class="modal-overlay" id="lesson-modal">
@@ -13204,39 +13265,42 @@
       window.refreshStatsDisplay = refreshStatsDisplay;
 
       
-      let currentActiveLevelId = null;
+      // ============================================================
+      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
+      // طراز MG Coptic الملكي - خالي من الملصقات والرموز التعبيرية مع أيقونات SVG
+      // ============================================================
       function getActiveLevelId() {
-        if (currentActiveLevelId) return currentActiveLevelId;
-        try {
-          const saved = localStorage.getItem('mg_coptic_active_level_id');
-          if (saved) {
-            currentActiveLevelId = String(saved);
-            return currentActiveLevelId;
-          }
-        } catch(e) {}
-        return '5'; // الافتراضي: المستوى الأول
-      }
-      function setActiveLevelId(lvlId) {
-        currentActiveLevelId = String(lvlId);
-        try {
-          localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
-        } catch(e) {}
+        const stored = localStorage.getItem('mg_coptic_active_level_id');
+        if (stored === '6') return '6';
+        return '5'; // المستوى الأول افتراضياً
       }
 
-      function getLevelStats(lvlId, curriculum, progress) {
+      function setActiveLevelId(levelId) {
+        localStorage.setItem('mg_coptic_active_level_id', String(levelId));
+      }
+
+      function getLevelStats(levelId, curriculum, progress) {
         if (!curriculum || !curriculum.units) {
           return { totalUnits: 0, totalLessons: 0, completedLessons: 0, totalChallenges: 0, percent: 0, isCompleted: false };
         }
-        const units = curriculum.units.filter(u => String(u.level_id) === String(lvlId));
+        const units = curriculum.units.filter(u => String(u.level_id) === String(levelId));
         let totalLessons = 0;
         let completedLessons = 0;
         let totalChallenges = 0;
+
         units.forEach(u => {
-          (u.lessons || []).forEach(l => {
+          (u.lessons || []).forEach(les => {
             totalLessons++;
-            totalChallenges += (l.challenges || []).length;
-            if ((progress[String(l.id)] || {}).status === 'completed') {
+            const p = progress ? progress[String(les.id)] : null;
+            if (p && p.status === 'completed') {
               completedLessons++;
+            }
+            if (les.challenge_list && les.challenge_list.length > 0) {
+              totalChallenges += les.challenge_list.length;
+            } else if (les.content && les.content.challenges) {
+              totalChallenges += les.content.challenges.length;
+            } else {
+              totalChallenges += 4;
             }
           });
         });
@@ -13263,9 +13327,6 @@
         if (order === 2 || String(activeLvlId) === '6') {
           glyph = 'Ⲻ';
           badgeText = 'المستوى الثاني • قواعد القراءة';
-        } else if (order === 3) {
-          glyph = 'Ⲫϯ';
-          badgeText = 'المستوى الثالث • النحو';
         }
 
         return `
@@ -13277,12 +13338,19 @@
               <div class="level-capsule-info">
                 <div class="level-capsule-tag-row">
                   <span class="level-capsule-tag">${escapeHtml(badgeText)}</span>
-                  <span class="level-capsule-progress-badge">${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                  <span class="level-capsule-progress-badge">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                  </span>
                 </div>
                 <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
               </div>
-              <div class="level-capsule-chevron-box">
-                <svg class="level-capsule-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <div class="level-capsule-switch-pill">
+                <span>تبديل</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </div>
@@ -13295,7 +13363,12 @@
         const container = document.getElementById('level-cards-container');
         if (!container || !activeCurriculum) return;
         
-        const levels = (activeCurriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        // عرض المستويين الأول والثاني فقط بدون المستوى الثالث وبدون أي ملصقات
+        const levels = (activeCurriculum.levels || [])
+          .filter(l => String(l.id) === '5' || String(l.id) === '6' || Number(l.order_index) === 1 || Number(l.order_index) === 2)
+          .slice()
+          .sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+
         const activeLvlId = String(getActiveLevelId());
         
         let html = '';
@@ -13306,88 +13379,98 @@
           const isActive = lvlId === activeLvlId;
           
           let glyph = 'Ⲁ';
-          let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات وتتبع الرسم';
+          let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات والقواعد الأساسية';
           let tag = 'المستوى الأول • إتقان الحروف';
-          let isLocked = false;
           
           if (order === 2 || lvlId === '6') {
             glyph = 'Ⲻ';
-            subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المزدوجة، والمقاطع الصوتية';
+            subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
-            isLocked = false; 
-          } else if (order === 3) {
-            glyph = 'Ⲫϯ';
-            subtitle = 'أدوات التعريف، الملكية، الإشارة، وتفكيك صلاة أبانا الذي';
-            tag = 'المستوى الثالث • نحو وبناء الجملة';
-            isLocked = true;
           }
 
           let statusBadgeHtml = '';
-          if (isLocked) {
-            statusBadgeHtml = `<span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>`;
-          } else if (isActive) {
-            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">المستوى الحالي 📍</span>`;
+          if (isActive) {
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-active-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span>المستوى المفتوح</span>
+              </span>`;
           } else if (stats.isCompleted) {
-            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill">مكتمل ١٠٠٪ 🎖️</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-completed-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="16 10 11 15 8 12"/>
+                </svg>
+                <span>مكتمل بالكامل</span>
+              </span>`;
           } else if (stats.completedLessons > 0) {
-            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">قيد التقدم (${stats.percent}%)</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-switch-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>قيد التقدم (${stats.percent}%)</span>
+              </span>`;
           } else {
-            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill" style="background:rgba(196,160,82,0.12);color:#8C6F2D;">متاح للتعلم 🔓</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-switch-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>اضغط للانتقال</span>
+              </span>`;
           }
 
-          const clickAction = isLocked 
-            ? "if(typeof showToast === 'function') showToast('المستوى الثالث قيد الإعداد الأكاديمي وسيتوفر قريباً!')" 
-            : "switchCurriculumLevel('" + lvlId + "')";
-
           html += `
-            <div class="modern-level-card ${isActive ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}" onclick="${clickAction}">
+            <div class="modern-level-card ${isActive ? 'is-active' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
               <div class="level-card-icon-col">
                 <span>${glyph}</span>
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
-                  <span class="level-capsule-tag" style="font-size:0.75rem;">${escapeHtml(tag)}</span>
+                  <span class="level-capsule-tag">${escapeHtml(tag)}</span>
                   ${statusBadgeHtml}
                 </div>
                 <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
                 <p class="level-card-desc">${escapeHtml(lvl.description || subtitle)}</p>
                 <div class="level-card-stats-row">
-                  <span>📚 ${stats.totalUnits} وحدات</span>
-                  <span>📖 ${stats.totalLessons} درساً</span>
-                  <span>🎯 ${stats.totalChallenges} تمريناً</span>
-                  ${stats.completedLessons > 0 ? `<span style="margin-right:auto;color:#00B368;font-weight:800;">${stats.completedLessons}/${stats.totalLessons} منجز</span>` : ''}
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>${stats.totalUnits} وحدات</span>
+                  </span>
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                    <span>${stats.totalLessons} درساً</span>
+                  </span>
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>${stats.totalChallenges} تمريناً</span>
+                  </span>
+                  ${stats.completedLessons > 0 ? `
+                    <span class="stat-pill stat-completed">
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
+                    </span>` : ''}
                 </div>
-                ${!isLocked ? `
-                  <div class="level-card-progress-bar-wrap">
-                    <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
-                  </div>
-                ` : ''}
+                <div class="level-card-progress-bar-wrap">
+                  <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
+                </div>
               </div>
             </div>
           `;
         });
-
-        if (!levels.some(l => Number(l.order_index) === 3)) {
-          html += `
-            <div class="modern-level-card is-locked" onclick="if(typeof showToast === 'function') showToast('المستوى الثالث (النحو وبناء الجملة ومردات الليتورجيا) قيد الإعداد الأكاديمي وسيتوفر قريباً!')">
-              <div class="level-card-icon-col">
-                <span>Ⲫϯ</span>
-              </div>
-              <div class="level-card-main-col">
-                <div class="level-card-top-meta">
-                  <span class="level-capsule-tag" style="font-size:0.75rem;">المستوى الثالث • نحو وبناء الجملة</span>
-                  <span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>
-                </div>
-                <h4 class="level-card-title">المستوى الثالث: أساسيات النحو والترجمة والمفردات</h4>
-                <p class="level-card-desc">أدوات التعريف والتنكير، الملكية، الإشارة، تراكيب الجمل وصلاة «Ⲡⲉⲛⲓⲱⲧ - أبانا الذي»</p>
-                <div class="level-card-stats-row">
-                  <span>📚 ٧ وحدات مخطط لها</span>
-                  <span>📖 ترجمة ليتورجية</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }
 
         container.innerHTML = html;
       }

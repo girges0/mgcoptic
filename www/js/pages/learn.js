@@ -116,39 +116,42 @@
       window.refreshStatsDisplay = refreshStatsDisplay;
 
       
-      let currentActiveLevelId = null;
+      // ============================================================
+      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
+      // طراز MG Coptic الملكي - خالي من الملصقات والرموز التعبيرية مع أيقونات SVG
+      // ============================================================
       function getActiveLevelId() {
-        if (currentActiveLevelId) return currentActiveLevelId;
-        try {
-          const saved = localStorage.getItem('mg_coptic_active_level_id');
-          if (saved) {
-            currentActiveLevelId = String(saved);
-            return currentActiveLevelId;
-          }
-        } catch(e) {}
-        return '5'; // الافتراضي: المستوى الأول
-      }
-      function setActiveLevelId(lvlId) {
-        currentActiveLevelId = String(lvlId);
-        try {
-          localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
-        } catch(e) {}
+        const stored = localStorage.getItem('mg_coptic_active_level_id');
+        if (stored === '6') return '6';
+        return '5'; // المستوى الأول افتراضياً
       }
 
-      function getLevelStats(lvlId, curriculum, progress) {
+      function setActiveLevelId(levelId) {
+        localStorage.setItem('mg_coptic_active_level_id', String(levelId));
+      }
+
+      function getLevelStats(levelId, curriculum, progress) {
         if (!curriculum || !curriculum.units) {
           return { totalUnits: 0, totalLessons: 0, completedLessons: 0, totalChallenges: 0, percent: 0, isCompleted: false };
         }
-        const units = curriculum.units.filter(u => String(u.level_id) === String(lvlId));
+        const units = curriculum.units.filter(u => String(u.level_id) === String(levelId));
         let totalLessons = 0;
         let completedLessons = 0;
         let totalChallenges = 0;
+
         units.forEach(u => {
-          (u.lessons || []).forEach(l => {
+          (u.lessons || []).forEach(les => {
             totalLessons++;
-            totalChallenges += (l.challenges || []).length;
-            if ((progress[String(l.id)] || {}).status === 'completed') {
+            const p = progress ? progress[String(les.id)] : null;
+            if (p && p.status === 'completed') {
               completedLessons++;
+            }
+            if (les.challenge_list && les.challenge_list.length > 0) {
+              totalChallenges += les.challenge_list.length;
+            } else if (les.content && les.content.challenges) {
+              totalChallenges += les.content.challenges.length;
+            } else {
+              totalChallenges += 4;
             }
           });
         });
@@ -175,9 +178,6 @@
         if (order === 2 || String(activeLvlId) === '6') {
           glyph = 'Ⲻ';
           badgeText = 'المستوى الثاني • قواعد القراءة';
-        } else if (order === 3) {
-          glyph = 'Ⲫϯ';
-          badgeText = 'المستوى الثالث • النحو';
         }
 
         return `
@@ -189,12 +189,19 @@
               <div class="level-capsule-info">
                 <div class="level-capsule-tag-row">
                   <span class="level-capsule-tag">${escapeHtml(badgeText)}</span>
-                  <span class="level-capsule-progress-badge">${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                  <span class="level-capsule-progress-badge">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                  </span>
                 </div>
                 <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
               </div>
-              <div class="level-capsule-chevron-box">
-                <svg class="level-capsule-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <div class="level-capsule-switch-pill">
+                <span>تبديل</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </div>
@@ -207,7 +214,12 @@
         const container = document.getElementById('level-cards-container');
         if (!container || !activeCurriculum) return;
         
-        const levels = (activeCurriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        // عرض المستويين الأول والثاني فقط بدون المستوى الثالث وبدون أي ملصقات
+        const levels = (activeCurriculum.levels || [])
+          .filter(l => String(l.id) === '5' || String(l.id) === '6' || Number(l.order_index) === 1 || Number(l.order_index) === 2)
+          .slice()
+          .sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+
         const activeLvlId = String(getActiveLevelId());
         
         let html = '';
@@ -218,88 +230,98 @@
           const isActive = lvlId === activeLvlId;
           
           let glyph = 'Ⲁ';
-          let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات وتتبع الرسم';
+          let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات والقواعد الأساسية';
           let tag = 'المستوى الأول • إتقان الحروف';
-          let isLocked = false;
           
           if (order === 2 || lvlId === '6') {
             glyph = 'Ⲻ';
-            subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المزدوجة، والمقاطع الصوتية';
+            subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
-            isLocked = false; 
-          } else if (order === 3) {
-            glyph = 'Ⲫϯ';
-            subtitle = 'أدوات التعريف، الملكية، الإشارة، وتفكيك صلاة أبانا الذي';
-            tag = 'المستوى الثالث • نحو وبناء الجملة';
-            isLocked = true;
           }
 
           let statusBadgeHtml = '';
-          if (isLocked) {
-            statusBadgeHtml = `<span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>`;
-          } else if (isActive) {
-            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">المستوى الحالي 📍</span>`;
+          if (isActive) {
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-active-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span>المستوى المفتوح</span>
+              </span>`;
           } else if (stats.isCompleted) {
-            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill">مكتمل ١٠٠٪ 🎖️</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-completed-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="16 10 11 15 8 12"/>
+                </svg>
+                <span>مكتمل بالكامل</span>
+              </span>`;
           } else if (stats.completedLessons > 0) {
-            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">قيد التقدم (${stats.percent}%)</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-switch-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <span>قيد التقدم (${stats.percent}%)</span>
+              </span>`;
           } else {
-            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill" style="background:rgba(196,160,82,0.12);color:#8C6F2D;">متاح للتعلم 🔓</span>`;
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-switch-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span>اضغط للانتقال</span>
+              </span>`;
           }
 
-          const clickAction = isLocked 
-            ? "if(typeof showToast === 'function') showToast('المستوى الثالث قيد الإعداد الأكاديمي وسيتوفر قريباً!')" 
-            : "switchCurriculumLevel('" + lvlId + "')";
-
           html += `
-            <div class="modern-level-card ${isActive ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}" onclick="${clickAction}">
+            <div class="modern-level-card ${isActive ? 'is-active' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
               <div class="level-card-icon-col">
                 <span>${glyph}</span>
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
-                  <span class="level-capsule-tag" style="font-size:0.75rem;">${escapeHtml(tag)}</span>
+                  <span class="level-capsule-tag">${escapeHtml(tag)}</span>
                   ${statusBadgeHtml}
                 </div>
                 <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
                 <p class="level-card-desc">${escapeHtml(lvl.description || subtitle)}</p>
                 <div class="level-card-stats-row">
-                  <span>📚 ${stats.totalUnits} وحدات</span>
-                  <span>📖 ${stats.totalLessons} درساً</span>
-                  <span>🎯 ${stats.totalChallenges} تمريناً</span>
-                  ${stats.completedLessons > 0 ? `<span style="margin-right:auto;color:#00B368;font-weight:800;">${stats.completedLessons}/${stats.totalLessons} منجز</span>` : ''}
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>${stats.totalUnits} وحدات</span>
+                  </span>
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                    <span>${stats.totalLessons} درساً</span>
+                  </span>
+                  <span class="stat-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>${stats.totalChallenges} تمريناً</span>
+                  </span>
+                  ${stats.completedLessons > 0 ? `
+                    <span class="stat-pill stat-completed">
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
+                    </span>` : ''}
                 </div>
-                ${!isLocked ? `
-                  <div class="level-card-progress-bar-wrap">
-                    <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
-                  </div>
-                ` : ''}
+                <div class="level-card-progress-bar-wrap">
+                  <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
+                </div>
               </div>
             </div>
           `;
         });
-
-        if (!levels.some(l => Number(l.order_index) === 3)) {
-          html += `
-            <div class="modern-level-card is-locked" onclick="if(typeof showToast === 'function') showToast('المستوى الثالث (النحو وبناء الجملة ومردات الليتورجيا) قيد الإعداد الأكاديمي وسيتوفر قريباً!')">
-              <div class="level-card-icon-col">
-                <span>Ⲫϯ</span>
-              </div>
-              <div class="level-card-main-col">
-                <div class="level-card-top-meta">
-                  <span class="level-capsule-tag" style="font-size:0.75rem;">المستوى الثالث • نحو وبناء الجملة</span>
-                  <span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>
-                </div>
-                <h4 class="level-card-title">المستوى الثالث: أساسيات النحو والترجمة والمفردات</h4>
-                <p class="level-card-desc">أدوات التعريف والتنكير، الملكية، الإشارة، تراكيب الجمل وصلاة «Ⲡⲉⲛⲓⲱⲧ - أبانا الذي»</p>
-                <div class="level-card-stats-row">
-                  <span>📚 ٧ وحدات مخطط لها</span>
-                  <span>📖 ترجمة ليتورجية</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }
 
         container.innerHTML = html;
       }

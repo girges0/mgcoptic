@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v2.0.1-admin-fix';
+const CACHE_NAME = 'mgcoptic-v2.1.0-level-switcher';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
