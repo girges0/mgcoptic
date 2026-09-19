@@ -90,7 +90,7 @@ const LETTERS_DATA = [
     pronunciationAr: 'إي خفيفة',
     soundFile: 'audio_coptic/5ei.mp3',
     info: 'الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).',
-    wordCoptic: 'ⲉ̀ⲣϣⲱ',
+    wordCoptic: 'ⲉ̀ⲣϫⲱ',
     wordPhoneticAr: 'إرجو',
     wordMeaning: 'دجاجة',
     wrongMeanings: ['عصفور', 'حمامة', 'بطة'],

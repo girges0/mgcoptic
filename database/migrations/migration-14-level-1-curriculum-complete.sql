@@ -381,7 +381,7 @@ BEGIN
 • قواعد النطق: الحرف الخامس. حرف متحرك خفيف ينطق مثل حرف (E) في الإنجليزية (فتحة مائلة للكسر).
 ────────────────────
 • كلمة تطبيقية على الحرف:
-  - الكلمة بالقبطية: ⲉ̀ⲣϣⲱ
+  - الكلمة بالقبطية: ⲉ̀ⲣϫⲱ
   - القبطي المعرب (نطقها): «إرجو»
   - المعنى بالعربية: دجاجة
 
@@ -1031,7 +1031,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (863, 165, 'write', 'رتب حروف الكلمة: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 4)
+    VALUES (863, 165, 'write', 'رتب حروف الكلمة: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϫⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϫⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 4)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1255,7 +1255,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (696, 137, 'select', 'ما معنى الكلمة القبطية: ⲉ̀ⲣϣⲱ؟ (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 5)
+    VALUES (696, 137, 'select', 'ما معنى الكلمة القبطية: ⲉ̀ⲣϫⲱ؟ (المعرب: «إرجو»)', 'ⲉ̀ⲣϫⲱ', 'إرجو', 'audio_coptic/5ei.mp3', NULL, NULL, NULL, TRUE, 5)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
@@ -1383,7 +1383,7 @@ BEGIN
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)
-    VALUES (697, 137, 'write', 'رتب حروف الكلمة القبطية لتكوين: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϣⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϣⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 6)
+    VALUES (697, 137, 'write', 'رتب حروف الكلمة القبطية لتكوين: دجاجة (المعرب: «إرجو»)', 'ⲉ̀ⲣϫⲱ', 'إرجو', 'audio_coptic/5ei.mp3', 'ⲉ̀ⲣϫⲱ', '["ⲉ","̀","ⲣ","ϣ","ⲱ"]'::jsonb, NULL, TRUE, 6)
     ON CONFLICT (id) DO UPDATE SET question = EXCLUDED.question, coptic_display = EXCLUDED.coptic_display, audio_text = EXCLUDED.audio_text, audio_url = EXCLUDED.audio_url, correct_word = EXCLUDED.correct_word, tiles = EXCLUDED.tiles, pairs = EXCLUDED.pairs, order_index = EXCLUDED.order_index;
 
     INSERT INTO public.challenges (id, lesson_id, type, question, coptic_display, audio_text, audio_url, correct_word, tiles, pairs, is_correct, order_index)

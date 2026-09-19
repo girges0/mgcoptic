@@ -77,7 +77,7 @@
       rules: [
         'حرف متحرك للكسر الخفيف، يُنطق فتحة مائلة للكسر (إمالة خفيفة كالياء اللينة) مثل حركة الياء في كلمتي <strong>(إلى)</strong> و<strong>(على)</strong>.'
       ],
-      word: { coptic: 'ⲉ̀ⲣϣⲱ', phoneticAr: 'إِرْشُـو', meaning: 'دجاجة', soundFile: 'assets/sounds/5ergoh.mp3' },
+      word: { coptic: 'ⲉ̀ⲣϫⲱ', phoneticAr: 'إِرْجُـو', meaning: 'دجاجة', soundFile: 'assets/sounds/5ergoh.mp3' },
       soundFile: 'audio_coptic/5ei.mp3'
     },
 
