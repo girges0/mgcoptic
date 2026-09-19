@@ -115,6 +115,226 @@
       }
       window.refreshStatsDisplay = refreshStatsDisplay;
 
+      
+      let currentActiveLevelId = null;
+      function getActiveLevelId() {
+        if (currentActiveLevelId) return currentActiveLevelId;
+        try {
+          const saved = localStorage.getItem('mg_coptic_active_level_id');
+          if (saved) {
+            currentActiveLevelId = String(saved);
+            return currentActiveLevelId;
+          }
+        } catch(e) {}
+        return '5'; // الافتراضي: المستوى الأول
+      }
+      function setActiveLevelId(lvlId) {
+        currentActiveLevelId = String(lvlId);
+        try {
+          localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
+        } catch(e) {}
+      }
+
+      function getLevelStats(lvlId, curriculum, progress) {
+        if (!curriculum || !curriculum.units) {
+          return { totalUnits: 0, totalLessons: 0, completedLessons: 0, totalChallenges: 0, percent: 0, isCompleted: false };
+        }
+        const units = curriculum.units.filter(u => String(u.level_id) === String(lvlId));
+        let totalLessons = 0;
+        let completedLessons = 0;
+        let totalChallenges = 0;
+        units.forEach(u => {
+          (u.lessons || []).forEach(l => {
+            totalLessons++;
+            totalChallenges += (l.challenges || []).length;
+            if ((progress[String(l.id)] || {}).status === 'completed') {
+              completedLessons++;
+            }
+          });
+        });
+        const percent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        const isCompleted = totalLessons > 0 && completedLessons >= totalLessons;
+        return {
+          totalUnits: units.length,
+          totalLessons,
+          completedLessons,
+          totalChallenges,
+          percent,
+          isCompleted
+        };
+      }
+
+      function renderLevelCapsuleHeader(activeLvlId, curriculum, progress) {
+        const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        const currentLvl = levels.find(l => String(l.id) === String(activeLvlId)) || levels[0] || { id: 5, title: 'المستوى الأول: الأبجدية القبطية الكاملة', order_index: 1 };
+        const order = Number(currentLvl.order_index) || 1;
+        const stats = getLevelStats(activeLvlId, curriculum, progress);
+        
+        let glyph = 'Ⲁ';
+        let badgeText = 'المستوى الأول • الأبجدية';
+        if (order === 2 || String(activeLvlId) === '6') {
+          glyph = 'Ⲻ';
+          badgeText = 'المستوى الثاني • قواعد القراءة';
+        } else if (order === 3) {
+          glyph = 'Ⲫϯ';
+          badgeText = 'المستوى الثالث • النحو';
+        }
+
+        return `
+          <div class="modern-level-switcher-wrapper">
+            <button type="button" class="modern-level-capsule-btn" onclick="openLevelSelectorModal()" aria-label="تبديل المستوى الدراسي" title="اضغط للتنقل بين المستويات الدراسية">
+              <div class="level-capsule-icon-box">
+                <span class="level-capsule-glyph">${glyph}</span>
+              </div>
+              <div class="level-capsule-info">
+                <div class="level-capsule-tag-row">
+                  <span class="level-capsule-tag">${escapeHtml(badgeText)}</span>
+                  <span class="level-capsule-progress-badge">${stats.completedLessons}/${stats.totalLessons} درس (${stats.percent}%)</span>
+                </div>
+                <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
+              </div>
+              <div class="level-capsule-chevron-box">
+                <svg class="level-capsule-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </button>
+          </div>
+        `;
+      }
+
+      function renderLevelSelectorCards() {
+        const container = document.getElementById('level-cards-container');
+        if (!container || !activeCurriculum) return;
+        
+        const levels = (activeCurriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        const activeLvlId = String(getActiveLevelId());
+        
+        let html = '';
+        levels.forEach((lvl, idx) => {
+          const lvlId = String(lvl.id);
+          const order = Number(lvl.order_index) || (idx + 1);
+          const stats = getLevelStats(lvlId, activeCurriculum, activeLessonProgress);
+          const isActive = lvlId === activeLvlId;
+          
+          let glyph = 'Ⲁ';
+          let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات وتتبع الرسم';
+          let tag = 'المستوى الأول • إتقان الحروف';
+          let isLocked = false;
+          
+          if (order === 2 || lvlId === '6') {
+            glyph = 'Ⲻ';
+            subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المزدوجة، والمقاطع الصوتية';
+            tag = 'المستوى الثاني • قواعد القراءة';
+            isLocked = false; 
+          } else if (order === 3) {
+            glyph = 'Ⲫϯ';
+            subtitle = 'أدوات التعريف، الملكية، الإشارة، وتفكيك صلاة أبانا الذي';
+            tag = 'المستوى الثالث • نحو وبناء الجملة';
+            isLocked = true;
+          }
+
+          let statusBadgeHtml = '';
+          if (isLocked) {
+            statusBadgeHtml = `<span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>`;
+          } else if (isActive) {
+            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">المستوى الحالي 📍</span>`;
+          } else if (stats.isCompleted) {
+            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill">مكتمل ١٠٠٪ 🎖️</span>`;
+          } else if (stats.completedLessons > 0) {
+            statusBadgeHtml = `<span class="level-card-badge badge-active-pill">قيد التقدم (${stats.percent}%)</span>`;
+          } else {
+            statusBadgeHtml = `<span class="level-card-badge badge-completed-pill" style="background:rgba(196,160,82,0.12);color:#8C6F2D;">متاح للتعلم 🔓</span>`;
+          }
+
+          const clickAction = isLocked 
+            ? "if(typeof showToast === 'function') showToast('المستوى الثالث قيد الإعداد الأكاديمي وسيتوفر قريباً!')" 
+            : "switchCurriculumLevel('" + lvlId + "')";
+
+          html += `
+            <div class="modern-level-card ${isActive ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}" onclick="${clickAction}">
+              <div class="level-card-icon-col">
+                <span>${glyph}</span>
+              </div>
+              <div class="level-card-main-col">
+                <div class="level-card-top-meta">
+                  <span class="level-capsule-tag" style="font-size:0.75rem;">${escapeHtml(tag)}</span>
+                  ${statusBadgeHtml}
+                </div>
+                <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
+                <p class="level-card-desc">${escapeHtml(lvl.description || subtitle)}</p>
+                <div class="level-card-stats-row">
+                  <span>📚 ${stats.totalUnits} وحدات</span>
+                  <span>📖 ${stats.totalLessons} درساً</span>
+                  <span>🎯 ${stats.totalChallenges} تمريناً</span>
+                  ${stats.completedLessons > 0 ? `<span style="margin-right:auto;color:#00B368;font-weight:800;">${stats.completedLessons}/${stats.totalLessons} منجز</span>` : ''}
+                </div>
+                ${!isLocked ? `
+                  <div class="level-card-progress-bar-wrap">
+                    <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+
+        if (!levels.some(l => Number(l.order_index) === 3)) {
+          html += `
+            <div class="modern-level-card is-locked" onclick="if(typeof showToast === 'function') showToast('المستوى الثالث (النحو وبناء الجملة ومردات الليتورجيا) قيد الإعداد الأكاديمي وسيتوفر قريباً!')">
+              <div class="level-card-icon-col">
+                <span>Ⲫϯ</span>
+              </div>
+              <div class="level-card-main-col">
+                <div class="level-card-top-meta">
+                  <span class="level-capsule-tag" style="font-size:0.75rem;">المستوى الثالث • نحو وبناء الجملة</span>
+                  <span class="level-card-badge badge-upcoming-pill">✨ قريباً (قيد الإعداد)</span>
+                </div>
+                <h4 class="level-card-title">المستوى الثالث: أساسيات النحو والترجمة والمفردات</h4>
+                <p class="level-card-desc">أدوات التعريف والتنكير، الملكية، الإشارة، تراكيب الجمل وصلاة «Ⲡⲉⲛⲓⲱⲧ - أبانا الذي»</p>
+                <div class="level-card-stats-row">
+                  <span>📚 ٧ وحدات مخطط لها</span>
+                  <span>📖 ترجمة ليتورجية</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        container.innerHTML = html;
+      }
+
+      window.openLevelSelectorModal = function() {
+        const modal = document.getElementById('level-selector-modal');
+        const btn = document.querySelector('.modern-level-capsule-btn');
+        if (!modal) return;
+        renderLevelSelectorCards();
+        modal.classList.add('show');
+        if (btn) btn.classList.add('active');
+      };
+
+      window.closeLevelSelectorModal = function() {
+        const modal = document.getElementById('level-selector-modal');
+        const btn = document.querySelector('.modern-level-capsule-btn');
+        if (modal) modal.classList.remove('show');
+        if (btn) btn.classList.remove('active');
+      };
+
+      window.switchCurriculumLevel = function(targetLevelId) {
+        setActiveLevelId(targetLevelId);
+        window.closeLevelSelectorModal();
+        drawSkillMapDOM();
+        const container = document.getElementById('curriculum-units-container');
+        if (container) {
+          const targetY = container.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        }
+        const lvlName = String(targetLevelId) === '6' ? 'المستوى الثاني: قواعد القراءة' : 'المستوى الأول: الأبجدية القبطية';
+        if (typeof showToast === 'function') {
+          showToast(`تم الانتقال إلى ${lvlName}`, 'check');
+        }
+      };
+
       function drawSkillMapDOM() {
         const container = document.getElementById('curriculum-units-container');
         if (!container) return;
@@ -123,10 +343,10 @@
           // التحقق من صلاحية وتحديث خيارات التمارين
           try {
             const curVer = localStorage.getItem('mg_coptic_curriculum_v_tag');
-            if (curVer !== 'v7_strict_2_or_4_options') {
+            if (curVer !== 'v8_multi_level_switcher') {
               localStorage.removeItem('mg_coptic_curriculum_v2');
               localStorage.removeItem('mg_coptic_curriculum_v1');
-              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v7_strict_2_or_4_options');
+              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v8_multi_level_switcher');
             }
           } catch(e) {}
           const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');
@@ -191,29 +411,23 @@
 
         let currentRenderedLevelId = null;
 
-        sortedUnits.forEach((unit, unitIdx) => {
-          // إضافة شريط المستوى عند الانتقال لمستوى جديد
-          const unitLvlId = String(unit.level_id);
-          const lvlInfo = levelMap.get(unitLvlId);
-          if (lvlInfo && unitLvlId !== currentRenderedLevelId) {
-            currentRenderedLevelId = unitLvlId;
-            html += `
-              <div class="level-section-header" style="margin: 40px auto 25px; text-align: center; max-width: 580px; position: relative;">
-                <div style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: linear-gradient(135deg, #4A0D24 0%, #6B1530 100%); color: #FFE066; padding: 10px 28px; border-radius: 50px; border: 2px solid #C4A052; box-shadow: 0 6px 18px rgba(74,13,36,0.25);">
-                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#FFE066; box-shadow:0 0 8px #FFE066;"></span>
-                  <span style="font-size: 1.25rem; font-weight: 900; font-family: var(--font-display, inherit); color: #FFF; letter-spacing: -0.2px;">${escapeHtml(lvlInfo.title || `المستوى ${lvlInfo.order}`)}</span>
-                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#FFE066; box-shadow:0 0 8px #FFE066;"></span>
-                </div>
-                ${lvlInfo.description ? `<p style="font-size: 0.9rem; color: var(--ink-soft, #706354); margin: 10px auto 0; max-width: 480px; font-weight: 600; line-height: 1.5;">${escapeHtml(lvlInfo.description)}</p>` : ''}
-              </div>
-            `;
-          }
+        // تصفية الوحدات لعرض وحدات المستوى النشط فقط لسرعة فائقة (0ms) وخفة الـ DOM
+        let activeLvlId = String(getActiveLevelId());
+        let unitsToRender = sortedUnits.filter(u => String(u.level_id) === activeLvlId);
+        if (unitsToRender.length === 0) {
+          activeLvlId = '5';
+          unitsToRender = sortedUnits.filter(u => String(u.level_id) === '5');
+        }
 
+        // إضافة الكبسولة العائمة الذكية لتبديل المستويات في قمة المسار
+        html += renderLevelCapsuleHeader(activeLvlId, activeCurriculum, activeLessonProgress);
+
+        unitsToRender.forEach((unit, unitIdx) => {
           const unitLessons = (unit.lessons && unit.lessons.length > 0) 
             ? unit.lessons.slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1)) 
             : [];
 
-          const prevUnit = unitIdx === 0 ? null : sortedUnits[unitIdx - 1];
+          const prevUnit = unitIdx === 0 ? null : unitsToRender[unitIdx - 1];
           let prevUnitMastered = true;
           if (prevUnit && prevUnit.lessons && prevUnit.lessons.length > 0) {
             prevUnitMastered = prevUnit.lessons.every(l => (activeLessonProgress[String(l.id)] || {}).status === 'completed');
