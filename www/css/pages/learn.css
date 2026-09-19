@@ -3402,7 +3402,7 @@
       background: #FFFFFF;
     }
 
-    /* المستوى النشط الحالي - عنابي ملكي أصيل مع إطار ذهبي دافئ */
+    /* المستوى النشط الحالي */
     .modern-level-card.is-active {
       border-color: #6B1530 !important;
       background: linear-gradient(135deg, rgba(107, 21, 48, 0.04) 0%, rgba(250, 243, 228, 0.95) 100%) !important;
@@ -3418,6 +3418,36 @@
       height: 4px;
       background: #B8892E;
       border-radius: 0 0 6px 6px;
+    }
+
+    /* بطاقة المستوى المقفل */
+    .modern-level-card.is-locked {
+      background: #F6F1E7 !important;
+      border-color: #DDD2C0 !important;
+      cursor: not-allowed !important;
+      opacity: 0.84;
+      border-style: dashed !important;
+      box-shadow: none !important;
+    }
+
+    .modern-level-card.is-locked:hover {
+      transform: none !important;
+      box-shadow: none !important;
+      border-color: #CBBDA7 !important;
+      background: #F6F1E7 !important;
+    }
+
+    .modern-level-card.is-locked .level-card-icon-col {
+      background: linear-gradient(135deg, #7A695A 0%, #948272 100%) !important;
+      border-color: #C5B8A8 !important;
+      box-shadow: none !important;
+      color: #FAF3E4 !important;
+    }
+
+    .badge-locked-pill {
+      background: rgba(122, 105, 90, 0.12);
+      color: #6E5C4E;
+      border: 1px solid rgba(122, 105, 90, 0.25);
     }
 
     .level-card-icon-col {

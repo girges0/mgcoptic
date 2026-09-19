@@ -120,14 +120,68 @@
       // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
       // طراز MG Coptic الملكي - خالي من الملصقات والرموز التعبيرية مع أيقونات SVG
       // ============================================================
+      // منطق التبديل الذكي بين المستويات (Level Switcher Engine)
+      // شرط إلزامي صارم: لا يمكن فتح أو دخول أي مستوى إلا بعد إكمال المستوى السابق بالكامل
+      // طراز MG Coptic الملكي - خالي تماماً من الملصقات والرموز التعبيرية مع أيقونات SVG نقية
+      // ============================================================
+      let currentActiveLevelId = null;
+
+      function isLevelUnlocked(levelId, curriculum, progress) {
+        // المستوى الأول مفتوح دائماً للجميع
+        if (String(levelId) === '5') return true;
+
+        if (!curriculum || !curriculum.levels) return false;
+        const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+        const targetIdx = levels.findIndex(l => String(l.id) === String(levelId));
+        if (targetIdx <= 0) return true;
+
+        // التحقق من اكتمال كافة المستويات السابقة بنسبة 100%
+        for (let i = 0; i < targetIdx; i++) {
+          const prevLvl = levels[i];
+          const prevStats = getLevelStats(prevLvl.id, curriculum, progress);
+          if (!prevStats.isCompleted) {
+            return false;
+          }
+        }
+        return true;
+      }
+
       function getActiveLevelId() {
-        const stored = localStorage.getItem('mg_coptic_active_level_id');
-        if (stored === '6') return '6';
-        return '5'; // المستوى الأول افتراضياً
+        let activeCur = null;
+        if (typeof activeCurriculum !== 'undefined' && activeCurriculum && activeCurriculum.units) activeCur = activeCurriculum;
+        else if (typeof DEFAULT_CURRICULUM !== 'undefined' && DEFAULT_CURRICULUM && DEFAULT_CURRICULUM.units) activeCur = DEFAULT_CURRICULUM;
+        
+        let prog = (typeof activeLessonProgress !== 'undefined' && activeLessonProgress) ? activeLessonProgress : {};
+
+        if (currentActiveLevelId) {
+          if (activeCur && !isLevelUnlocked(currentActiveLevelId, activeCur, prog)) {
+            currentActiveLevelId = '5';
+            try { localStorage.setItem('mg_coptic_active_level_id', '5'); } catch(e){}
+          }
+          return currentActiveLevelId;
+        }
+
+        try {
+          const saved = localStorage.getItem('mg_coptic_active_level_id');
+          if (saved && saved !== '5') {
+            if (activeCur && !isLevelUnlocked(saved, activeCur, prog)) {
+              currentActiveLevelId = '5';
+              localStorage.setItem('mg_coptic_active_level_id', '5');
+              return '5';
+            }
+            currentActiveLevelId = String(saved);
+            return currentActiveLevelId;
+          }
+        } catch(e) {}
+        currentActiveLevelId = '5';
+        return currentActiveLevelId;
       }
 
       function setActiveLevelId(levelId) {
-        localStorage.setItem('mg_coptic_active_level_id', String(levelId));
+        currentActiveLevelId = String(levelId);
+        try {
+          localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
+        } catch(e) {}
       }
 
       function getLevelStats(levelId, curriculum, progress) {
@@ -143,7 +197,7 @@
           (u.lessons || []).forEach(les => {
             totalLessons++;
             const p = progress ? progress[String(les.id)] : null;
-            if (p && p.status === 'completed') {
+            if (p && (p.status === 'completed' || p.completed === true || Number(p.stars) > 0)) {
               completedLessons++;
             }
             if (les.challenge_list && les.challenge_list.length > 0) {
@@ -200,7 +254,7 @@
                 <div class="level-capsule-title">${escapeHtml(currentLvl.title)}</div>
               </div>
               <div class="level-capsule-switch-pill">
-                <span>تبديل</span>
+                <span>المستويات</span>
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -214,7 +268,6 @@
         const container = document.getElementById('level-cards-container');
         if (!container || !activeCurriculum) return;
         
-        // عرض المستويين الأول والثاني فقط بدون المستوى الثالث وبدون أي ملصقات
         const levels = (activeCurriculum.levels || [])
           .filter(l => String(l.id) === '5' || String(l.id) === '6' || Number(l.order_index) === 1 || Number(l.order_index) === 2)
           .slice()
@@ -228,6 +281,7 @@
           const order = Number(lvl.order_index) || (idx + 1);
           const stats = getLevelStats(lvlId, activeCurriculum, activeLessonProgress);
           const isActive = lvlId === activeLvlId;
+          const isUnlocked = isLevelUnlocked(lvlId, activeCurriculum, activeLessonProgress);
           
           let glyph = 'Ⲁ';
           let subtitle = '٣٢ حرفاً ورمزاً بالأصوات والكلمات والقواعد الأساسية';
@@ -240,13 +294,22 @@
           }
 
           let statusBadgeHtml = '';
-          if (isActive) {
+          if (!isUnlocked) {
+            statusBadgeHtml = `
+              <span class="level-card-badge badge-locked-pill">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>مغلق • يتطلب إكمال المستوى السابق</span>
+              </span>`;
+          } else if (isActive) {
             statusBadgeHtml = `
               <span class="level-card-badge badge-active-pill">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                <span>المستوى المفتوح</span>
+                <span>المستوى الحالي</span>
               </span>`;
           } else if (stats.isCompleted) {
             statusBadgeHtml = `
@@ -276,10 +339,58 @@
               </span>`;
           }
 
+          let statsRowHtml = '';
+          if (!isUnlocked) {
+            const prevStats = getLevelStats('5', activeCurriculum, activeLessonProgress);
+            const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
+            statsRowHtml = `
+              <span class="stat-pill" style="color:#8C6517;font-weight:800;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>أكمل ${remaining} درساً في المستوى الأول لفتح هذا المستوى</span>
+              </span>
+            `;
+          } else {
+            statsRowHtml = `
+              <span class="stat-pill">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>${stats.totalUnits} وحدات</span>
+              </span>
+              <span class="stat-pill">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                <span>${stats.totalLessons} درساً</span>
+              </span>
+              <span class="stat-pill">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                </svg>
+                <span>${stats.totalChallenges} تمريناً</span>
+              </span>
+              ${stats.completedLessons > 0 ? `
+                <span class="stat-pill stat-completed">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
+                </span>` : ''}
+            `;
+          }
+
           html += `
-            <div class="modern-level-card ${isActive ? 'is-active' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
+            <div class="modern-level-card ${isActive ? 'is-active' : ''} ${!isUnlocked ? 'is-locked' : ''}" onclick="switchCurriculumLevel('${lvlId}')">
               <div class="level-card-icon-col">
-                <span>${glyph}</span>
+                ${!isUnlocked ? `
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                ` : `<span>${glyph}</span>`}
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
@@ -289,35 +400,13 @@
                 <h4 class="level-card-title">${escapeHtml(lvl.title)}</h4>
                 <p class="level-card-desc">${escapeHtml(lvl.description || subtitle)}</p>
                 <div class="level-card-stats-row">
-                  <span class="stat-pill">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                    </svg>
-                    <span>${stats.totalUnits} وحدات</span>
-                  </span>
-                  <span class="stat-pill">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                    <span>${stats.totalLessons} درساً</span>
-                  </span>
-                  <span class="stat-pill">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
-                    </svg>
-                    <span>${stats.totalChallenges} تمريناً</span>
-                  </span>
-                  ${stats.completedLessons > 0 ? `
-                    <span class="stat-pill stat-completed">
-                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"/>
-                      </svg>
-                      <span>${stats.completedLessons}/${stats.totalLessons} منجز</span>
-                    </span>` : ''}
+                  ${statsRowHtml}
                 </div>
-                <div class="level-card-progress-bar-wrap">
-                  <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
-                </div>
+                ${isUnlocked ? `
+                  <div class="level-card-progress-bar-wrap">
+                    <div class="level-card-progress-fill ${stats.isCompleted ? 'completed' : ''}" style="width: ${stats.percent}%;"></div>
+                  </div>
+                ` : ''}
               </div>
             </div>
           `;
@@ -343,6 +432,27 @@
       };
 
       window.switchCurriculumLevel = function(targetLevelId) {
+        if (!isLevelUnlocked(targetLevelId, activeCurriculum, activeLessonProgress)) {
+          const prevStats = getLevelStats('5', activeCurriculum, activeLessonProgress);
+          const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
+          const msg = `المستوى مغلق! يجب إكمال جميع دروس المستوى الأول أولاً (متبقي ${remaining} درساً).`;
+          
+          if (typeof showToast === 'function') {
+            showToast(msg, 'lock');
+          } else if (typeof Swal !== 'undefined') {
+            Swal.fire({
+              icon: 'warning',
+              title: 'المستوى مغلق 🔒',
+              text: msg,
+              confirmButtonText: 'حسناً، سأكمل المستوى الأول أولاً',
+              confirmButtonColor: '#6B1530'
+            });
+          } else {
+            alert(msg);
+          }
+          return;
+        }
+
         setActiveLevelId(targetLevelId);
         window.closeLevelSelectorModal();
         drawSkillMapDOM();
