@@ -2173,20 +2173,24 @@
   }
   .word-tile:hover { transform: translateY(-2px); border-color: #6B1530; }
 
-  /* Match Grid Matching Website */
-  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-  .match-col { display: flex; flex-direction: column; gap: 12px; }
+  /* Match Grid Matching Website - تصميم هندسي متناسق وزي بعض */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 2.5vw, 16px); width: 100%; max-width: 520px; margin: 10px auto; box-sizing: border-box; }
+  .match-col { display: grid; grid-auto-rows: 1fr; gap: clamp(10px, 2vw, 14px); }
   .match-btn {
-    background: #FAF3E4; border: 2px solid rgba(168, 130, 58, 0.35);
-    border-radius: 16px; padding: 16px 14px; font-family: var(--font-display, 'Cairo', 'Tajawal', sans-serif);
-    font-size: 1.15rem; font-weight: 800; color: #2E2018; cursor: pointer; text-align: center;
-    box-shadow: 0 4px 0 rgba(168, 130, 58, 0.2); transition: all 0.15s; user-select: none;
+    width: 100%; height: 100%; min-height: clamp(58px, 8.5vh, 72px);
+    background: #FFFFFF; border: 2.5px solid #E2D7C3; border-bottom: 4px solid #C8B89E;
+    border-radius: 18px; padding: 10px 14px; font-family: var(--font-display, 'Cairo', 'Tajawal', sans-serif);
+    font-size: clamp(1.02rem, 2.2vh, 1.22rem); font-weight: 800; color: #2E2018; cursor: pointer; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03); transition: all 0.14s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none;
+    box-sizing: border-box; line-height: 1.35; text-wrap: balance;
   }
-  .match-btn.coptic-font { font-family: 'girges', 'Coptic Girges', 'Noto Sans Coptic', 'Segoe UI Historic', serif; font-size: 1.35rem; direction: ltr; }
-  .match-btn:hover:not(.matched) { border-color: #6B1530; transform: translateY(-2px); }
-  .match-btn.selected { border-color: #6B1530; background: rgba(168, 130, 58, 0.2); color: #6B1530; box-shadow: 0 4px 0 #6B1530; }
+  .match-btn.coptic-font { font-family: 'girges', 'Coptic Girges', 'Noto Sans Coptic', 'Segoe UI Historic', serif; font-size: clamp(1.35rem, 3vh, 1.65rem); color: #6B1530; direction: ltr; }
+  .match-btn:hover:not(.matched) { border-color: #A8823A; border-bottom-color: #8C6A28; background: #FFFDF9; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(168, 130, 58, 0.16); }
+  .match-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .match-btn.selected { border-color: #C5A059 !important; border-bottom-color: #9E7D38 !important; background: #FFF9ED !important; color: #6B1530 !important; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.28) !important; transform: translateY(1px); }
   .match-btn.matched {
-    opacity: 0.35; pointer-events: none; border-color: #2E6B3E; background: rgba(46, 107, 62, 0.1); color: #2E6B3E;
+    opacity: 0.42; pointer-events: none; border-color: #2E6B3E !important; border-bottom-color: #1F4C2B !important; border-bottom-width: 2px !important; background: #EDF9F0 !important; color: #1A542A !important; transform: none !important; box-shadow: none !important;
   }
   .match-btn.flash-wrong {
     border-color: #6B1530 !important; background: rgba(140, 36, 48, 0.15) !important;

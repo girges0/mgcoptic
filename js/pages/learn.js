@@ -1577,6 +1577,19 @@
       function renderChallengeContent(ch) {
         const runnerBody = document.getElementById('runner-body-content');
         if (!runnerBody) return;
+
+        // خلط خيارات الإجابة عشوائياً (Fisher-Yates Shuffle) حتى لا تكون الإجابة الصحيحة دائماً أول خيار (أ أو ب)
+        if (Array.isArray(ch.options) && ch.options.length > 1) {
+          if (!ch._shuffledOptions) {
+            const shuffled = [...ch.options];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            ch._shuffledOptions = shuffled;
+          }
+        }
+        const activeOptions = ch._shuffledOptions || ch.options || [];
         let html = '';
 
         if (ch.type === 'letter_overview') {
@@ -1708,7 +1721,7 @@
               </div>
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -1746,7 +1759,7 @@
               ` : ''}
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const optText = (typeof window.formatPronunciationOption === 'function') 
                   ? window.formatPronunciationOption(opt.text) 
                   : (opt.text ? opt.text.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').replace(/[A-Za-zŌō]/g, '').trim() : '');
@@ -1795,7 +1808,7 @@
               ` : ''}
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -1819,7 +1832,7 @@
               </button>
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -2676,6 +2689,7 @@
             btnCheck.disabled = false;
           }
         } else {
+          delete ch._shuffledOptions;
           currentChallenges.push(ch);
 
           if (game.loseHeart) {
@@ -2697,7 +2711,8 @@
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
                 feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
-                const correctOpt = (ch.options || []).find(o => o.is_correct);
+                const opts = ch._shuffledOptions || ch.options || [];
+                const correctOpt = opts.find(o => o.is_correct) || (ch.options || []).find(o => o.is_correct);
                 if (correctOpt) {
                   const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
                     ? window.formatPronunciationOption(correctOpt.text)

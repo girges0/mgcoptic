@@ -7474,44 +7474,83 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* تمرين المطابقة */
+    /* تمرين المطابقة - تصميم منسق وهندسي متوازن زي بعض تماماً */
     .match-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: clamp(10px, 2.5vw, 16px);
+      width: 100%;
+      max-width: 520px;
+      margin: 10px auto;
+      box-sizing: border-box;
     }
     .match-col {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: grid;
+      grid-auto-rows: 1fr;
+      gap: clamp(10px, 2vw, 14px);
     }
     .match-btn {
-      background: var(--parchment-card);
-      border: 2px solid rgba(168, 130, 58, 0.35);
-      border-radius: 14px;
-      padding: 12px 10px;
-      font-family: var(--font-display);
-      font-size: 1.05rem;
+      width: 100%;
+      height: 100%;
+      min-height: clamp(58px, 8.5vh, 72px);
+      background: #FFFFFF;
+      border: 2.5px solid #E2D7C3;
+      border-bottom: 4px solid #C8B89E;
+      border-radius: 18px;
+      padding: 10px 14px;
+      font-family: 'Cairo', var(--font-display), sans-serif;
+      font-size: clamp(1.02rem, 2.2vh, 1.22rem);
       font-weight: 800;
-      color: var(--ink);
+      color: #2D1A12;
       cursor: pointer;
       text-align: center;
-      box-shadow: 0 3px 0 rgba(168, 130, 58, 0.2);
-      transition: all .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      transition: all .14s cubic-bezier(0.34, 1.56, 0.64, 1);
       user-select: none;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      line-height: 1.35;
+      text-wrap: balance;
     }
-    .match-btn.coptic-font { font-family: var(--font-coptic); font-size: 1.25rem; }
-    .match-btn:hover { border-color: var(--madder); transform: translateY(-2px); }
+    .match-btn.coptic-font {
+      font-family: var(--font-coptic), 'girges', sans-serif !important;
+      font-size: clamp(1.35rem, 3vh, 1.65rem);
+      color: #6B1530;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+    }
+    .match-btn:hover {
+      border-color: #A8823A;
+      border-bottom-color: #8C6A28;
+      background: #FFFDF9;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(168, 130, 58, 0.16);
+    }
+    .match-btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
     .match-btn.selected {
-      border-color: var(--madder);
-      background: rgba(168, 130, 58, 0.2);
-      color: var(--madder);
+      border-color: #C5A059 !important;
+      border-bottom-color: #9E7D38 !important;
+      background: #FFF9ED !important;
+      color: #6B1530 !important;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.28) !important;
+      transform: translateY(1px);
     }
     .match-btn.matched {
-      opacity: 0.35;
+      opacity: 0.42;
       pointer-events: none;
-      border-color: #2E6B3E;
-      background: rgba(46, 107, 62, 0.1);
+      border-color: #2E6B3E !important;
+      border-bottom-color: #1F4C2B !important;
+      border-bottom-width: 2px !important;
+      background: #EDF9F0 !important;
+      color: #1A542A !important;
+      transform: none !important;
+      box-shadow: none !important;
     }
 
     .runner-footer {
@@ -7657,6 +7696,23 @@
         border-radius: 12px;
         min-height: 44px;
         box-shadow: 0 3px 0 rgba(168, 130, 58, 0.2);
+      }
+      .match-grid {
+        gap: 10px;
+        margin: 6px auto 10px;
+      }
+      .match-col {
+        gap: 8px;
+      }
+      .match-btn {
+        min-height: 52px;
+        padding: 8px 10px;
+        font-size: 0.98rem;
+        border-radius: 14px;
+        border-bottom-width: 3.5px;
+      }
+      .match-btn.coptic-font {
+        font-size: 1.28rem;
       }
       .trace-interactive-card {
         max-width: 330px;
@@ -14776,6 +14832,19 @@
       function renderChallengeContent(ch) {
         const runnerBody = document.getElementById('runner-body-content');
         if (!runnerBody) return;
+
+        // خلط خيارات الإجابة عشوائياً (Fisher-Yates Shuffle) حتى لا تكون الإجابة الصحيحة دائماً أول خيار (أ أو ب)
+        if (Array.isArray(ch.options) && ch.options.length > 1) {
+          if (!ch._shuffledOptions) {
+            const shuffled = [...ch.options];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            ch._shuffledOptions = shuffled;
+          }
+        }
+        const activeOptions = ch._shuffledOptions || ch.options || [];
         let html = '';
 
         if (ch.type === 'letter_overview') {
@@ -14907,7 +14976,7 @@
               </div>
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -14945,7 +15014,7 @@
               ` : ''}
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const optText = (typeof window.formatPronunciationOption === 'function') 
                   ? window.formatPronunciationOption(opt.text) 
                   : (opt.text ? opt.text.replace(/\s*\([A-Za-zŌō\s+-]+\)/g, '').replace(/[A-Za-zŌō]/g, '').trim() : '');
@@ -14994,7 +15063,7 @@
               ` : ''}
             ` : ''}
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -15018,7 +15087,7 @@
               </button>
             </div>
             <div class="options-grid">
-              ${(ch.options || []).map((opt, i) => {
+              ${activeOptions.map((opt, i) => {
                 const letters = ['أ', 'ب', 'ج', 'د'];
                 return `
                   <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
@@ -15092,23 +15161,33 @@
           selectedMatchLeft = null;
           selectedMatchRight = null;
 
-          const leftShuffled = [...pairs].sort(() => Math.random() - 0.5);
-          const rightShuffled = [...pairs].sort(() => Math.random() - 0.5);
+          // خلط عشوائي لكلا العمودين
+          const shuffleArray = (arr) => {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+          };
+
+          const leftShuffled = shuffleArray(pairs);
+          const rightShuffled = shuffleArray(pairs);
 
           html += `
-            <div class="question-heading">${ch.question}</div>
+            <div class="question-heading">${escapeHtml(ch.question || 'طابق كل عنصر قبطي بالمعنى أو النطق الصحيح')}</div>
             <div class="match-grid">
               <div class="match-col">
                 ${leftShuffled.map(p => `
-                  <button type="button" class="match-btn coptic-font" data-pair-key="${p.left}" onclick="handleMatchClick(this, 'left', '${p.left}')">
-                    ${p.left}
+                  <button type="button" class="match-btn coptic-font" data-pair-key="${escapeHtml(p.left)}" onclick="handleMatchClick(this, 'left', '${p.left.replace(/'/g, "\\'")}')">
+                    <span>${p.left}</span>
                   </button>
                 `).join('')}
               </div>
               <div class="match-col">
                 ${rightShuffled.map(p => `
-                  <button type="button" class="match-btn" data-pair-match="${p.left}" onclick="handleMatchClick(this, 'right', '${p.left}')">
-                    ${p.right}
+                  <button type="button" class="match-btn" data-pair-match="${escapeHtml(p.left)}" onclick="handleMatchClick(this, 'right', '${p.left.replace(/'/g, "\\'")}')">
+                    <span>${p.right}</span>
                   </button>
                 `).join('')}
               </div>
@@ -15759,7 +15838,8 @@
         if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
-          const selectedOpt = ch.options[currentSelection];
+          const opts = ch._shuffledOptions || ch.options || [];
+          const selectedOpt = opts[currentSelection];
           isCorrect = selectedOpt && selectedOpt.is_correct;
         } else if (ch.type === 'listen_write') {
           const inputEl = document.getElementById('listen-write-user-input');
@@ -15822,8 +15902,9 @@
 
         if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const allOptionCards = document.querySelectorAll('.option-card');
+          const opts = ch._shuffledOptions || ch.options || [];
           allOptionCards.forEach((c, idx) => {
-            const isThisCorrect = ch.options && ch.options[idx] && ch.options[idx].is_correct;
+            const isThisCorrect = opts[idx] && opts[idx].is_correct;
             if (isThisCorrect) {
               c.classList.remove('selected');
               c.classList.add('correct');
@@ -15875,6 +15956,7 @@
             btnCheck.disabled = false;
           }
         } else {
+          delete ch._shuffledOptions;
           currentChallenges.push(ch);
 
           if (game.loseHeart) {
@@ -15896,7 +15978,8 @@
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
                 feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
-                const correctOpt = (ch.options || []).find(o => o.is_correct);
+                const opts = ch._shuffledOptions || ch.options || [];
+                const correctOpt = opts.find(o => o.is_correct) || (ch.options || []).find(o => o.is_correct);
                 if (correctOpt) {
                   const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
                     ? window.formatPronunciationOption(correctOpt.text)
