@@ -1388,22 +1388,32 @@
               return;
             }
 
-            if (currentRunnerHearts < 1 || runnerState === 'out_of_hearts') {
+            if (currentRunnerHearts < 1) {
               handleOutOfHearts();
               return;
             }
 
-            if (runnerState === 'answering') {
-              btnCheckAction.disabled = true;
-              await evaluateAnswer();
-            } else if (runnerState === 'checked') {
-              if (currentRunnerHearts <= 0) {
-                handleOutOfHearts();
-                return;
+            if (runnerState === 'out_of_hearts') {
+              runnerState = 'checked';
+            }
+
+            try {
+              if (runnerState === 'answering') {
+                btnCheckAction.disabled = true;
+                await evaluateAnswer();
+              } else if (runnerState === 'checked') {
+                if (currentRunnerHearts < 1) {
+                  handleOutOfHearts();
+                  return;
+                }
+                btnCheckAction.disabled = true;
+                currentChallengeIndex++;
+                loadChallenge(currentChallengeIndex);
               }
-              btnCheckAction.disabled = true;
-              currentChallengeIndex++;
-              loadChallenge(currentChallengeIndex);
+            } catch (runnerErr) {
+              console.error('Error during challenge check:', runnerErr);
+              btnCheckAction.disabled = false;
+              btnCheckAction.style.pointerEvents = 'auto';
             }
           };
         }
@@ -2729,12 +2739,8 @@
             if (btnCheck) {
               btnCheck.textContent = 'نفدت المحاولات';
               btnCheck.className = 'btn-check-answer btn-continue-err';
-              btnCheck.disabled = true;
-              btnCheck.style.pointerEvents = 'none';
-              btnCheck.onclick = (e) => {
-                if (e) { e.preventDefault(); e.stopPropagation(); }
-                handleOutOfHearts();
-              };
+              btnCheck.disabled = false;
+              btnCheck.style.pointerEvents = 'auto';
             }
             setTimeout(() => handleOutOfHearts(), 350);
           } else {
@@ -3192,46 +3198,68 @@
             updateLiveTimer();
             countdownInterval = setInterval(updateLiveTimer, 1000);
 
+            const performHeartPurchase = async (count, cost) => {
+              if (!game.buyHeartsWithXp) return;
+              try {
+                const buyRes = await game.buyHeartsWithXp(uid, count, cost);
+                if (buyRes && buyRes.success) {
+                  boughtHearts = true;
+                  if (countdownInterval) clearInterval(countdownInterval);
+                  const newHearts = Number(buyRes?.prog?.hearts ?? buyRes?.hearts ?? count);
+                  currentRunnerHearts = newHearts;
+
+                  const runnerHeartsEl = document.getElementById('runner-hearts-count');
+                  if (runnerHeartsEl) runnerHeartsEl.textContent = newHearts;
+
+                  await refreshStatsDisplay();
+                  if (game.sound) game.sound.playCorrect();
+                  showToast(count === 1 ? 'تم شراء 1 قلب بنجاح! (+1)' : `تم ملء جميع القلوب (${count} قلوب) بنجاح!`);
+
+                  isOutOfHeartsModalOpen = false;
+                  if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
+
+                  Swal.close();
+
+                  const btnCheck = document.getElementById('btn-check-action');
+                  if (runnerState === 'out_of_hearts' || runnerState === 'checked') {
+                    runnerState = 'checked';
+                    if (btnCheck) {
+                      btnCheck.textContent = 'متابعة';
+                      btnCheck.className = 'btn-check-answer btn-continue-err';
+                      btnCheck.disabled = false;
+                      btnCheck.style.pointerEvents = 'auto';
+                    }
+                  } else {
+                    runnerState = 'answering';
+                    loadChallenge(currentChallengeIndex);
+                  }
+                } else {
+                  showToast('تعذر الشراء، رصيد الـ XP غير كافٍ');
+                }
+              } catch (errBuy) {
+                console.error('Error buying hearts:', errBuy);
+                showToast('حدث خطأ أثناء الشراء، يرجى المحاولة ثانية');
+              }
+            };
+
             const b1 = document.getElementById('swal-buy-1-heart');
             if (b1) {
               b1.onclick = async () => {
-                boughtHearts = true;
-                if (countdownInterval) clearInterval(countdownInterval);
-                Swal.close();
-                if (game.buyHeartsWithXp) {
-                  const buyRes = await game.buyHeartsWithXp(uid, 1, costPerHeart);
-                  if (buyRes.success) {
-                    currentRunnerHearts = Number(buyRes.hearts ?? 1);
-                    await refreshStatsDisplay();
-                    if (game.sound) game.sound.playCorrect();
-                    showToast('تم شراء 1 قلب بنجاح! (+1)');
-                    if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
-                    runnerState = 'answering';
-                    isOutOfHeartsModalOpen = false;
-                    loadChallenge(currentChallengeIndex);
-                  }
-                }
+                b1.disabled = true;
+                b1.style.opacity = '0.7';
+                await performHeartPurchase(1, costPerHeart);
+                b1.disabled = false;
+                b1.style.opacity = '1';
               };
             }
             const bAll = document.getElementById('swal-buy-all-hearts');
             if (bAll) {
               bAll.onclick = async () => {
-                boughtHearts = true;
-                if (countdownInterval) clearInterval(countdownInterval);
-                Swal.close();
-                if (game.buyHeartsWithXp) {
-                  const buyRes = await game.buyHeartsWithXp(uid, heartsNeeded, costPerHeart);
-                  if (buyRes.success) {
-                    currentRunnerHearts = Number(buyRes.hearts ?? 5);
-                    await refreshStatsDisplay();
-                    if (game.sound) game.sound.playCorrect();
-                    showToast(`تم ملء جميع القلوب (${heartsNeeded} قلوب) بنجاح!`);
-                    if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
-                    runnerState = 'answering';
-                    isOutOfHeartsModalOpen = false;
-                    loadChallenge(currentChallengeIndex);
-                  }
-                }
+                bAll.disabled = true;
+                bAll.style.opacity = '0.7';
+                await performHeartPurchase(heartsNeeded, fullCost);
+                bAll.disabled = false;
+                bAll.style.opacity = '1';
               };
             }
           },

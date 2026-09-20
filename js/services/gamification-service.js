@@ -1418,11 +1418,11 @@ class GamificationService {
 
     this.saveProgressLocal(prog, uid);
     if(sbClient && uid){
-      try {
-        await sbClient.from('user_progress').update({ points: prog.points, hearts: prog.hearts }).eq('user_id', uid);
-      } catch(e){}
+      sbClient.from('user_progress').update({ points: prog.points, hearts: prog.hearts }).eq('user_id', uid).then(()=>{}).catch(e => {
+        console.warn('Supabase buyHearts update error:', e);
+      });
     }
-    return { success: true, prog };
+    return { success: true, prog, hearts: prog.hearts };
   }
 
     async refillHearts(userId){
