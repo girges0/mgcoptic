@@ -6406,13 +6406,29 @@ const CurriculumAdminSystem = (function(){
       const selected = previewState.selectedTiles || [];
       const available = previewState.availableTiles || [];
 
+      // استخراج المعنى والقبطي المعرب إذا وجد دون كشف الكلمة القبطية
+      let meaning = '';
+      let phonetic = challenge.audio_text || '';
+      if (challenge.question) {
+        const m = challenge.question.match(/(?:لتكوين|الكلمة|كلمة)\s*['"«]?([^'"»()[]+)['"»]?/);
+        if (m && m[1]) meaning = m[1].trim();
+        const mPhon = challenge.question.match(/\(([^)]+)\)|«([^»]+)»/);
+        if (mPhon) phonetic = (mPhon[1] || mPhon[2]).trim();
+      }
+      if (!meaning) meaning = 'الكلمة المطلوبة';
+
       challengeContent = `
         <div class="question-heading">${escapeHtml(challenge.question)}</div>
-        ${challenge.coptic_display ? `
-          <div class="coptic-letter-display">
-            <span class="coptic-big-glyph">${escapeHtml(challenge.coptic_display)}</span>
-          </div>
-        ` : ''}
+        <div class="write-target-card" style="background:#FFFFFF; border:2px solid #E6D7C3; border-radius:18px; padding:14px 20px; margin:10px auto 16px; max-width:440px; text-align:center; box-shadow:0 4px 14px rgba(74, 13, 36, 0.05);">
+          <div style="font-size:0.8rem; font-weight:800; color:#8D725C; margin-bottom:4px;">المعنى بالعربية:</div>
+          <div style="font-size:1.6rem; font-weight:900; color:#3A2315; margin-bottom:6px;">${escapeHtml(meaning)}</div>
+          ${phonetic ? `
+            <div style="display:inline-flex; align-items:center; gap:6px; background:#FAF4E8; border:1px solid #ECDDC5; padding:3px 14px; border-radius:16px; color:#6F1737; font-weight:800; font-size:0.92rem;">
+              <span style="color:#8D725C; font-size:0.78rem;">القبطي المعرب:</span>
+              <span>«${escapeHtml(phonetic)}»</span>
+            </div>
+          ` : ''}
+        </div>
         <div class="write-area">
           <div class="tiles-dropzone">
             ${selected.length > 0 ? selected.map((tile, i) => `

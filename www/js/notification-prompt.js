@@ -416,7 +416,18 @@
    * الاستماع اللحظي لإشعارات السيرفر والإدارة (Realtime In-App Notifications)
    */
   function initRealtimeNotificationListener() {
-    const sb = window.sbClient || window.sb;
+    let sb = window.sbClient || window.sb;
+    if (!sb && typeof window.getSupabaseClient === 'function') {
+      sb = window.getSupabaseClient();
+    }
+    if (!sb && window.supabase && typeof window.supabase.createClient === 'function') {
+      const SB_URL = 'https://kdoanxzpfiscprjjzzic.supabase.co';
+      const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkb2FueHpwZmlzY3Byamp6emljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTA3MjEsImV4cCI6MjEwMDM4NjcyMX0.5m-YS9NFVMFGbB6OtBvm2MXwhNuU0bT5Q7vPFTJ5PYo';
+      try {
+        sb = window.supabase.createClient(SB_URL, SB_ANON_KEY);
+        window.sbClient = sb;
+      } catch (_) {}
+    }
     if (!sb || typeof sb.channel !== 'function') return;
 
     try {
@@ -863,6 +874,14 @@
     const totalCount = cachedNotificationsList.length;
     const giftsCount = cachedNotificationsList.filter(n => isGiftNotification(n)).length;
 
+    // حفظ العدد غير المقروء في الكاش للاستعادة الفورية في كل زيارة
+    try {
+      localStorage.setItem('mg_coptic_cached_unread_notifs_count', String(unreadCount));
+      if (Array.isArray(cachedNotificationsList)) {
+        localStorage.setItem('mg_coptic_cached_notifs_list', JSON.stringify(cachedNotificationsList.slice(0, 50)));
+      }
+    } catch (_) {}
+
     // 1. Topbar Bell Badge
     const badgeEl = document.getElementById('topbar-notif-badge');
     if (badgeEl) {
@@ -1096,6 +1115,7 @@
 
     markNotifAsDismissed(notifId, uid);
     cachedNotificationsList = cachedNotificationsList.filter(n => String(n.id) !== String(notifId));
+    updateNotificationBadges();
 
     if (window.Sound && typeof window.Sound.playWhoosh === 'function') {
       try { window.Sound.playWhoosh(); } catch (_) {}
@@ -1141,6 +1161,7 @@
     }
 
     cachedNotificationsList = [];
+    updateNotificationBadges();
 
     setTimeout(() => {
       renderNotificationsBody([], currentNotifFilter);
@@ -1172,6 +1193,7 @@
     }
 
     lastDeletedNotification = null;
+    updateNotificationBadges();
     renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
 
     if (window.Sound && typeof window.Sound.playVictory === 'function') {
@@ -1185,6 +1207,7 @@
     cachedNotificationsList.forEach(item => {
       markNotifAsRead(item.id, uid);
     });
+    updateNotificationBadges();
     renderNotificationsBody(cachedNotificationsList, currentNotifFilter);
     if (typeof toast === 'function') toast('تم تحديد كافة الإشعارات كمقروءة');
   }
@@ -1323,15 +1346,68 @@
 
   // تصدير دالة الفحص العام
   window.checkAndShowNotificationPrompt = createAndShowPrompt;
+  window.updateNotificationBadgeCount = fetchUserNotificationsList;
+  window.updateNotificationBadges = updateNotificationBadges;
 
-  // التشغيل التلقائي عند اكتمال تحميل الصفحة
+  // استعادة فورية لشارة الإشعارات من الكاش المحلي بدون أي انتظار
+  function restoreCachedBadgeSync() {
+    try {
+      const cachedCount = localStorage.getItem('mg_coptic_cached_unread_notifs_count');
+      const badgeEl = document.getElementById('topbar-notif-badge');
+      if (badgeEl && cachedCount !== null) {
+        const count = parseInt(cachedCount, 10);
+        if (!isNaN(count) && count > 0) {
+          badgeEl.textContent = count > 99 ? '99+' : String(count);
+          badgeEl.style.display = 'flex';
+        } else if (count === 0) {
+          badgeEl.style.display = 'none';
+        }
+      }
+      if (cachedNotificationsList.length === 0) {
+        const rawList = localStorage.getItem('mg_coptic_cached_notifs_list');
+        if (rawList) {
+          const parsed = JSON.parse(rawList);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            cachedNotificationsList = parsed;
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  // فحص وجلب التنبيهات في الخلفية تلقائياً
+  async function initBackgroundNotificationSync() {
+    restoreCachedBadgeSync();
+    try {
+      await fetchUserNotificationsList();
+    } catch (e) {
+      console.warn('[Notif Sync] background init error:', e);
+    }
+  }
+
+  // تشغيل الاستعادة الفورية في اللحظة 0
+  restoreCachedBadgeSync();
+
+  // التشغيل التلقائي عند بدء التشغيل
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      initBackgroundNotificationSync();
       initNotificationPrompt();
-      setTimeout(initRealtimeNotificationListener, 2000);
+      setTimeout(initRealtimeNotificationListener, 1500);
     });
   } else {
+    initBackgroundNotificationSync();
     initNotificationPrompt();
-    setTimeout(initRealtimeNotificationListener, 2000);
+    setTimeout(initRealtimeNotificationListener, 1500);
   }
+
+  // فحص وتحديث إضافي بعد ثانية واحدة (لضمان اكتمال استعادة الجلسة من التخزين)
+  setTimeout(initBackgroundNotificationSync, 1000);
+
+  // إعادة الفحص فور تسجيل الدخول أو عودة المستخدم للتبويب
+  window.addEventListener('mg:auth-state-changed', () => setTimeout(initBackgroundNotificationSync, 400));
+  window.addEventListener('mg:user-login', () => setTimeout(initBackgroundNotificationSync, 400));
+  window.addEventListener('focus', () => {
+    fetchUserNotificationsList().catch(() => {});
+  });
 })();

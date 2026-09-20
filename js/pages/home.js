@@ -45,7 +45,7 @@
             if (heroCache && heroCache.levelTag) {
               curriculumLvlTag = heroCache.levelTag;
             }
-            if (heroCache && heroCache.version === 3 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
+            if (heroCache && heroCache.version === 4 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
               if (heroCache.lessonTitle) {
                 const lTitleEl = document.getElementById('home-lesson-title');
                 if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
@@ -87,6 +87,21 @@
 
         // 3. هدف اليوم الفوري الحقيقي
         updateDailyGoalUI();
+
+        // 3.1 استعادة فورية لشارة الإشعارات من الكاش
+        try {
+          const cachedNotifs = localStorage.getItem('mg_coptic_cached_unread_notifs_count');
+          const notifBadge = document.getElementById('topbar-notif-badge');
+          if (notifBadge && cachedNotifs !== null) {
+            const count = parseInt(cachedNotifs, 10);
+            if (!isNaN(count) && count > 0) {
+              notifBadge.textContent = count > 99 ? '99+' : String(count);
+              notifBadge.style.display = 'flex';
+            } else if (count === 0) {
+              notifBadge.style.display = 'none';
+            }
+          }
+        } catch (_) {}
 
         // 4. اسم وصورة الترحيب
         const user = getUserProfileData();
@@ -165,11 +180,12 @@
           return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
         });
 
-        // بناء مصفوفة كافة محطات مسار التعلم الحقيقية (الدرس، التطبيق، التحدي)
+        // بناء مصفوفة كافة محطات مسار التعلم الحقيقية مع معرف المستوى
         let allSteps = [];
         sortedUnits.forEach((unit, uIdx) => {
           const lvl = levelMap.get(String(unit.level_id));
-          const levelTitle = lvl ? lvl.title : 'المستوى 1';
+          const levelTitle = lvl ? lvl.title : 'المستوى الأول';
+          const levelId = String(unit.level_id || (lvl ? lvl.id : '5'));
           const unitLessons = (unit.lessons && unit.lessons.length > 0)
             ? unit.lessons.slice().sort((a,b) => (a.order_index || 1) - (b.order_index || 1))
             : [];
@@ -181,6 +197,7 @@
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelId: levelId,
               levelTitle: levelTitle,
               xpReward: parseInt(les.xp_reward, 10) || 20,
               kind: 'lesson'
@@ -188,25 +205,76 @@
           });
         });
 
-        const totalStepsCount = allSteps.length;
-        let completedCount = 0;
+        // تحديد المستوى النشط المختار إن وجد
+        let preferredLevelId = null;
+        try {
+          preferredLevelId = localStorage.getItem('mg_coptic_active_level_id');
+        } catch(e) {}
+
         let activeStep = null;
 
-        for (let i = 0; i < allSteps.length; i++) {
-          const step = allSteps[i];
-          const prog = progressMap[String(step.id)];
-          if (prog && prog.status === 'completed') {
-            completedCount++;
-          } else if (!activeStep) {
-            activeStep = step; // أول خطوة غير مكتملة
+        // إذا كان هناك مستوى مفضل محدد، نبحث أولاً عن أول درس غير مكتمل فيه
+        if (preferredLevelId) {
+          const prefLevelSteps = allSteps.filter(s => String(s.levelId) === String(preferredLevelId));
+          if (prefLevelSteps.length > 0) {
+            for (let i = 0; i < prefLevelSteps.length; i++) {
+              const step = prefLevelSteps[i];
+              const prog = progressMap[String(step.id)];
+              const isCompleted = prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0);
+              if (!isCompleted) {
+                activeStep = step;
+                break;
+              }
+            }
+            // إذا اكتملت جميع دروس هذا المستوى المفضل، نأخذ آخر درس فيه
+            if (!activeStep && prefLevelSteps.length > 0) {
+              activeStep = prefLevelSteps[prefLevelSteps.length - 1];
+            }
           }
         }
 
+        // إذا لم نجد activeStep، نبحث في كامل خطوات المنهج بالترتيب عن أول درس غير مكتمل
+        if (!activeStep) {
+          for (let i = 0; i < allSteps.length; i++) {
+            const step = allSteps[i];
+            const prog = progressMap[String(step.id)];
+            const isCompleted = prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0);
+            if (!isCompleted) {
+              activeStep = step;
+              break;
+            }
+          }
+        }
+
+        // إذا لم نجد أي درس غير مكتمل، نأخذ آخر درس في المنهج
         if (!activeStep && allSteps.length > 0) {
           activeStep = allSteps[allSteps.length - 1];
         }
 
         if (activeStep) {
+          // حساب إحصائيات المستوى الحالي التابع له هذا الدرس فقط
+          const currentLevelId = String(activeStep.levelId || '5');
+          const currentLevelSteps = allSteps.filter(s => String(s.levelId) === currentLevelId);
+          const effectiveLevelSteps = currentLevelSteps.length > 0 ? currentLevelSteps : allSteps;
+          const totalLevelStepsCount = effectiveLevelSteps.length;
+
+          // ترتيب الدرس الحالي داخل هذا المستوى
+          const activeIndexInLevel = effectiveLevelSteps.findIndex(s => String(s.id) === String(activeStep.id)) + 1;
+          const currentLessonNumber = activeIndexInLevel > 0 ? activeIndexInLevel : 1;
+
+          // حساب الدروس المكتملة داخل هذا المستوى
+          let completedInLevelCount = 0;
+          effectiveLevelSteps.forEach(s => {
+            const prog = progressMap[String(s.id)];
+            if (prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0)) {
+              completedInLevelCount++;
+            }
+          });
+
+          // نسبة إنجاز المستوى الحقيقي
+          const pct = totalLevelStepsCount > 0 ? Math.round((completedInLevelCount / totalLevelStepsCount) * 100) : 0;
+          const displayFillPct = totalLevelStepsCount > 0 ? Math.min(100, Math.max(0, pct)) : 0;
+
           const lTitleEl = document.getElementById('home-lesson-title');
           if (lTitleEl) lTitleEl.textContent = activeStep.title;
 
@@ -219,15 +287,32 @@
             uTitleEl.textContent = desc;
           }
 
+          let lvlTag = 'المستوى الأول';
+          if (activeStep.levelTitle) {
+            if (activeStep.levelTitle.includes('الثاني') || currentLevelId === '6') {
+              lvlTag = 'المستوى الثاني';
+            } else if (activeStep.levelTitle.includes('الأول') || currentLevelId === '5') {
+              lvlTag = 'المستوى الأول';
+            } else {
+              lvlTag = activeStep.levelTitle.split(':')[0] || 'المستوى الأول';
+            }
+          }
+
           const tagText = document.getElementById('home-curriculum-tag-text');
           if (tagText) {
-            const lvlTag = activeStep.levelTitle ? (activeStep.levelTitle.split(':')[0] || 'المستوى 1') : 'المستوى 1';
             tagText.textContent = `تابع التعلّم • ${lvlTag}`;
           }
 
           const btnEl = document.getElementById('home-continue-btn');
           if (btnEl) {
             btnEl.onclick = () => {
+              try {
+                if (typeof setActiveLevelId === 'function') {
+                  setActiveLevelId(currentLevelId);
+                } else {
+                  localStorage.setItem('mg_coptic_active_level_id', currentLevelId);
+                }
+              } catch(e) {}
               switchTab('learn');
               if (activeStep && activeStep.id && typeof openLessonDetails === 'function') {
                 setTimeout(() => openLessonDetails(String(activeStep.id)), 150);
@@ -238,12 +323,8 @@
           const xpRewardEl = document.getElementById('home-hero-xp-reward');
           if (xpRewardEl) xpRewardEl.textContent = `+${activeStep.xpReward} XP عند الإتمام`;
 
-          const activeIndex = allSteps.findIndex(s => s.id === activeStep.id) + 1;
-          const pct = totalStepsCount > 0 ? Math.round((completedCount / totalStepsCount) * 100) : 0;
-          const displayFillPct = totalStepsCount > 0 ? Math.min(100, Math.max(0, pct)) : 0;
-
           const countEl = document.getElementById('home-progress-count');
-          if (countEl) countEl.textContent = `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`;
+          if (countEl) countEl.textContent = `الدرس ${currentLessonNumber} من ${totalLevelStepsCount}`;
 
           const pctEl = document.getElementById('home-progress-pct');
           if (pctEl) pctEl.textContent = `${pct}%`;
@@ -251,16 +332,16 @@
           const fillEl = document.getElementById('home-progress-fill');
           if (fillEl) fillEl.style.width = `${displayFillPct}%`;
 
-          // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية
+          // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية (الإصدار 4)
           try {
             localStorage.setItem('mg_coptic_cached_hero_card', JSON.stringify({
-              version: 3,
+              version: 4,
               levelTag: lvlTag,
               lessonTitle: activeStep.title,
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),
               xpRewardText: `+${activeStep.xpReward} XP عند الإتمام`,
-              progressCount: `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`,
+              progressCount: `الدرس ${currentLessonNumber} من ${totalLevelStepsCount}`,
               progressPct: `${pct}%`,
               fillWidth: `${displayFillPct}%`
             }));
@@ -340,7 +421,9 @@
       if (tbHearts2) tbHearts2.textContent = prog.hearts ?? 5;
 
       // تحديث شارة مركز الإشعارات
-      if (typeof window.refreshNotificationsCenter === 'function') {
+      if (typeof window.updateNotificationBadgeCount === 'function') {
+        window.updateNotificationBadgeCount();
+      } else if (typeof window.refreshNotificationsCenter === 'function') {
         window.refreshNotificationsCenter();
       }
 

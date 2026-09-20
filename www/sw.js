@@ -1,7 +1,7 @@
 // Service Worker for MG COPTIC PWA
 // Strategy: Fast Network-First with Timeout for Navigation, Stale-While-Revalidate for Assets
 
-const CACHE_NAME = 'mgcoptic-v2.2.0-level-locking';
+const CACHE_NAME = 'mgcoptic-v3.0.0-rocket-speed';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
@@ -18,9 +18,16 @@ const PRECACHE_ASSETS = [
   '/girges.woff',
   '/assets/fonts/girges.woff',
   '/css/preloader.css',
+  '/css/coptic-keyboard.css',
+  '/css/coptic-calendar.css',
+  '/gamification-service.js',
+  '/swal-theme.js',
+  '/js/config/supabase.js',
+  '/js/services/auth-service.js',
   '/js/preloader.js',
   '/js/pwa-register.js',
-  '/js/back-button-handler.js'
+  '/js/back-button-handler.js',
+  '/js/notification-prompt.js'
 ];
 
 // Install: Pre-cache essential shell assets and activate immediately
@@ -108,7 +115,7 @@ self.addEventListener('fetch', (event) => {
               resolve(cached);
             }
           }
-        }, 1200);
+        }, 350);
 
         fetch(reqToFetch)
           .then((networkResponse) => {

@@ -708,7 +708,7 @@ class GamificationService {
               if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
             }
           }
-        } else if(data.type === 'progress_remote' || data.type === 'progress_admin_update'){
+        } else if(data.type === 'progress_remote' || data.type === 'progress_admin_update' || data.type === 'levels_unlocked'){
           const curUser = this.getCurrentUser();
           const curUid = curUser?.id;
           if(curUid && data.payload?.user_id === curUid){
@@ -721,7 +721,15 @@ class GamificationService {
                   if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
                 }
               });
-            }, 600);
+              if(data.type === 'levels_unlocked'){
+                this.getLessonProgress(curUid, true).then(() => {
+                  if(typeof window !== 'undefined'){
+                    if(typeof window.drawSkillMapDOM === 'function') window.drawSkillMapDOM();
+                    if(typeof window.renderSkillMap === 'function') window.renderSkillMap();
+                  }
+                });
+              }
+            }, 300);
           }
         } else if(data.type === 'curriculum_updated'){
           if(typeof window !== 'undefined'){
@@ -1455,7 +1463,7 @@ class GamificationService {
 
     // إذا كان المنهج محفوظاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً
     if(cachedCurriculum && Array.isArray(cachedCurriculum.units) && !forceRemote){
-      if (Array.isArray(cachedCurriculum.levels) && cachedCurriculum.levels.length >= 2 && cachedCurriculum.units.length >= 15) {
+      if (Array.isArray(cachedCurriculum.levels) && cachedCurriculum.levels.length >= 3 && cachedCurriculum.units.length >= 25) {
         return cachedCurriculum;
       }
       localStorage.removeItem('mg_coptic_curriculum_v2');

@@ -173,10 +173,23 @@
       }
 
       function setActiveLevelId(levelId) {
+        let activeCur = null;
+        if (typeof activeCurriculum !== 'undefined' && activeCurriculum && activeCurriculum.units) activeCur = activeCurriculum;
+        else if (typeof DEFAULT_CURRICULUM !== 'undefined' && DEFAULT_CURRICULUM && DEFAULT_CURRICULUM.units) activeCur = DEFAULT_CURRICULUM;
+        let prog = (typeof activeLessonProgress !== 'undefined' && activeLessonProgress) ? activeLessonProgress : {};
+
+        if (activeCur && !isLevelUnlocked(levelId, activeCur, prog)) {
+          console.warn('[Anti-Cheat] محاولة مرفوضة: لا يمكن الانتقال لمستوى مغلق قبل إكمال المستوى السابق بنسبة 100%.');
+          currentActiveLevelId = '5';
+          try { localStorage.setItem('mg_coptic_active_level_id', '5'); } catch(e) {}
+          return false;
+        }
+
         currentActiveLevelId = String(levelId);
         try {
           localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
         } catch(e) {}
+        return true;
       }
 
       function getLevelStats(levelId, curriculum, progress) {

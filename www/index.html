@@ -102,8 +102,14 @@
   <link rel="icon" type="image/png" href="assets/images/favicon.png?v=2">
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png?v=2">
   <link rel="apple-touch-icon" href="assets/images/favicon.png?v=2">
+  <!-- Performance Preconnect & DNS-Prefetch -->
+  <link rel="preconnect" href="https://kdoanxzpfiscprjjzzic.supabase.co" crossorigin>
+  <link rel="dns-prefetch" href="https://kdoanxzpfiscprjjzzic.supabase.co">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="girges.woff" as="font" type="font/woff" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap"
     rel="stylesheet">
@@ -137,25 +143,6 @@
       unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
-      font-family: 'girges';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-    @font-face {
-      font-family: 'girges';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: bold;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-
-    @font-face {
       font-family: 'Coptic Girges';
       src: url('girges.woff') format('woff'),
            url('assets/fonts/girges.woff') format('woff');
@@ -165,47 +152,10 @@
       unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
     }
     @font-face {
-      font-family: 'Coptic Girges';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-    @font-face {
-      font-family: 'Coptic Girges';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: bold;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-
-    @font-face {
       font-family: 'Noto Sans Coptic';
       src: url('girges.woff') format('woff'),
            url('assets/fonts/girges.woff') format('woff');
       font-weight: 100 900;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-    @font-face {
-      font-family: 'Noto Sans Coptic';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-      unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
-    }
-    @font-face {
-      font-family: 'Noto Sans Coptic';
-      src: url('girges.woff') format('woff'),
-           url('assets/fonts/girges.woff') format('woff');
-      font-weight: bold;
       font-style: normal;
       font-display: swap;
       unicode-range: U+0300-036F, U+0370-03FF, U+2C80-2CFF, U+2E00-2E7F, U+FE20-FE2F, U+102E0-102FF;
@@ -1507,11 +1457,16 @@
       display: none;
       width: 100%;
       box-sizing: border-box;
+      content-visibility: auto;
+      contain-intrinsic-size: 800px;
     }
 
     .tab-panel.active {
       display: block;
+      content-visibility: visible;
       animation: slidePanel .38s cubic-bezier(.22, .8, .28, 1);
+      will-change: transform, opacity;
+      transform: translateZ(0);
     }
 
     @keyframes slidePanel {
@@ -9046,7 +9001,7 @@
   <div id="mg-preloader" role="status" aria-label="جارٍ التحميل" style="background:#F8EFE0;">
     <div class="mg-preloader-content" id="mg-loader-main-box">
       <div class="mg-loader-logo-wrap">
-        <img src="logo.png" alt="MG COPTIC">
+        <img src="logo.png" alt="MG COPTIC" decoding="async" width="40" height="40">
       </div>
       <div class="mg-spinner-wrap">
         <div class="mg-spinner"></div>
@@ -10419,6 +10374,8 @@
         detectSessionInUrl: true
       }
     });
+    window.sb = sb;
+    window.sbClient = window.sbClient || sb;
 
     /* ============ DATA (تتحمّل من قاعدة البيانات عند فتح الموقع مع بيانات احتياطية كاملة) ============ */
     const DEFAULT_ALPHABET = [
@@ -11624,51 +11581,30 @@
     const _letterAudioCache = new Map();
 
     function preloadAlphabetAudio() {
-      if (typeof window !== 'undefined' && window.Sound && typeof window.Sound.preloadAllSounds === 'function') {
-        window.Sound.preloadAllSounds();
+      // فك قفل محرك الصوت برفق دون تجميد الخيط الرئيسي
+      if (typeof window !== 'undefined' && window.Sound && typeof window.Sound.unlock === 'function') {
+        try { window.Sound.unlock(); } catch(_) {}
       }
-      if (!Array.isArray(alphabetData)) return;
-      alphabetData.forEach(l => {
-        if (!l.audio) return;
-        const src = resolveAudioUrl(l.audio);
-        if (!_letterAudioCache.has(src)) {
-          try {
-            const a = new Audio();
-            a.preload = 'auto';
-            a.src = src;
-            _letterAudioCache.set(src, a);
-            _letterAudioCache.set(l.audio, a);
-            const fn = src.split('/').pop();
-            _letterAudioCache.set(fn, a);
-          } catch(_) {}
-        }
-      });
-
-      // تحميل مسبق فوري لجميع الكلمات المعتمدة الـ 32 لضمان أعلى سرعة استجابة (0ms)
-      const approvedWordAudios = [
-        'assets/sounds/1alom.mp3', 'assets/sounds/2vo.mp3', 'assets/sounds/3ghala.mp3',
-        'assets/sounds/4zoksa.mp3', 'assets/sounds/5ergoh.mp3', 'assets/sounds/6soohinrpmy.mp3',
-        'assets/sounds/7zowy.mp3', 'assets/sounds/8ei.mp3', 'assets/sounds/9samyo.mp3',
-        'assets/sounds/10ial.mp3', 'assets/sounds/11kash.mp3', 'assets/sounds/12lavo.mp3',
-        'assets/sounds/13manhon.mp3', 'assets/sounds/14enkot.mp3', 'assets/sounds/15ksooy.mp3',
-        'assets/sounds/16o\'om.mp3', 'assets/sounds/17bayot.mp3', 'assets/sounds/18ree.mp3',
-        'assets/sounds/19pason.mp3', 'assets/sounds/20tamav.mp3', 'assets/sounds/21usis.mp3',
-        'assets/sounds/22fev.mp3', 'assets/sounds/23khlil.mp3', 'assets/sounds/24psit.mp3',
-        'assets/sounds/25tasoni.mp3', 'assets/sounds/26shau.mp3', 'assets/sounds/27foi.mp3',
-        'assets/sounds/28khevs.mp3', 'assets/sounds/29htho.mp3', 'assets/sounds/30zempheh.mp3',
-        'assets/sounds/31chaj.mp3', 'assets/sounds/32timi.mp3'
-      ];
-      approvedWordAudios.forEach(src => {
-        if (!_letterAudioCache.has(src)) {
-          try {
-            const a = new Audio();
-            a.preload = 'auto';
-            a.src = src;
-            _letterAudioCache.set(src, a);
-            const fn = src.split('/').pop();
-            _letterAudioCache.set(fn, a);
-          } catch(_) {}
-        }
+      // تحميل كسول غير معطّل (Lazy / Non-blocking) لأول 5 حروف فقط في أوقات فراغ المعالج
+      const idleRun = window.requestIdleCallback || ((cb) => setTimeout(cb, 600));
+      idleRun(() => {
+        if (!Array.isArray(alphabetData)) return;
+        const initialFew = alphabetData.slice(0, 5);
+        initialFew.forEach(l => {
+          if (!l.audio) return;
+          const src = resolveAudioUrl(l.audio);
+          if (!_letterAudioCache.has(src)) {
+            try {
+              const a = new Audio();
+              a.preload = 'metadata';
+              a.src = src;
+              _letterAudioCache.set(src, a);
+              _letterAudioCache.set(l.audio, a);
+              const fn = src.split('/').pop();
+              _letterAudioCache.set(fn, a);
+            } catch(_) {}
+          }
+        });
       });
     }
 
@@ -12096,16 +12032,25 @@
       if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
     }
 
+    // طبقة كاش في الذاكرة RAM لتفادي استدعاء القرص المتكرر (0.001ms)
+    let _memUserProfile = null;
+    let _memUserProgress = null;
+
     function getUserProfileData() {
       if (currentAuthUser) return currentAuthUser;
+      if (_memUserProfile) return _memUserProfile;
       try {
         const raw = localStorage.getItem('mg_coptic_user');
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+          _memUserProfile = JSON.parse(raw);
+          return _memUserProfile;
+        }
       } catch (e) { }
       return null;
     }
 
     function getUserProgressData() {
+      if (_memUserProgress) return _memUserProgress;
       try {
         const raw = localStorage.getItem('mg_coptic_progress');
         if (raw) {
@@ -12113,11 +12058,17 @@
           const points = parsed.points ?? parsed.total_points ?? 0;
           const streak = parsed.streak_days ?? parsed.streak ?? 1;
           const hearts = parsed.hearts ?? 5;
-          return { points, total_points: points, streak_days: streak, hearts };
+          _memUserProgress = { points, total_points: points, streak_days: streak, hearts };
+          return _memUserProgress;
         }
       } catch (e) { }
       return { points: 0, total_points: 0, streak_days: 1, hearts: 5 };
     }
+
+    window.invalidateMGCache = function() {
+      _memUserProfile = null;
+      _memUserProgress = null;
+    };
 
 
     
@@ -12171,7 +12122,7 @@
             if (heroCache && heroCache.levelTag) {
               curriculumLvlTag = heroCache.levelTag;
             }
-            if (heroCache && heroCache.version === 3 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
+            if (heroCache && heroCache.version === 4 && heroCache.lessonTitle && !heroCache.lessonTitle.includes('تحدي') && !heroCache.lessonTitle.includes('تطبيق') && heroCache.lessonTitle !== 'رقم1') {
               if (heroCache.lessonTitle) {
                 const lTitleEl = document.getElementById('home-lesson-title');
                 if (lTitleEl) lTitleEl.textContent = heroCache.lessonTitle;
@@ -12213,6 +12164,21 @@
 
         // 3. هدف اليوم الفوري الحقيقي
         updateDailyGoalUI();
+
+        // 3.1 استعادة فورية لشارة الإشعارات من الكاش
+        try {
+          const cachedNotifs = localStorage.getItem('mg_coptic_cached_unread_notifs_count');
+          const notifBadge = document.getElementById('topbar-notif-badge');
+          if (notifBadge && cachedNotifs !== null) {
+            const count = parseInt(cachedNotifs, 10);
+            if (!isNaN(count) && count > 0) {
+              notifBadge.textContent = count > 99 ? '99+' : String(count);
+              notifBadge.style.display = 'flex';
+            } else if (count === 0) {
+              notifBadge.style.display = 'none';
+            }
+          }
+        } catch (_) {}
 
         // 4. اسم وصورة الترحيب
         const user = getUserProfileData();
@@ -12294,11 +12260,12 @@
           return (Number(a.order_index) || 1) - (Number(b.order_index) || 1);
         });
 
-        // بناء مصفوفة كافة محطات مسار التعلم الحقيقية (الدرس، التطبيق، التحدي)
+        // بناء مصفوفة كافة محطات مسار التعلم الحقيقية مع معرف المستوى
         let allSteps = [];
         sortedUnits.forEach((unit, uIdx) => {
           const lvl = levelMap.get(String(unit.level_id));
-          const levelTitle = lvl ? lvl.title : 'المستوى 1';
+          const levelTitle = lvl ? lvl.title : 'المستوى الأول';
+          const levelId = String(unit.level_id || (lvl ? lvl.id : '5'));
           const unitLessons = (unit.lessons && unit.lessons.length > 0)
             ? unit.lessons.slice().sort((a,b) => (a.order_index || 1) - (b.order_index || 1))
             : [];
@@ -12310,6 +12277,7 @@
               unitTitle: unit.title,
               unitDesc: unit.description || '',
               unitIndex: uIdx + 1,
+              levelId: levelId,
               levelTitle: levelTitle,
               xpReward: parseInt(les.xp_reward, 10) || 20,
               kind: 'lesson'
@@ -12317,25 +12285,76 @@
           });
         });
 
-        const totalStepsCount = allSteps.length;
-        let completedCount = 0;
+        // تحديد المستوى النشط المختار إن وجد
+        let preferredLevelId = null;
+        try {
+          preferredLevelId = localStorage.getItem('mg_coptic_active_level_id');
+        } catch(e) {}
+
         let activeStep = null;
 
-        for (let i = 0; i < allSteps.length; i++) {
-          const step = allSteps[i];
-          const prog = progressMap[String(step.id)];
-          if (prog && prog.status === 'completed') {
-            completedCount++;
-          } else if (!activeStep) {
-            activeStep = step; // أول خطوة غير مكتملة
+        // إذا كان هناك مستوى مفضل محدد، نبحث أولاً عن أول درس غير مكتمل فيه
+        if (preferredLevelId) {
+          const prefLevelSteps = allSteps.filter(s => String(s.levelId) === String(preferredLevelId));
+          if (prefLevelSteps.length > 0) {
+            for (let i = 0; i < prefLevelSteps.length; i++) {
+              const step = prefLevelSteps[i];
+              const prog = progressMap[String(step.id)];
+              const isCompleted = prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0);
+              if (!isCompleted) {
+                activeStep = step;
+                break;
+              }
+            }
+            // إذا اكتملت جميع دروس هذا المستوى المفضل، نأخذ آخر درس فيه
+            if (!activeStep && prefLevelSteps.length > 0) {
+              activeStep = prefLevelSteps[prefLevelSteps.length - 1];
+            }
           }
         }
 
+        // إذا لم نجد activeStep، نبحث في كامل خطوات المنهج بالترتيب عن أول درس غير مكتمل
+        if (!activeStep) {
+          for (let i = 0; i < allSteps.length; i++) {
+            const step = allSteps[i];
+            const prog = progressMap[String(step.id)];
+            const isCompleted = prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0);
+            if (!isCompleted) {
+              activeStep = step;
+              break;
+            }
+          }
+        }
+
+        // إذا لم نجد أي درس غير مكتمل، نأخذ آخر درس في المنهج
         if (!activeStep && allSteps.length > 0) {
           activeStep = allSteps[allSteps.length - 1];
         }
 
         if (activeStep) {
+          // حساب إحصائيات المستوى الحالي التابع له هذا الدرس فقط
+          const currentLevelId = String(activeStep.levelId || '5');
+          const currentLevelSteps = allSteps.filter(s => String(s.levelId) === currentLevelId);
+          const effectiveLevelSteps = currentLevelSteps.length > 0 ? currentLevelSteps : allSteps;
+          const totalLevelStepsCount = effectiveLevelSteps.length;
+
+          // ترتيب الدرس الحالي داخل هذا المستوى
+          const activeIndexInLevel = effectiveLevelSteps.findIndex(s => String(s.id) === String(activeStep.id)) + 1;
+          const currentLessonNumber = activeIndexInLevel > 0 ? activeIndexInLevel : 1;
+
+          // حساب الدروس المكتملة داخل هذا المستوى
+          let completedInLevelCount = 0;
+          effectiveLevelSteps.forEach(s => {
+            const prog = progressMap[String(s.id)];
+            if (prog && (prog.status === 'completed' || prog.completed === true || Number(prog.stars) > 0)) {
+              completedInLevelCount++;
+            }
+          });
+
+          // نسبة إنجاز المستوى الحقيقي
+          const pct = totalLevelStepsCount > 0 ? Math.round((completedInLevelCount / totalLevelStepsCount) * 100) : 0;
+          const displayFillPct = totalLevelStepsCount > 0 ? Math.min(100, Math.max(0, pct)) : 0;
+
           const lTitleEl = document.getElementById('home-lesson-title');
           if (lTitleEl) lTitleEl.textContent = activeStep.title;
 
@@ -12348,15 +12367,32 @@
             uTitleEl.textContent = desc;
           }
 
+          let lvlTag = 'المستوى الأول';
+          if (activeStep.levelTitle) {
+            if (activeStep.levelTitle.includes('الثاني') || currentLevelId === '6') {
+              lvlTag = 'المستوى الثاني';
+            } else if (activeStep.levelTitle.includes('الأول') || currentLevelId === '5') {
+              lvlTag = 'المستوى الأول';
+            } else {
+              lvlTag = activeStep.levelTitle.split(':')[0] || 'المستوى الأول';
+            }
+          }
+
           const tagText = document.getElementById('home-curriculum-tag-text');
           if (tagText) {
-            const lvlTag = activeStep.levelTitle ? (activeStep.levelTitle.split(':')[0] || 'المستوى 1') : 'المستوى 1';
             tagText.textContent = `تابع التعلّم • ${lvlTag}`;
           }
 
           const btnEl = document.getElementById('home-continue-btn');
           if (btnEl) {
             btnEl.onclick = () => {
+              try {
+                if (typeof setActiveLevelId === 'function') {
+                  setActiveLevelId(currentLevelId);
+                } else {
+                  localStorage.setItem('mg_coptic_active_level_id', currentLevelId);
+                }
+              } catch(e) {}
               switchTab('learn');
               if (activeStep && activeStep.id && typeof openLessonDetails === 'function') {
                 setTimeout(() => openLessonDetails(String(activeStep.id)), 150);
@@ -12367,12 +12403,8 @@
           const xpRewardEl = document.getElementById('home-hero-xp-reward');
           if (xpRewardEl) xpRewardEl.textContent = `+${activeStep.xpReward} XP عند الإتمام`;
 
-          const activeIndex = allSteps.findIndex(s => s.id === activeStep.id) + 1;
-          const pct = totalStepsCount > 0 ? Math.round((completedCount / totalStepsCount) * 100) : 0;
-          const displayFillPct = totalStepsCount > 0 ? Math.min(100, Math.max(0, pct)) : 0;
-
           const countEl = document.getElementById('home-progress-count');
-          if (countEl) countEl.textContent = `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`;
+          if (countEl) countEl.textContent = `الدرس ${currentLessonNumber} من ${totalLevelStepsCount}`;
 
           const pctEl = document.getElementById('home-progress-pct');
           if (pctEl) pctEl.textContent = `${pct}%`;
@@ -12380,16 +12412,16 @@
           const fillEl = document.getElementById('home-progress-fill');
           if (fillEl) fillEl.style.width = `${displayFillPct}%`;
 
-          // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية
+          // حفظ نسخة محسوبة في الكاش للاستعادة الفورية في الزيارة التالية (الإصدار 4)
           try {
             localStorage.setItem('mg_coptic_cached_hero_card', JSON.stringify({
-              version: 3,
+              version: 4,
               levelTag: lvlTag,
               lessonTitle: activeStep.title,
               unitTitle: uTitleEl ? uTitleEl.textContent : '',
               btnHref: 'learn.html?lesson=' + encodeURIComponent(activeStep.id),
               xpRewardText: `+${activeStep.xpReward} XP عند الإتمام`,
-              progressCount: `الدرس ${activeIndex > 0 ? activeIndex : 1} من ${totalStepsCount}`,
+              progressCount: `الدرس ${currentLessonNumber} من ${totalLevelStepsCount}`,
               progressPct: `${pct}%`,
               fillWidth: `${displayFillPct}%`
             }));
@@ -12470,6 +12502,13 @@
       if (tbStreak2) tbStreak2.textContent = streakDays;
       const tbHearts2 = document.getElementById('topbar-hearts-val') || document.getElementById('hearts-val');
       if (tbHearts2) tbHearts2.textContent = prog.hearts ?? 5;
+
+      // تحديث شارة مركز الإشعارات تلقائياً
+      if (typeof window.updateNotificationBadgeCount === 'function') {
+        window.updateNotificationBadgeCount();
+      } else if (typeof window.refreshNotificationsCenter === 'function') {
+        window.refreshNotificationsCenter();
+      }
 
       const greetName = document.getElementById('home-greeting-name');
       const monogram = document.getElementById('home-monogram');
@@ -13319,10 +13358,23 @@
       }
 
       function setActiveLevelId(levelId) {
+        let activeCur = null;
+        if (typeof activeCurriculum !== 'undefined' && activeCurriculum && activeCurriculum.units) activeCur = activeCurriculum;
+        else if (typeof DEFAULT_CURRICULUM !== 'undefined' && DEFAULT_CURRICULUM && DEFAULT_CURRICULUM.units) activeCur = DEFAULT_CURRICULUM;
+        let prog = (typeof activeLessonProgress !== 'undefined' && activeLessonProgress) ? activeLessonProgress : {};
+
+        if (activeCur && !isLevelUnlocked(levelId, activeCur, prog)) {
+          console.warn('[Anti-Cheat] محاولة مرفوضة: لا يمكن الانتقال لمستوى مغلق قبل إكمال المستوى السابق بنسبة 100%.');
+          currentActiveLevelId = '5';
+          try { localStorage.setItem('mg_coptic_active_level_id', '5'); } catch(e) {}
+          return false;
+        }
+
         currentActiveLevelId = String(levelId);
         try {
           localStorage.setItem('mg_coptic_active_level_id', currentActiveLevelId);
         } catch(e) {}
+        return true;
       }
 
       function getLevelStats(levelId, curriculum, progress) {
@@ -13368,9 +13420,13 @@
         const order = Number(currentLvl.order_index) || 1;
         const stats = getLevelStats(activeLvlId, curriculum, progress);
         
-        let levelName = 'المستوى الأول: الأبجدية القبطية';
-        if (order === 2 || String(activeLvlId) === '6') {
+        let levelName = currentLvl.title || 'المستوى الأول';
+        if (order === 1 || String(activeLvlId) === '5') {
+          levelName = 'المستوى الأول: الأبجدية القبطية';
+        } else if (order === 2 || String(activeLvlId) === '6') {
           levelName = 'المستوى الثاني: قواعد القراءة';
+        } else if (order === 3 || String(activeLvlId) === '7') {
+          levelName = 'المستوى الثالث: المراجعة والتطبيق المتقدم';
         }
 
         return `
@@ -13402,7 +13458,7 @@
         if (!container || !activeCurriculum) return;
         
         const levels = (activeCurriculum.levels || [])
-          .filter(l => String(l.id) === '5' || String(l.id) === '6' || Number(l.order_index) === 1 || Number(l.order_index) === 2)
+          .filter(l => String(l.id) === '5' || String(l.id) === '6' || String(l.id) === '7' || Number(l.order_index) === 1 || Number(l.order_index) === 2 || Number(l.order_index) === 3)
           .slice()
           .sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
 
@@ -13422,6 +13478,9 @@
           if (order === 2 || lvlId === '6') {
             subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
+          } else if (order === 3 || lvlId === '7') {
+            subtitle = 'المراجعة الشاملة، تحليل النصوص، التراكيب الكنسية، والترجمة التطبيقية';
+            tag = 'المستوى الثالث • المراجعة والتطبيق المتقدم';
           }
 
           let statusBadgeHtml = '';
@@ -13472,15 +13531,17 @@
 
           let statsRowHtml = '';
           if (!isUnlocked) {
-            const prevStats = getLevelStats('5', activeCurriculum, activeLessonProgress);
+            const prevLvl = idx > 0 ? levels[idx - 1] : levels[0];
+            const prevStats = getLevelStats(prevLvl.id, activeCurriculum, activeLessonProgress);
             const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
+            const prevLvlName = Number(prevLvl.order_index) === 2 ? 'المستوى الثاني' : 'المستوى الأول';
             statsRowHtml = `
               <span class="stat-pill" style="color:#8C6517;font-weight:800;">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                <span>أكمل ${remaining} درساً في المستوى الأول لفتح هذا المستوى</span>
+                <span>أكمل ${remaining} درساً في ${prevLvlName} لفتح هذا المستوى</span>
               </span>
             `;
           } else {
@@ -13521,7 +13582,7 @@
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                   </svg>
-                ` : `<span>${order === 1 ? '١' : '٢'}</span>`}
+                ` : `<span>${order === 1 ? '١' : (order === 2 ? '٢' : (order === 3 ? '٣' : order))}</span>`}
               </div>
               <div class="level-card-main-col">
                 <div class="level-card-top-meta">
@@ -13564,9 +13625,13 @@
 
       window.switchCurriculumLevel = function(targetLevelId) {
         if (!isLevelUnlocked(targetLevelId, activeCurriculum, activeLessonProgress)) {
-          const prevStats = getLevelStats('5', activeCurriculum, activeLessonProgress);
+          const levels = (activeCurriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
+          const targetIdx = levels.findIndex(l => String(l.id) === String(targetLevelId));
+          const prevLvl = targetIdx > 0 ? levels[targetIdx - 1] : levels[0];
+          const prevStats = getLevelStats(prevLvl.id, activeCurriculum, activeLessonProgress);
           const remaining = Math.max(0, prevStats.totalLessons - prevStats.completedLessons);
-          const msg = `المستوى مغلق! يجب إكمال جميع دروس المستوى الأول أولاً (متبقي ${remaining} درساً).`;
+          const prevLvlName = Number(prevLvl.order_index) === 2 ? 'المستوى الثاني' : 'المستوى الأول';
+          const msg = `المستوى مغلق! يجب إكمال جميع دروس ${prevLvlName} أولاً (متبقي ${remaining} درساً).`;
           
           if (typeof showToast === 'function') {
             showToast(msg, 'lock');
@@ -13575,7 +13640,7 @@
               icon: 'warning',
               title: 'المستوى مغلق 🔒',
               text: msg,
-              confirmButtonText: 'حسناً، سأكمل المستوى الأول أولاً',
+              confirmButtonText: `حسناً، سأكمل ${prevLvlName} أولاً`,
               confirmButtonColor: '#6B1530'
             });
           } else {
@@ -13592,7 +13657,8 @@
           const targetY = container.getBoundingClientRect().top + window.pageYOffset - 80;
           window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
         }
-        const lvlName = String(targetLevelId) === '6' ? 'المستوى الثاني: قواعد القراءة' : 'المستوى الأول: الأبجدية القبطية';
+        const currentLvl = (activeCurriculum.levels || []).find(l => String(l.id) === String(targetLevelId));
+        const lvlName = currentLvl ? currentLvl.title : (String(targetLevelId) === '7' ? 'المستوى الثالث: المراجعة والتطبيق المتقدم' : (String(targetLevelId) === '6' ? 'المستوى الثاني: قواعد القراءة' : 'المستوى الأول: الأبجدية القبطية'));
         if (typeof showToast === 'function') {
           showToast(`تم الانتقال إلى ${lvlName}`, 'check');
         }
@@ -13606,10 +13672,10 @@
           // التحقق من صلاحية وتحديث خيارات التمارين
           try {
             const curVer = localStorage.getItem('mg_coptic_curriculum_v_tag');
-            if (curVer !== 'v8_multi_level_switcher') {
+            if (curVer !== 'v9_level3_comprehensive_review') {
               localStorage.removeItem('mg_coptic_curriculum_v2');
               localStorage.removeItem('mg_coptic_curriculum_v1');
-              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v8_multi_level_switcher');
+              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v9_level3_comprehensive_review');
             }
           } catch(e) {}
           const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');

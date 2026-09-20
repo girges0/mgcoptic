@@ -4665,6 +4665,179 @@ function resetFullAccountFromModal() {
 }
 window.resetFullAccountFromModal = resetFullAccountFromModal;
 
+/* ============ UNLOCK ALL LEVELS (فتح جميع المستويات للطالب) ============ */
+async function unlockAllLevels(userId, userName) {
+  const result = await Swal.fire({
+    title: 'فتح جميع المستويات للطالب 🔓',
+    html: `
+      <div style="text-align:right; font-size:0.95rem; line-height:1.7; color:#2E2018;">
+        <p>هل تريد بالتأكيد فتح جميع المستويات الدراسية لحساب الطالب: <b>«${esc(userName || 'المستخدم')}»</b>؟</p>
+        <div style="background:#FFF9EB; border:1.5px solid #EBD59B; border-radius:12px; padding:14px; margin:14px 0; font-size:0.88rem; color:#785304;">
+          <div style="font-weight:900; margin-bottom:6px; color:#B45309; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>أثر هذا الإجراء الإداري:</span>
+          </div>
+          <ul style="margin:4px 0 0 16px; padding:0;">
+            <li>تسجيل اجتياز دروس المستويات السابقة (المستوى 1 و 2) رسمياً في قاعدة بيانات Supabase.</li>
+            <li>فتح المستوى الثاني والثالث تلقائياً وفورياً بحساب الطالب دون أي عوائق.</li>
+            <li>إمكانية تنقل الطالب بحرية بين كافة مستويات ودروس المنصة (المستوى 1، 2، 3).</li>
+          </ul>
+        </div>
+      </div>
+    `,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'نعم، افتح جميع المستويات 🔓',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#D97706',
+    cancelButtonColor: '#6B7280'
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    Swal.fire({
+      title: 'جارٍ فتح جميع المستويات...',
+      html: '<p style="font-weight:700; color:#555;">يتم تحديث سجلات المنهج في Supabase وبث التحديث لحساب الطالب...</p>',
+      allowOutsideClick: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+
+    // 1) جلب دروس المستويين 1 و 2
+    let lessonIds = [];
+    try {
+      const { data: dbUnits } = await sb.from('units').select('id, level_id').in('level_id', [5, 6]);
+      const unitIds = (dbUnits || []).map(u => u.id);
+      if (unitIds.length > 0) {
+        const { data: dbLessons } = await sb.from('lessons').select('id').in('unit_id', unitIds);
+        if (dbLessons && dbLessons.length > 0) {
+          lessonIds = dbLessons.map(l => l.id);
+        }
+      }
+    } catch(e) {
+      console.warn('Dynamic lessons fetch warning:', e);
+    }
+
+    // احتياطي موثوق إذا تعذر جلب المعرفات ديناميكياً
+    if (lessonIds.length === 0) {
+      for (let i = 1; i <= 32; i++) lessonIds.push(i);
+      for (let i = 101; i <= 109; i++) lessonIds.push(i);
+      for (let i = 201; i <= 236; i++) lessonIds.push(i);
+    }
+
+    // 2) إعداد صفوف الإنجاز للإدخال في user_lesson_progress
+    const nowIso = new Date().toISOString();
+    const rowsToUpsert = lessonIds.map(lid => ({
+      user_id: userId,
+      lesson_id: lid,
+      status: 'completed',
+      score: 100,
+      updated_at: nowIso
+    }));
+
+    // حفظ في Supabase على دفعات
+    const batchSize = 40;
+    for (let i = 0; i < rowsToUpsert.length; i += batchSize) {
+      const chunk = rowsToUpsert.slice(i, i + batchSize);
+      const { error: upsertErr } = await sb.from('user_lesson_progress').upsert(chunk, { onConflict: 'user_id,lesson_id' });
+      if (upsertErr) console.warn('Chunk upsert warning:', upsertErr.message);
+    }
+
+    // 3) تحديث الكاش المحلي للمتصفح إذا كان الحساب يعمل محلياً أو للتجربة المباشرة
+    try {
+      const userLpKey = `mg_coptic_lesson_progress_${userId}`;
+      let localProg = {};
+      try {
+        const raw = localStorage.getItem(userLpKey) || localStorage.getItem('mg_coptic_lesson_progress');
+        if (raw) localProg = JSON.parse(raw);
+      } catch(_) {}
+
+      lessonIds.forEach(lid => {
+        const sLid = String(lid);
+        localProg[sLid] = { status: 'completed', score: 100, completed: true };
+        localProg[`${sLid}_p`] = { status: 'completed', score: 100 };
+        localProg[`${sLid}_c`] = { status: 'completed', score: 100 };
+      });
+
+      localStorage.setItem(userLpKey, JSON.stringify(localProg));
+      const localUserRaw = localStorage.getItem('mg_coptic_user');
+      if (localUserRaw) {
+        const u = JSON.parse(localUserRaw);
+        if (u && u.id === userId) {
+          localStorage.setItem('mg_coptic_lesson_progress', JSON.stringify(localProg));
+        }
+      }
+      localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
+    } catch(_) {}
+
+    // 4) بث التحديث الفوري للعميل المفتوح
+    broadcastAdminActionToClient(userId, 'unlock_levels', { unlockedAll: true, count: lessonIds.length });
+    try {
+      const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mg_coptic_gamification_sync') : null;
+      if (channel) {
+        channel.postMessage({
+          type: 'levels_unlocked',
+          payload: { user_id: userId, unlocked_all: true, count: lessonIds.length }
+        });
+        channel.close();
+      }
+    } catch(_) {}
+
+    // 5) تحديث بيانات الطالب في الذاكرة الحية ونافذة التفاصيل
+    const student = allLoadedStudents.find(s => s.id === userId);
+    const newLps = rowsToUpsert.map(r => ({ lesson_id: r.lesson_id, status: 'completed', score: 100, updated_at: nowIso }));
+
+    if (student) {
+      student.completed_lessons = Math.max(student.completed_lessons || 0, lessonIds.length);
+      student.actualLevel = 'المستوى 3: المراجعة الشاملة والتطبيق المتقدم';
+      student.tierLevel = 'المستوى 3';
+      const existingOther = (student.lessons_detail || []).filter(l => !lessonIds.includes(Number(l.lesson_id)));
+      student.lessons_detail = [...existingOther, ...newLps];
+    }
+
+    if (activeSelectedStudent && activeSelectedStudent.id === userId) {
+      activeSelectedStudent.completed_lessons = Math.max(activeSelectedStudent.completed_lessons || 0, lessonIds.length);
+      activeSelectedStudent.actualLevel = 'المستوى 3: المراجعة الشاملة والتطبيق المتقدم';
+      activeSelectedStudent.tierLevel = 'المستوى 3';
+      const existingOther = (activeSelectedStudent.lessons_detail || []).filter(l => !lessonIds.includes(Number(l.lesson_id)));
+      activeSelectedStudent.lessons_detail = [...existingOther, ...newLps];
+
+      const levelEl = document.getElementById('m-student-level');
+      if (levelEl) levelEl.textContent = 'المستوى 3 (جميع المستويات مفتوحة 🔓)';
+
+      const countEl = document.getElementById('m-student-lessons-count');
+      if (countEl) countEl.textContent = `${activeSelectedStudent.completed_lessons} درس`;
+
+      renderStudentLessonsAudit(activeSelectedStudent);
+    }
+
+    updateStudentsSummaryStats(allLoadedStudents);
+    filterStudentsTable();
+
+    Swal.close();
+    Swal.fire({
+      icon: 'success',
+      title: 'تم فتح جميع المستويات بنجاح! 🔓',
+      html: `<p style="font-weight:700; color:#2E2018;">تم تسجيل إتمام كافة متطلبات المستويات السابقة لحساب <b>«${esc(userName || 'الطالب')}»</b> رسمياً في Supabase.<br><span style="color:#059669; font-weight:800;">جميع المستويات (المستوى 1 و 2 و 3) مفتوحة الآن بحسابه ويمكنه دراستها كاملة.</span></p>`,
+      confirmButtonText: 'رائع، حسناً',
+      confirmButtonColor: '#6B1530'
+    });
+
+  } catch(err) {
+    Swal.close();
+    console.error('unlockAllLevels error:', err);
+    toast('تعذر فتح المستويات: ' + (err.message || err), true);
+  }
+}
+window.unlockAllLevels = unlockAllLevels;
+
+function unlockAllLevelsFromModal() {
+  if (!activeSelectedStudent) return;
+  const s = activeSelectedStudent;
+  unlockAllLevels(s.id, s.full_name);
+}
+window.unlockAllLevelsFromModal = unlockAllLevelsFromModal;
+
 // 4. حذف الحساب نهائياً
 async function deleteUser(userId, userName) {
   const c = await mgConfirm('حذف المستخدم نهائياً', `هل أنت متأكد من رغبتك في حذف حساب «${userName || 'المستخدم'}» نهائياً من قاعدة البيانات؟ سيتم مسح حسابه وسجلات تقدمه ونقاطه بالكامل.`, 'warning', { confirmText: 'نعم، احذف الحساب', cancelText: 'إلغاء' });
