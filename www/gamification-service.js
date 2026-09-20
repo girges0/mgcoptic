@@ -1503,7 +1503,7 @@ class GamificationService {
           let allOptions = [];
           if(allChallenges.length > 0){
             const chIds = allChallenges.map(c => c.id);
-            const { data: optData } = await sbClient.from('challenge_options').select('*').in('challenge_id', chIds);
+            const { data: optData } = await sbClient.from('challenge_options').select('*').in('challenge_id', chIds).order('id', { ascending: true });
             allOptions = optData || [];
           }
 

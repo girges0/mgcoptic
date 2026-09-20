@@ -2689,7 +2689,6 @@
             btnCheck.disabled = false;
           }
         } else {
-          delete ch._shuffledOptions;
           currentChallenges.push(ch);
 
           if (game.loseHeart) {
@@ -2711,8 +2710,7 @@
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
                 feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
-                const opts = ch._shuffledOptions || ch.options || [];
-                const correctOpt = opts.find(o => o.is_correct) || (ch.options || []).find(o => o.is_correct);
+                const correctOpt = (ch.options || []).find(o => o.is_correct);
                 if (correctOpt) {
                   const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
                     ? window.formatPronunciationOption(correctOpt.text)

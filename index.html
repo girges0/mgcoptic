@@ -13728,10 +13728,10 @@
           // التحقق من صلاحية وتحديث خيارات التمارين
           try {
             const curVer = localStorage.getItem('mg_coptic_curriculum_v_tag');
-            if (curVer !== 'v9_level3_comprehensive_review') {
+            if (curVer !== 'v10_unified_options_order') {
               localStorage.removeItem('mg_coptic_curriculum_v2');
               localStorage.removeItem('mg_coptic_curriculum_v1');
-              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v9_level3_comprehensive_review');
+              localStorage.setItem('mg_coptic_curriculum_v_tag', 'v10_unified_options_order');
             }
           } catch(e) {}
           const raw = localStorage.getItem('mg_coptic_curriculum_v2') || localStorage.getItem('mg_coptic_curriculum_v1');
@@ -14648,17 +14648,23 @@
               return;
             }
 
-            if (runnerState === 'answering') {
-              btnCheckAction.disabled = true;
-              await evaluateAnswer();
-            } else if (runnerState === 'checked') {
-              if (currentRunnerHearts <= 0) {
-                handleOutOfHearts();
-                return;
+            try {
+              if (runnerState === 'answering') {
+                btnCheckAction.disabled = true;
+                await evaluateAnswer();
+              } else if (runnerState === 'checked') {
+                if (currentRunnerHearts <= 0) {
+                  handleOutOfHearts();
+                  return;
+                }
+                btnCheckAction.disabled = true;
+                currentChallengeIndex++;
+                loadChallenge(currentChallengeIndex);
               }
-              btnCheckAction.disabled = true;
-              currentChallengeIndex++;
-              loadChallenge(currentChallengeIndex);
+            } catch (runnerErr) {
+              console.error('Error during challenge check:', runnerErr);
+              btnCheckAction.disabled = false;
+              btnCheckAction.style.pointerEvents = 'auto';
             }
           };
         }
@@ -14807,6 +14813,7 @@
           btnCheck.disabled = true;
           btnCheck.textContent = 'تحقق';
           btnCheck.className = 'btn-check-answer';
+          btnCheck.style.pointerEvents = 'auto';
         }
         if (feedbackBox) feedbackBox.style.visibility = 'hidden';
 
@@ -14833,18 +14840,7 @@
         const runnerBody = document.getElementById('runner-body-content');
         if (!runnerBody) return;
 
-        // خلط خيارات الإجابة عشوائياً (Fisher-Yates Shuffle) حتى لا تكون الإجابة الصحيحة دائماً أول خيار (أ أو ب)
-        if (Array.isArray(ch.options) && ch.options.length > 1) {
-          if (!ch._shuffledOptions) {
-            const shuffled = [...ch.options];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            ch._shuffledOptions = shuffled;
-          }
-        }
-        const activeOptions = ch._shuffledOptions || ch.options || [];
+        const activeOptions = ch.options || [];
         let html = '';
 
         if (ch.type === 'letter_overview') {
@@ -15161,18 +15157,24 @@
           selectedMatchLeft = null;
           selectedMatchRight = null;
 
-          // خلط عشوائي لكلا العمودين
-          const shuffleArray = (arr) => {
-            const a = [...arr];
-            for (let i = a.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [a[i], a[j]] = [a[j], a[i]];
+          // خلط تركيبي محدد برقم التمرين لتوحيد أماكن الكروت لجميع المستخدمين والحسابات
+          const deterministicShuffle = (array, seed) => {
+            let s = Number(seed) || 1;
+            const rnd = () => {
+              s = (s * 9301 + 49297) % 233280;
+              return s / 233280;
+            };
+            const res = [...array];
+            for (let i = res.length - 1; i > 0; i--) {
+              const j = Math.floor(rnd() * (i + 1));
+              [res[i], res[j]] = [res[j], res[i]];
             }
-            return a;
+            return res;
           };
 
-          const leftShuffled = shuffleArray(pairs);
-          const rightShuffled = shuffleArray(pairs);
+          const chSeed = Number(ch.id) || 42;
+          const leftShuffled = deterministicShuffle(pairs, chSeed * 13 + 7);
+          const rightShuffled = deterministicShuffle(pairs, chSeed * 37 + 19);
 
           html += `
             <div class="question-heading">${escapeHtml(ch.question || 'طابق كل عنصر قبطي بالمعنى أو النطق الصحيح')}</div>
@@ -15838,8 +15840,7 @@
         if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
-          const opts = ch._shuffledOptions || ch.options || [];
-          const selectedOpt = opts[currentSelection];
+          const selectedOpt = ch.options ? ch.options[currentSelection] : null;
           isCorrect = selectedOpt && selectedOpt.is_correct;
         } else if (ch.type === 'listen_write') {
           const inputEl = document.getElementById('listen-write-user-input');
@@ -15902,9 +15903,8 @@
 
         if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const allOptionCards = document.querySelectorAll('.option-card');
-          const opts = ch._shuffledOptions || ch.options || [];
           allOptionCards.forEach((c, idx) => {
-            const isThisCorrect = opts[idx] && opts[idx].is_correct;
+            const isThisCorrect = ch.options && ch.options[idx] && ch.options[idx].is_correct;
             if (isThisCorrect) {
               c.classList.remove('selected');
               c.classList.add('correct');
@@ -15929,7 +15929,11 @@
 
           if (!alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
-            if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
+            try {
+              if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
+            } catch (errProg) {
+              console.warn('Could not update progress in runner:', errProg);
+            }
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           }
@@ -15939,7 +15943,9 @@
             sessionAnsweredChallenges.add(challengeUniqueId);
           }
 
-          if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
+          try {
+            if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
+          } catch(e) {}
 
           if (feedbackBox) {
             feedbackBox.className = 'feedback-msg correct';
@@ -15954,20 +15960,27 @@
             btnCheck.textContent = 'متابعة';
             btnCheck.className = 'btn-check-answer btn-continue-ok';
             btnCheck.disabled = false;
+            btnCheck.style.pointerEvents = 'auto';
           }
         } else {
-          delete ch._shuffledOptions;
           currentChallenges.push(ch);
 
-          if (game.loseHeart) {
-            const prog = await game.loseHeart(uid);
-            currentRunnerHearts = Number(prog.hearts ?? 0);
-          } else {
+          try {
+            if (game.loseHeart) {
+              const prog = await game.loseHeart(uid);
+              currentRunnerHearts = Number(prog.hearts ?? 0);
+            } else {
+              currentRunnerHearts = Math.max(0, currentRunnerHearts - 1);
+            }
+          } catch (errHeart) {
+            console.warn('Could not update hearts in runner:', errHeart);
             currentRunnerHearts = Math.max(0, currentRunnerHearts - 1);
           }
           const runnerHearts = document.getElementById('runner-hearts-count');
           if (runnerHearts) runnerHearts.textContent = currentRunnerHearts;
-          if (game.sound) game.sound.playWrong();
+          try {
+            if (game.sound) game.sound.playWrong();
+          } catch(e) {}
 
           if (feedbackBox) {
             feedbackBox.className = 'feedback-msg wrong';
@@ -15978,8 +15991,7 @@
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
                 feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
               } else {
-                const opts = ch._shuffledOptions || ch.options || [];
-                const correctOpt = opts.find(o => o.is_correct) || (ch.options || []).find(o => o.is_correct);
+                const correctOpt = (ch.options || []).find(o => o.is_correct);
                 if (correctOpt) {
                   const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
                     ? window.formatPronunciationOption(correctOpt.text)
@@ -15998,12 +16010,8 @@
             if (btnCheck) {
               btnCheck.textContent = 'نفدت المحاولات';
               btnCheck.className = 'btn-check-answer btn-continue-err';
-              btnCheck.disabled = true;
-              btnCheck.style.pointerEvents = 'none';
-              btnCheck.onclick = (e) => {
-                if (e) { e.preventDefault(); e.stopPropagation(); }
-                handleOutOfHearts();
-              };
+              btnCheck.disabled = false;
+              btnCheck.style.pointerEvents = 'auto';
             }
             setTimeout(() => handleOutOfHearts(), 350);
           } else {
