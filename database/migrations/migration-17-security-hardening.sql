@@ -1,6 +1,6 @@
 -- ============================================================================
 -- MG COPTIC — Migration 17: Database Security Hardening & Privacy Protection
--- حماية البيانات ومنع استخراج أرقام الهواتف أو الإيميلات ومنع ترقية الصلاحيات
+-- حماية كاملة ضد التبديل بين الحسابات بالـ ID ومنع التلاعب بالرتب أو ترقية الصلاحيات
 -- ============================================================================
 
 -- 1. تقييد استعلام بيانات المستخدمين الحساسة (الهواتف والإيميلات)
@@ -10,13 +10,19 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "anyone can read users" ON public.users;
 DROP POLICY IF EXISTS "users can read own profile or admin can read all" ON public.users;
-
 CREATE POLICY "users can read own profile or admin can read all" ON public.users
   FOR SELECT
   USING (
     auth.uid() = id 
     OR public.is_admin()
   );
+
+-- منع أي مستخدم من تعديل حساب مستخدم آخر بالـ ID
+DROP POLICY IF EXISTS "user can update own profile" ON public.users;
+CREATE POLICY "user can update own profile" ON public.users
+  FOR UPDATE
+  USING (auth.uid() = id OR public.is_admin())
+  WITH CHECK (auth.uid() = id OR public.is_admin());
 
 -- 2. تأمين لوحة المتصدرين (Leaderboard) لعرض الأسماء والنقاط فقط بدون الهواتف أو الإيميلات
 -- استخدام SECURITY DEFINER على مستوى الـ View لتسمح للجميع برؤية الترتيب العام
@@ -39,7 +45,7 @@ ORDER BY points DESC;
 GRANT SELECT ON public.leaderboard_view TO anon, authenticated;
 
 -- 3. سد ثغرة ترقية الرتب (Privilege Escalation) على مستوى الـ INSERT والـ UPDATE
--- منع أي مستخدم من تسجيل نفسه كـ admin أو super_admin
+-- منع أي مستخدم أو مشرف عادي من تغيير رتبته أو ترقية حسابه إلى admin أو super_admin
 CREATE OR REPLACE FUNCTION public.protect_user_role_escalation()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -64,6 +70,7 @@ BEGIN
   -- فحص عند تعديل الحساب (UPDATE)
   IF TG_OP = 'UPDATE' THEN
     IF NEW.role IS DISTINCT FROM OLD.role THEN
+      -- التحقق الصارم: السوبر أدمن الموثق فقط هو القادر على تغيير الرتب
       IF NOT public.is_super_admin() THEN
         RAISE EXCEPTION 'غير مصرح: تعديل رتب أو صلاحيات المستخدمين محصور فقط بالسوبر أدمن (Super Admin)';
       END IF;
@@ -80,12 +87,12 @@ CREATE TRIGGER trg_protect_user_role_escalation
   FOR EACH ROW
   EXECUTE FUNCTION public.protect_user_role_escalation();
 
--- 4. تعزيز حماية تقدم الطلاب (User Progress)
+-- 4. إحكام الحماية ضد التلاعب بتقدم الطلاب (User Progress IDOR Protection)
+-- منع قراءة أو كتابة أو تعديل تقدم أي طالب إلا بواسطة صاحبه الموثق بالتوكن (auth.uid())
 ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "anyone can read user_progress" ON public.user_progress;
 DROP POLICY IF EXISTS "user can read own progress or admin" ON public.user_progress;
-
 CREATE POLICY "user can read own progress or admin" ON public.user_progress
   FOR SELECT
   USING (
@@ -93,4 +100,38 @@ CREATE POLICY "user can read own progress or admin" ON public.user_progress
     OR public.is_admin()
   );
 
--- تم بنجاح تفعيل أقصى درجات الحماية على قاعدة البيانات
+DROP POLICY IF EXISTS "user can update own progress" ON public.user_progress;
+CREATE POLICY "user can update own progress" ON public.user_progress
+  FOR UPDATE
+  USING (auth.uid() = user_id OR public.is_admin())
+  WITH CHECK (auth.uid() = user_id OR public.is_admin());
+
+DROP POLICY IF EXISTS "user can insert own progress" ON public.user_progress;
+CREATE POLICY "user can insert own progress" ON public.user_progress
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id OR public.is_admin());
+
+-- 5. إحكام الحماية على تقدم الدروس (User Lesson Progress IDOR Protection)
+ALTER TABLE public.user_lesson_progress ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "user can view own lesson progress" ON public.user_lesson_progress;
+CREATE POLICY "user can view own lesson progress" ON public.user_lesson_progress
+  FOR SELECT
+  USING (auth.uid() = user_id OR public.is_admin());
+
+DROP POLICY IF EXISTS "user can manage own lesson progress" ON public.user_lesson_progress;
+CREATE POLICY "user can manage own lesson progress" ON public.user_lesson_progress
+  FOR ALL
+  USING (auth.uid() = user_id OR public.is_admin())
+  WITH CHECK (auth.uid() = user_id OR public.is_admin());
+
+-- 6. إحكام الحماية على حل التحديات (User Challenge Progress IDOR Protection)
+ALTER TABLE public.user_challenge_progress ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "user can manage own challenge progress" ON public.user_challenge_progress;
+CREATE POLICY "user can manage own challenge progress" ON public.user_challenge_progress
+  FOR ALL
+  USING (auth.uid() = user_id OR public.is_admin())
+  WITH CHECK (auth.uid() = user_id OR public.is_admin());
+
+-- تم بنجاح تفعيل أقصى درجات الحماية ضد انتحال الـ ID وتعديل الرتب

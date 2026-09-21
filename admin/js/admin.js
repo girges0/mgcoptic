@@ -4527,12 +4527,8 @@ async function resetFullAccount(userId, userName) {
   } catch (_) {}
 
   if (!currentAdminId) {
-    if (window.currentAdminRole === 'super_admin') {
-      currentAdminId = '00000000-0000-0000-0000-000000000000';
-    } else {
-      Swal.fire('خطأ في الصلاحيات', 'يجب أن تكون مسجل الدخول كمشرف لتصفير الحساب.', 'error');
-      return;
-    }
+    Swal.fire('خطأ في الصلاحيات', 'يجب أن تكون مسجل الدخول كمشرف لتصفير الحساب.', 'error');
+    return;
   }
 
   // إظهار شاشة التحميل الفوري
