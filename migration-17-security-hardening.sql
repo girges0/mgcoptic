@@ -3,10 +3,21 @@
 -- حماية كاملة ضد التبديل بين الحسابات بالـ ID ومنع التلاعب بالرتب أو ترقية الصلاحيات
 -- ============================================================================
 
--- 0. التأكد من وجود عمودي رقم الموبايل ووسيلة التسجيل (لتفادي أي خطأ في لوحة التحكم)
+-- 0. التأكد من وجود كافة أعمدة المستخدمين (لتفادي أي أخطاء missing column)
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS auth_type VARCHAR(30);
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS age INT DEFAULT 15;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT FALSE;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ DEFAULT NULL;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS deleted_by TEXT DEFAULT NULL;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT FALSE;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS ban_reason TEXT DEFAULT NULL;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS banned_until TIMESTAMPTZ DEFAULT NULL;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS banned_at TIMESTAMPTZ DEFAULT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_users_phone ON public.users(phone);
+CREATE INDEX IF NOT EXISTS idx_users_is_deleted ON public.users(is_deleted);
 
 -- 1. تقييد استعلام بيانات المستخدمين الحساسة (الهواتف والإيميلات)
 -- لا يستطيع أي طالب أو مستخدم عادي قراءة بيانات مستخدمين آخرين
