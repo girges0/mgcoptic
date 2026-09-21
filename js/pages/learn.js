@@ -229,6 +229,61 @@
         };
       }
 
+      function areAllLevelsCompleted(curriculum, progress) {
+        if (!curriculum || !curriculum.levels || curriculum.levels.length === 0) return false;
+        const cur = (curriculum && curriculum.units) ? curriculum : (typeof DEFAULT_CURRICULUM !== 'undefined' ? DEFAULT_CURRICULUM : null);
+        if (!cur) return false;
+        const levels = (cur.levels || []).filter(l => {
+          const stats = getLevelStats(l.id, cur, progress);
+          return stats.totalLessons > 0;
+        });
+        if (levels.length === 0) return false;
+        return levels.every(l => {
+          const stats = getLevelStats(l.id, cur, progress);
+          return stats.isCompleted;
+        });
+      }
+      window.areAllLevelsCompleted = areAllLevelsCompleted;
+
+      function showAllLevelsCompletedModal() {
+        if (typeof Swal === 'undefined') return;
+        Swal.fire({
+          title: '<span style="color:#0f172a;font-weight:900;font-size:1.35rem;">تهانينا يا بطل! 🎉🏆</span>',
+          html: `
+            <div style="text-align:center;direction:rtl;padding:4px 0;font-family:'Tajawal','Cairo',sans-serif;">
+              <div style="font-size:3.5rem;margin-bottom:12px;line-height:1;">🎓</div>
+              <p style="font-size:1.05rem;color:#1e293b;font-weight:800;line-height:1.7;margin-bottom:14px;">
+                لقد أتممت ببراعة واجتهاد <b>جميع مستويات منصة MG COPTIC</b> المتاحة حالياً! 🌟
+              </p>
+              <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:1.5px solid #86efac;border-radius:18px;padding:16px;text-align:right;margin-bottom:16px;box-shadow:0 4px 12px rgba(22,101,52,0.06);">
+                <div style="display:flex;align-items:center;gap:8px;font-weight:900;color:#166534;font-size:1rem;margin-bottom:8px;">
+                  <span style="font-size:1.2rem;">🚀</span>
+                  <span>مستويات وتحديثات جديدة قادمة قريباً:</span>
+                </div>
+                <p style="font-size:0.88rem;color:#15803d;line-height:1.6;margin:0 0 8px;font-weight:700;">
+                  نعمل حالياً بكل شغف على مراجعة وتجهيز المستويات المتقدمة التالية:
+                </p>
+                <ul style="font-size:0.85rem;color:#166534;margin:0 18px 0 0;padding:0;line-height:1.9;font-weight:700;text-align:right;">
+                  <li>📖 <b>المستوى الثالث: تراكيب وقواعد لغوية متقدمة</b></li>
+                  <li>🗣️ <b>محادثات قبطية تفاعلية وجمل مستخدمة يومياً</b></li>
+                  <li>⛪ <b>صلوات وألحان ونصوص كنسية معربة ومترجمة</b></li>
+                </ul>
+              </div>
+              <p style="font-size:0.84rem;color:#64748b;margin:0;line-height:1.5;font-weight:600;">
+                💡 يمكنك في هذه الأثناء مراجعة الدروس السابقة لتثبيت معلوماتك، أو تصفح القاموس والأبجدية والنتيجة القبطية!
+              </p>
+            </div>
+          `,
+          confirmButtonText: 'رائع، في انتظار المستويات القادمة! 🌟',
+          confirmButtonColor: '#6B1530',
+          backdrop: 'rgba(15, 23, 42, 0.75)',
+          customClass: {
+            popup: 'swal2-celebration-popup'
+          }
+        });
+      }
+      window.showAllLevelsCompletedModal = showAllLevelsCompletedModal;
+
       function renderLevelCapsuleHeader(activeLvlId, curriculum, progress) {
         const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
         const currentLvl = levels.find(l => String(l.id) === String(activeLvlId)) || levels[0] || { id: 5, title: 'المستوى الأول: الأبجدية القبطية الكاملة', order_index: 1 };
@@ -409,6 +464,36 @@
             </div>
           `;
         });
+
+        html += `
+          <div class="level-card level-card-upcoming" onclick="window.showAllLevelsCompletedModal()" style="cursor:pointer;border:2px dashed #818cf8;background:linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);">
+            <div class="level-card-icon-col" style="background:#4338ca;color:#fef08a;border-color:#818cf8;">
+              <span style="font-size:1.4rem;">🔜</span>
+            </div>
+            <div class="level-card-main-col">
+              <div class="level-card-top-meta">
+                <span class="level-card-tag" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;">قريباً جداً • قيد الإعداد</span>
+                <span class="level-card-badge" style="background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>مستويات متقدمة</span>
+                </span>
+              </div>
+              <h4 class="level-card-title" style="color:#1e1b4b;">المستويات القادمة: محادثات وتراكيب ونصوص كنسية 🚀</h4>
+              <p class="level-card-desc" style="color:#475569;">نعمل على تجهيز مستويات جديدة تشمل المحادثات اليومية والقواعد المتقدمة والنصوص الكنسية والصلوات المعربة</p>
+              <div class="level-card-stats-row">
+                <span class="stat-pill" style="color:#4338ca;font-weight:800;">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  <span>اضغط لمعرفة ما ينتظرك في التحديث القادم ✨</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
 
         container.innerHTML = html;
       }
@@ -861,6 +946,30 @@
             </div>
           `;
         });
+
+        // إذا أتم الطالب كافة المستويات المتاحة في المنصة
+        if (typeof areAllLevelsCompleted === 'function' && areAllLevelsCompleted(activeCurriculum, activeLessonProgress)) {
+          html += `
+            <div class="all-levels-celebration-card" onclick="window.showAllLevelsCompletedModal()">
+              <div class="celebration-badge-row">
+                <span class="celebration-pill-tag">إنجاز أسطوري • 100% مكتمل</span>
+                <span class="celebration-pill-soon">مستويات جديدة قريباً 🚀</span>
+              </div>
+              <div class="celebration-trophy-circle">🏆</div>
+              <h3 class="celebration-title">تهانينا من القلب! لقد أتممت جميع المستويات بنجاح! 🎉</h3>
+              <p class="celebration-desc">
+                أحسنت صنعاً! لقد أنهيت كافة الدروس والتحديات المتاحة حالياً على منصة MG COPTIC.
+                نحن نعمل حالياً بكل شغف على إعداد وتجهيز <b>مستويات وتحديات متقدمة جديدة</b> ستنزل قريباً جداً بإذن الله ✨
+              </p>
+              <button type="button" class="celebration-action-btn" onclick="event.stopPropagation(); window.showAllLevelsCompletedModal()">
+                <span>ماذا ينتظرك في المستويات القادمة؟ 🌟</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+            </div>
+          `;
+        }
 
         container.innerHTML = html;
 
@@ -1428,6 +1537,17 @@
             const uid = getAuthUserId();
             if (game.getLessonProgress) activeLessonProgress = await game.getLessonProgress(uid);
             renderSkillMap();
+
+            // فحص اكتمال جميع المستويات وإظهار رسالة المستويات القادمة
+            try {
+              if (typeof areAllLevelsCompleted === 'function' && areAllLevelsCompleted(activeCurriculum, activeLessonProgress)) {
+                setTimeout(() => {
+                  if (typeof window.showAllLevelsCompletedModal === 'function') {
+                    window.showAllLevelsCompletedModal();
+                  }
+                }, 450);
+              }
+            } catch(e) {}
           };
         }
       });
