@@ -70,43 +70,16 @@
         else submitBtn.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
       }
 
-      // في حال إنشاء الحساب: البريد الإلكتروني غير متاح مؤقتاً
+      // إتاحة التسجيل بالبريد والموبايل
       if (tabEmail) {
-        if (isSignUp) {
-          switchModalIdentifierType('phone');
-          tabEmail.style.opacity = '0.6';
-          tabEmail.style.cursor = 'not-allowed';
-          tabEmail.title = 'إنشاء الحساب بالبريد غير متاح مؤقتاً';
-          if (emailBadge) emailBadge.style.display = 'inline-flex';
-        } else {
-          tabEmail.style.opacity = '1';
-          tabEmail.style.cursor = 'pointer';
-          tabEmail.title = '';
-          if (emailBadge) emailBadge.style.display = 'none';
-        }
+        tabEmail.style.opacity = '1';
+        tabEmail.style.cursor = 'pointer';
+        tabEmail.title = '';
+        if (emailBadge) emailBadge.style.display = 'none';
       }
     }
 
     function switchModalIdentifierType(type) {
-      if (currentAuthMode === 'signup' && type === 'email') {
-        const statusEl = document.getElementById('auth-status-msg');
-        if (statusEl) {
-          statusEl.className = 'auth-status-msg';
-          statusEl.style.color = '#B45309';
-          statusEl.innerHTML = `
-            <span style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;font-weight:700;">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#B45309" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              <span>إنشاء الحساب بالبريد غير متاح مؤقتاً، يرجى المتابعة برقم الموبايل أو Google.</span>
-            </span>
-          `;
-        }
-        return;
-      }
-
       const isPhone = type === 'phone';
       const form = document.getElementById('auth-form');
       if (form) form.setAttribute('data-auth-type', isPhone ? 'phone' : 'email');
@@ -116,8 +89,13 @@
       const tabPhone = document.getElementById('modal-tab-phone');
       const tabEmail = document.getElementById('modal-tab-email');
 
-      if (phoneGroup) phoneGroup.style.display = isPhone ? 'block' : 'none';
-      if (emailGroup) emailGroup.style.display = isPhone ? 'none' : 'block';
+      if (currentAuthMode === 'signup' && !isPhone) {
+        if (emailGroup) emailGroup.style.display = 'block';
+        if (phoneGroup) phoneGroup.style.display = 'block';
+      } else {
+        if (phoneGroup) phoneGroup.style.display = isPhone ? 'block' : 'none';
+        if (emailGroup) emailGroup.style.display = isPhone ? 'none' : 'block';
+      }
 
       if (tabPhone) {
         tabPhone.style.background = isPhone ? 'rgba(107,21,48,0.06)' : '#FFFDF8';
@@ -446,11 +424,8 @@
         return;
       }
 
-      if (mode === 'signup' && !norm.isPhone) {
-        resetFormUI('إنشاء الحساب عبر البريد الإلكتروني غير متاح مؤقتاً. يرجى إنشاء الحساب باستخدام رقم الموبايل أو Google.');
-        if (phoneEl) phoneEl.focus();
-        return;
-      }
+      let userPhone = '';
+      let authType = norm.isPhone ? 'phone' : 'email';
 
       if (norm.isPhone) {
         if (norm.cleanPhone.length < 8 || norm.cleanPhone.length > 15) {
@@ -458,11 +433,26 @@
           if (phoneEl) phoneEl.focus();
           return;
         }
-      } else if (!email.includes('@') || !email.includes('.')) {
-        resetFormUI('يرجى كتابة بريد إلكتروني صحيح (مثال: name@example.com) أو استخدام رقم الموبايل.');
-        if (emailEl) emailEl.focus();
-        return;
+        userPhone = norm.cleanPhone;
+      } else {
+        if (!email.includes('@') || !email.includes('.')) {
+          resetFormUI('يرجى كتابة بريد إلكتروني صحيح (مثال: name@example.com).');
+          if (emailEl) emailEl.focus();
+          return;
+        }
+        // إلزام التسجيل بالبريد بكتابة رقم الموبايل أيضاً
+        if (mode === 'signup') {
+          const phoneVal = phoneEl ? phoneEl.value.trim() : '';
+          const normPhone = normalizeAuthIdentifier(phoneVal);
+          if (!phoneVal || !normPhone.isPhone || normPhone.cleanPhone.length < 8 || normPhone.cleanPhone.length > 15) {
+            resetFormUI('يرجى كتابة رقم موبايل صحيح (إجباري للتسجيل بالبريد، مثال: 01012345678).');
+            if (phoneEl) phoneEl.focus();
+            return;
+          }
+          userPhone = normPhone.cleanPhone;
+        }
       }
+
       if (!password) {
         resetFormUI('يرجى كتابة كلمة المرور.');
         if (passEl) passEl.focus();
@@ -520,8 +510,8 @@
                 full_name: fullName,
                 age: age,
                 password: password,
-                phone: norm.isPhone ? norm.cleanPhone : '',
-                auth_type: norm.isPhone ? 'phone' : 'email'
+                phone: userPhone,
+                auth_type: authType
               }
             }
           });
@@ -610,7 +600,13 @@
           let createdUser = null;
           try {
             createdUser = (signData && signData.user) || (await sb.auth.getUser()).data?.user;
-            if (createdUser) await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', createdUser.id);
+            if (createdUser) {
+              const fullProfile = { full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType };
+              const { error: pErr } = await sb.from('users').update(fullProfile).eq('id', createdUser.id);
+              if (pErr) {
+                await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', createdUser.id);
+              }
+            }
           } catch (e) {
             console.warn('Password profile sync notice:', e);
           }
@@ -640,8 +636,9 @@
               full_name: fullName,
               avatar_url: '',
               role: 'student',
-              phone: norm.isPhone ? norm.cleanPhone : '',
-              display_identifier: norm.isPhone ? norm.cleanPhone : email
+              phone: userPhone,
+              auth_type: authType,
+              display_identifier: userPhone || email
             };
             localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
             if (signData?.session) {
@@ -658,7 +655,9 @@
           // مزامنة البيانات وتحديث كلمة المرور بالخلفية دون حجب أو تأخير النقل اللحظي
           if (targetUser) {
             try {
-              sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).then(() => {}, () => {});
+              sb.from('users').update({ full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType }).eq('id', targetUser.id).then(() => {}, () => {
+                sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).catch(() => {});
+              });
             } catch (_) {}
           }
 
@@ -925,14 +924,29 @@
             }
           }
 
+          const userPhone = (profile && profile.phone) || activeSession.user.user_metadata?.phone || (activeSession.user.email?.startsWith('phone_') ? activeSession.user.email.replace('phone_', '').split('@')[0] : '');
+          const userAuthType = (profile && profile.auth_type) || activeSession.user.user_metadata?.auth_type || (activeSession.user.app_metadata?.provider === 'google' ? 'google' : (activeSession.user.email?.startsWith('phone_') ? 'phone' : 'email'));
+
           currentAuthUser = {
             id: activeSession.user.id,
             email: activeSession.user.email,
             full_name: (profile && profile.full_name) ? profile.full_name : (activeSession.user.user_metadata?.full_name || activeSession.user.email?.split('@')[0] || 'بطل قبطي'),
             avatar_url: (profile && profile.avatar_url) ? profile.avatar_url : (localStorage.getItem('mg_coptic_user.avatar_url') || ''),
-            role: (profile && profile.role) ? profile.role : 'student'
+            role: (profile && profile.role) ? profile.role : 'student',
+            phone: userPhone,
+            auth_type: userAuthType
           };
           localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+
+          // فحص إلزامية رقم الموبايل للمسجلين بجوجل أو بالبريد
+          const hasPhone = Boolean(userPhone && String(userPhone).trim().length >= 8);
+          const isGoogleOrEmailUser = (userAuthType === 'google' || userAuthType === 'email' || !activeSession.user.email?.startsWith('phone_'));
+          if (!hasPhone && isGoogleOrEmailUser && !window._phonePromptActive) {
+            window._phonePromptActive = true;
+            setTimeout(() => {
+              promptForMandatoryMobilePhone(activeSession.user);
+            }, 800);
+          }
 
           // جلب التقدم الحقيقي من Supabase وفحص إصدار التصفير (reset_version)
           const { data: prog } = await sb.from('user_progress').select('*').eq('user_id', activeSession.user.id).maybeSingle();
@@ -1068,6 +1082,73 @@
         }, 1500);
       }
     }
+
+    async function promptForMandatoryMobilePhone(user) {
+      if (typeof Swal === 'undefined' || !user || !user.id) return;
+      const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'بطل قبطي';
+
+      const { value: phoneVal } = await Swal.fire({
+        title: '<div style="font-family:\'Cairo\',sans-serif;font-weight:900;color:#6B1530;font-size:1.3rem;">تأكيد رقم الموبايل 📱</div>',
+        html: `
+          <div style="text-align:right;font-family:'Tajawal','Cairo',sans-serif;direction:rtl;color:#2E2018;font-size:0.95rem;line-height:1.7;">
+            <p style="margin-bottom:12px;font-weight:700;">
+              أهلاً بك يا <b>${userName}</b>! لإكمال تفعيل حسابك والتواصل معك، يرجى إدخال <b>رقم الموبايل</b>:
+            </p>
+          </div>
+        `,
+        input: 'tel',
+        inputPlaceholder: '012********',
+        inputAttributes: {
+          dir: 'ltr',
+          inputmode: 'numeric',
+          autocomplete: 'tel',
+          style: 'text-align:center;font-size:1.15rem;font-weight:800;letter-spacing:1px;'
+        },
+        confirmButtonText: 'حفظ وتأكيد الحساب',
+        confirmButtonColor: '#6B1530',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        customClass: {
+          popup: 'swal2-coptic-popup'
+        },
+        inputValidator: (val) => {
+          const clean = (val || '').replace(/[\s\-\+]/g, '');
+          if (!clean) return 'يرجى إدخال رقم الموبايل.';
+          if (clean.length < 8 || clean.length > 15 || isNaN(clean)) {
+            return 'يرجى كتابة رقم موبايل صحيح (مثال: 01012345678).';
+          }
+          return null;
+        }
+      });
+
+      if (phoneVal) {
+        const norm = normalizeAuthIdentifier(phoneVal);
+        const cleanPhone = norm.isPhone ? norm.cleanPhone : phoneVal.replace(/[\s\-\+]/g, '');
+        try {
+          await sb.auth.updateUser({ data: { phone: cleanPhone, auth_type: 'google' } });
+        } catch (_) {}
+        try {
+          const { error: pErr } = await sb.from('users').update({ phone: cleanPhone, auth_type: 'google' }).eq('id', user.id);
+          if (pErr) {
+            console.warn('phone column sync notice:', pErr);
+          }
+        } catch (_) {}
+
+        if (currentAuthUser) {
+          currentAuthUser.phone = cleanPhone;
+          currentAuthUser.auth_type = 'google';
+          localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+        }
+        window._phonePromptActive = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تأكيد رقم الموبايل بنجاح!',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    }
+    window.promptForMandatoryMobilePhone = promptForMandatoryMobilePhone;
 
     function getUserProfileData() {
       if (currentAuthUser) return currentAuthUser;

@@ -395,6 +395,8 @@
               <th>الطالب</th>
               <th style="text-align:center;">العمر</th>
               <th>البريد الإلكتروني</th>
+              <th>رقم الموبايل</th>
+              <th style="text-align:center;">طريقة التسجيل</th>
               <th>الرتبة</th>
               <th>الـ XP والرتبة</th>
               <th>الدروس المنجزة</th>
@@ -406,7 +408,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td colspan="12" class="empty">جارٍ تحميل بيانات الطلاب بالكامل والمزامنة اللحظية...</td></tr>
+            <tr><td colspan="14" class="empty">جارٍ تحميل بيانات الطلاب بالكامل والمزامنة اللحظية...</td></tr>
           </tbody>
         </table>
       </div>
@@ -1555,6 +1557,28 @@
               <span>العمر / السن:</span>
             </span>
             <span id="m-student-age" style="font-weight:800; color:#8C2430;">-</span>
+          </div>
+          <div>
+            <span style="color:#746B6F; display:inline-flex; align-items:center; gap:4px;">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#746B6F" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <span>رقم الموبايل:</span>
+            </span>
+            <span id="m-student-phone-wrapper" style="display:inline-flex; align-items:center; gap:6px;">
+              <code id="m-student-phone" style="font-size:0.86rem; font-weight:800; color:#166534; font-family:monospace; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 7px; border-radius:4px; direction:ltr;">-</code>
+              <a id="m-student-phone-call" href="#" style="display:none; color:#15803D; text-decoration:none; font-size:0.85rem;" title="اتصال هاتفي">📞</a>
+              <a id="m-student-phone-wa" href="#" target="_blank" style="display:none; color:#25D366; text-decoration:none; font-size:0.85rem;" title="محادثة عبر واتساب">💬</a>
+              <button type="button" id="btn-copy-phone" onclick="copyStudentPhone()" style="display:none; background:#FAF6EE; border:1px solid #E7DCC8; color:#6B1530; font-size:0.72rem; font-weight:700; border-radius:4px; padding:2px 6px; cursor:pointer;" title="نسخ رقم الموبايل">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>نسخ</span>
+              </button>
+            </span>
+          </div>
+          <div>
+            <span style="color:#746B6F; display:inline-flex; align-items:center; gap:4px;">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#746B6F" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span>طريقة التسجيل:</span>
+            </span>
+            <span id="m-student-auth-type" style="font-weight:800; font-size:0.85rem;">-</span>
           </div>
           <div style="grid-column: 1 / -1; padding-top: 8px; border-top: 1px dashed #E7DCC8; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
             <div style="display:flex; align-items:center; gap:8px;">
