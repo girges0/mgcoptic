@@ -1975,29 +1975,38 @@
       width: 100%;
       background: #FFFFFF;
       border-top: 2px solid #EADBBE;
-      padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+      padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       box-shadow: 0 -4px 20px rgba(50, 30, 10, 0.06);
       z-index: 10;
       box-sizing: border-box;
     }
     .feedback-msg {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      visibility: hidden;
+      gap: 8px;
       font-family: 'Cairo', var(--font-display), sans-serif;
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       width: 100%;
       max-width: 480px;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 12px;
       box-sizing: border-box;
+      line-height: 1.4;
+      text-align: center;
+      animation: feedbackPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .feedback-msg.show {
+      display: flex !important;
+    }
+    @keyframes feedbackPop {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
     .feedback-msg.correct {
       background: #EDF9F0;
@@ -2012,7 +2021,6 @@
     .btn-check-answer {
       width: 100%;
       max-width: 480px;
-      height: 52px;
       padding: 0 24px;
       font-family: 'Cairo', var(--font-display), sans-serif;
       font-size: 1.2rem;

@@ -1394,7 +1394,9 @@
             }
 
             if (runnerState === 'out_of_hearts') {
-              runnerState = 'checked';
+              runnerState = 'answering';
+              loadChallenge(currentChallengeIndex);
+              return;
             }
 
             try {
@@ -1530,6 +1532,11 @@
           runnerOverlay.style.display = 'none';
           runnerOverlay.classList.remove('trace-fullscreen-active');
         }
+        const feedbackBox = document.getElementById('feedback-msg-box');
+        if (feedbackBox) {
+          feedbackBox.style.display = 'none';
+          feedbackBox.className = 'feedback-msg';
+        }
         document.body.style.overflow = 'auto';
         refreshStatsDisplay();
         renderSkillMap();
@@ -1562,8 +1569,16 @@
           btnCheck.disabled = true;
           btnCheck.textContent = 'تحقق';
           btnCheck.className = 'btn-check-answer';
+          btnCheck.style.pointerEvents = 'auto';
         }
-        if (feedbackBox) feedbackBox.style.visibility = 'hidden';
+        if (feedbackBox) {
+          feedbackBox.style.display = 'none';
+          feedbackBox.className = 'feedback-msg';
+          const fbIcon = document.getElementById('feedback-icon');
+          const fbText = document.getElementById('feedback-text');
+          if (fbIcon) fbIcon.innerHTML = '';
+          if (fbText) fbText.textContent = '';
+        }
 
         const percent = Math.min(100, Math.round((correctAnswersCount / Math.max(1, initialChallengesCount)) * 100));
         if (runnerProgress) runnerProgress.style.width = percent + '%';
@@ -2685,18 +2700,19 @@
           if (ch.type !== 'match' && game.sound) game.sound.playCorrect();
 
           if (feedbackBox) {
-            feedbackBox.className = 'feedback-msg correct';
+            feedbackBox.className = 'feedback-msg correct show';
+            feedbackBox.style.display = 'flex';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
               feedbackText.textContent = (challengeXp > 0) ? 'إجابة صحيحة وممتازة! (+1 XP)' : 'إجابة صحيحة وممتازة!';
             }
-            feedbackBox.style.visibility = 'visible';
           }
 
           if (btnCheck) {
             btnCheck.textContent = 'متابعة';
             btnCheck.className = 'btn-check-answer btn-continue-ok';
             btnCheck.disabled = false;
+            btnCheck.style.pointerEvents = 'auto';
           }
         } else {
           currentChallenges.push(ch);
@@ -2712,7 +2728,8 @@
           if (game.sound) game.sound.playWrong();
 
           if (feedbackBox) {
-            feedbackBox.className = 'feedback-msg wrong';
+            feedbackBox.className = 'feedback-msg wrong show';
+            feedbackBox.style.display = 'flex';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
             if (feedbackText) {
               if (ch.type === 'fill_blank' && ch.correct_word) {
@@ -2731,7 +2748,6 @@
                 }
               }
             }
-            feedbackBox.style.visibility = 'visible';
           }
 
           if (currentRunnerHearts <= 0) {
@@ -3216,22 +3232,19 @@
                   showToast(count === 1 ? 'تم شراء 1 قلب بنجاح! (+1)' : `تم ملء جميع القلوب (${count} قلوب) بنجاح!`);
 
                   isOutOfHeartsModalOpen = false;
-                  if (runnerOverlay) runnerOverlay.style.pointerEvents = 'auto';
+                  const runnerOverlayEl = document.getElementById('challenge-runner-overlay');
+                  if (runnerOverlayEl) {
+                    runnerOverlayEl.style.pointerEvents = 'auto';
+                  }
 
                   Swal.close();
 
-                  const btnCheck = document.getElementById('btn-check-action');
-                  if (runnerState === 'out_of_hearts' || runnerState === 'checked') {
-                    runnerState = 'checked';
-                    if (btnCheck) {
-                      btnCheck.textContent = 'متابعة';
-                      btnCheck.className = 'btn-check-answer btn-continue-err';
-                      btnCheck.disabled = false;
-                      btnCheck.style.pointerEvents = 'auto';
-                    }
-                  } else {
+                  const isRunnerActive = runnerOverlayEl && runnerOverlayEl.style.display === 'flex';
+                  if (isRunnerActive && currentChallenges && currentChallenges.length > 0) {
                     runnerState = 'answering';
                     loadChallenge(currentChallengeIndex);
+                  } else if (selectedLesson) {
+                    startLessonRunner(selectedLesson);
                   }
                 } else {
                   showToast('تعذر الشراء، رصيد الـ XP غير كافٍ');
