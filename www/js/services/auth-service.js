@@ -50,10 +50,13 @@
       const submitBtn = document.getElementById('auth-submit-btn');
 
       if (tSignIn && tSignUp) {
-        tSignIn.style.borderBottomColor = isSignUp ? 'transparent' : 'var(--madder)';
+        tSignIn.style.background = isSignUp ? 'transparent' : '#FFFFFF';
         tSignIn.style.color = isSignUp ? 'var(--ink-soft)' : 'var(--madder)';
-        tSignUp.style.borderBottomColor = isSignUp ? 'var(--madder)' : 'transparent';
+        tSignIn.style.boxShadow = isSignUp ? 'none' : '0 2px 6px rgba(0,0,0,0.05)';
+
+        tSignUp.style.background = isSignUp ? '#FFFFFF' : 'transparent';
         tSignUp.style.color = isSignUp ? 'var(--madder)' : 'var(--ink-soft)';
+        tSignUp.style.boxShadow = isSignUp ? '0 2px 6px rgba(0,0,0,0.05)' : 'none';
       }
       if (nameGrp) nameGrp.style.display = isSignUp ? 'block' : 'none';
       if (ageGrp) ageGrp.style.display = isSignUp ? 'block' : 'none';
@@ -63,6 +66,31 @@
         const span = submitBtn.querySelector('span');
         if (span) span.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
         else submitBtn.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
+      }
+    }
+
+    function switchModalIdentifierType(type) {
+      const isPhone = type === 'phone';
+      const form = document.getElementById('auth-form');
+      if (form) form.setAttribute('data-auth-type', isPhone ? 'phone' : 'email');
+
+      const phoneGroup = document.getElementById('modal-group-phone');
+      const emailGroup = document.getElementById('modal-group-email');
+      const tabPhone = document.getElementById('modal-tab-phone');
+      const tabEmail = document.getElementById('modal-tab-email');
+
+      if (phoneGroup) phoneGroup.style.display = isPhone ? 'block' : 'none';
+      if (emailGroup) emailGroup.style.display = isPhone ? 'none' : 'block';
+
+      if (tabPhone) {
+        tabPhone.style.background = isPhone ? 'rgba(107,21,48,0.06)' : '#FFFDF8';
+        tabPhone.style.borderColor = isPhone ? 'rgba(107,21,48,0.25)' : 'rgba(231,220,200,0.8)';
+        tabPhone.style.color = isPhone ? 'var(--madder)' : 'var(--ink-soft)';
+      }
+      if (tabEmail) {
+        tabEmail.style.background = !isPhone ? 'rgba(107,21,48,0.06)' : '#FFFDF8';
+        tabEmail.style.borderColor = !isPhone ? 'rgba(107,21,48,0.25)' : 'rgba(231,220,200,0.8)';
+        tabEmail.style.color = !isPhone ? 'var(--madder)' : 'var(--ink-soft)';
       }
     }
 
@@ -203,12 +231,91 @@
       document.head.appendChild(st);
     }
 
+    // -------------------------------------------------------------------------
+    // أدوات التحقق وتطبيع المعرفات (رقم الموبايل والبريد الإلكتروني)
+    // -------------------------------------------------------------------------
+    function isPhoneIdentifier(val) {
+      if (!val) return false;
+      const cleaned = String(val).trim().replace(/[\s\-\(\)\.]/g, '');
+      // أرقام الموبايل المصرية (010, 011, 012, 015) أو الأرقام الدولية
+      return /^(\+?\d{8,15}|01[0125]\d{8})$/.test(cleaned);
+    }
+
+    function normalizeAuthIdentifier(val) {
+      if (!val) return { isPhone: false, rawPhone: '', cleanPhone: '', authEmail: '' };
+      const trimmed = String(val).trim();
+      if (isPhoneIdentifier(trimmed)) {
+        let clean = trimmed.replace(/[\s\-\(\)\.]/g, '');
+        if (clean.startsWith('+')) clean = clean.substring(1);
+        return {
+          isPhone: true,
+          rawPhone: trimmed,
+          cleanPhone: clean,
+          authEmail: `phone_${clean}@phone.mgcoptic.com`
+        };
+      }
+      return {
+        isPhone: false,
+        rawPhone: '',
+        cleanPhone: '',
+        authEmail: trimmed.toLowerCase()
+      };
+    }
+    window.isPhoneIdentifier = isPhoneIdentifier;
+    window.normalizeAuthIdentifier = normalizeAuthIdentifier;
+
+    async function signInWithGoogle() {
+      if (!window.sb || !window.sb.auth) {
+        if (typeof showToast === 'function') showToast('خدمة التحقق غير متاحة حالياً', 'error');
+        return;
+      }
+      try {
+        const redirectUrl = window.location.origin + window.location.pathname.replace(/\/(login|signup)\.html$/, '/index.html');
+        const { data, error } = await sb.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: redirectUrl
+          }
+        });
+        if (error) throw error;
+      } catch (err) {
+        console.warn('Google sign-in notice:', err);
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            title: '<div style="display:flex;align-items:center;justify-content:center;gap:10px;"><svg viewBox="0 0 24 24" width="28" height="28"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg><span style="font-family:\'Cairo\',sans-serif;font-weight:800;color:#2E2018;">الدخول السريع عبر Google</span></div>',
+            html: `
+              <div style="text-align:right;font-family:'Tajawal','Cairo',sans-serif;direction:rtl;color:#2E2018;line-height:1.7;font-size:0.95rem;">
+                <p style="margin-bottom:12px;font-weight:700;">
+                  لتفعيل الربط التلقائي المباشر بزر Google، يرجى تفعيل مزود <b>Google</b> في لوحة تحكم Supabase (Authentication → Providers → Google) وإدخال Client ID.
+                </p>
+                <div style="background:#FAF3E4;border:1.5px solid #C4A052;border-radius:12px;padding:14px;font-size:0.9rem;margin-top:10px;">
+                  <p style="margin:0 0 6px 0;font-weight:800;color:#6B1530;">الحل المتاح فوراً وبدون أي خطوات إضافية:</p>
+                  <ul style="margin:0;padding-right:20px;color:#5A4A3E;font-size:0.88rem;">
+                    <li>أدخل بريد Gmail الخاص بك وكلمة المرور مباشرة في خانة البريد.</li>
+                    <li>أو استخدم <b>رقم الموبايل</b> للتسجيل والدخول في ثوانٍ معدودة وبدون أي تعقيد.</li>
+                  </ul>
+                </div>
+              </div>
+            `,
+            confirmButtonText: 'حسناً، فهمت',
+            confirmButtonColor: '#6B1530'
+          });
+        } else {
+          alert('يمكنك استخدام رقم الموبايل أو كتابة بريدك الإلكتروني للدخول الفوري.');
+        }
+      }
+    }
+    window.signInWithGoogle = signInWithGoogle;
+
     async function handleAuthSubmit(e, explicitMode) {
       if (e && e.preventDefault) e.preventDefault();
 
       const form = (e && e.target && e.target.tagName === 'FORM') ? e.target : document.getElementById('auth-form');
       const mode = explicitMode || (form ? form.getAttribute('data-auth-mode') : null) || currentAuthMode;
 
+      const activeTabType = (form ? form.getAttribute('data-auth-type') : null) || (window.currentAuthTabType || 'phone');
+
+      const phoneEl = (form && (form.querySelector('[name="phone"]') || form.querySelector('#auth-phone-input'))) || document.getElementById('auth-phone-input');
       const emailEl = (form && (form.querySelector('[name="email"]') || form.querySelector('#auth-email-input'))) || document.getElementById('auth-email-input');
       const passEl = (form && (form.querySelector('[name="password"]') || form.querySelector('#auth-password-input'))) || document.getElementById('auth-password-input');
       const confirmPassEl = form ? (form.querySelector('[name="confirm_password"]') || form.querySelector('#auth-confirm-password-input')) : null;
@@ -219,7 +326,24 @@
       const statusEl = (form && (form.querySelector('.auth-status-msg') || form.querySelector('#auth-status-msg'))) || document.getElementById('auth-status-msg');
       const submitBtn = (form && (form.querySelector('button[type="submit"]') || form.querySelector('#auth-submit-btn'))) || document.getElementById('auth-submit-btn');
 
-      const email = emailEl ? emailEl.value.trim() : '';
+      // تحديد المعرف المدخل (رقم موبايل أو بريد إلكتروني)
+      let rawIdentifier = '';
+      let isPhoneSelected = (activeTabType === 'phone');
+
+      if (isPhoneSelected && phoneEl && phoneEl.value.trim()) {
+        rawIdentifier = phoneEl.value.trim();
+      } else if (!isPhoneSelected && emailEl && emailEl.value.trim()) {
+        rawIdentifier = emailEl.value.trim();
+      } else if (phoneEl && phoneEl.value.trim()) {
+        rawIdentifier = phoneEl.value.trim();
+        isPhoneSelected = true;
+      } else if (emailEl && emailEl.value.trim()) {
+        rawIdentifier = emailEl.value.trim();
+        isPhoneSelected = false;
+      }
+
+      const norm = normalizeAuthIdentifier(rawIdentifier);
+      const email = norm.authEmail;
       const password = passEl ? passEl.value : '';
       const formInputs = form ? Array.from(form.querySelectorAll('input, button, select')) : [];
 
@@ -278,8 +402,21 @@
         }
       }
 
-      if (!email) {
-        resetFormUI('يرجى كتابة البريد الإلكتروني.');
+      if (!rawIdentifier) {
+        resetFormUI(isPhoneSelected ? 'يرجى إدخال رقم الموبايل.' : 'يرجى إدخال البريد الإلكتروني.');
+        if (isPhoneSelected && phoneEl) phoneEl.focus();
+        else if (emailEl) emailEl.focus();
+        return;
+      }
+
+      if (norm.isPhone) {
+        if (norm.cleanPhone.length < 8 || norm.cleanPhone.length > 15) {
+          resetFormUI('يرجى كتابة رقم موبايل صحيح (مثال: 01012345678).');
+          if (phoneEl) phoneEl.focus();
+          return;
+        }
+      } else if (!email.includes('@') || !email.includes('.')) {
+        resetFormUI('يرجى كتابة بريد إلكتروني صحيح (مثال: name@example.com) أو استخدام رقم الموبايل.');
         if (emailEl) emailEl.focus();
         return;
       }
@@ -339,12 +476,14 @@
                 father_name: fatherName,
                 full_name: fullName,
                 age: age,
-                password: password
+                password: password,
+                phone: norm.isPhone ? norm.cleanPhone : '',
+                auth_type: norm.isPhone ? 'phone' : 'email'
               }
             }
           });
 
-          // كشف حالة الإيميل المسجل مسبقاً (سواء error صريح أو fake signup بدون identities)
+          // كشف حالة الإيميل أو رقم الهاتف المسجل مسبقاً
           const isAlreadyRegisteredError = signErr && (() => {
             const errMsg = String(signErr.message || '').toLowerCase();
             return errMsg.includes('already registered') || errMsg.includes('already exists') || errMsg.includes('user already exists');
@@ -364,6 +503,9 @@
                 </span>
               `;
             }
+            const alreadyMsg = norm.isPhone 
+              ? `رقم الموبايل «${norm.cleanPhone}» مسجل مسبقاً! جاري نقلك لتسجيل الدخول...`
+              : `هذا البريد مسجل مسبقاً! جاري نقلك لتسجيل الدخول...`;
             if (statusEl) {
               statusEl.className = 'auth-status-msg auth-status-loading-box';
               statusEl.innerHTML = `
@@ -371,26 +513,34 @@
                   <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
                   <path d="M12 2a10 10 0 0 1 10 10"></path>
                 </svg>
-                <span>هذا البريد مسجل مسبقاً! جاري نقلك لتسجيل الدخول...</span>
+                <span>${alreadyMsg}</span>
               `;
             }
             if (document.getElementById('auth-modal')) {
               setTimeout(() => {
                 switchAuthTab('signin');
-                const emailInp = document.getElementById('auth-email-input');
+                if (norm.isPhone) {
+                  const phoneInp = document.getElementById('auth-phone-input');
+                  if (phoneInp) phoneInp.value = norm.cleanPhone;
+                  if (typeof window.switchAuthIdentifierTab === 'function') window.switchAuthIdentifierTab('phone');
+                } else {
+                  const emailInp = document.getElementById('auth-email-input');
+                  if (emailInp) emailInp.value = email;
+                  if (typeof window.switchAuthIdentifierTab === 'function') window.switchAuthIdentifierTab('email');
+                }
                 const passInp = document.getElementById('auth-password-input');
-                if (emailInp) emailInp.value = email;
                 if (passInp) {
                   passInp.value = '';
                   passInp.focus();
                 }
-                resetFormUI('هذا البريد مسجل بالفعل. أدخل كلمة المرور واضغط "دخول".');
+                resetFormUI(norm.isPhone ? 'رقم الموبايل مسجل بالفعل. أدخل كلمة المرور واضغط "دخول".' : 'هذا البريد مسجل بالفعل. أدخل كلمة المرور واضغط "دخول".');
               }, 1500);
               return;
             } else {
               setTimeout(() => {
                 const redirectParam = redirectTarget ? '&redirect=' + encodeURIComponent(redirectTarget) : '';
-                window.location.href = 'login.html?email=' + encodeURIComponent(email) + redirectParam;
+                const paramKey = norm.isPhone ? 'phone=' + encodeURIComponent(norm.cleanPhone) : 'email=' + encodeURIComponent(email);
+                window.location.href = 'login.html?' + paramKey + redirectParam;
               }, 1500);
               return;
             }
@@ -446,7 +596,9 @@
               email: email,
               full_name: fullName,
               avatar_url: '',
-              role: 'student'
+              role: 'student',
+              phone: norm.isPhone ? norm.cleanPhone : '',
+              display_identifier: norm.isPhone ? norm.cleanPhone : email
             };
             localStorage.setItem('mg_coptic_user', JSON.stringify(basicUser));
             if (signData?.session) {
@@ -564,7 +716,7 @@
         let msg = err.message || 'حدث خطأ أثناء المحاولة';
         const low = msg.toLowerCase();
         if (low.includes('invalid login credentials')) {
-          msg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+          msg = 'بيانات الدخول غير صحيحة (تأكد من رقم الموبايل أو البريد وكلمة المرور).';
         } else if (low.includes('password should be at least')) {
           msg = 'كلمة المرور يجب أن تكون ٨ أحرف على الأقل.';
         }
@@ -2751,6 +2903,8 @@
     window.openAuthModal = openAuthModal;
     window.closeAuthModal = closeAuthModal;
     window.switchAuthTab = switchAuthTab;
+    window.switchModalIdentifierType = switchModalIdentifierType;
+    window.signInWithGoogle = signInWithGoogle;
     window.initUserSession = initUserSession;
     window.signOutStudent = signOutStudent;
     window.deleteCurrentUserAccount = deleteCurrentUserAccount;
