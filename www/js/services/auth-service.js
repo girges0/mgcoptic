@@ -48,6 +48,8 @@
       const titleEl = document.getElementById('auth-modal-title');
       const subtitleEl = document.getElementById('auth-modal-subtitle');
       const submitBtn = document.getElementById('auth-submit-btn');
+      const tabEmail = document.getElementById('modal-tab-email');
+      const emailBadge = document.getElementById('modal-email-unavailable-badge');
 
       if (tSignIn && tSignUp) {
         tSignIn.style.background = isSignUp ? 'transparent' : '#FFFFFF';
@@ -67,9 +69,44 @@
         if (span) span.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
         else submitBtn.textContent = isSignUp ? 'إنشاء الحساب' : 'دخول';
       }
+
+      // في حال إنشاء الحساب: البريد الإلكتروني غير متاح مؤقتاً
+      if (tabEmail) {
+        if (isSignUp) {
+          switchModalIdentifierType('phone');
+          tabEmail.style.opacity = '0.6';
+          tabEmail.style.cursor = 'not-allowed';
+          tabEmail.title = 'إنشاء الحساب بالبريد غير متاح مؤقتاً';
+          if (emailBadge) emailBadge.style.display = 'inline-flex';
+        } else {
+          tabEmail.style.opacity = '1';
+          tabEmail.style.cursor = 'pointer';
+          tabEmail.title = '';
+          if (emailBadge) emailBadge.style.display = 'none';
+        }
+      }
     }
 
     function switchModalIdentifierType(type) {
+      if (currentAuthMode === 'signup' && type === 'email') {
+        const statusEl = document.getElementById('auth-status-msg');
+        if (statusEl) {
+          statusEl.className = 'auth-status-msg';
+          statusEl.style.color = '#B45309';
+          statusEl.innerHTML = `
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;font-weight:700;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#B45309" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>إنشاء الحساب بالبريد غير متاح مؤقتاً، يرجى المتابعة برقم الموبايل أو Google.</span>
+            </span>
+          `;
+        }
+        return;
+      }
+
       const isPhone = type === 'phone';
       const form = document.getElementById('auth-form');
       if (form) form.setAttribute('data-auth-type', isPhone ? 'phone' : 'email');
@@ -406,6 +443,12 @@
         resetFormUI(isPhoneSelected ? 'يرجى إدخال رقم الموبايل.' : 'يرجى إدخال البريد الإلكتروني.');
         if (isPhoneSelected && phoneEl) phoneEl.focus();
         else if (emailEl) emailEl.focus();
+        return;
+      }
+
+      if (mode === 'signup' && !norm.isPhone) {
+        resetFormUI('إنشاء الحساب عبر البريد الإلكتروني غير متاح مؤقتاً. يرجى إنشاء الحساب باستخدام رقم الموبايل أو Google.');
+        if (phoneEl) phoneEl.focus();
         return;
       }
 

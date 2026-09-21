@@ -271,6 +271,94 @@
       stroke: var(--madder);
     }
 
+    .auth-tab-btn.tab-disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px dashed rgba(200, 185, 170, 0.7);
+    }
+
+    .auth-tab-btn.tab-disabled:hover {
+      background: rgba(107, 21, 48, 0.03);
+    }
+
+    .tab-badge-unavailable {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 0.70rem;
+      font-weight: 800;
+      background: rgba(180, 83, 9, 0.1);
+      color: #B45309;
+      border: 1px solid rgba(180, 83, 9, 0.25);
+      margin-right: 4px;
+    }
+
+    .tab-badge-unavailable svg {
+      width: 11px;
+      height: 11px;
+      stroke: #B45309;
+    }
+
+    /* Notice Box */
+    .auth-notice-box {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      text-align: right;
+      animation: modalPop 0.2s ease;
+    }
+
+    .auth-notice-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .auth-notice-text {
+      flex: 1;
+      font-size: 0.84rem;
+      color: #78350F;
+      line-height: 1.5;
+    }
+
+    .auth-notice-text strong {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 2px;
+      color: #92400E;
+    }
+
+    .auth-notice-text p {
+      margin: 0;
+      color: #78350F;
+    }
+
+    .auth-notice-close {
+      background: none;
+      border: none;
+      color: #B45309;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+
+    .auth-notice-close:hover {
+      background: rgba(180, 83, 9, 0.1);
+    }
+
     /* Form Fields */
     .form-group {
       margin-bottom: 13px;
@@ -490,7 +578,7 @@
       <span>أو إنشاء حساب بالبيانات</span>
     </div>
 
-    <!-- تبويبات وسيلة الحساب (موبايل / بريد) -->
+    <!-- تبويبات وسيلة الحساب (موبايل / بريد غير متاح مؤقتاً) -->
     <div class="auth-tabs-pill">
       <button type="button" id="tab-identifier-phone" class="auth-tab-btn active" onclick="switchAuthIdentifierTab('phone')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -499,12 +587,40 @@
         </svg>
         <span>برقم الموبايل</span>
       </button>
-      <button type="button" id="tab-identifier-email" class="auth-tab-btn" onclick="switchAuthIdentifierTab('email')">
+      <button type="button" id="tab-identifier-email" class="auth-tab-btn tab-disabled" onclick="handleDisabledEmailTab(event)" aria-disabled="true" title="التسجيل بالبريد غير متاح مؤقتاً">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
           <polyline points="22,6 12,13 2,6"/>
         </svg>
         <span>بالبريد الإلكتروني</span>
+        <span class="tab-badge-unavailable">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+          </svg>
+          <span>غير متاح مؤقتاً</span>
+        </span>
+      </button>
+    </div>
+
+    <!-- تنبيه عدم إتاحة البريد مؤقتاً -->
+    <div id="email-disabled-banner" class="auth-notice-box" style="display:none;">
+      <div class="auth-notice-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#B45309" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="auth-notice-text">
+        <strong>التسجيل بالبريد غير متاح مؤقتاً</strong>
+        <p>يرجى إنشاء حسابك برقم الموبايل أو عبر زر Google السريع بالأعلى.</p>
+      </div>
+      <button type="button" class="auth-notice-close" onclick="document.getElementById('email-disabled-banner').style.display='none'" aria-label="إغلاق التنبيه">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </button>
     </div>
 
@@ -688,39 +804,41 @@
   <script>
     window.currentAuthTabType = 'phone';
 
+    function handleDisabledEmailTab(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const banner = document.getElementById('email-disabled-banner');
+      if (banner) {
+        banner.style.display = 'flex';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      const phoneInput = document.getElementById('auth-phone-input');
+      if (phoneInput) phoneInput.focus();
+    }
+    window.handleDisabledEmailTab = handleDisabledEmailTab;
+
     function switchAuthIdentifierTab(type) {
-      window.currentAuthTabType = type;
+      if (type === 'email') {
+        handleDisabledEmailTab();
+        return;
+      }
+      window.currentAuthTabType = 'phone';
       const form = document.getElementById('auth-form');
-      if (form) form.setAttribute('data-auth-type', type);
+      if (form) form.setAttribute('data-auth-type', 'phone');
 
       const tabPhone = document.getElementById('tab-identifier-phone');
-      const tabEmail = document.getElementById('tab-identifier-email');
       const groupPhone = document.getElementById('group-phone-input');
       const groupEmail = document.getElementById('group-email-input');
       const phoneInput = document.getElementById('auth-phone-input');
       const emailInput = document.getElementById('auth-email-input');
 
-      if (type === 'phone') {
-        if (tabPhone) tabPhone.classList.add('active');
-        if (tabEmail) tabEmail.classList.remove('active');
-        if (groupPhone) groupPhone.style.display = 'block';
-        if (groupEmail) groupEmail.style.display = 'none';
-        if (phoneInput) {
-          phoneInput.required = true;
-          phoneInput.focus();
-        }
-        if (emailInput) emailInput.required = false;
-      } else {
-        if (tabPhone) tabPhone.classList.remove('active');
-        if (tabEmail) tabEmail.classList.add('active');
-        if (groupPhone) groupPhone.style.display = 'none';
-        if (groupEmail) groupEmail.style.display = 'block';
-        if (emailInput) {
-          emailInput.required = true;
-          emailInput.focus();
-        }
-        if (phoneInput) phoneInput.required = false;
+      if (tabPhone) tabPhone.classList.add('active');
+      if (groupPhone) groupPhone.style.display = 'block';
+      if (groupEmail) groupEmail.style.display = 'none';
+      if (phoneInput) {
+        phoneInput.required = true;
+        phoneInput.focus();
       }
+      if (emailInput) emailInput.required = false;
     }
     window.switchAuthIdentifierTab = switchAuthIdentifierTab;
 
