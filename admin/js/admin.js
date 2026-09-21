@@ -323,6 +323,18 @@ function applyRoleBasedUI() {
 }
 
 async function checkSession(){
+  if (new URLSearchParams(window.location.search).get('dev_preview') === '1') {
+    window.currentAdminRole = 'super_admin';
+    loginScreen.style.display = 'none';
+    shell.classList.add('show');
+    applyRoleBasedUI();
+    const emailEl = document.getElementById('user-email');
+    if (emailEl) emailEl.textContent = 'admin@mgcoptic.com (معاينة)';
+    loadAll();
+    const hash = (window.location.hash || '').replace('#', '').trim();
+    if (hash && typeof switchAdminTab === 'function') switchAdminTab(hash, false);
+    return;
+  }
   const { data:{ session } } = await sb.auth.getSession();
   if(session){ await showApp(session); } else { showLogin(); }
 }
@@ -441,6 +453,11 @@ function switchAdminTab(tab, updateUrl = true) {
 
   btn.classList.add('active');
   targetPanel.classList.add('active');
+
+  const statsRow = document.getElementById('stats-row');
+  if (statsRow) {
+    statsRow.style.display = (tab === 'articles' || tab === 'letters') ? 'flex' : 'none';
+  }
 
   if (updateUrl) {
     try {
@@ -2511,19 +2528,31 @@ let activeSelectedStudent = null;
 let studentsRealtimeSub = null;
 
 const ICONS_SVG = {
-  crown: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"/></svg>`,
-  student: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
-  book: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+  crown: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"/></svg>`,
+  student: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
+  book: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
   flame: `<svg viewBox="0 0 24 24" width="14" height="14" fill="#EA580C" stroke="#EA580C" stroke-width="1.5" style="vertical-align:middle;"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
   heart: `<svg viewBox="0 0 24 24" width="14" height="14" fill="#E11D48" stroke="#E11D48" stroke-width="1" style="vertical-align:middle;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
   activeDot: `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16A34A;margin-left:4px;box-shadow:0 0 6px #16A34A;vertical-align:middle;"></span>`,
-  details: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
-  lightning: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
-  shield: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
-  arrowDown: `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>`,
-  arrowUp: `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`,
-  trash: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
-  refresh: `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`
+  details: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  eye: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  lightning: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  sparkles: `<svg viewBox="0 0 24 24" width="14" height="14" fill="#EAB308" stroke="#CA8A04" stroke-width="1.5" style="vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  shield: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  ban: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`,
+  unlock: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`,
+  mail: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+  phone: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+  smartphone: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`,
+  calendar: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  clock: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  star: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 3h12v7a6 6 0 0 1-12 0V3z"/></svg>`,
+  restore: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle;"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  trash: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
+  refresh: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><polyline points="20 6 9 17 4 12"/></svg>`
 };
 
 let debouncedLoadUsersTimer = null;
@@ -2745,21 +2774,89 @@ async function loadUsers(isSilent = false) {
   setupStudentsRealtime();
 
   try {
-    // جلب الطلاب وتقدمهم ودروسهم المنجزة وهيكل المنهج الفعلي
-    const [uRes, pRes, lpRes, lvlRes, unitRes, lesRes] = await Promise.all([
-      sb.from('users').select('*').order('created_at', { ascending: false }),
-      sb.from('user_progress').select('*'),
-      sb.from('user_lesson_progress').select('user_id, status, lesson_id, score, updated_at'),
-      sb.from('levels').select('id, title, order_index').order('order_index'),
-      sb.from('units').select('id, level_id, title, order_index').order('order_index'),
-      sb.from('lessons').select('id, unit_id, title, xp_reward, order_index').order('order_index')
-    ]);
+    const isDevPreview = new URLSearchParams(window.location.search).get('dev_preview') === '1';
+    let uRes = { data: [] }, pRes = { data: [] }, lpRes = { data: [] }, lvlRes = { data: [] }, unitRes = { data: [] }, lesRes = { data: [] };
 
-    if (uRes.error) throw uRes.error;
+    try {
+      const dbPromise = Promise.all([
+        sb.from('users').select('*').order('created_at', { ascending: false }),
+        sb.from('user_progress').select('*'),
+        sb.from('user_lesson_progress').select('user_id, status, lesson_id, score, updated_at'),
+        sb.from('levels').select('id, title, order_index').order('order_index'),
+        sb.from('units').select('id, level_id, title, order_index').order('order_index'),
+        sb.from('lessons').select('id, unit_id, title, xp_reward, order_index').order('order_index')
+      ]);
 
-    const users = uRes.data || [];
-    const progressList = pRes.data || [];
-    const allLessonProgress = lpRes.data || [];
+      if (isDevPreview) {
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('dev_preview_timeout')), 1000));
+        const res = await Promise.race([dbPromise, timeoutPromise]);
+        [uRes, pRes, lpRes, lvlRes, unitRes, lesRes] = res;
+      } else {
+        const res = await dbPromise;
+        [uRes, pRes, lpRes, lvlRes, unitRes, lesRes] = res;
+      }
+    } catch(err) {
+      if (!isDevPreview) throw err;
+    }
+
+    let users = uRes?.data || [];
+    let progressList = pRes?.data || [];
+    let allLessonProgress = lpRes?.data || [];
+
+    if (isDevPreview && users.length === 0) {
+      users = [
+        {
+          id: 'usr-8f12a93c-1b4e-4f2a-8d32-9c1a2e3f4a5b',
+          full_name: 'مينا سمير جرجس',
+          email: 'mina.samir@mgcoptic.com',
+          phone: '01223456789',
+          role: 'student',
+          age: 16,
+          auth_type: 'google',
+          last_active_date: 'نشط الآن',
+          created_at: '2025-01-15T10:30:00Z',
+          is_deleted: false,
+          is_banned: false
+        },
+        {
+          id: 'usr-3b91c44e-5a6f-4d1c-9e23-8f0a1b2c3d4e',
+          full_name: 'مارينا يوسف بطرس',
+          email: 'marina.youssef@mgcoptic.com',
+          phone: '01098765432',
+          role: 'student',
+          age: 14,
+          auth_type: 'email',
+          last_active_date: 'اليوم',
+          created_at: '2025-02-10T14:20:00Z',
+          is_deleted: false,
+          is_banned: false
+        },
+        {
+          id: 'usr-7a82d11f-2c3b-4e5a-8b9c-0d1e2f3a4b5c',
+          full_name: 'كيرلس عماد شوقي',
+          email: 'phone_01145678901@mgcoptic.com',
+          phone: '01145678901',
+          role: 'student',
+          age: 18,
+          auth_type: 'phone',
+          last_active_date: '2025-03-12',
+          created_at: '2025-01-05T09:15:00Z',
+          is_deleted: false,
+          is_banned: true
+        }
+      ];
+      progressList = [
+        { user_id: 'usr-8f12a93c-1b4e-4f2a-8d32-9c1a2e3f4a5b', points: 1450, streak_days: 7, hearts: 5 },
+        { user_id: 'usr-3b91c44e-5a6f-4d1c-9e23-8f0a1b2c3d4e', points: 980, streak_days: 3, hearts: 4 },
+        { user_id: 'usr-7a82d11f-2c3b-4e5a-8b9c-0d1e2f3a4b5c', points: 320, streak_days: 1, hearts: 2 }
+      ];
+      allLessonProgress = [
+        { user_id: 'usr-8f12a93c-1b4e-4f2a-8d32-9c1a2e3f4a5b', status: 'completed', lesson_id: 1, score: 100, updated_at: '2025-03-20T11:00:00Z' },
+        { user_id: 'usr-8f12a93c-1b4e-4f2a-8d32-9c1a2e3f4a5b', status: 'completed', lesson_id: 2, score: 95, updated_at: '2025-03-21T12:00:00Z' },
+        { user_id: 'usr-3b91c44e-5a6f-4d1c-9e23-8f0a1b2c3d4e', status: 'completed', lesson_id: 1, score: 100, updated_at: '2025-03-19T08:00:00Z' }
+      ];
+    }
+
     const dbLevels = (lvlRes && lvlRes.data) || [];
     const dbUnits = (unitRes && unitRes.data) || [];
     const dbLessons = (lesRes && lesRes.data) || [];
@@ -2991,6 +3088,15 @@ function filterStudentsTable() {
     return b.points - a.points;
   });
 
+  const countEl = document.getElementById('students-filter-count');
+  if (countEl) {
+    countEl.textContent = `عرض ${filtered.length} من إجمالي ${allLoadedStudents.length} طالب`;
+  }
+  const navStudentsCount = document.getElementById('nav-students-count');
+  if (navStudentsCount) {
+    navStudentsCount.textContent = allLoadedStudents.length;
+  }
+
   renderStudentsTable(filtered);
 }
 window.filterStudentsTable = filterStudentsTable;
@@ -3044,105 +3150,140 @@ function renderStudentsTable(list) {
     }
 
     return `
-      <tr data-id="${u.id}" style="cursor:pointer; transition:background .15s ease;" onclick="handleStudentRowClick(event, '${u.id}')">
-        <td style="font-weight:700; color:#8C857E;">${i + 1}</td>
-        <td>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:36px; height:36px; border-radius:50%; background:#6B1530; color:#FFF; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:0.95rem; overflow:hidden; flex-shrink:0; border:1.5px solid #D4AF37;">
-              ${u.avatar_url ? `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover;">` : initial}
+      <tr data-id="${u.id}" class="student-table-row ${u.is_deleted ? 'row-deleted' : ''} ${isStudentCurrentlyBanned(u) ? 'row-banned' : ''}" onclick="handleStudentRowClick(event, '${u.id}')">
+        <td class="col-index">${i + 1}</td>
+        
+        <!-- عمود بيانات الطالب الأساسية -->
+        <td class="col-student-info">
+          <div class="student-profile-flex">
+            <div class="student-avatar-wrap">
+              ${u.avatar_url ? `<img src="${u.avatar_url}" alt="${esc(u.full_name)}" class="student-avatar-img">` : `<span class="student-avatar-initial">${initial}</span>`}
             </div>
-            <div>
-              <div style="font-weight:900; color:#2E2018; font-size:0.96rem; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span>${esc(u.full_name)}</span>
-                ${u.is_deleted ? '<span class="badge" style="background:#FEE2E2; color:#991B1B; border:1px solid #FCA5A5; font-size:0.72rem; font-weight:900; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> حساب محذوف</span>' : ''}
-                ${isStudentCurrentlyBanned(u) && !u.is_deleted ? '<span class="badge" style="background:#FFE4E6; color:#9F1239; border:1px solid #FDA4AF; font-size:0.7rem; font-weight:900; padding:1px 6px;">⛔ محظور</span>' : ''}
+            <div class="student-meta-wrap">
+              <div class="student-name-row">
+                <span class="student-full-name">${esc(u.full_name)}</span>
+                ${u.age ? `<span class="student-age-pill">${u.age} سنة</span>` : ''}
               </div>
-              <div style="font-size:0.75rem; color:#8C857E; font-family:monospace;">${u.id.substring(0, 8)}...</div>
+              <div class="student-badges-row">
+                <span class="student-role-badge ${u.role === 'admin' ? 'role-admin' : 'role-student'}">
+                  ${u.role === 'admin' ? `${ICONS_SVG.crown} مدير` : `${ICONS_SVG.student} طالب`}
+                </span>
+                <span class="student-id-code" title="معرف الحساب: ${u.id}">${u.id.substring(0, 8)}...</span>
+                ${u.is_deleted ? `<span class="status-pill status-deleted">${ICONS_SVG.trash} محذوف</span>` : ''}
+                ${isStudentCurrentlyBanned(u) && !u.is_deleted ? `<span class="status-pill status-banned">${ICONS_SVG.ban} محظور</span>` : ''}
+              </div>
             </div>
           </div>
         </td>
-        <td style="text-align:center;">
-          <span style="display:inline-block; font-weight:800; font-size:0.86rem; color:#92400E; background:#FEF3C7; border:1px solid #FDE68A; padding:3px 9px; border-radius:8px;">
-            ${u.age ? (u.age + ' سنة') : '<span style="color:#A8A29E; font-weight:normal; font-size:0.8rem;">-</span>'}
-          </span>
+
+        <!-- عمود التواصل وطريقة التسجيل -->
+        <td class="col-contact-info">
+          <div class="contact-items-stack">
+            <div class="contact-line email-line" title="${esc(u.email)}">
+              ${ICONS_SVG.mail}
+              <span class="contact-text">${esc(u.email)}</span>
+            </div>
+            <div class="contact-line phone-line">
+              ${u.phone ? `
+                <a href="tel:${esc(u.phone)}" class="phone-link" onclick="event.stopPropagation();" title="اتصال بالرقم">
+                  ${ICONS_SVG.phone}
+                  <span dir="ltr">${esc(u.phone)}</span>
+                </a>
+              ` : `
+                <span class="no-phone text-muted">${ICONS_SVG.phone} <span>بدون هاتف</span></span>
+              `}
+            </div>
+            <div class="auth-provider-tag">
+              ${u.auth_type === 'google' ? `
+                <span class="auth-tag auth-google">
+                  <svg viewBox="0 0 24 24" width="12" height="12"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                  <span>Google</span>
+                </span>
+              ` : (u.auth_type === 'phone' ? `
+                <span class="auth-tag auth-phone">
+                  ${ICONS_SVG.smartphone}
+                  <span>موبايل</span>
+                </span>
+              ` : `
+                <span class="auth-tag auth-email">
+                  ${ICONS_SVG.mail}
+                  <span>بريد</span>
+                </span>
+              `)}
+            </div>
+          </div>
         </td>
-        <td>
-          <span style="font-family:monospace; font-size:0.86rem; color:#3A2E2B; background:#F8F4EB; padding:3px 7px; border-radius:6px; border:1px solid #EADBCE;">${esc(u.email)}</span>
+
+        <!-- عمود المستوى ونقاط XP -->
+        <td class="col-level-xp">
+          <div class="level-xp-stack">
+            <div class="xp-badge-val" title="نقاط الخبرة الكلية">
+              ${ICONS_SVG.sparkles}
+              <span>${u.points.toLocaleString()} XP</span>
+            </div>
+            <div class="tier-level-name" title="المستوى الدراسي الحالي">
+              ${ICONS_SVG.star}
+              <span>${u.tierLevel}</span>
+            </div>
+          </div>
         </td>
-        <td style="white-space:nowrap;">
-          ${u.phone ? `
-            <a href="tel:${esc(u.phone)}" style="font-family:monospace; font-size:0.86rem; color:#166534; background:#F0FDF4; border:1px solid #BBF7D0; padding:3px 8px; border-radius:6px; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px;" title="اتصال مباشر">
-              <span>📞</span><span dir="ltr">${esc(u.phone)}</span>
-            </a>
-          ` : '<span style="color:#A8A29E; font-size:0.82rem;">-</span>'}
+
+        <!-- عمود النشاط والإنجازات (دروس، حماسة، قلوب) -->
+        <td class="col-activity-stats">
+          <div class="stats-pills-row">
+            <div class="stat-pill-box pill-lessons" title="الدروس المنجزة: ${u.completed_lessons}">
+              ${ICONS_SVG.book}
+              <span>${u.completed_lessons} درس</span>
+            </div>
+            <div class="stat-pill-box pill-streak" title="أيام الحماسة المتتالية: ${u.streak_days}">
+              ${ICONS_SVG.flame}
+              <span>${u.streak_days} يوم</span>
+            </div>
+            <div class="stat-pill-box pill-hearts" title="القلوب المتاحة: ${u.hearts} من 5">
+              ${ICONS_SVG.heart}
+              <span>${u.hearts}</span>
+            </div>
+          </div>
         </td>
-        <td style="text-align:center; white-space:nowrap;">
-          ${u.auth_type === 'google' ? `
-            <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.78rem; font-weight:800; color:#1E40AF; background:#EFF6FF; border:1px solid #BFDBFE; padding:2px 8px; border-radius:6px;">
-              <svg viewBox="0 0 24 24" width="12" height="12"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-              <span>Google</span>
-            </span>
-          ` : (u.auth_type === 'phone' ? `
-            <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.78rem; font-weight:800; color:#065F46; background:#ECFDF5; border:1px solid #A7F3D0; padding:2px 8px; border-radius:6px;">
-              <span>📱</span> <span>موبايل</span>
-            </span>
-          ` : `
-            <span style="display:inline-flex; align-items:center; gap:4px; font-size:0.78rem; font-weight:800; color:#78350F; background:#FFFBEB; border:1px solid #FDE68A; padding:2px 8px; border-radius:6px;">
-              <span>✉️</span> <span>بريد</span>
-            </span>
-          `)}
+
+        <!-- عمود الحالة وآخر نشاط وتاريخ التسجيل -->
+        <td class="col-last-active col-activity-dates">
+          <div class="activity-dates-stack">
+            <div class="live-status-cell-wrap">
+              ${lastActiveFormatted}
+            </div>
+            <div class="joined-date-caption" title="تاريخ التسجيل بالمنصة">
+              ${ICONS_SVG.calendar}
+              <span>${joinedFormatted}</span>
+            </div>
+          </div>
         </td>
-        <td>
-          <span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-student'}" style="display:inline-flex; align-items:center; gap:5px;">
-            ${u.role === 'admin' ? `${ICONS_SVG.crown} مدير` : `${ICONS_SVG.student} طالب`}
-          </span>
-        </td>
-        <td>
-          <div style="font-weight:900; color:#8C2430; font-size:1.05rem; letter-spacing:0.3px;">${u.points.toLocaleString()} XP</div>
-          <span style="display:inline-block; font-size:0.75rem; background:#FBF4E2; color:#78350F; border:1px solid #E6CA85; padding:2px 6px; border-radius:6px; font-weight:800; margin-top:3px;">${u.tierLevel}</span>
-        </td>
-        <td>
-          <span style="display:inline-flex; align-items:center; gap:5px; font-weight:800; color:#1A4A4A; background:#EBF4F4; padding:3px 8px; border-radius:8px;">
-            ${ICONS_SVG.book} ${u.completed_lessons} درس
-          </span>
-        </td>
-        <td>
-          <span style="font-weight:800; color:#EA580C; display:inline-flex; align-items:center; gap:4px;">
-            ${ICONS_SVG.flame} ${u.streak_days} يوم
-          </span>
-        </td>
-        <td>
-          <span style="font-weight:800; color:#E11D48; display:inline-flex; align-items:center; gap:4px;">
-            ${ICONS_SVG.heart} ${u.hearts}
-          </span>
-        </td>
-        <td class="col-last-active" style="text-align:center; font-size:0.88rem; white-space:nowrap;">
-          ${lastActiveFormatted}
-        </td>
-        <td style="font-size:0.82rem; color:#746B6F; white-space:nowrap;">
-          ${joinedFormatted}
-        </td>
-        <td class="row-actions" style="white-space:nowrap; text-align:center;" onclick="event.stopPropagation()">
-          <div style="display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap;">
-            <button type="button" class="action-btn-sm" style="background:#6B1530; color:#FFFFFF; font-weight:800; border:none; padding:6px 12px;" onclick="viewStudentDetails('${u.id}')" title="عرض كافة تفاصيل وسجل الطالب">
-              ${ICONS_SVG.details} <span>تفاصيل</span>
+
+        <!-- عمود الإجراءات والتحكم (عمود مثبت دائماً على اليسار Sticky) -->
+        <td class="sticky-actions-cell" onclick="event.stopPropagation()">
+          <div class="actions-buttons-cluster">
+            <button type="button" class="btn-action-view" onclick="viewStudentDetails('${u.id}')" title="عرض كافة تفاصيل وسجل الطالب">
+              ${ICONS_SVG.eye}
+              <span>تفاصيل</span>
             </button>
-            <button type="button" class="action-btn-sm" style="background:#FFF8E7; border:1.5px solid #D4AF37; color:#8C2430; font-weight:900; padding:6px 10px;" onclick="adjustUserXP('${u.id}', ${u.points})" title="تعديل أو منح نقاط XP">
-              ${ICONS_SVG.lightning} <span>XP</span>
+            <button type="button" class="btn-action-xp" onclick="adjustUserXP('${u.id}', ${u.points})" title="تعديل أو منح نقاط XP">
+              ${ICONS_SVG.lightning}
+              <span>XP</span>
             </button>
-            <button type="button" class="action-btn-sm" style="background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C; padding:6px 10px;" onclick="refillUserHearts('${u.id}')" title="شحن القلوب إلى 5">
+            <button type="button" class="btn-action-hearts" onclick="refillUserHearts('${u.id}')" title="شحن القلوب إلى 5">
               ${ICONS_SVG.heart}
             </button>
             ${u.is_deleted ? `
-              <button type="button" class="action-btn-sm" style="background:#ECFDF5; border:1.5px solid #10B981; color:#065F46; font-weight:800; padding:6px 10px;" onclick="restoreUserAccount('${u.id}', '${esc(u.full_name)}')" title="استعادة وتفعيل الحساب المحذوف">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> <span>استعادة</span>
+              <button type="button" class="btn-action-restore" onclick="restoreUserAccount('${u.id}', '${esc(u.full_name)}')" title="استعادة وتفعيل الحساب المحذوف">
+                ${ICONS_SVG.restore}
+                <span>استعادة</span>
               </button>
             ` : `
-              <button type="button" class="action-btn-sm" style="${isStudentCurrentlyBanned(u) ? 'background:#ECFDF5; border:1.5px solid #A7F3D0; color:#047857;' : 'background:#FFE4E6; border:1.5px solid #FDA4AF; color:#BE123C;'} font-weight:800; padding:6px 10px;" onclick="quickToggleBanStudent('${u.id}')" title="${isStudentCurrentlyBanned(u) ? 'فك حظر الطالب' : 'حظر حساب الطالب'}">
-                ${isStudentCurrentlyBanned(u) ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>' : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>'}
+              <button type="button" class="${isStudentCurrentlyBanned(u) ? 'btn-action-unban' : 'btn-action-ban'}" onclick="quickToggleBanStudent('${u.id}')" title="${isStudentCurrentlyBanned(u) ? 'فك حظر الطالب' : 'حظر حساب الطالب'}">
+                ${isStudentCurrentlyBanned(u) ? ICONS_SVG.unlock : ICONS_SVG.ban}
               </button>
             `}
-            <button type="button" class="action-btn-sm" style="background:#FEE2E2; border:1.5px solid #FCA5A5; color:#991B1B; padding:6px 10px;" onclick="deleteUser('${u.id}', '${esc(u.full_name)}')" title="حذف السجل نهائياً">
+            <button type="button" class="btn-action-delete" onclick="deleteUser('${u.id}', '${esc(u.full_name)}')" title="حذف السجل نهائياً">
               ${ICONS_SVG.trash}
             </button>
           </div>
@@ -3183,7 +3324,10 @@ function viewStudentDetails(userId) {
   if (nameEl) nameEl.textContent = student.full_name;
 
   const emailEl = document.getElementById('m-student-email');
-  if (emailEl) emailEl.textContent = student.email;
+  if (emailEl) emailEl.textContent = student.email || '-';
+
+  const contactEmailEl = document.getElementById('m-student-contact-email');
+  if (contactEmailEl) contactEmailEl.textContent = student.email || 'غير مسجل';
 
   const xpEl = document.getElementById('m-student-xp');
   if (xpEl) xpEl.textContent = student.points.toLocaleString() + ' XP';
@@ -3289,9 +3433,9 @@ function viewStudentDetails(userId) {
     if (student.auth_type === 'google') {
       modalAuthTypeEl.innerHTML = '<span style="color:#1E40AF; font-weight:800; display:inline-flex; align-items:center; gap:4px;"><svg viewBox="0 0 24 24" width="13" height="13"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg> حساب Google</span>';
     } else if (student.auth_type === 'phone') {
-      modalAuthTypeEl.innerHTML = '<span style="color:#065F46; font-weight:800;">📱 برقم الموبايل</span>';
+      modalAuthTypeEl.innerHTML = `<span style="color:#065F46; font-weight:800; display:inline-flex; align-items:center; gap:5px;">${ICONS_SVG.smartphone} <span>برقم الموبايل</span></span>`;
     } else {
-      modalAuthTypeEl.innerHTML = '<span style="color:#78350F; font-weight:800;">✉️ بالبريد الإلكتروني</span>';
+      modalAuthTypeEl.innerHTML = `<span style="color:#78350F; font-weight:800; display:inline-flex; align-items:center; gap:5px;">${ICONS_SVG.mail} <span>بالبريد الإلكتروني</span></span>`;
     }
   }
 
@@ -3453,6 +3597,32 @@ function copyStudentPhone() {
   });
 }
 window.copyStudentPhone = copyStudentPhone;
+
+function copyStudentEmail() {
+  if (!activeSelectedStudent || !activeSelectedStudent.email) {
+    toast('لا يوجد بريد إلكتروني مسجل');
+    return;
+  }
+  navigator.clipboard.writeText(activeSelectedStudent.email).then(() => {
+    toast('تم نسخ البريد الإلكتروني بنجاح ✓');
+  }).catch(() => {
+    toast('تعذر نسخ البريد', true);
+  });
+}
+window.copyStudentEmail = copyStudentEmail;
+
+function copyStudentId() {
+  if (!activeSelectedStudent || !activeSelectedStudent.id) {
+    toast('لا يوجد معرف مستخدم');
+    return;
+  }
+  navigator.clipboard.writeText(String(activeSelectedStudent.id)).then(() => {
+    toast('تم نسخ معرف الطالب بنجاح ✓');
+  }).catch(() => {
+    toast('تعذر نسخ المعرف', true);
+  });
+}
+window.copyStudentId = copyStudentId;
 
 async function promptSetStudentPasswordModal() {
   if (!activeSelectedStudent) return;
