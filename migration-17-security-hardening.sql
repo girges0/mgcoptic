@@ -3,6 +3,11 @@
 -- حماية كاملة ضد التبديل بين الحسابات بالـ ID ومنع التلاعب بالرتب أو ترقية الصلاحيات
 -- ============================================================================
 
+-- 0. التأكد من وجود عمودي رقم الموبايل ووسيلة التسجيل (لتفادي أي خطأ في لوحة التحكم)
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS auth_type VARCHAR(30);
+CREATE INDEX IF NOT EXISTS idx_users_phone ON public.users(phone);
+
 -- 1. تقييد استعلام بيانات المستخدمين الحساسة (الهواتف والإيميلات)
 -- لا يستطيع أي طالب أو مستخدم عادي قراءة بيانات مستخدمين آخرين
 -- فقط صاحب الحساب نفسه أو مدراء المنصة (admin / super_admin)
