@@ -721,11 +721,16 @@ class GamificationService {
                   if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
                 }
               });
-              if(data.type === 'levels_unlocked'){
-                this.getLessonProgress(curUid, true).then(() => {
+              if(data.type === 'levels_unlocked' || data.actionType === 'unlock_levels'){
+                try {
+                  localStorage.setItem('mg_coptic_unlocked_all_levels', 'true');
+                  if (curUid) localStorage.setItem(`mg_coptic_unlocked_all_levels_${curUid}`, 'true');
+                } catch(_) {}
+                this.getLessonProgress(curUid, false).then(() => {
                   if(typeof window !== 'undefined'){
                     if(typeof window.drawSkillMapDOM === 'function') window.drawSkillMapDOM();
                     if(typeof window.renderSkillMap === 'function') window.renderSkillMap();
+                    if(typeof window.renderLevelSelectorCards === 'function') window.renderLevelSelectorCards();
                   }
                 });
               }

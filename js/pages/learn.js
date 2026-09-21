@@ -125,6 +125,20 @@
         // المستوى الأول مفتوح دائماً للجميع
         if (String(levelId) === '5') return true;
 
+        // التحقق من تفعيل فتح جميع المستويات بالحساب (Admin Override / Master Unlock)
+        try {
+          const uid = (typeof getAuthUserId === 'function') ? getAuthUserId() : null;
+          if (uid && (localStorage.getItem(`mg_coptic_unlocked_all_levels_${uid}`) === 'true' || localStorage.getItem('mg_coptic_unlocked_all_levels') === 'true')) {
+            return true;
+          }
+          if (localStorage.getItem('mg_coptic_unlocked_all_levels') === 'true') {
+            return true;
+          }
+          if (progress && (progress.all_levels_unlocked === true || progress.unlocked_all_levels === true || progress['__all_unlocked'] === true)) {
+            return true;
+          }
+        } catch(e) {}
+
         if (!curriculum || !curriculum.levels) return false;
         const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
         const targetIdx = levels.findIndex(l => String(l.id) === String(levelId));
@@ -344,6 +358,9 @@
           if (order === 2 || lvlId === '6') {
             subtitle = 'الحركات، أزمنة النطق، الجنكم، الحروف المركبة، والمقاطع الصوتية';
             tag = 'المستوى الثاني • قواعد القراءة';
+          } else if (order === 3 || lvlId === '7') {
+            subtitle = 'المراجعة الشاملة، تحليل النصوص، التراكيب الكنسية، والترجمة التطبيقية';
+            tag = 'المستوى الثالث • المراجعة والتطبيق المتقدم';
           }
 
           let statusBadgeHtml = '';
@@ -853,8 +870,20 @@
             const progressInfo = activeLessonProgress[step.id] || { status: 'locked' };
             const isCompleted = progressInfo.status === 'completed';
             
+            const isAllLevelsUnlockedOverride = (function() {
+              try {
+                const uid = (typeof getAuthUserId === 'function') ? getAuthUserId() : null;
+                if (uid && (localStorage.getItem(`mg_coptic_unlocked_all_levels_${uid}`) === 'true' || localStorage.getItem('mg_coptic_unlocked_all_levels') === 'true')) return true;
+                if (localStorage.getItem('mg_coptic_unlocked_all_levels') === 'true') return true;
+                if (activeLessonProgress && (activeLessonProgress['__all_unlocked'] === true || activeLessonProgress.all_levels_unlocked === true)) return true;
+              } catch(_) {}
+              return false;
+            })();
+
             let isUnlocked = false;
-            if (step.requires === null) {
+            if (isAllLevelsUnlockedOverride) {
+              isUnlocked = true;
+            } else if (step.requires === null) {
               isUnlocked = prevUnitMastered;
             } else {
               isUnlocked = (activeLessonProgress[step.requires] || {}).status === 'completed';

@@ -2270,6 +2270,48 @@
         if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
         if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
         if (typeof renderSkillMap === 'function') renderSkillMap();
+      } else if (data.actionType === 'unlock_levels') {
+        const uid = currentAuthUser?.id || data.userId;
+        if (uid) {
+          try {
+            localStorage.setItem(`mg_coptic_unlocked_all_levels_${uid}`, 'true');
+          } catch (_) {}
+        }
+        try {
+          localStorage.setItem('mg_coptic_unlocked_all_levels', 'true');
+          const allLessonIds = [];
+          for (let i = 133; i <= 172; i++) allLessonIds.push(String(i));
+          for (let i = 201; i <= 237; i++) allLessonIds.push(String(i));
+          for (let i = 301; i <= 342; i++) allLessonIds.push(String(i));
+
+          let lp = {};
+          try {
+            const raw = (uid ? localStorage.getItem(`mg_coptic_lesson_progress_${uid}`) : null) || localStorage.getItem('mg_coptic_lesson_progress');
+            if (raw) lp = JSON.parse(raw);
+          } catch (_) {}
+          allLessonIds.forEach(id => {
+            lp[id] = { status: 'completed', score: 100, completed: true };
+            lp[`${id}_p`] = { status: 'completed', score: 100 };
+            lp[`${id}_c`] = { status: 'completed', score: 100 };
+          });
+          lp['__all_unlocked'] = true;
+          lp['all_levels_unlocked'] = true;
+
+          localStorage.setItem('mg_coptic_lesson_progress', JSON.stringify(lp));
+          if (uid) localStorage.setItem(`mg_coptic_lesson_progress_${uid}`, JSON.stringify(lp));
+        } catch (_) {}
+
+        if (typeof window.renderSkillMap === 'function') {
+          window.renderSkillMap();
+        } else if (typeof window.drawSkillMapDOM === 'function') {
+          window.drawSkillMapDOM();
+        }
+        if (typeof window.renderLevelSelectorCards === 'function') {
+          window.renderLevelSelectorCards();
+        }
+        if (typeof showToast === 'function') {
+          showToast('تم فتح جميع المستويات بنجاح بواسطة إدارة المنصة! 🔓', 'check');
+        }
       }
     }
 

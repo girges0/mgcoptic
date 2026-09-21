@@ -4703,26 +4703,40 @@ async function unlockAllLevels(userId, userName) {
       didOpen: () => { Swal.showLoading(); }
     });
 
-    // 1) جلب دروس المستويين 1 و 2
+    // 1) جلب وتحديد كافة معرفات الدروس الحقيقية لجميع المستويات (المستوى 1، المستوى 2، المستوى 3)
     let lessonIds = [];
     try {
-      const { data: dbUnits } = await sb.from('units').select('id, level_id').in('level_id', [5, 6]);
-      const unitIds = (dbUnits || []).map(u => u.id);
-      if (unitIds.length > 0) {
-        const { data: dbLessons } = await sb.from('lessons').select('id').in('unit_id', unitIds);
-        if (dbLessons && dbLessons.length > 0) {
-          lessonIds = dbLessons.map(l => l.id);
-        }
+      const { data: dbLessons, error: dbErr } = await sb.from('lessons').select('id').order('id');
+      if (!dbErr && dbLessons && dbLessons.length > 0) {
+        lessonIds = dbLessons.map(l => Number(l.id));
       }
     } catch(e) {
       console.warn('Dynamic lessons fetch warning:', e);
     }
 
-    // احتياطي موثوق إذا تعذر جلب المعرفات ديناميكياً
-    if (lessonIds.length === 0) {
-      for (let i = 1; i <= 32; i++) lessonIds.push(i);
-      for (let i = 101; i <= 109; i++) lessonIds.push(i);
-      for (let i = 201; i <= 236; i++) lessonIds.push(i);
+    // المعرفات المعتمدة الثابتة للمنهج كاملاً (119 درساً تغطي المستويات الثلاثة كاملة)
+    // المستوى 1: 40 درساً (الحروف 133..164 والصناديق التعليمية 165..172)
+    const CANONICAL_LEVEL1_LESSONS = [
+      133, 134, 135, 136, 137, 165, 138, 139, 140, 141, 142, 166, 143, 144, 145, 146, 147, 167,
+      148, 149, 150, 151, 152, 168, 153, 154, 155, 156, 157, 169, 158, 159, 160, 161, 162, 170,
+      163, 164, 171, 172
+    ];
+    // المستوى 2: 37 درساً (قواعد القراءة 201..237)
+    const CANONICAL_LEVEL2_LESSONS = [];
+    for (let i = 201; i <= 237; i++) CANONICAL_LEVEL2_LESSONS.push(i);
+
+    // المستوى 3: 42 درساً (المراجعة الشاملة والتطبيق 301..342)
+    const CANONICAL_LEVEL3_LESSONS = [];
+    for (let i = 301; i <= 342; i++) CANONICAL_LEVEL3_LESSONS.push(i);
+
+    const CANONICAL_ALL_LESSONS = [...CANONICAL_LEVEL1_LESSONS, ...CANONICAL_LEVEL2_LESSONS, ...CANONICAL_LEVEL3_LESSONS];
+
+    if (!lessonIds || lessonIds.length === 0) {
+      lessonIds = CANONICAL_ALL_LESSONS;
+    } else {
+      CANONICAL_ALL_LESSONS.forEach(id => {
+        if (!lessonIds.includes(id)) lessonIds.push(id);
+      });
     }
 
     // 2) إعداد صفوف الإنجاز للإدخال في user_lesson_progress
@@ -4739,12 +4753,19 @@ async function unlockAllLevels(userId, userName) {
     const batchSize = 40;
     for (let i = 0; i < rowsToUpsert.length; i += batchSize) {
       const chunk = rowsToUpsert.slice(i, i + batchSize);
-      const { error: upsertErr } = await sb.from('user_lesson_progress').upsert(chunk, { onConflict: 'user_id,lesson_id' });
-      if (upsertErr) console.warn('Chunk upsert warning:', upsertErr.message);
+      try {
+        const { error: upsertErr } = await sb.from('user_lesson_progress').upsert(chunk, { onConflict: 'user_id,lesson_id' });
+        if (upsertErr) console.warn('Chunk upsert warning:', upsertErr.message);
+      } catch(upE) {
+        console.warn('Chunk upsert exception:', upE);
+      }
     }
 
-    // 3) تحديث الكاش المحلي للمتصفح إذا كان الحساب يعمل محلياً أو للتجربة المباشرة
+    // 3) تحديث الكاش المحلي للمتصفح مع أعلام الفتح الشامل الفوري
     try {
+      localStorage.setItem(`mg_coptic_unlocked_all_levels_${userId}`, 'true');
+      localStorage.setItem('mg_coptic_unlocked_all_levels', 'true');
+
       const userLpKey = `mg_coptic_lesson_progress_${userId}`;
       let localProg = {};
       try {
@@ -4758,19 +4779,15 @@ async function unlockAllLevels(userId, userName) {
         localProg[`${sLid}_p`] = { status: 'completed', score: 100 };
         localProg[`${sLid}_c`] = { status: 'completed', score: 100 };
       });
+      localProg['__all_unlocked'] = true;
+      localProg['all_levels_unlocked'] = true;
 
       localStorage.setItem(userLpKey, JSON.stringify(localProg));
-      const localUserRaw = localStorage.getItem('mg_coptic_user');
-      if (localUserRaw) {
-        const u = JSON.parse(localUserRaw);
-        if (u && u.id === userId) {
-          localStorage.setItem('mg_coptic_lesson_progress', JSON.stringify(localProg));
-        }
-      }
+      localStorage.setItem('mg_coptic_lesson_progress', JSON.stringify(localProg));
       localStorage.setItem('mg_coptic_sync_ping', Date.now().toString());
     } catch(_) {}
 
-    // 4) بث التحديث الفوري للعميل المفتوح
+    // 4) بث التحديث الفوري للعميل المفتوح عبر كلتا القناتين
     broadcastAdminActionToClient(userId, 'unlock_levels', { unlockedAll: true, count: lessonIds.length });
     try {
       const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mg_coptic_gamification_sync') : null;
@@ -4778,6 +4795,13 @@ async function unlockAllLevels(userId, userName) {
         channel.postMessage({
           type: 'levels_unlocked',
           payload: { user_id: userId, unlocked_all: true, count: lessonIds.length }
+        });
+        channel.postMessage({
+          type: 'ADMIN_ACTION',
+          userId,
+          actionType: 'unlock_levels',
+          unlockedAll: true,
+          count: lessonIds.length
         });
         channel.close();
       }
@@ -4790,7 +4814,7 @@ async function unlockAllLevels(userId, userName) {
     if (student) {
       student.completed_lessons = Math.max(student.completed_lessons || 0, lessonIds.length);
       student.actualLevel = 'المستوى 3: المراجعة الشاملة والتطبيق المتقدم';
-      student.tierLevel = 'المستوى 3';
+      student.tierLevel = 'المستوى 3 (جميع المستويات مفتوحة 🔓)';
       const existingOther = (student.lessons_detail || []).filter(l => !lessonIds.includes(Number(l.lesson_id)));
       student.lessons_detail = [...existingOther, ...newLps];
     }
@@ -4798,7 +4822,7 @@ async function unlockAllLevels(userId, userName) {
     if (activeSelectedStudent && activeSelectedStudent.id === userId) {
       activeSelectedStudent.completed_lessons = Math.max(activeSelectedStudent.completed_lessons || 0, lessonIds.length);
       activeSelectedStudent.actualLevel = 'المستوى 3: المراجعة الشاملة والتطبيق المتقدم';
-      activeSelectedStudent.tierLevel = 'المستوى 3';
+      activeSelectedStudent.tierLevel = 'المستوى 3 (جميع المستويات مفتوحة 🔓)';
       const existingOther = (activeSelectedStudent.lessons_detail || []).filter(l => !lessonIds.includes(Number(l.lesson_id)));
       activeSelectedStudent.lessons_detail = [...existingOther, ...newLps];
 
