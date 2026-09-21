@@ -487,12 +487,13 @@
           meaning: f.meaning.value.trim(),
           cat: f.category.value.trim() || 'مضافة'
         };
-      if (!entry.coptic || !entry.meaning) return;
-      customVocab.push(entry);
-      await saveCustomVocab();
-      f.reset();
-      renderVocab();
-    });
+        if (!entry.coptic || !entry.meaning) return;
+        customVocab.push(entry);
+        await saveCustomVocab();
+        f.reset();
+        renderVocab();
+      });
+    }
 
     /* ============ STORAGE (persists across sessions via localStorage) ============ */
     const STORAGE_KEY_VOCAB = 'coptic-app-custom-vocab';

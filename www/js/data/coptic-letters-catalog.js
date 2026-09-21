@@ -391,7 +391,7 @@
       rules: [
         'حرف مصري ديموطيقي أصيل، يُنطق دائماً حرف خاء <strong>"خ"</strong>.'
       ],
-      word: { coptic: 'Ϧⲏⲃⲥ', phoneticAr: 'خِيبْسْ', meaning: 'مصباح', soundFile: 'assets/sounds/28khevs.mp3' },
+      word: { coptic: 'ϧⲏⲃⲥ', phoneticAr: 'خِيبْسْ', meaning: 'مصباح', soundFile: 'assets/sounds/28khevs.mp3' },
       soundFile: 'audio_coptic/28khay.mp3'
     },
     {

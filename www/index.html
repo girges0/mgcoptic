@@ -15954,7 +15954,7 @@
           const challengeUniqueId = ch.id || `ch_${currentChallengeIndex}_${(ch.question || ch.coptic_display || '').substring(0,20)}`;
           const alreadyAnsweredThisChallenge = sessionAnsweredChallenges.has(challengeUniqueId);
 
-          if (!alreadyAnsweredThisChallenge && challengeXp > 0) {
+          if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
             try {
               if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
@@ -15979,7 +15979,11 @@
             feedbackBox.style.display = 'flex';
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
-              feedbackText.textContent = (challengeXp > 0) ? 'إجابة صحيحة وممتازة! (+1 XP)' : 'إجابة صحيحة وممتازة!';
+              if (isReplayingLesson) {
+                feedbackText.textContent = 'إجابة صحيحة وممتازة! (مراجعة)';
+              } else {
+                feedbackText.textContent = (challengeXp > 0) ? 'إجابة صحيحة وممتازة! (+1 XP)' : 'إجابة صحيحة وممتازة!';
+              }
             }
           }
 
@@ -16594,13 +16598,13 @@
           ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length
           : (parseInt(selectedLesson?.xp_reward, 10) || 1);
         const fullConfiguredXp = Math.max(1, earnableCount);
-        const earnedXp = fullConfiguredXp;
+        const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;
 
         const vXp = document.getElementById('v-xp-gained');
         const vAcc = document.getElementById('v-accuracy');
         const victoryModal = document.getElementById('victory-modal');
 
-        if (vXp) vXp.textContent = `+${earnedXp} XP`;
+        if (vXp) vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${earnedXp} XP`;
         if (vAcc) vAcc.textContent = `${accuracy}%`;
 
         // إظهار شاشة النصر فوراً بدون أي تعليق أو تأخير (0 ميلي ثانية)

@@ -1261,10 +1261,16 @@ class GamificationService {
   async updateProgress(userId, updates = {}){
     const uid = userId || this.getCurrentUser()?.id;
     let prog = await this.getProgress(uid);
-    if(typeof updates.hearts === 'number') prog.hearts = Math.max(0, updates.hearts);
-    if(typeof updates.addPoints === 'number') prog.points = Math.max(0, (prog.points || 0) + updates.addPoints);
-    if(typeof updates.addHearts === 'number') prog.hearts = Math.max(0, (prog.hearts ?? 5) + updates.addHearts);
-    if(typeof updates.streak_days === 'number') prog.streak_days = updates.streak_days;
+    if(typeof updates.hearts === 'number') prog.hearts = Math.max(0, Math.min(5, updates.hearts));
+    if(typeof updates.addPoints === 'number') {
+      const safePoints = Math.max(0, parseInt(updates.addPoints, 10) || 0);
+      prog.points = Math.max(0, (prog.points || 0) + safePoints);
+    }
+    if(typeof updates.addHearts === 'number') {
+      const safeHearts = Math.max(0, parseInt(updates.addHearts, 10) || 0);
+      prog.hearts = Math.max(0, Math.min(5, (prog.hearts ?? 5) + safeHearts));
+    }
+    if(typeof updates.streak_days === 'number') prog.streak_days = Math.max(1, updates.streak_days);
     if(Array.isArray(updates.claimed_chests)) prog.claimed_chests = updates.claimed_chests;
 
     this.saveProgressLocal(prog, uid);
@@ -1402,13 +1408,15 @@ class GamificationService {
   async buyHeartsWithXp(userId, count = 1, costPerHeart = 100){
     const uid = userId || this.getCurrentUser()?.id;
     let prog = await this.getProgress(uid);
-    const totalCost = count * costPerHeart;
+    const safeCount = Math.max(1, Math.min(5, parseInt(count, 10) || 1));
+    const safeCost = Math.max(1, parseInt(costPerHeart, 10) || 100);
+    const totalCost = safeCount * safeCost;
     const currentPoints = prog.points || 0;
     if(currentPoints < totalCost){
       return { success: false, reason: 'insufficient_xp', required: totalCost, current: currentPoints };
     }
     prog.points = Math.max(0, currentPoints - totalCost);
-    prog.hearts = Math.max(0, Math.min(5, (prog.hearts || 0) + count));
+    prog.hearts = Math.max(0, Math.min(5, (prog.hearts || 0) + safeCount));
 
     const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
     if (prog.hearts >= 5) {
