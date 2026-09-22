@@ -534,12 +534,7 @@
       </div>
 
       <div id="brief-timer-mount"></div>
-      <div class="brief-skip-direct-wrap" style="display:flex; justify-content:center; margin:6px auto 14px;">
-        <button type="button" class="btn-skip-direct-exercises" onclick="window.skipDirectlyToExercises && window.skipDirectlyToExercises()" style="background:#FAF4E8; border:1.5px solid #D6C4AD; color:#6F1737; font-weight:800; font-size:0.86rem; padding:6px 18px; border-radius:22px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all .2s ease; box-shadow:0 2px 6px rgba(111,23,55,0.06);" title="بدء التمارين فوراً دون انتظار">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <span>بدء التمارين فوراً ←</span>
-        </button>
-      </div>
+
 
       <div class="coptic-overview-wrap single-view">
         <div class="letter-overview-card hero-letter-card">
@@ -629,12 +624,7 @@
       </div>
 
       <div id="brief-timer-mount"></div>
-      <div class="brief-skip-direct-wrap" style="display:flex; justify-content:center; margin:6px auto 14px;">
-        <button type="button" class="btn-skip-direct-exercises" onclick="window.skipDirectlyToExercises && window.skipDirectlyToExercises()" style="background:#FAF4E8; border:1.5px solid #D6C4AD; color:#6F1737; font-weight:800; font-size:0.86rem; padding:6px 18px; border-radius:22px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all .2s ease; box-shadow:0 2px 6px rgba(111,23,55,0.06);" title="بدء التمارين فوراً دون انتظار">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <span>بدء التمارين فوراً ←</span>
-        </button>
-      </div>
+
 
       <div class="coptic-overview-wrap single-view">
         <div class="word-overview-card hero-word-card">
