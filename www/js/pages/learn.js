@@ -1516,7 +1516,7 @@
                 if (!sessionAnsweredChallenges.has(chId)) {
                   sessionAnsweredChallenges.add(chId);
                   sessionXpEarned += 1;
-                  if (game.updateProgress) await game.updateProgress(uid, { addPoints: 1 });
+                  if (game.addPointsLocalOnly) game.addPointsLocalOnly(uid, 1);
                   showFloatingXpBadge('+1 XP ⭐');
                   if (window.addTodayEarnedXP) window.addTodayEarnedXP(1);
                 }
@@ -3346,7 +3346,9 @@
 
           if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
-            if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
+            if (game.addPointsLocalOnly) {
+              game.addPointsLocalOnly(uid, challengeXp);
+            }
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           }
@@ -3933,7 +3935,7 @@
               bAll.onclick = async () => {
                 bAll.disabled = true;
                 bAll.style.opacity = '0.7';
-                await performHeartPurchase(heartsNeeded, fullCost);
+                await performHeartPurchase(heartsNeeded, costPerHeart);
                 bAll.disabled = false;
                 bAll.style.opacity = '1';
               };
@@ -3982,9 +3984,15 @@
         // إظهار شاشة النصر فوراً بدون أي تعليق أو تأخير (0 ميلي ثانية)
         if (victoryModal) victoryModal.style.display = 'flex';
 
-        // حفظ التقدم ومزامنة السحابة في الخلفية دون تعطيل الواجهة
+        // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).catch(e => {
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).then(res => {
+            if (res && res.added_xp != null && vXp) {
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${res.added_xp} XP`;
+            }
+            if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
+            if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+          }).catch(e => {
             console.warn('Background completeLesson error:', e);
           });
 

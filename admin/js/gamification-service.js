@@ -721,11 +721,16 @@ class GamificationService {
                   if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
                 }
               });
-              if(data.type === 'levels_unlocked'){
-                this.getLessonProgress(curUid, true).then(() => {
+              if(data.type === 'levels_unlocked' || data.actionType === 'unlock_levels'){
+                try {
+                  localStorage.setItem('mg_coptic_unlocked_all_levels', 'true');
+                  if (curUid) localStorage.setItem(`mg_coptic_unlocked_all_levels_${curUid}`, 'true');
+                } catch(_) {}
+                this.getLessonProgress(curUid, false).then(() => {
                   if(typeof window !== 'undefined'){
                     if(typeof window.drawSkillMapDOM === 'function') window.drawSkillMapDOM();
                     if(typeof window.renderSkillMap === 'function') window.renderSkillMap();
+                    if(typeof window.renderLevelSelectorCards === 'function') window.renderLevelSelectorCards();
                   }
                 });
               }
@@ -795,7 +800,30 @@ class GamificationService {
                 const rawLocalReset = localStorage.getItem(`mg_coptic_reset_version_${curUid}`);
                 const localResetVer = Number(rawLocalReset || 0);
                 const isExplicitReset = (rawLocalReset !== null && newResetVer > oldResetVer && newResetVer > localResetVer && localResetVer > 0);
-                this.getProgress(curUid, isExplicitReset).then(fresh => {
+                if(isExplicitReset){
+                  this.resetFullAccountLocal(curUid);
+                }
+
+                if (payload?.new) {
+                  const curProg = this.getProgressLocal(curUid) || {};
+                  curProg.points = Number(payload.new.points ?? curProg.points ?? 0);
+                  curProg.total_points = curProg.points;
+                  if (payload.new.hearts != null) curProg.hearts = Number(payload.new.hearts);
+                  if (payload.new.streak_days != null) curProg.streak_days = Number(payload.new.streak_days);
+                  if (Array.isArray(payload.new.claimed_chests)) curProg.claimed_chests = payload.new.claimed_chests;
+                  if (payload.new.reset_version != null) {
+                    curProg.reset_version = Number(payload.new.reset_version);
+                    localStorage.setItem(`mg_coptic_reset_version_${curUid}`, String(curProg.reset_version));
+                  }
+                  this.saveProgressLocal(curProg, curUid);
+                  if(typeof window !== 'undefined'){
+                    if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(curProg);
+                    if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+                    if(typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
+                  }
+                }
+
+                this.getProgress(curUid, true).then(fresh => {
                   if(typeof window !== 'undefined'){
                     if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(fresh);
                     if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
@@ -1160,9 +1188,33 @@ class GamificationService {
       if(raw) progress = JSON.parse(raw);
     } catch(e){}
 
-    // إذا كان التقدم مسجلاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً
+    // إذا كان التقدم مسجلاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً مع مزامنة في الخلفية
     if(progress && !forceRemote){
-      return this.checkAndRegenerateHearts(progress, uid);
+      const cached = this.checkAndRegenerateHearts(progress, uid);
+      if(sbClient && uid && !this._bgSyncActive){
+        this._bgSyncActive = true;
+        sbClient.from('user_progress').select('*').eq('user_id', uid).maybeSingle().then(({ data, error }) => {
+          this._bgSyncActive = false;
+          if(!error && data){
+            const serverPoints = Number(data.points ?? 0);
+            const serverHearts = Number(data.hearts ?? 5);
+            const serverStreak = Number(data.streak_days ?? 1);
+            if(cached.points !== serverPoints || cached.hearts !== serverHearts || cached.streak_days !== serverStreak){
+              cached.points = serverPoints;
+              cached.total_points = serverPoints;
+              cached.hearts = serverHearts;
+              cached.streak_days = serverStreak;
+              if(Array.isArray(data.claimed_chests)) cached.claimed_chests = data.claimed_chests;
+              this.saveProgressLocal(cached, uid);
+              if(typeof window !== 'undefined'){
+                if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(cached);
+                if(typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();
+              }
+            }
+          }
+        }).catch(() => { this._bgSyncActive = false; });
+      }
+      return cached;
     }
 
     if(sbClient && uid){
@@ -1257,14 +1309,30 @@ class GamificationService {
     } catch(e){}
   }
 
-  // تحديث التقدم سحابياً في Supabase لحساب المستخدم
+  // إضافة نقاط محلياً فقط دون إرسال تحديث فردي للسيرفر (لمنع التكرار وحماية حصانة السيرفر)
+  addPointsLocalOnly(userId, points = 0){
+    const uid = userId || this.getCurrentUser()?.id;
+    const prog = this.getProgressLocal(uid) || {};
+    const safePoints = Math.max(0, parseInt(points, 10) || 0);
+    prog.points = Math.max(0, (prog.points || 0) + safePoints);
+    prog.total_points = prog.points;
+    this.saveProgressLocal(prog, uid, true);
+    return prog;
+  }
+
+  // تحديث التقدم سحابياً في Supabase لحساب المستخدم بدقة دون مساس بالنقاط إلا إذا حُددت
   async updateProgress(userId, updates = {}){
     const uid = userId || this.getCurrentUser()?.id;
     let prog = await this.getProgress(uid);
+    let pointsChanged = false;
     if(typeof updates.hearts === 'number') prog.hearts = Math.max(0, Math.min(5, updates.hearts));
     if(typeof updates.addPoints === 'number') {
-      const safePoints = Math.max(0, parseInt(updates.addPoints, 10) || 0);
-      prog.points = Math.max(0, (prog.points || 0) + safePoints);
+      const safePoints = parseInt(updates.addPoints, 10) || 0;
+      if (safePoints !== 0) {
+        prog.points = Math.max(0, (prog.points || 0) + safePoints);
+        prog.total_points = prog.points;
+        pointsChanged = true;
+      }
     }
     if(typeof updates.addHearts === 'number') {
       const safeHearts = Math.max(0, parseInt(updates.addHearts, 10) || 0);
@@ -1276,17 +1344,19 @@ class GamificationService {
     this.saveProgressLocal(prog, uid);
 
     if(sbClient && uid){
-      // مزامنة سحابية غير معطلة في الخلفية
-      sbClient.from('user_progress').upsert({
-        user_id: uid,
-        hearts: prog.hearts,
-        points: prog.points,
-        streak_days: prog.streak_days,
-        last_active_date: prog.last_active_date,
-        claimed_chests: prog.claimed_chests || []
-      }).then(()=>{}).catch(e => {
-        console.warn('Supabase updateProgress error:', e);
-      });
+      // تحديث الحقول المعدلة فعلياً فقط دون كتابة عشوائية فوق النقاط
+      const dbUpdates = {};
+      if(typeof updates.hearts === 'number' || typeof updates.addHearts === 'number') dbUpdates.hearts = prog.hearts;
+      if(typeof updates.streak_days === 'number') dbUpdates.streak_days = prog.streak_days;
+      if(Array.isArray(updates.claimed_chests)) dbUpdates.claimed_chests = prog.claimed_chests || [];
+      if(updates.last_active_date) dbUpdates.last_active_date = prog.last_active_date;
+      if(pointsChanged) dbUpdates.points = prog.points;
+
+      if(Object.keys(dbUpdates).length > 0){
+        sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid).then(()=>{}).catch(e => {
+          console.warn('Supabase updateProgress error:', e);
+        });
+      }
     }
     return prog;
   }
@@ -1404,18 +1474,74 @@ class GamificationService {
   }
 
   // إعادة ملء القلوب إلى 5
-    // شراء قلوب بنقاط الـ XP (القلب = 100 XP)
-  async buyHeartsWithXp(userId, count = 1, costPerHeart = 100){
+    // شراء قلوب بنقاط الـ XP (القلب = 100 XP) مع دعم RPC الذري والاحتياطي الموثوق
+  async buyHeartsWithXp(userId, count = 1, costParam = 100){
     const uid = userId || this.getCurrentUser()?.id;
-    let prog = await this.getProgress(uid);
     const safeCount = Math.max(1, Math.min(5, parseInt(count, 10) || 1));
-    const safeCost = Math.max(1, parseInt(costPerHeart, 10) || 100);
-    const totalCost = safeCount * safeCost;
+    const COST_PER_HEART = 100;
+
+    // 1. المحاولة أولاً عبر الدالة الذرية الموثوقة على السيرفر (Server-Authoritative RPC)
+    if(sbClient && uid){
+      try {
+        const { data: rpcData, error: rpcErr } = await sbClient.rpc('buy_hearts_with_xp', {
+          p_hearts_count: safeCount,
+          p_cost_per_heart: COST_PER_HEART
+        });
+
+        if(!rpcErr && rpcData){
+          if(rpcData.success){
+            const curProg = this.getProgressLocal(uid) || {};
+            curProg.points = Number(rpcData.points ?? curProg.points ?? 0);
+            curProg.total_points = curProg.points;
+            curProg.hearts = Number(rpcData.hearts ?? 5);
+
+            const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
+            if(curProg.hearts >= 5){
+              try { localStorage.removeItem(timerKey); } catch(e){}
+              curProg.last_heart_loss_at = null;
+            }
+
+            this.saveProgressLocal(curProg, uid);
+            return { success: true, prog: curProg, hearts: curProg.hearts, points: curProg.points };
+          } else {
+            return {
+              success: false,
+              reason: rpcData.reason || 'insufficient_xp',
+              required: rpcData.required,
+              current: rpcData.current
+            };
+          }
+        }
+      } catch(rpcEx){
+        console.warn('buy_hearts_with_xp RPC fallback to client calculation:', rpcEx);
+      }
+    }
+
+    // 2. احتياطي العميل الموثوق (Client Fallback) في حال تعذر تشغيل RPC
+    let prog = await this.getProgress(uid, true);
+
+    // حساب التكلفة الصحيحة بدقة:
+    // إذا مرر المستدعي التكلفة الإجمالية (مثلاً 400 لأربعة قلوب) أو سعر القلب الواحد (100)
+    let totalCost = safeCount * COST_PER_HEART;
+    const numCost = parseInt(costParam, 10);
+    if(!isNaN(numCost) && numCost > 0){
+      if(numCost === safeCount * COST_PER_HEART){
+        totalCost = numCost;
+      } else if(numCost === COST_PER_HEART){
+        totalCost = safeCount * COST_PER_HEART;
+      } else if(numCost < COST_PER_HEART){
+        totalCost = safeCount * numCost;
+      } else {
+        totalCost = numCost;
+      }
+    }
+
     const currentPoints = prog.points || 0;
     if(currentPoints < totalCost){
       return { success: false, reason: 'insufficient_xp', required: totalCost, current: currentPoints };
     }
     prog.points = Math.max(0, currentPoints - totalCost);
+    prog.total_points = prog.points;
     prog.hearts = Math.max(0, Math.min(5, (prog.hearts || 0) + safeCount));
 
     const timerKey = `mg_coptic_heart_timer_${uid || 'guest'}`;
@@ -1430,7 +1556,7 @@ class GamificationService {
         console.warn('Supabase buyHearts update error:', e);
       });
     }
-    return { success: true, prog, hearts: prog.hearts };
+    return { success: true, prog, hearts: prog.hearts, points: prog.points };
   }
 
     async refillHearts(userId){
@@ -1715,6 +1841,10 @@ class GamificationService {
           if(rpcData.hearts != null) curProg.hearts = Number(rpcData.hearts);
           if(rpcData.streak_days != null) curProg.streak_days = Number(rpcData.streak_days);
           this.saveProgressLocal(curProg, uid);
+
+          map.added_xp = Number(rpcData.added_xp || 0);
+          map.points = curProg.points;
+          map.hearts = curProg.hearts;
 
           if(rpcData.added_xp > 0){
             this.recordTodayEarnedXP(uid, rpcData.added_xp);

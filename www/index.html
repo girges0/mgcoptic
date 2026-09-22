@@ -11305,8 +11305,20 @@
               const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser && window.currentAuthUser.id);
               const updatedUid = payload?.new?.user_id || payload?.old?.user_id;
               if (uid && updatedUid && uid === updatedUid) {
+                if (payload?.new && window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
+                  const pNew = payload.new;
+                  const curProg = (window.MGCopticGame.getProgressLocal ? window.MGCopticGame.getProgressLocal(uid) : null) || {};
+                  curProg.points = Number(pNew.points ?? curProg.points ?? 0);
+                  curProg.total_points = curProg.points;
+                  if (pNew.hearts != null) curProg.hearts = Number(pNew.hearts);
+                  if (pNew.streak_days != null) curProg.streak_days = Number(pNew.streak_days);
+                  if (Array.isArray(pNew.claimed_chests)) curProg.claimed_chests = pNew.claimed_chests;
+                  window.MGCopticGame.saveProgressLocal(curProg, uid);
+                  if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay(curProg);
+                  if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+                }
                 if (window.MGCopticGame && window.MGCopticGame.getProgress) {
-                  window.MGCopticGame.getProgress(uid, false).then((freshProg) => {
+                  window.MGCopticGame.getProgress(uid, true).then((freshProg) => {
                     if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay(freshProg);
                     if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
                   });
@@ -11314,7 +11326,7 @@
                   if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
                 }
               }
-            }, 800);
+            }, 400);
           })
           .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
             if (typeof renderRealLeaderboard === 'function') renderRealLeaderboard();
@@ -12962,7 +12974,7 @@
         const userId = user ? user.id : null;
 
         const curriculum = await game.getCurriculum();
-        const userProg = (await game.getProgress(userId)) || getUserProgressData();
+        const userProg = (await game.getProgress(userId, true)) || getUserProgressData();
         const progressMap = await game.getLessonProgress(userId, false);
 
         const xp = userProg.points ?? userProg.total_points ?? 0;
@@ -15525,7 +15537,7 @@
                 if (!sessionAnsweredChallenges.has(chId)) {
                   sessionAnsweredChallenges.add(chId);
                   sessionXpEarned += 1;
-                  if (game.updateProgress) await game.updateProgress(uid, { addPoints: 1 });
+                  if (game.addPointsLocalOnly) game.addPointsLocalOnly(uid, 1);
                   showFloatingXpBadge('+1 XP ⭐');
                   if (window.addTodayEarnedXP) window.addTodayEarnedXP(1);
                 }
@@ -17286,10 +17298,8 @@
 
           if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
-            try {
-              if (game.updateProgress) await game.updateProgress(uid, { addPoints: challengeXp });
-            } catch (errProg) {
-              console.warn('Could not update progress in runner:', errProg);
+            if (game.addPointsLocalOnly) {
+              game.addPointsLocalOnly(uid, challengeXp);
             }
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
@@ -17886,7 +17896,7 @@
               bAll.onclick = async () => {
                 bAll.disabled = true;
                 bAll.style.opacity = '0.7';
-                await performHeartPurchase(heartsNeeded, fullCost);
+                await performHeartPurchase(heartsNeeded, costPerHeart);
                 bAll.disabled = false;
                 bAll.style.opacity = '1';
               };
@@ -17940,9 +17950,15 @@
         // إظهار شاشة النصر فوراً بدون أي تعليق أو تأخير (0 ميلي ثانية)
         if (victoryModal) victoryModal.style.display = 'flex';
 
-        // حفظ التقدم ومزامنة السحابة في الخلفية دون تعطيل الواجهة
+        // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).catch(e => {
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).then(res => {
+            if (res && res.added_xp != null && vXp) {
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${res.added_xp} XP`;
+            }
+            if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
+            if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+          }).catch(e => {
             console.warn('Background completeLesson error:', e);
           });
 
