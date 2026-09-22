@@ -1311,16 +1311,16 @@
 
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         } else {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         }
 
@@ -1503,14 +1503,14 @@
             const currentCh = currentChallenges[currentChallengeIndex];
 
             // للشاشات التمهيدية (نبذة الحرف ونبذة الكلمة)، انتقال فوري ومريح للدارس بنقرة واحدة
-            if (currentCh && (currentCh.type === 'letter_overview' || currentCh.type === 'word_overview')) {
+            if (currentCh && (currentCh.type === 'letter_overview' || currentCh.type === 'word_overview' || currentCh.type === 'lesson_overview')) {
               if (currentRunnerHearts <= 0) {
                 handleOutOfHearts();
                 return;
               }
               btnCheckAction.disabled = true;
               correctAnswersCount++;
-              if (currentCh.type === 'letter_overview' && !isReplayingLesson) {
+              if ((currentCh.type === 'letter_overview' || currentCh.type === 'lesson_overview') && !isReplayingLesson) {
                 const uid = getAuthUserId();
                 const chId = currentCh.id || `ch_letter_${selectedLesson?.id}`;
                 if (!sessionAnsweredChallenges.has(chId)) {
@@ -1582,6 +1582,7 @@
       });
 
       async function startLessonRunner(lesson) {
+        window.startLessonRunner = startLessonRunner;
         const uid = getAuthUserId();
         let prog = {};
         if (game.getProgress) {
@@ -1605,9 +1606,10 @@
           return;
         }
 
-        // تحضير تمارين المستوى الأول لتبدأ بنبذة الحرف أولاً ثم نبذة الكلمة ثم باقي التمارين
+        // تحضير النبذات التمهيدية التفصيلية والاحترافية لكافة الدروس (المستوى الأول والثاني والمراجعات)
         try {
           const firstCh = currentChallenges[0];
+          let expandedLetter = false;
           if (firstCh && (firstCh.type === 'text_view' || firstCh.type === 'letter_overview') && typeof window.findLetterCatalogItem === 'function') {
             const item = window.findLetterCatalogItem(firstCh);
             if (item && item.word && item.word.coptic) {
@@ -1631,10 +1633,34 @@
                 xp_reward: 0
               };
               currentChallenges = [letterCh, wordCh, ...currentChallenges.slice(1)];
+              expandedLetter = true;
+            }
+          }
+
+          // إذا لم يكن حرفاً تمهيدياً (دروس المراجعات أو المستوى الثاني)، فحص وجود نبذة في كتالوج النبذات الشامل
+          if (!expandedLetter && typeof window.getLessonOverviewData === 'function') {
+            const ovData = window.getLessonOverviewData(lesson.id);
+            if (ovData) {
+              const overviewCh = {
+                id: `intro_lesson_${lesson.id}`,
+                lesson_id: lesson.id,
+                type: 'lesson_overview',
+                overview_data: ovData,
+                question: ovData.headerTitle || lesson.title,
+                audio_url: ovData.audioFile || '',
+                audio_text: ovData.audioText || lesson.title,
+                xp_reward: 0,
+                xp: 0
+              };
+              if (currentChallenges[0] && currentChallenges[0].type === 'text_view') {
+                currentChallenges = [overviewCh, ...currentChallenges.slice(1)];
+              } else if (currentChallenges[0] && currentChallenges[0].type !== 'lesson_overview') {
+                currentChallenges = [overviewCh, ...currentChallenges];
+              }
             }
           }
         } catch (e) {
-          console.warn('Error expanding letter/word overview:', e);
+          console.warn('Error expanding letter/lesson overview:', e);
         }
 
         // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً لمنع تكرار المكافآت
@@ -1689,9 +1715,402 @@
         document.body.style.overflow = 'auto';
         refreshStatsDisplay();
         renderSkillMap();
+        if (typeof clearActiveBriefTimer === 'function') {
+          clearActiveBriefTimer();
+        }
       }
 
+      // ==========================================================================
+      // READING BRIEF COUNTDOWN TIMER CONTROLLER
+      // ==========================================================================
+      let activeBriefTimerInterval = null;
+      let briefTimerRemaining = 15;
+      let briefTimerTotal = 15;
+      let isBriefTimerPaused = false;
+
+      function isBriefTimerEnabled() {
+        try {
+          return localStorage.getItem('mg_coptic_brief_timer_enabled') !== 'false';
+        } catch (_) {
+          return true;
+        }
+      }
+
+      function getBriefTimerDuration() {
+        try {
+          const val = parseInt(localStorage.getItem('mg_coptic_brief_timer_duration'), 10);
+          return (val && val >= 3 && val <= 180) ? val : 15;
+        } catch (_) {
+          return 15;
+        }
+      }
+
+      function handleBriefTimerToggleChange(enabled) {
+        try {
+          localStorage.setItem('mg_coptic_brief_timer_enabled', enabled ? 'true' : 'false');
+        } catch (_) {}
+        const durBlock = document.getElementById('settings-timer-duration-block');
+        if (durBlock) {
+          if (enabled) durBlock.classList.remove('disabled');
+          else durBlock.classList.add('disabled');
+        }
+        if (typeof showToast === 'function') {
+          showToast(enabled ? 'تم تفعيل مؤقت القراءة قبل التمارين' : 'تم إيقاف مؤقت القراءة قبل التمارين');
+        }
+      }
+
+      function stepBriefTimerDuration(delta) {
+        const customInput = document.getElementById('settings-timer-custom-input');
+        let current = parseInt(customInput ? customInput.value : getBriefTimerDuration(), 10) || 15;
+        current = Math.max(3, Math.min(180, current + delta));
+        setBriefTimerDuration(current);
+      }
+
+      function handleCustomDurationInput(val) {
+        let num = parseInt(val, 10);
+        if (!num || isNaN(num)) return;
+        num = Math.max(3, Math.min(180, num));
+        setBriefTimerDuration(num);
+      }
+
+      function setBriefTimerDuration(seconds) {
+        seconds = parseInt(seconds, 10) || 15;
+        seconds = Math.max(3, Math.min(180, seconds));
+
+        try {
+          localStorage.setItem('mg_coptic_brief_timer_duration', String(seconds));
+        } catch (_) {}
+
+        const display = document.getElementById('settings-timer-duration-display');
+        if (display) {
+          display.textContent = `${seconds} ثانية`;
+        }
+
+        const customInput = document.getElementById('settings-timer-custom-input');
+        if (customInput && parseInt(customInput.value, 10) !== seconds) {
+          customInput.value = seconds;
+        }
+
+        const rangeInput = document.getElementById('settings-timer-range');
+        if (rangeInput && seconds >= 5 && seconds <= 60 && parseInt(rangeInput.value, 10) !== seconds) {
+          rangeInput.value = seconds;
+        }
+
+        document.querySelectorAll('.duration-chip-btn').forEach(btn => {
+          const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
+          btn.classList.toggle('active', btnSec === seconds);
+        });
+
+        if (typeof showToast === 'function') {
+          showToast(`تم ضبط مدة مؤقت القراءة على ${seconds} ثانية`);
+        }
+      }
+
+      function initBriefTimerSettingsUI() {
+        const toggle = document.getElementById('settings-timer-toggle');
+        const durBlock = document.getElementById('settings-timer-duration-block');
+        const customInput = document.getElementById('settings-timer-custom-input');
+        const rangeInput = document.getElementById('settings-timer-range');
+        const display = document.getElementById('settings-timer-duration-display');
+        const isEnabled = isBriefTimerEnabled();
+        const duration = getBriefTimerDuration();
+
+        if (toggle) toggle.checked = isEnabled;
+        if (durBlock) {
+          if (isEnabled) durBlock.classList.remove('disabled');
+          else durBlock.classList.add('disabled');
+        }
+        if (display) {
+          display.textContent = `${duration} ثانية`;
+        }
+        if (customInput) {
+          customInput.value = duration;
+        }
+        if (rangeInput && duration >= 5 && duration <= 60) {
+          rangeInput.value = duration;
+        }
+        document.querySelectorAll('.duration-chip-btn').forEach(btn => {
+          const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
+          btn.classList.toggle('active', btnSec === duration);
+        });
+      }
+
+      function clearActiveBriefTimer() {
+        if (activeBriefTimerInterval) {
+          clearInterval(activeBriefTimerInterval);
+          activeBriefTimerInterval = null;
+        }
+        isBriefTimerPaused = false;
+      }
+
+      function renderBriefTimerWidgetHtml(initialSeconds) {
+        return `
+          <div class="brief-timer-widget" id="brief-timer-widget">
+            <div class="brief-timer-header-row">
+              <div class="brief-timer-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                <span>نبذة تمهيدية</span>
+              </div>
+              <div class="brief-timer-status" id="brief-timer-status">
+                <span class="brief-timer-status-dot" id="brief-timer-status-dot"></span>
+                <span id="brief-timer-status-text">وقت القراءة</span>
+              </div>
+            </div>
+
+            <div class="brief-timer-main">
+              <div class="brief-timer-info-col">
+                <div class="brief-timer-title">
+                  <span>تمهّل لفهم القاعدة ونطق الحرف</span>
+                </div>
+                <div class="brief-timer-desc">
+                  راجع النطق والقاعدة جيداً قبل بدء التمارين
+                </div>
+              </div>
+
+              <div class="brief-timer-circular-wrap">
+                <svg class="brief-timer-svg" viewBox="0 0 80 80" width="60" height="60" style="width:60px;height:60px;transform:rotate(-90deg);display:block;">
+                  <circle class="brief-timer-bg-circle" cx="40" cy="40" r="34" fill="none" stroke="#EADBCE" stroke-width="6"></circle>
+                  <circle class="brief-timer-progress-circle" id="brief-timer-progress-circle" cx="40" cy="40" r="34" fill="none" stroke="#B8892E" stroke-width="6" stroke-linecap="round" stroke-dasharray="213.628" stroke-dashoffset="0" style="transition:stroke-dashoffset 0.85s linear, stroke 0.3s ease;"></circle>
+                </svg>
+                <div class="brief-timer-center">
+                  <span class="brief-timer-num" id="brief-timer-seconds">${initialSeconds}</span>
+                  <span class="brief-timer-unit">ثانية</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="brief-timer-controls">
+              <button type="button" class="btn-brief-ctrl pause" id="btn-brief-pause" onclick="window.toggleBriefTimerPause && window.toggleBriefTimerPause()" title="إيقاف مؤقت للقراءة">
+                <svg id="brief-pause-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span id="brief-pause-text">إيقاف مؤقت</span>
+              </button>
+              <button type="button" class="btn-brief-ctrl skip" id="btn-brief-skip" onclick="window.skipBriefTimer && window.skipBriefTimer()" title="تخطي الوقت والبدء فوراً">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                  <line x1="19" y1="5" x2="19" y2="19"></line>
+                </svg>
+                <span>تخطي والبدء</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function updateBriefTimerUI(remaining, total) {
+        const secEl = document.getElementById('brief-timer-seconds');
+        const circleEl = document.getElementById('brief-timer-progress-circle');
+        if (secEl) {
+          secEl.textContent = String(remaining);
+          if (remaining <= 3) {
+            secEl.classList.add('ending');
+          } else {
+            secEl.classList.remove('ending');
+          }
+        }
+        if (circleEl) {
+          const circumference = 213.628;
+          const fraction = Math.max(0, remaining) / Math.max(1, total);
+          const offset = circumference * (1 - fraction);
+          circleEl.style.strokeDashoffset = String(offset);
+          if (remaining <= 3) {
+            circleEl.style.stroke = '#DC2626';
+          } else if (remaining <= Math.ceil(total / 2)) {
+            circleEl.style.stroke = '#EAB308';
+          } else {
+            circleEl.style.stroke = '#B8892E';
+          }
+        }
+      }
+
+      function toggleBriefTimerPause() {
+        if (!activeBriefTimerInterval) return;
+        isBriefTimerPaused = !isBriefTimerPaused;
+        const pauseBtn = document.getElementById('btn-brief-pause');
+        const pauseIcon = document.getElementById('brief-pause-icon');
+        const pauseText = document.getElementById('brief-pause-text');
+        const dot = document.getElementById('brief-timer-status-dot');
+        const statusText = document.getElementById('brief-timer-status-text');
+        const btnCheck = document.getElementById('btn-check-action');
+
+        if (isBriefTimerPaused) {
+          if (pauseText) pauseText.textContent = 'استئناف';
+          if (pauseIcon) {
+            pauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"></polygon>';
+          }
+          if (dot) {
+            dot.classList.add('paused');
+            dot.classList.remove('done');
+          }
+          if (statusText) statusText.textContent = 'المؤقت موقوف';
+          if (pauseBtn) pauseBtn.style.background = 'rgba(245, 158, 11, 0.18)';
+          if (btnCheck && btnCheck.disabled) {
+            btnCheck.textContent = `قراءة النبذة (موقوف ${briefTimerRemaining} ث)`;
+          }
+        } else {
+          if (pauseText) pauseText.textContent = 'إيقاف مؤقت';
+          if (pauseIcon) {
+            pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+          }
+          if (dot) {
+            dot.classList.remove('paused');
+          }
+          if (statusText) statusText.textContent = 'وقت القراءة';
+          if (pauseBtn) pauseBtn.style.background = '';
+          if (btnCheck && btnCheck.disabled) {
+            btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+          }
+        }
+      }
+
+      function skipBriefTimer() {
+        clearActiveBriefTimer();
+        const btnCheck = document.getElementById('btn-check-action');
+        onBriefTimerComplete(btnCheck, true);
+      }
+
+      function onBriefTimerComplete(btnCheck, isSkip = false) {
+        const secEl = document.getElementById('brief-timer-seconds');
+        const circleEl = document.getElementById('brief-timer-progress-circle');
+        const dot = document.getElementById('brief-timer-status-dot');
+        const statusText = document.getElementById('brief-timer-status-text');
+        const pauseBtn = document.getElementById('btn-brief-pause');
+        const skipBtn = document.getElementById('btn-brief-skip');
+
+        if (secEl) {
+          secEl.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          secEl.classList.remove('ending');
+        }
+        if (circleEl) {
+          circleEl.style.strokeDashoffset = '0';
+          circleEl.style.stroke = '#059669';
+        }
+        if (dot) {
+          dot.className = 'brief-timer-status-dot done';
+        }
+        if (statusText) {
+          statusText.textContent = isSkip ? 'تم التخطي ✓' : 'اكتمل وقت القراءة ✓';
+          statusText.style.color = '#059669';
+          statusText.style.fontWeight = '800';
+        }
+        if (pauseBtn) pauseBtn.style.display = 'none';
+        if (skipBtn) skipBtn.style.display = 'none';
+
+        if (btnCheck) {
+          btnCheck.disabled = false;
+          const orig = btnCheck.getAttribute('data-original-text');
+          if (orig) btnCheck.textContent = orig;
+          btnCheck.classList.add('ready');
+          btnCheck.style.animation = 'briefFadeIn 0.4s ease-out';
+        }
+
+        try {
+          if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(40);
+          }
+        } catch (_) {}
+
+        if (isSkip && btnCheck) {
+          setTimeout(() => {
+            try { btnCheck.click(); } catch (_) {}
+          }, 80);
+        }
+      }
+
+      function startBriefTimerForChallenge(ch, btnCheck) {
+        clearActiveBriefTimer();
+
+        const mount = document.getElementById('brief-timer-mount');
+        if (!mount) {
+          if (btnCheck) {
+            btnCheck.disabled = false;
+            btnCheck.classList.add('ready');
+          }
+          return;
+        }
+
+        if (!isBriefTimerEnabled()) {
+          mount.innerHTML = '';
+          if (btnCheck) {
+            btnCheck.disabled = false;
+            btnCheck.classList.add('ready');
+          }
+          return;
+        }
+
+        const duration = getBriefTimerDuration();
+        briefTimerRemaining = duration;
+        briefTimerTotal = duration;
+        isBriefTimerPaused = false;
+
+        mount.innerHTML = renderBriefTimerWidgetHtml(duration);
+
+        if (btnCheck) {
+          btnCheck.disabled = true;
+          btnCheck.classList.remove('ready');
+          const originalText = (ch.type === 'letter_overview') ? 'التالي: نبذة عن الكلمة ←' : ((ch.type === 'word_overview' || ch.type === 'lesson_overview') ? 'ابدأ التمارين ←' : 'فهمت ومتابعة');
+          btnCheck.setAttribute('data-original-text', originalText);
+          btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+        }
+
+        updateBriefTimerUI(briefTimerRemaining, briefTimerTotal);
+
+        activeBriefTimerInterval = setInterval(() => {
+          if (isBriefTimerPaused) return;
+
+          briefTimerRemaining--;
+
+          if (briefTimerRemaining <= 0) {
+            clearActiveBriefTimer();
+            onBriefTimerComplete(btnCheck, false);
+          } else {
+            updateBriefTimerUI(briefTimerRemaining, briefTimerTotal);
+            if (btnCheck && btnCheck.disabled) {
+              btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+            }
+          }
+        }, 1000);
+      }
+
+      window.isBriefTimerEnabled = isBriefTimerEnabled;
+      window.getBriefTimerDuration = getBriefTimerDuration;
+      window.handleBriefTimerToggleChange = handleBriefTimerToggleChange;
+      window.setBriefTimerDuration = setBriefTimerDuration;
+      window.toggleCustomDurationPanel = function() {};
+      window.stepBriefTimerDuration = stepBriefTimerDuration;
+      window.handleCustomDurationInput = handleCustomDurationInput;
+      window.initBriefTimerSettingsUI = initBriefTimerSettingsUI;
+      window.toggleBriefTimerPause = toggleBriefTimerPause;
+      window.skipBriefTimer = skipBriefTimer;
+      window.clearActiveBriefTimer = clearActiveBriefTimer;
+      window.startBriefTimerForChallenge = startBriefTimerForChallenge;
+      try { initBriefTimerSettingsUI(); } catch (_) {}
+
+      function skipDirectlyToExercises() {
+        if (typeof clearActiveBriefTimer === 'function') {
+          clearActiveBriefTimer();
+        }
+        if (!Array.isArray(currentChallenges) || currentChallenges.length === 0) return;
+        const firstExerciseIdx = currentChallenges.findIndex(c => c && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'text_view' && c.type !== 'image_view');
+        if (firstExerciseIdx !== -1 && firstExerciseIdx > currentChallengeIndex) {
+          currentChallengeIndex = firstExerciseIdx;
+          loadChallenge(currentChallengeIndex);
+        } else if (currentChallengeIndex < currentChallenges.length - 1) {
+          currentChallengeIndex++;
+          loadChallenge(currentChallengeIndex);
+        }
+      }
+      window.skipDirectlyToExercises = skipDirectlyToExercises;
+
       function loadChallenge(index) {
+        if (typeof clearActiveBriefTimer === 'function') {
+          clearActiveBriefTimer();
+        }
         if (typeof cleanupTraceOrientationListener === 'function') {
           cleanupTraceOrientationListener();
         }
@@ -1703,9 +2122,27 @@
           handleOutOfHearts();
           return;
         }
+        if (!Array.isArray(currentChallenges) || currentChallenges.length === 0) {
+          mgAlert('لا توجد تمارين', 'لا توجد تمارين مسجلة لهذا الدرس حالياً.', 'info');
+          closeRunner();
+          return;
+        }
         if (index >= currentChallenges.length) {
           finishLessonSuccess();
           return;
+        }
+
+        const ch = currentChallenges[index];
+        if (!ch) {
+          console.warn('Challenge at index', index, 'is invalid or missing.');
+          if (index < currentChallenges.length - 1) {
+            currentChallengeIndex++;
+            loadChallenge(currentChallengeIndex);
+            return;
+          } else {
+            finishLessonSuccess();
+            return;
+          }
         }
 
         runnerState = 'answering';
@@ -1732,19 +2169,36 @@
         const percent = Math.min(100, Math.round((correctAnswersCount / Math.max(1, initialChallengesCount)) * 100));
         if (runnerProgress) runnerProgress.style.width = percent + '%';
 
-        const ch = currentChallenges[index];
-        renderChallengeContent(ch);
+        try {
+          renderChallengeContent(ch);
+        } catch (renderErr) {
+          console.error('Error rendering challenge at index', index, renderErr, ch);
+          const runnerBody = document.getElementById('runner-body-content');
+          if (runnerBody) {
+            runnerBody.innerHTML = `
+              <div style="text-align:center; padding:30px 16px; max-width:440px; margin:0 auto;">
+                <p style="font-weight:700; color:#3A271B; margin-bottom:16px;">تعذر تحميل هذا السؤال. اضغط للمتابعة إلى السؤال التالي:</p>
+                <button type="button" class="btn-check-answer ready" style="margin:0 auto; display:block;" onclick="currentChallengeIndex++; loadChallenge(currentChallengeIndex);">السؤال التالي ←</button>
+              </div>
+            `;
+          }
+        }
 
-        if (ch && (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') && btnCheck) {
-          btnCheck.disabled = false;
+        if (ch && (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview') && btnCheck) {
           if (ch.type === 'letter_overview') {
             btnCheck.textContent = 'التالي: نبذة عن الكلمة ←';
-          } else if (ch.type === 'word_overview') {
+          } else if (ch.type === 'word_overview' || ch.type === 'lesson_overview') {
             btnCheck.textContent = 'ابدأ التمارين ←';
           } else {
             btnCheck.textContent = 'فهمت ومتابعة';
           }
-          btnCheck.classList.add('ready');
+
+          if (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview') {
+            startBriefTimerForChallenge(ch, btnCheck);
+          } else {
+            btnCheck.disabled = false;
+            btnCheck.classList.add('ready');
+          }
         }
       }
 
@@ -1752,7 +2206,17 @@
         const runnerBody = document.getElementById('runner-body-content');
         if (!runnerBody) return;
 
-        // خلط خيارات الإجابة عشوائياً (Fisher-Yates Shuffle) حتى لا تكون الإجابة الصحيحة دائماً أول خيار (أ أو ب)
+        if (!ch) {
+          runnerBody.innerHTML = `
+            <div style="text-align:center; padding:30px 16px;">
+              <p style="font-weight:700; color:#3A271B; margin-bottom:14px;">التمرين غير متوفر</p>
+              <button type="button" class="btn-check-answer ready" onclick="currentChallengeIndex++; loadChallenge(currentChallengeIndex);">التالي ←</button>
+            </div>
+          `;
+          return;
+        }
+
+        // خلط الخيارات عشوائياً للمتعلم (Fisher-Yates Shuffle)
         if (Array.isArray(ch.options) && ch.options.length > 1) {
           if (!ch._shuffledOptions) {
             const shuffled = [...ch.options];
@@ -1775,6 +2239,12 @@
         } else if (ch.type === 'word_overview') {
           if (typeof window.renderWordOnlyCardHtml === 'function') {
             html += window.renderWordOnlyCardHtml(ch);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
+            html += window.renderLetterOverviewCardHtml(ch);
+          }
+        } else if (ch.type === 'lesson_overview') {
+          if (typeof window.renderComprehensiveLessonOverviewHtml === 'function') {
+            html += window.renderComprehensiveLessonOverviewHtml(ch, selectedLesson);
           } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
             html += window.renderLetterOverviewCardHtml(ch);
           }
@@ -1813,7 +2283,9 @@
             ` : ''}
           `;
         } else if (ch.type === 'text_view') {
-          if (typeof window.renderLetterOverviewCardHtml === 'function') {
+          if (typeof window.renderComprehensiveLessonOverviewHtml === 'function' && window.getLessonOverviewData && window.getLessonOverviewData(selectedLesson?.id || ch.lesson_id)) {
+            html += window.renderComprehensiveLessonOverviewHtml(ch, selectedLesson);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
             html += window.renderLetterOverviewCardHtml(ch);
           } else {
             html += `
@@ -2239,6 +2711,39 @@
               </div>
             </div>
           `;
+        } else {
+          // احتياطي شامل لأي تمرين لضمان عدم بقاء الشاشة فارغة مطلقاً
+          html += `
+            <div class="question-heading">${escapeHtml(ch.question || 'اختر الإجابة الصحيحة')}</div>
+            ${(ch.coptic_display || ch.audio_text || ch.audio_url) ? `
+              <div class="coptic-letter-display">
+                ${ch.coptic_display ? `<span class="coptic-big-glyph">${escapeHtml(ch.coptic_display)}</span>` : ''}
+                ${(ch.audio_text || ch.audio_url) ? `
+                  <button type="button" class="audio-icon-btn" aria-label="استمع للنطق" title="استمع للنطق" onclick="window.playChallengeAudio ? window.playChallengeAudio('${ch.audio_url || ''}', '${ch.audio_text || ch.coptic_display || ''}', this) : null">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                    </svg>
+                  </button>
+                ` : ''}
+              </div>
+            ` : ''}
+            ${activeOptions.length > 0 ? `
+              <div class="options-grid">
+                ${activeOptions.map((opt, i) => {
+                  const optText = typeof opt === 'string' ? opt : (opt.text || '');
+                  const letters = ['أ', 'ب', 'ج', 'د'];
+                  return `
+                    <div class="option-card" data-idx="${i}" onclick="selectOptionCard(this, ${i})">
+                      <span class="option-badge">${letters[i] || (i + 1)}</span>
+                      <span class="option-label-text">${escapeHtml(optText)}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
+          `;
         }
 
         runnerBody.innerHTML = html;
@@ -2440,27 +2945,32 @@
         }
 
         if (typeof LetterTracer !== 'undefined') {
-          window.activeRunnerTracer = new LetterTracer({
-            canvasId: canvasEl,
-            fontUrl: 'assets/fonts/girges.woff',
-            text: cleanText,
-            passThreshold: 80,
-            minCoverageThreshold: 80,
-            onStrokeEnd: (count) => {
-              if (btnCheck && count > 0) btnCheck.disabled = false;
-            },
-            onSuccess: (score) => {
-              if (badge && scoreVal) {
-                scoreVal.textContent = score;
-                badge.style.display = 'block';
-                badge.style.color = '#2e6b3e';
-                badge.style.borderColor = '#2e6b3e';
+          try {
+            window.activeRunnerTracer = new LetterTracer({
+              canvasId: canvasEl,
+              fontUrl: 'assets/fonts/girges.woff',
+              text: cleanText,
+              passThreshold: 80,
+              minCoverageThreshold: 80,
+              onStrokeEnd: (count) => {
+                if (btnCheck && count > 0) btnCheck.disabled = false;
+              },
+              onSuccess: (score) => {
+                if (badge && scoreVal) {
+                  scoreVal.textContent = score;
+                  badge.style.display = 'block';
+                  badge.style.color = '#2e6b3e';
+                  badge.style.borderColor = '#2e6b3e';
+                }
+                ch._tracePassed = true;
+                ch._lastScore = score;
+                if (btnCheck) btnCheck.disabled = false;
               }
-              ch._tracePassed = true;
-              ch._lastScore = score;
-              if (btnCheck) btnCheck.disabled = false;
-            }
-          });
+            });
+          } catch (tracerErr) {
+            console.warn('LetterTracer initialization error:', tracerErr);
+            if (btnCheck) btnCheck.disabled = false;
+          }
         }
 
         const btnClear = document.getElementById('btn-trace-clear');
@@ -2744,7 +3254,7 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') {
+        if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const selectedOpt = ch.options[currentSelection];
@@ -2827,7 +3337,7 @@
         if (isCorrect) {
           correctAnswersCount++;
           // تمارين النبذة 0 XP، وكل التمارين الأخرى 1 XP
-          const isOverviewCh = (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'text_view' || ch.type === 'image_view');
+          const isOverviewCh = (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview' || ch.type === 'text_view' || ch.type === 'image_view');
           const challengeXp = isOverviewCh ? 0 : 1;
 
           // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو التمرين المُجاب عليه مسبقاً
@@ -3457,7 +3967,7 @@
         const uid = getAuthUserId();
         // ضمان تطابق الـ XP المكتسب بنسبة 100% مع الرقم المعروض والمضبوط من الداشبورد
         const earnableCount = (selectedLesson && Array.isArray(selectedLesson.challenges))
-          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length
+          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length
           : (parseInt(selectedLesson?.xp_reward, 10) || 1);
         const fullConfiguredXp = Math.max(1, earnableCount);
         const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;

@@ -132,6 +132,7 @@
   <script src="js/preloader.js"></script>
   <script src="js/back-button-handler.js" defer></script>
   <script src="js/data/coptic-letters-catalog.js?v=3.4.0"></script>
+  <script src="js/data/coptic-lesson-overview-catalog.js?v=3.5.0"></script>
   <style>
     @font-face {
       font-family: 'girges';
@@ -9175,6 +9176,438 @@
       box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.35) !important;
     }
 </style>
+<style>
+/* ============================================================
+   Reading Brief Countdown Timer Widget
+   ============================================================ */
+.brief-timer-widget {
+  background: linear-gradient(135deg, #FFFDF9 0%, #FAF5EC 100%) !important;
+  border: 1.5px solid #E4D5BE !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  margin: 12px auto 16px !important;
+  max-width: 540px !important;
+  box-shadow: 0 4px 14px rgba(111, 23, 55, 0.05) !important;
+  box-sizing: border-box !important;
+}
+.brief-timer-header-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+.brief-timer-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #6F1737 !important;
+  color: #FFFFFF !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  padding: 3px 10px !important;
+  border-radius: 12px !important;
+}
+.brief-timer-status {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: #7A583A !important;
+}
+.brief-timer-status-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #10B981 !important;
+  animation: pulseBriefDot 1.8s infinite !important;
+}
+.brief-timer-status-dot.paused {
+  background: #F59E0B !important;
+  animation: none !important;
+}
+.brief-timer-status-dot.done {
+  background: #6B7280 !important;
+  animation: none !important;
+}
+@keyframes pulseBriefDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+.brief-timer-main {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+.brief-timer-info-col {
+  flex: 1 !important;
+  text-align: right !important;
+}
+.brief-timer-title {
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  color: #3A2315 !important;
+  margin-bottom: 2px !important;
+}
+.brief-timer-desc {
+  font-size: 0.82rem !important;
+  color: #7A614D !important;
+  font-weight: 600 !important;
+}
+.brief-timer-circular-wrap {
+  position: relative !important;
+  width: 60px !important;
+  height: 60px !important;
+  flex-shrink: 0 !important;
+}
+.brief-timer-svg {
+  width: 60px !important;
+  height: 60px !important;
+  transform: rotate(-90deg) !important;
+  display: block !important;
+}
+.brief-timer-bg-circle {
+  fill: none !important;
+  stroke: #EADBCE !important;
+  stroke-width: 6 !important;
+}
+.brief-timer-progress-circle {
+  fill: none !important;
+  stroke: #B8892E !important;
+  stroke-width: 6 !important;
+  stroke-linecap: round !important;
+  stroke-dasharray: 213.628 !important;
+  stroke-dashoffset: 0 !important;
+  transition: stroke-dashoffset 0.85s linear, stroke 0.3s ease !important;
+}
+.brief-timer-center {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+.brief-timer-num {
+  font-size: 1.1rem !important;
+  font-weight: 900 !important;
+  color: #6F1737 !important;
+  line-height: 1 !important;
+}
+.brief-timer-num.ending {
+  color: #DC2626 !important;
+  animation: pulseNum 0.6s infinite alternate !important;
+}
+@keyframes pulseNum {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+.brief-timer-unit {
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  color: #8D725C !important;
+  line-height: 1 !important;
+  margin-top: 1px !important;
+}
+.brief-timer-controls {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
+  border-top: 1px dashed #EADECA !important;
+  padding-top: 8px !important;
+}
+.btn-brief-ctrl {
+  background: #FFFDF9 !important;
+  border: 1px solid #D6C4AD !important;
+  color: #5A3E2B !important;
+  border-radius: 8px !important;
+  padding: 5px 12px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  transition: all 0.2s ease !important;
+}
+.btn-brief-ctrl:hover {
+  background: #FAF2E3 !important;
+  border-color: #B8892E !important;
+  color: #6F1737 !important;
+}
+.btn-brief-ctrl.skip {
+  color: #6F1737 !important;
+  border-color: #E2C2D0 !important;
+  background: #FCF7F9 !important;
+}
+.btn-brief-ctrl.skip:hover {
+  background: #F8EBF0 !important;
+  border-color: #6F1737 !important;
+}
+
+/* ============================================================
+   Settings Card for Brief Timer
+   ============================================================ */
+.settings-brief-timer-card {
+  border: 1.5px solid rgba(184, 137, 46, 0.24) !important;
+  position: relative;
+}
+
+.settings-timer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.settings-timer-text-col {
+  flex: 1;
+  text-align: right;
+}
+
+.settings-timer-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.settings-timer-sub {
+  font-size: 0.83rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* Modern Toggle Switch */
+.mg-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 30px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.mg-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mg-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background-color: #D1D5DB;
+  border-radius: 34px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mg-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.mg-toggle-switch input:checked + .mg-toggle-slider {
+  background: linear-gradient(135deg, var(--madder) 0%, #8C2438 100%);
+}
+
+.mg-toggle-switch input:checked + .mg-toggle-slider:before {
+  transform: translateX(22px);
+}
+
+    /* Duration Block - Stepper & Range Slider (Professional, Minimalist & Emoji-free) */
+    .settings-timer-duration-block {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(184, 137, 46, 0.22);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-top: 6px;
+      transition: opacity 0.25s ease, filter 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .settings-timer-duration-block.disabled {
+      opacity: 0.38;
+      pointer-events: none;
+      filter: grayscale(0.7);
+    }
+
+    .settings-duration-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Stepper Box */
+    .settings-stepper-box {
+      display: inline-flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(184, 137, 46, 0.32);
+      border-radius: 10px;
+      padding: 2px 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      gap: 2px;
+    }
+
+    .btn-stepper {
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: rgba(184, 137, 46, 0.08);
+      color: var(--madder);
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .btn-stepper:hover {
+      background: rgba(107, 21, 48, 0.12);
+      color: var(--madder);
+      transform: scale(1.05);
+    }
+
+    .btn-stepper:active {
+      transform: scale(0.95);
+    }
+
+    .stepper-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
+    }
+
+    .stepper-num-input {
+      width: 42px;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--madder);
+      outline: none;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .stepper-num-input::-webkit-outer-spin-button,
+    .stepper-num-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .stepper-unit-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+    }
+
+    /* Range Slider */
+    .settings-range-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 2px;
+    }
+
+    .settings-duration-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 6px;
+      background: #EADDC7;
+      outline: none;
+      cursor: pointer;
+      margin: 4px 0;
+      transition: background 0.2s;
+    }
+
+    .settings-duration-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--madder) 0%, #8C2438 100%);
+      border: 2.5px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(107, 21, 48, 0.35);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .settings-duration-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 3px 8px rgba(107, 21, 48, 0.45);
+    }
+
+    .settings-duration-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--madder) 0%, #8C2438 100%);
+      border: 2.5px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(107, 21, 48, 0.35);
+      cursor: pointer;
+    }
+
+    .settings-slider-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      padding: 0 4px;
+      direction: rtl;
+    }
+
+    .settings-timer-tip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(184, 137, 46, 0.08);
+      border: 1px solid rgba(184, 137, 46, 0.2);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .settings-timer-tip svg {
+      color: var(--gold);
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+    }
+</style>
 </head>
 
 <body>
@@ -10345,6 +10778,70 @@
           </div>
         </div>
 
+        <!-- بطاقة إعدادات مؤقت نبذة القراءة والتعلم -->
+        <div class="settings-card settings-brief-timer-card" id="settings-brief-timer-card">
+          <h3 class="settings-card-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>مؤقت نبذة القراءة والتعلم</span>
+          </h3>
+
+          <div class="settings-timer-row">
+            <div class="settings-timer-text-col">
+              <div class="settings-timer-title">تفعيل مؤقت القراءة قبل التمارين</div>
+              <div class="settings-timer-sub">عرض عد تنازلي ذكي قبل التمارين لإتاحة وقت كافٍ لقراءة وفهم القاعدة والحروف بدقة.</div>
+            </div>
+            <label class="mg-toggle-switch" title="تفعيل أو إيقاف المؤقت">
+              <input type="checkbox" id="settings-timer-toggle" checked onchange="handleBriefTimerToggleChange(this.checked)">
+              <span class="mg-toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-timer-duration-block" id="settings-timer-duration-block">
+            <div class="settings-duration-top-row">
+              <div class="settings-timer-text-col">
+                <div class="settings-timer-title">مدة القراءة التمهيدية</div>
+                <div class="settings-timer-sub">حدد عدد الثواني للقراءة والاستيعاب قبل بدء الأسئلة</div>
+              </div>
+
+              <div class="settings-stepper-box">
+                <button type="button" class="btn-stepper minus" onclick="stepBriefTimerDuration(-5)" title="تقليل 5 ثوانٍ" aria-label="تقليل الوقت">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <div class="stepper-input-wrap">
+                  <input type="number" id="settings-timer-custom-input" class="stepper-num-input" min="3" max="180" value="15" oninput="handleCustomDurationInput(this.value)" onchange="handleCustomDurationInput(this.value)" aria-label="المدة بالثواني">
+                  <span class="stepper-unit-label">ثانية</span>
+                </div>
+                <button type="button" class="btn-stepper plus" onclick="stepBriefTimerDuration(5)" title="زيادة 5 ثوانٍ" aria-label="زيادة الوقت">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-range-wrap">
+              <input type="range" id="settings-timer-range" class="settings-duration-slider" min="5" max="60" step="5" value="15" oninput="setBriefTimerDuration(this.value)">
+              <div class="settings-slider-ticks">
+                <span>5 ثوانٍ</span>
+                <span>15 ثانية</span>
+                <span>30 ثانية</span>
+                <span>45 ثانية</span>
+                <span>60 ثانية</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-timer-tip">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>يمكنك دائماً إيقاف المؤقت مؤقتاً أو تخطيه مباشرة أثناء حل التمارين.</span>
+          </div>
+        </div>
+
         <!-- 2. بطاقة الأمان والنزاهة ومكافآت الإبلاغ عن الثغرات -->
         <div class="settings-card settings-security-card" id="settings-security-card">
           <h3 class="settings-card-title">
@@ -10920,6 +11417,7 @@
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
       }
       if (tabName === 'leaderboard' && typeof window.renderRealLeaderboard === 'function') window.renderRealLeaderboard();
+      if (tabName === 'settings' && typeof window.initBriefTimerSettingsUI === 'function') window.initBriefTimerSettingsUI();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     window.switchTab = switchTab;
@@ -14689,16 +15187,16 @@
 
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         } else {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length;
+          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
         }
 
@@ -15015,6 +15513,41 @@
           console.warn('Error expanding letter/word overview:', e);
         }
 
+        // إضافة نبذة الدرس التمهيدية الشاملة لكافة دروس المراجعة وقواعد المستوى الثاني
+        try {
+          const lId = lesson.id || lesson.lesson_id;
+          if (typeof window.getLessonOverviewData === 'function') {
+            const overviewData = window.getLessonOverviewData(lId);
+            if (overviewData) {
+              const firstCh = currentChallenges[0];
+              if (firstCh && (firstCh.type === 'text_view' || firstCh.type === 'lesson_overview')) {
+                currentChallenges[0] = {
+                  ...firstCh,
+                  id: `${firstCh.id || 'intro'}_lesson_overview`,
+                  type: 'lesson_overview',
+                  lesson_overview_data: overviewData,
+                  question: overviewData.headerTitle || 'نبذة تمهيدية عن الدرس',
+                  audio_url: overviewData.audioFile || firstCh.audio_url || '',
+                  audio_text: overviewData.audioText || '',
+                  xp_reward: 0, xp: 0
+                };
+              } else {
+                currentChallenges.unshift({
+                  id: `lesson_${lId}_overview`,
+                  type: 'lesson_overview',
+                  lesson_overview_data: overviewData,
+                  question: overviewData.headerTitle || 'نبذة تمهيدية عن الدرس',
+                  audio_url: overviewData.audioFile || '',
+                  audio_text: overviewData.audioText || '',
+                  xp_reward: 0, xp: 0
+                });
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Error adding comprehensive lesson overview:', e);
+        }
+
         // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً لمنع تكرار المكافآت
         try {
           const uid = getAuthUserId();
@@ -15067,7 +15600,397 @@
         document.body.style.overflow = 'auto';
         refreshStatsDisplay();
         renderSkillMap();
+        if (typeof clearActiveBriefTimer === 'function') {
+          clearActiveBriefTimer();
+        }
       }
+
+      // ==========================================================================
+      // READING BRIEF COUNTDOWN TIMER CONTROLLER
+      // ==========================================================================
+      let activeBriefTimerInterval = null;
+      let briefTimerRemaining = 15;
+      let briefTimerTotal = 15;
+      let isBriefTimerPaused = false;
+
+      function isBriefTimerEnabled() {
+        try {
+          return localStorage.getItem('mg_coptic_brief_timer_enabled') !== 'false';
+        } catch (_) {
+          return true;
+        }
+      }
+
+      function getBriefTimerDuration() {
+        try {
+          const val = parseInt(localStorage.getItem('mg_coptic_brief_timer_duration'), 10);
+          return (val && val >= 3 && val <= 180) ? val : 15;
+        } catch (_) {
+          return 15;
+        }
+      }
+
+      function handleBriefTimerToggleChange(enabled) {
+        try {
+          localStorage.setItem('mg_coptic_brief_timer_enabled', enabled ? 'true' : 'false');
+        } catch (_) {}
+        const durBlock = document.getElementById('settings-timer-duration-block');
+        if (durBlock) {
+          if (enabled) durBlock.classList.remove('disabled');
+          else durBlock.classList.add('disabled');
+        }
+        if (typeof showToast === 'function') {
+          showToast(enabled ? 'تم تفعيل مؤقت القراءة قبل التمارين' : 'تم إيقاف مؤقت القراءة قبل التمارين');
+        }
+      }
+
+      function stepBriefTimerDuration(delta) {
+        const customInput = document.getElementById('settings-timer-custom-input');
+        let current = parseInt(customInput ? customInput.value : getBriefTimerDuration(), 10) || 15;
+        current = Math.max(3, Math.min(180, current + delta));
+        setBriefTimerDuration(current);
+      }
+
+      function handleCustomDurationInput(val) {
+        let num = parseInt(val, 10);
+        if (!num || isNaN(num)) return;
+        num = Math.max(3, Math.min(180, num));
+        setBriefTimerDuration(num);
+      }
+
+      function setBriefTimerDuration(seconds) {
+        seconds = parseInt(seconds, 10) || 15;
+        seconds = Math.max(3, Math.min(180, seconds));
+
+        try {
+          localStorage.setItem('mg_coptic_brief_timer_duration', String(seconds));
+        } catch (_) {}
+
+        const display = document.getElementById('settings-timer-duration-display');
+        if (display) {
+          display.textContent = `${seconds} ثانية`;
+        }
+
+        const customInput = document.getElementById('settings-timer-custom-input');
+        if (customInput && parseInt(customInput.value, 10) !== seconds) {
+          customInput.value = seconds;
+        }
+
+        const rangeInput = document.getElementById('settings-timer-range');
+        if (rangeInput && seconds >= 5 && seconds <= 60 && parseInt(rangeInput.value, 10) !== seconds) {
+          rangeInput.value = seconds;
+        }
+
+        document.querySelectorAll('.duration-chip-btn').forEach(btn => {
+          const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
+          btn.classList.toggle('active', btnSec === seconds);
+        });
+
+        if (typeof showToast === 'function') {
+          showToast(`تم ضبط مدة مؤقت القراءة على ${seconds} ثانية`);
+        }
+      }
+
+      function initBriefTimerSettingsUI() {
+        const toggle = document.getElementById('settings-timer-toggle');
+        const durBlock = document.getElementById('settings-timer-duration-block');
+        const customInput = document.getElementById('settings-timer-custom-input');
+        const rangeInput = document.getElementById('settings-timer-range');
+        const display = document.getElementById('settings-timer-duration-display');
+        const isEnabled = isBriefTimerEnabled();
+        const duration = getBriefTimerDuration();
+
+        if (toggle) toggle.checked = isEnabled;
+        if (durBlock) {
+          if (isEnabled) durBlock.classList.remove('disabled');
+          else durBlock.classList.add('disabled');
+        }
+        if (display) {
+          display.textContent = `${duration} ثانية`;
+        }
+        if (customInput) {
+          customInput.value = duration;
+        }
+        if (rangeInput && duration >= 5 && duration <= 60) {
+          rangeInput.value = duration;
+        }
+        document.querySelectorAll('.duration-chip-btn').forEach(btn => {
+          const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
+          btn.classList.toggle('active', btnSec === duration);
+        });
+      }
+
+      function clearActiveBriefTimer() {
+        if (activeBriefTimerInterval) {
+          clearInterval(activeBriefTimerInterval);
+          activeBriefTimerInterval = null;
+        }
+        isBriefTimerPaused = false;
+      }
+
+      function renderBriefTimerWidgetHtml(initialSeconds) {
+        return `
+          <div class="brief-timer-widget" id="brief-timer-widget">
+            <div class="brief-timer-header-row">
+              <div class="brief-timer-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                <span>نبذة تمهيدية</span>
+              </div>
+              <div class="brief-timer-status" id="brief-timer-status">
+                <span class="brief-timer-status-dot" id="brief-timer-status-dot"></span>
+                <span id="brief-timer-status-text">وقت القراءة</span>
+              </div>
+            </div>
+
+            <div class="brief-timer-main">
+              <div class="brief-timer-info-col">
+                <div class="brief-timer-title">
+                  <span>تمهّل لفهم القاعدة ونطق الحرف</span>
+                </div>
+                <div class="brief-timer-desc">
+                  راجع النطق والقاعدة جيداً قبل بدء التمارين
+                </div>
+              </div>
+
+              <div class="brief-timer-circular-wrap">
+                <svg class="brief-timer-svg" viewBox="0 0 80 80" width="60" height="60" style="width:60px;height:60px;transform:rotate(-90deg);display:block;">
+                  <circle class="brief-timer-bg-circle" cx="40" cy="40" r="34" fill="none" stroke="#EADBCE" stroke-width="6"></circle>
+                  <circle class="brief-timer-progress-circle" id="brief-timer-progress-circle" cx="40" cy="40" r="34" fill="none" stroke="#B8892E" stroke-width="6" stroke-linecap="round" stroke-dasharray="213.628" stroke-dashoffset="0" style="transition:stroke-dashoffset 0.85s linear, stroke 0.3s ease;"></circle>
+                </svg>
+                <div class="brief-timer-center">
+                  <span class="brief-timer-num" id="brief-timer-seconds">${initialSeconds}</span>
+                  <span class="brief-timer-unit">ثانية</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="brief-timer-controls">
+              <button type="button" class="btn-brief-ctrl pause" id="btn-brief-pause" onclick="window.toggleBriefTimerPause && window.toggleBriefTimerPause()" title="إيقاف مؤقت للقراءة">
+                <svg id="brief-pause-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span id="brief-pause-text">إيقاف مؤقت</span>
+              </button>
+              <button type="button" class="btn-brief-ctrl skip" id="btn-brief-skip" onclick="window.skipBriefTimer && window.skipBriefTimer()" title="تخطي الوقت والبدء فوراً">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                  <line x1="19" y1="5" x2="19" y2="19"></line>
+                </svg>
+                <span>تخطي والبدء</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function updateBriefTimerUI(remaining, total) {
+        const secEl = document.getElementById('brief-timer-seconds');
+        const circleEl = document.getElementById('brief-timer-progress-circle');
+        if (secEl) {
+          secEl.textContent = String(remaining);
+          if (remaining <= 3) {
+            secEl.classList.add('ending');
+          } else {
+            secEl.classList.remove('ending');
+          }
+        }
+        if (circleEl) {
+          const circumference = 213.628;
+          const fraction = Math.max(0, remaining) / Math.max(1, total);
+          const offset = circumference * (1 - fraction);
+          circleEl.style.strokeDashoffset = String(offset);
+          if (remaining <= 3) {
+            circleEl.style.stroke = '#DC2626';
+          } else if (remaining <= Math.ceil(total / 2)) {
+            circleEl.style.stroke = '#EAB308';
+          } else {
+            circleEl.style.stroke = '#B8892E';
+          }
+        }
+      }
+
+      function toggleBriefTimerPause() {
+        if (!activeBriefTimerInterval) return;
+        isBriefTimerPaused = !isBriefTimerPaused;
+        const pauseBtn = document.getElementById('btn-brief-pause');
+        const pauseIcon = document.getElementById('brief-pause-icon');
+        const pauseText = document.getElementById('brief-pause-text');
+        const dot = document.getElementById('brief-timer-status-dot');
+        const statusText = document.getElementById('brief-timer-status-text');
+        const btnCheck = document.getElementById('btn-check-action');
+
+        if (isBriefTimerPaused) {
+          if (pauseText) pauseText.textContent = 'استئناف';
+          if (pauseIcon) {
+            pauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"></polygon>';
+          }
+          if (dot) {
+            dot.classList.add('paused');
+            dot.classList.remove('done');
+          }
+          if (statusText) statusText.textContent = 'المؤقت موقوف';
+          if (pauseBtn) pauseBtn.style.background = 'rgba(245, 158, 11, 0.18)';
+          if (btnCheck && btnCheck.disabled) {
+            btnCheck.textContent = `قراءة النبذة (موقوف ${briefTimerRemaining} ث)`;
+          }
+        } else {
+          if (pauseText) pauseText.textContent = 'إيقاف مؤقت';
+          if (pauseIcon) {
+            pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+          }
+          if (dot) {
+            dot.classList.remove('paused');
+          }
+          if (statusText) statusText.textContent = 'وقت القراءة';
+          if (pauseBtn) pauseBtn.style.background = '';
+          if (btnCheck && btnCheck.disabled) {
+            btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+          }
+        }
+      }
+
+      function skipBriefTimer() {
+        clearActiveBriefTimer();
+        const btnCheck = document.getElementById('btn-check-action');
+        onBriefTimerComplete(btnCheck, true);
+      }
+
+      function onBriefTimerComplete(btnCheck, isSkip = false) {
+        const secEl = document.getElementById('brief-timer-seconds');
+        const circleEl = document.getElementById('brief-timer-progress-circle');
+        const dot = document.getElementById('brief-timer-status-dot');
+        const statusText = document.getElementById('brief-timer-status-text');
+        const pauseBtn = document.getElementById('btn-brief-pause');
+        const skipBtn = document.getElementById('btn-brief-skip');
+
+        if (secEl) {
+          secEl.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#059669" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          secEl.classList.remove('ending');
+        }
+        if (circleEl) {
+          circleEl.style.strokeDashoffset = '0';
+          circleEl.style.stroke = '#059669';
+        }
+        if (dot) {
+          dot.className = 'brief-timer-status-dot done';
+        }
+        if (statusText) {
+          statusText.textContent = isSkip ? 'تم التخطي ✓' : 'اكتمل وقت القراءة ✓';
+          statusText.style.color = '#059669';
+          statusText.style.fontWeight = '800';
+        }
+        if (pauseBtn) pauseBtn.style.display = 'none';
+        if (skipBtn) skipBtn.style.display = 'none';
+
+        if (btnCheck) {
+          btnCheck.disabled = false;
+          const orig = btnCheck.getAttribute('data-original-text');
+          if (orig) btnCheck.textContent = orig;
+          btnCheck.classList.add('ready');
+          btnCheck.style.animation = 'briefFadeIn 0.4s ease-out';
+        }
+
+        try {
+          if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(40);
+          }
+        } catch (_) {}
+
+        if (isSkip && btnCheck) {
+          setTimeout(() => {
+            try { btnCheck.click(); } catch (_) {}
+          }, 80);
+        }
+      }
+
+      function startBriefTimerForChallenge(ch, btnCheck) {
+        clearActiveBriefTimer();
+
+        const mount = document.getElementById('brief-timer-mount');
+        if (!mount) {
+          if (btnCheck) {
+            btnCheck.disabled = false;
+            btnCheck.classList.add('ready');
+          }
+          return;
+        }
+
+        if (!isBriefTimerEnabled()) {
+          mount.innerHTML = '';
+          if (btnCheck) {
+            btnCheck.disabled = false;
+            btnCheck.classList.add('ready');
+          }
+          return;
+        }
+
+        const duration = getBriefTimerDuration();
+        briefTimerRemaining = duration;
+        briefTimerTotal = duration;
+        isBriefTimerPaused = false;
+
+        mount.innerHTML = renderBriefTimerWidgetHtml(duration);
+
+        if (btnCheck) {
+          btnCheck.disabled = true;
+          btnCheck.classList.remove('ready');
+          const originalText = (ch.type === 'letter_overview') ? 'التالي: نبذة عن الكلمة ←' : ((ch.type === 'word_overview' || ch.type === 'lesson_overview') ? 'ابدأ التمارين ←' : 'فهمت ومتابعة');
+          btnCheck.setAttribute('data-original-text', originalText);
+          btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+        }
+
+        updateBriefTimerUI(briefTimerRemaining, briefTimerTotal);
+
+        activeBriefTimerInterval = setInterval(() => {
+          if (isBriefTimerPaused) return;
+
+          briefTimerRemaining--;
+
+          if (briefTimerRemaining <= 0) {
+            clearActiveBriefTimer();
+            onBriefTimerComplete(btnCheck, false);
+          } else {
+            updateBriefTimerUI(briefTimerRemaining, briefTimerTotal);
+            if (btnCheck && btnCheck.disabled) {
+              btnCheck.textContent = `قراءة النبذة (${briefTimerRemaining} ث)`;
+            }
+          }
+        }, 1000);
+      }
+
+      window.isBriefTimerEnabled = isBriefTimerEnabled;
+      window.getBriefTimerDuration = getBriefTimerDuration;
+      window.handleBriefTimerToggleChange = handleBriefTimerToggleChange;
+      window.setBriefTimerDuration = setBriefTimerDuration;
+      window.toggleCustomDurationPanel = function() {};
+      window.stepBriefTimerDuration = stepBriefTimerDuration;
+      window.handleCustomDurationInput = handleCustomDurationInput;
+      window.initBriefTimerSettingsUI = initBriefTimerSettingsUI;
+      window.toggleBriefTimerPause = toggleBriefTimerPause;
+      window.skipBriefTimer = skipBriefTimer;
+      window.clearActiveBriefTimer = clearActiveBriefTimer;
+      window.startBriefTimerForChallenge = startBriefTimerForChallenge;
+      try { initBriefTimerSettingsUI(); } catch (_) {}
+
+      function skipDirectlyToExercises() {
+        if (typeof clearActiveBriefTimer === 'function') {
+          clearActiveBriefTimer();
+        }
+        if (!Array.isArray(currentChallenges) || currentChallenges.length === 0) return;
+        const firstExerciseIdx = currentChallenges.findIndex(c => c && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'text_view' && c.type !== 'image_view');
+        if (firstExerciseIdx !== -1 && firstExerciseIdx > currentChallengeIndex) {
+          currentChallengeIndex = firstExerciseIdx;
+          loadChallenge(currentChallengeIndex);
+        } else if (currentChallengeIndex < currentChallenges.length - 1) {
+          currentChallengeIndex++;
+          loadChallenge(currentChallengeIndex);
+        }
+      }
+      window.skipDirectlyToExercises = skipDirectlyToExercises;
 
       function loadChallenge(index) {
         if (typeof cleanupTraceOrientationListener === 'function') {
@@ -15113,16 +16036,19 @@
         const ch = currentChallenges[index];
         renderChallengeContent(ch);
 
-        if (ch && (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') && btnCheck) {
+        if (ch && (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview') && btnCheck) {
           btnCheck.disabled = false;
           if (ch.type === 'letter_overview') {
             btnCheck.textContent = 'التالي: نبذة عن الكلمة ←';
-          } else if (ch.type === 'word_overview') {
+          } else if (ch.type === 'word_overview' || ch.type === 'lesson_overview') {
             btnCheck.textContent = 'ابدأ التمارين ←';
           } else {
             btnCheck.textContent = 'فهمت ومتابعة';
           }
           btnCheck.classList.add('ready');
+          if (typeof startBriefTimerForChallenge === 'function' && (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview')) {
+            startBriefTimerForChallenge(ch, btnCheck);
+          }
         }
       }
 
@@ -15142,6 +16068,12 @@
         } else if (ch.type === 'word_overview') {
           if (typeof window.renderWordOnlyCardHtml === 'function') {
             html += window.renderWordOnlyCardHtml(ch);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
+            html += window.renderLetterOverviewCardHtml(ch);
+          }
+        } else if (ch.type === 'lesson_overview') {
+          if (typeof window.renderComprehensiveLessonOverviewHtml === 'function') {
+            html += window.renderComprehensiveLessonOverviewHtml(ch, selectedLesson);
           } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
             html += window.renderLetterOverviewCardHtml(ch);
           }
@@ -15180,7 +16112,9 @@
             ` : ''}
           `;
         } else if (ch.type === 'text_view') {
-          if (typeof window.renderLetterOverviewCardHtml === 'function') {
+          if (typeof window.renderComprehensiveLessonOverviewHtml === 'function' && window.getLessonOverviewData && window.getLessonOverviewData(selectedLesson?.id || ch.lesson_id)) {
+            html += window.renderComprehensiveLessonOverviewHtml(ch, selectedLesson);
+          } else if (typeof window.renderLetterOverviewCardHtml === 'function') {
             html += window.renderLetterOverviewCardHtml(ch);
           } else {
             html += `
@@ -16127,7 +17061,7 @@
         const ch = currentChallenges[currentChallengeIndex];
         let isCorrect = false;
 
-        if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview') {
+        if (ch.type === 'image_view' || ch.type === 'text_view' || ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview') {
           isCorrect = true;
         } else if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
           const selectedOpt = ch.options ? ch.options[currentSelection] : null;
@@ -16858,7 +17792,7 @@
         const uid = getAuthUserId();
         // ضمان تطابق الـ XP المكتسب بنسبة 100% مع الرقم المعروض والمضبوط من الداشبورد
         const earnableCount = (selectedLesson && Array.isArray(selectedLesson.challenges))
-          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'image_view').length
+          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length
           : (parseInt(selectedLesson?.xp_reward, 10) || 1);
         const fullConfiguredXp = Math.max(1, earnableCount);
         const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;
