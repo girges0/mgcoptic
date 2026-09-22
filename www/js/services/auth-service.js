@@ -2012,10 +2012,11 @@
       }
     })();
 
-    // استماع لرفع الصورة الشخصية إلى Supabase Storage
+    // استماع لرفع الصورة الشخصية إلى Supabase Storage مع مؤشر تحميل تفاعلي
     document.addEventListener('DOMContentLoaded', () => {
       const avatarInput = document.getElementById('settings-avatar-input');
-      if (avatarInput) {
+      if (avatarInput && !avatarInput.dataset.wired) {
+        avatarInput.dataset.wired = 'true';
         avatarInput.addEventListener('change', async function (e) {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
@@ -2023,8 +2024,32 @@
           if (!currentAuthUser) {
             openAuthModal('signin');
             if (typeof mgAlert === 'function') mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
+            avatarInput.value = '';
             return;
           }
+
+          if (file.type && !file.type.startsWith('image/')) {
+            if (typeof showToast === 'function') showToast('يرجى اختيار ملف صورة صالح (PNG, JPG, WebP)');
+            avatarInput.value = '';
+            return;
+          }
+
+          // تفعيل مؤشر التحميل الأنيق فوراً
+          if (typeof setAvatarUploadingState === 'function') setAvatarUploadingState(true);
+          if (typeof showToast === 'function') showToast('جارٍ رفع الصورة الشخصية...');
+
+          // عرض المعاينة المحلية فوراً تحت مؤشر التحميل
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const sImg = document.getElementById('settings-avatar-preview');
+            const sFallback = document.getElementById('settings-avatar-fallback');
+            if (sImg && sFallback) {
+              sImg.src = evt.target.result;
+              sImg.style.display = 'block';
+              sFallback.style.display = 'none';
+            }
+          };
+          reader.readAsDataURL(file);
 
           try {
             const fileExt = file.name.split('.').pop() || 'jpg';
@@ -2044,15 +2069,18 @@
             localStorage.setItem('mg_coptic_user.avatar_url', publicUrl);
             if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
             if (typeof renderRealLeaderboard === 'function') renderRealLeaderboard();
+            if (typeof showToast === 'function') showToast('تم رفع وتحديث صورتك الشخصية بنجاح');
           } catch (uploadErr) {
             console.warn('Storage upload error, using local fallback:', uploadErr);
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-              localStorage.setItem('mg_coptic_user.avatar_url', evt.target.result);
-              if (currentAuthUser) currentAuthUser.avatar_url = evt.target.result;
+            const localDataUrl = document.getElementById('settings-avatar-preview')?.src;
+            if (localDataUrl && localDataUrl.startsWith('data:')) {
+              localStorage.setItem('mg_coptic_user.avatar_url', localDataUrl);
+              if (currentAuthUser) currentAuthUser.avatar_url = localDataUrl;
               if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
-            };
-            reader.readAsDataURL(file);
+            }
+            if (typeof showToast === 'function') showToast('تم حفظ الصورة محلياً بنجاح');
+          } finally {
+            if (typeof setAvatarUploadingState === 'function') setAvatarUploadingState(false);
           }
         });
       }

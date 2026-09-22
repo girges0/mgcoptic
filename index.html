@@ -4887,6 +4887,7 @@
     }
 
     .avatar-preview-box {
+      position: relative;
       width: 82px;
       height: 82px;
       border-radius: 50%;
@@ -4906,6 +4907,61 @@
     .avatar-preview-box:hover {
       transform: scale(1.06);
       box-shadow: 0 5px 20px rgba(168, 130, 58, 0.28);
+    }
+
+    .avatar-loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(35, 8, 18, 0.82);
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      z-index: 10;
+      animation: mgAvatarFadeIn 0.22s ease forwards;
+    }
+
+    .avatar-loading-spinner {
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid rgba(255, 213, 107, 0.28);
+      border-top-color: #FFD56B;
+      border-radius: 50%;
+      animation: mgAvatarSpin 0.7s linear infinite;
+    }
+
+    .avatar-loading-text {
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #FFFDF9;
+      font-family: var(--font-display);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      user-select: none;
+    }
+
+    .btn-spinner-icon {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      display: inline-block;
+      animation: mgAvatarSpin 0.7s linear infinite;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    @keyframes mgAvatarSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes mgAvatarFadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .avatar-actions {
@@ -10735,6 +10791,11 @@
                 style="background:linear-gradient(145deg, #6B1530 0%, #4A0E21 100%); border-radius:50%; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">
                 <span style="font-size:2.2rem;font-weight:900;line-height:1;color:#FFFFFF;">Ⲁ</span>
               </div>
+              <!-- مؤشر التحميل الأنيق عند رفع الصورة -->
+              <div id="settings-avatar-loading" class="avatar-loading-overlay" style="display:none;" aria-live="polite">
+                <div class="avatar-loading-spinner"></div>
+                <span class="avatar-loading-text">جارٍ الرفع...</span>
+              </div>
             </div>
             <div class="avatar-actions">
               <input type="file" id="settings-avatar-input" accept="image/*" style="display:none;">
@@ -13535,19 +13596,88 @@
       renderRealLeaderboard();
     }
 
-    // استماع لرفع الصورة الشخصية إلى Supabase Storage
+    // إدارة حالة مؤشر التحميل عند رفع الصورة الشخصية
+    function setAvatarUploadingState(isUploading) {
+      const loadingOverlay = document.getElementById('settings-avatar-loading');
+      const btnUpload = document.getElementById('btn-upload-avatar');
+      const btnRemove = document.getElementById('btn-remove-avatar');
+      const avatarInput = document.getElementById('settings-avatar-input');
+
+      if (loadingOverlay) {
+        loadingOverlay.style.display = isUploading ? 'flex' : 'none';
+      }
+
+      if (btnUpload) {
+        btnUpload.disabled = isUploading;
+        if (isUploading) {
+          btnUpload.classList.add('loading');
+          btnUpload.innerHTML = `
+            <span class="btn-spinner-icon" aria-hidden="true"></span>
+            <span>جارٍ الرفع...</span>
+          `;
+        } else {
+          btnUpload.classList.remove('loading');
+          btnUpload.innerHTML = `
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <span>تغيير الصورة</span>
+          `;
+        }
+      }
+
+      if (btnRemove) {
+        btnRemove.disabled = isUploading;
+      }
+
+      if (!isUploading && avatarInput) {
+        avatarInput.value = '';
+      }
+    }
+    window.setAvatarUploadingState = setAvatarUploadingState;
+
+    // استماع لرفع الصورة الشخصية إلى Supabase Storage مع مؤشر تحميل تفاعلي
     document.addEventListener('DOMContentLoaded', () => {
       const avatarInput = document.getElementById('settings-avatar-input');
-      if (avatarInput) {
+      if (avatarInput && !avatarInput.dataset.wired) {
+        avatarInput.dataset.wired = 'true';
         avatarInput.addEventListener('change', async function (e) {
           const file = e.target.files && e.target.files[0];
           if (!file) return;
 
           if (!currentAuthUser) {
             openAuthModal('signin');
-            mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
+            if (typeof mgAlert === 'function') {
+              mgAlert('تسجيل دخول مطلوب', 'يجب تسجيل الدخول أولاً لرفع وتخزين الصورة الشخصية سحابياً', 'info');
+            }
+            avatarInput.value = '';
             return;
           }
+
+          if (file.type && !file.type.startsWith('image/')) {
+            if (typeof showToast === 'function') showToast('يرجى اختيار ملف صورة صالح (PNG, JPG, WebP)');
+            avatarInput.value = '';
+            return;
+          }
+
+          // تفعيل مؤشر التحميل الأنيق فوراً
+          setAvatarUploadingState(true);
+          if (typeof showToast === 'function') showToast('جارٍ رفع الصورة الشخصية...');
+
+          // عرض المعاينة المحلية فوراً تحت مؤشر التحميل لاستجابة بصرية فائقة السرعة
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const sImg = document.getElementById('settings-avatar-preview');
+            const sFallback = document.getElementById('settings-avatar-fallback');
+            if (sImg && sFallback) {
+              sImg.src = evt.target.result;
+              sImg.style.display = 'block';
+              sFallback.style.display = 'none';
+            }
+          };
+          reader.readAsDataURL(file);
 
           try {
             const fileExt = file.name.split('.').pop() || 'jpg';
@@ -13566,16 +13696,19 @@
             localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
             localStorage.setItem('mg_coptic_user.avatar_url', publicUrl);
             syncUserProfileUI();
-            renderRealLeaderboard();
+            if (typeof renderRealLeaderboard === 'function') renderRealLeaderboard();
+            if (typeof showToast === 'function') showToast('تم رفع وتحديث صورتك الشخصية بنجاح');
           } catch (uploadErr) {
             console.warn('Storage upload error, using local fallback:', uploadErr);
-            const reader = new FileReader();
-            reader.onload = function (evt) {
-              localStorage.setItem('mg_coptic_user.avatar_url', evt.target.result);
-              if (currentAuthUser) currentAuthUser.avatar_url = evt.target.result;
+            const localDataUrl = document.getElementById('settings-avatar-preview')?.src;
+            if (localDataUrl && localDataUrl.startsWith('data:')) {
+              localStorage.setItem('mg_coptic_user.avatar_url', localDataUrl);
+              if (currentAuthUser) currentAuthUser.avatar_url = localDataUrl;
               syncUserProfileUI();
-            };
-            reader.readAsDataURL(file);
+            }
+            if (typeof showToast === 'function') showToast('تم حفظ الصورة محلياً بنجاح');
+          } finally {
+            setAvatarUploadingState(false);
           }
         });
       }
