@@ -601,11 +601,24 @@
           try {
             createdUser = (signData && signData.user) || (await sb.auth.getUser()).data?.user;
             if (createdUser) {
-              const fullProfile = { full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType };
-              const { error: pErr } = await sb.from('users').update(fullProfile).eq('id', createdUser.id);
+              const fullProfile = {
+                id: createdUser.id,
+                full_name: fullName,
+                password: password,
+                age: age,
+                phone: userPhone,
+                auth_type: authType,
+                role: 'student'
+              };
+              const { error: pErr } = await sb.from('users').upsert(fullProfile, { onConflict: 'id' });
               if (pErr) {
-                await sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', createdUser.id);
+                console.warn('First upsert attempt:', pErr);
+                await sb.from('users').upsert({ id: createdUser.id, full_name: fullName, password: password, age: age }, { onConflict: 'id' });
               }
+              // مزامنة الميتاداتا في Auth للتأكيد
+              try {
+                await sb.auth.updateUser({ data: { full_name: fullName, first_name: firstName, father_name: fatherName, phone: userPhone } });
+              } catch (_) {}
             }
           } catch (e) {
             console.warn('Password profile sync notice:', e);
@@ -655,8 +668,8 @@
           // مزامنة البيانات وتحديث كلمة المرور بالخلفية دون حجب أو تأخير النقل اللحظي
           if (targetUser) {
             try {
-              sb.from('users').update({ full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType }).eq('id', targetUser.id).then(() => {}, () => {
-                sb.from('users').update({ full_name: fullName, password: password, age: age }).eq('id', targetUser.id).catch(() => {});
+              sb.from('users').upsert({ id: targetUser.id, full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType }, { onConflict: 'id' }).then(() => {}, () => {
+                sb.from('users').upsert({ id: targetUser.id, full_name: fullName, password: password, age: age }, { onConflict: 'id' }).catch(() => {});
               });
             } catch (_) {}
           }
@@ -1189,8 +1202,14 @@
       }
 
       try {
-        const { error } = await sb.from('users').update({ full_name: cleanName }).eq('id', currentAuthUser.id);
-        if (error) throw error;
+        const { error } = await sb.from('users').upsert({ id: currentAuthUser.id, full_name: cleanName }, { onConflict: 'id' });
+        if (error) {
+          // fallback to update
+          await sb.from('users').update({ full_name: cleanName }).eq('id', currentAuthUser.id);
+        }
+        try {
+          await sb.auth.updateUser({ data: { full_name: cleanName } });
+        } catch (_) {}
         currentAuthUser.full_name = cleanName;
         localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
         if (typeof syncUserProfileUI === 'function') {

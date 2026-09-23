@@ -1334,7 +1334,10 @@
         const modalCount = document.getElementById('modal-lesson-count');
         const lessonModal = document.getElementById('lesson-modal');
 
-        const isAlreadyDone = (activeLessonProgress && activeLessonProgress[String(lessonCopy.id)] && activeLessonProgress[String(lessonCopy.id)].status === 'completed');
+        const isAlreadyDone = Boolean(activeLessonProgress && (
+          (activeLessonProgress[String(lessonCopy.id)] && activeLessonProgress[String(lessonCopy.id)].status === 'completed') ||
+          (baseLessonId && activeLessonProgress[baseLessonId] && activeLessonProgress[baseLessonId].status === 'completed')
+        ));
         if (modalBadge) {
           let badgeText = '';
           const copticMatches = (lessonCopy.title || '').match(/[\u2C80-\u2CFF\u0370-\u03FF]+/g);
@@ -1374,7 +1377,9 @@
             modalDesc.textContent = foundUnit.description ? `تدريبات وتمارين على: ${foundUnit.description}` : 'أجب عن الأسئلة بدقة لكسب النقاط وفتح المستوى التالي.';
           }
         }
-        if (modalXp) modalXp.textContent = `+${lessonCopy.xp_reward} XP`;
+        if (modalXp) modalXp.textContent = isAlreadyDone ? 'مراجعة (0 XP)' : `+${lessonCopy.xp_reward} XP`;
+        const btnModalStart = document.getElementById('btn-modal-start');
+        if (btnModalStart) btnModalStart.textContent = isAlreadyDone ? 'مراجعة الدرس' : 'ابدأ الدرس';
         const count = lessonCopy.challenges.length;
         if (modalCount) {
           modalCount.textContent = count === 0 ? 'لا توجد تمارين بعد' : (count === 1 ? 'تمرين واحد' : (count === 2 ? 'تمرينان' : (count >= 3 && count <= 10 ? `${count} تمارين` : `${count} تمرين`)));
@@ -1675,8 +1680,9 @@
         } catch(e) {}
 
         // فحص ما إذا كان المستوى قد تم إكماله مسبقاً (وضع الإعادة/المراجعة)
-        const currentProg = (activeLessonProgress && activeLessonProgress[String(lesson.id)]) || {};
-        isReplayingLesson = (currentProg.status === 'completed');
+        const baseLId = String(lesson.id).replace(/_[pc]$/, '');
+        const currentProg = (activeLessonProgress && (activeLessonProgress[String(lesson.id)] || activeLessonProgress[baseLId])) || {};
+        isReplayingLesson = Boolean(currentProg.status === 'completed');
 
         // تهيئة قائمة التمارين المُجاب عليها للجلسة الحالية
         sessionAnsweredChallenges = new Set();
@@ -3986,9 +3992,9 @@
 
         // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).then(res => {
-            if (res && res.added_xp != null && vXp) {
-              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${res.added_xp} XP`;
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, isReplayingLesson ? 0 : earnedXp).then(res => {
+            if (vXp) {
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${(res && res.added_xp != null) ? res.added_xp : earnedXp} XP`;
             }
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();

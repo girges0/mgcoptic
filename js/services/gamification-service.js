@@ -1788,7 +1788,11 @@ class GamificationService {
       if(raw) map = JSON.parse(raw);
     } catch(e){}
 
-    const wasAlreadyCompleted = map[String(lessonId)] && map[String(lessonId)].status === 'completed';
+    const baseLessonKey = String(lessonId).replace(/_[pc]$/, '');
+    const wasAlreadyCompleted = Boolean(
+      (map[String(lessonId)] && map[String(lessonId)].status === 'completed') ||
+      (map[baseLessonKey] && map[baseLessonKey].status === 'completed')
+    );
     map[String(lessonId)] = { status: 'completed', score: score };
 
     // إذا كانت محطة تحدي _c اكتملت، نتأكد أن الدرس الأساسي والمحطة _p مسجلان كمكتملين
@@ -1842,12 +1846,13 @@ class GamificationService {
           if(rpcData.streak_days != null) curProg.streak_days = Number(rpcData.streak_days);
           this.saveProgressLocal(curProg, uid);
 
-          map.added_xp = Number(rpcData.added_xp || 0);
+          const awardedXp = wasAlreadyCompleted ? 0 : Number(rpcData.added_xp || 0);
+          map.added_xp = awardedXp;
           map.points = curProg.points;
           map.hearts = curProg.hearts;
 
-          if(rpcData.added_xp > 0){
-            this.recordTodayEarnedXP(uid, rpcData.added_xp);
+          if(awardedXp > 0){
+            this.recordTodayEarnedXP(uid, awardedXp);
           }
         } else if(rpcErr){
           console.warn('complete_lesson_reward RPC error:', rpcErr);
@@ -1873,7 +1878,8 @@ class GamificationService {
 
     // احتياطي غير متصل (Offline fallback) فقط في حال تعذر الاتصال بالسيرفر
     if(!serverHandled){
-      const fallbackXp = parseInt(xpReward, 10) || 20;
+      const rawReward = (xpReward !== undefined && xpReward !== null) ? parseInt(xpReward, 10) : 20;
+      const fallbackXp = wasAlreadyCompleted ? 0 : (isNaN(rawReward) ? 0 : Math.max(0, rawReward));
       const curProg = this.getProgressLocal(uid) || {};
       if(fallbackXp > 0){
         curProg.points = (curProg.points || 0) + fallbackXp;
@@ -1881,6 +1887,10 @@ class GamificationService {
         this.saveProgressLocal(curProg, uid);
         this.recordTodayEarnedXP(uid, fallbackXp);
       }
+      map.added_xp = fallbackXp;
+      map.points = curProg.points || 0;
+      map.hearts = curProg.hearts || 5;
+
       if(sbClient && uid && !isNaN(numLessonId)){
         sbClient.from('user_lesson_progress').upsert({
           user_id: uid,
@@ -1890,10 +1900,12 @@ class GamificationService {
           updated_at: new Date().toISOString()
         }).then(()=>{}, ()=>{});
 
-        sbClient.from('user_progress').update({
-          points: curProg.points || 0,
-          last_active_date: new Date().toISOString().split('T')[0]
-        }).eq('user_id', uid).then(()=>{}, ()=>{});
+        if(!wasAlreadyCompleted && fallbackXp > 0){
+          sbClient.from('user_progress').update({
+            points: curProg.points || 0,
+            last_active_date: new Date().toISOString().split('T')[0]
+          }).eq('user_id', uid).then(()=>{}, ()=>{});
+        }
       }
     }
 

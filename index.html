@@ -12645,10 +12645,33 @@
             }
           }
 
+          // استخراج الاسم الحقيقي للطالب من مصادر متعددة وتحديثه في قاعدة البيانات تلقائياً
+          const meta = session.user.user_metadata || {};
+          let resolvedName = (profile && profile.full_name) ? profile.full_name.trim() : '';
+          const genericNames = ['مستخدم قبطي', 'طالب قبطي', 'بطل قبطي', ''];
+          if (!resolvedName || genericNames.includes(resolvedName)) {
+            const metaName = (meta.full_name || meta.name || meta.display_name || '').trim();
+            const compositeName = ((meta.first_name || '') + ' ' + (meta.father_name || '')).trim();
+            const emailPrefix = session.user.email ? session.user.email.split('@')[0] : '';
+            resolvedName = metaName || compositeName || emailPrefix || 'طالب قبطي';
+            
+            // مزامنة فورية لقاعدة البيانات public.users لضمان حفظ الاسم وظهوره بالداشبورد
+            (async () => {
+              try {
+                await sb.from('users').upsert({
+                  id: session.user.id,
+                  email: session.user.email,
+                  full_name: resolvedName,
+                  role: (profile && profile.role) || 'student'
+                }, { onConflict: 'id' });
+              } catch (_) {}
+            })();
+          }
+
           currentAuthUser = {
             id: session.user.id,
             email: session.user.email,
-            full_name: (profile && profile.full_name) ? profile.full_name : (session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'بطل قبطي'),
+            full_name: resolvedName,
             avatar_url: (profile && profile.avatar_url) ? profile.avatar_url : (localStorage.getItem('mg_coptic_user.avatar_url') || ''),
             role: (profile && profile.role) ? profile.role : 'student'
           };
@@ -13354,8 +13377,13 @@
       }
 
       try {
-        const { error } = await sb.from('users').update({ full_name: cleanName }).eq('id', currentAuthUser.id);
-        if (error) throw error;
+        const { error } = await sb.from('users').upsert({ id: currentAuthUser.id, full_name: cleanName }, { onConflict: 'id' });
+        if (error) {
+          await sb.from('users').update({ full_name: cleanName }).eq('id', currentAuthUser.id);
+        }
+        try {
+          await sb.auth.updateUser({ data: { full_name: cleanName } });
+        } catch (_) {}
         currentAuthUser.full_name = cleanName;
         localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
         syncUserProfileUI();
@@ -15355,7 +15383,10 @@
         const modalCount = document.getElementById('modal-lesson-count');
         const lessonModal = document.getElementById('lesson-modal');
 
-        const isAlreadyDone = (activeLessonProgress && activeLessonProgress[String(lessonCopy.id)] && activeLessonProgress[String(lessonCopy.id)].status === 'completed');
+        const isAlreadyDone = Boolean(activeLessonProgress && (
+          (activeLessonProgress[String(lessonCopy.id)] && activeLessonProgress[String(lessonCopy.id)].status === 'completed') ||
+          (baseLessonId && activeLessonProgress[baseLessonId] && activeLessonProgress[baseLessonId].status === 'completed')
+        ));
         if (modalBadge) {
           let badgeText = '';
           const copticMatches = (lessonCopy.title || '').match(/[\u2C80-\u2CFF\u0370-\u03FF]+/g);
@@ -15395,7 +15426,9 @@
             modalDesc.textContent = foundUnit.description ? `تدريبات وتمارين على: ${foundUnit.description}` : 'أجب عن الأسئلة بدقة لكسب النقاط وفتح المستوى التالي.';
           }
         }
-        if (modalXp) modalXp.textContent = `+${lessonCopy.xp_reward} XP`;
+        if (modalXp) modalXp.textContent = isAlreadyDone ? 'مراجعة (0 XP)' : `+${lessonCopy.xp_reward} XP`;
+        const btnModalStart = document.getElementById('btn-modal-start');
+        if (btnModalStart) btnModalStart.textContent = isAlreadyDone ? 'مراجعة الدرس' : 'ابدأ الدرس';
         const count = lessonCopy.challenges.length;
         if (modalCount) {
           modalCount.textContent = count === 0 ? 'لا توجد تمارين بعد' : (count === 1 ? 'تمرين واحد' : (count === 2 ? 'تمرينان' : (count >= 3 && count <= 10 ? `${count} تمارين` : `${count} تمرين`)));
@@ -15705,8 +15738,9 @@
         } catch(e) {}
 
         // فحص ما إذا كان المستوى قد تم إكماله مسبقاً (وضع الإعادة/المراجعة)
-        const currentProg = (activeLessonProgress && activeLessonProgress[String(lesson.id)]) || {};
-        isReplayingLesson = (currentProg.status === 'completed');
+        const baseLId = String(lesson.id).replace(/_[pc]$/, '');
+        const currentProg = (activeLessonProgress && (activeLessonProgress[String(lesson.id)] || activeLessonProgress[baseLId])) || {};
+        isReplayingLesson = Boolean(currentProg.status === 'completed');
 
         // تهيئة قائمة التمارين المُجاب عليها للجلسة الحالية
         sessionAnsweredChallenges = new Set();
@@ -17952,9 +17986,9 @@
 
         // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, earnedXp).then(res => {
-            if (res && res.added_xp != null && vXp) {
-              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${res.added_xp} XP`;
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, isReplayingLesson ? 0 : earnedXp).then(res => {
+            if (vXp) {
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${(res && res.added_xp != null) ? res.added_xp : earnedXp} XP`;
             }
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();

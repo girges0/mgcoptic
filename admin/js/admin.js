@@ -2963,9 +2963,23 @@ async function loadUsers(isSilent = false) {
         }
       }
 
+      // استخراج الاسم الدقيق للطالب مع تجنب الأسماء الافتراضية
+      const rawMeta = u.raw_user_meta_data || u.user_metadata || {};
+      let resolvedStudentName = (u.full_name || '').trim();
+      const genericNames = ['مستخدم قبطي', 'طالب قبطي', 'بطل قبطي', ''];
+      if (!resolvedStudentName || genericNames.includes(resolvedStudentName)) {
+        const metaName = (rawMeta.full_name || rawMeta.name || rawMeta.display_name || '').trim();
+        const compositeName = ((rawMeta.first_name || '') + ' ' + (rawMeta.father_name || '')).trim();
+        let fallbackEmailName = '';
+        if (u.email && !u.email.startsWith('phone_')) {
+          fallbackEmailName = u.email.split('@')[0];
+        }
+        resolvedStudentName = metaName || compositeName || fallbackEmailName || (studentPhone ? ('طالب (' + studentPhone + ')') : 'طالب قبطي');
+      }
+
       return {
         id: u.id,
-        full_name: u.full_name || 'طالب قبطي',
+        full_name: resolvedStudentName,
         email: u.email || 'بدون بريد',
         phone: studentPhone,
         auth_type: studentAuthType,
@@ -3707,6 +3721,59 @@ async function promptSetStudentPasswordModal() {
   }
 }
 window.promptSetStudentPasswordModal = promptSetStudentPasswordModal;
+
+async function editStudentNameModal() {
+  const s = activeSelectedStudent;
+  if (!s) return;
+
+  const { value: newName } = await Swal.fire({
+    title: 'تعديل اسم الطالب',
+    text: `الاسم الحالي: ${s.full_name}`,
+    input: 'text',
+    inputValue: s.full_name || '',
+    showCancelButton: true,
+    confirmButtonText: 'حفظ الاسم في قاعدة البيانات',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#8C2430',
+    inputValidator: (val) => {
+      if (!val || !val.trim()) return 'يرجى إدخال اسم صحيح';
+      if (val.trim().length < 2) return 'الاسم قصير جداً';
+    }
+  });
+
+  if (!newName || newName.trim() === s.full_name) return;
+
+  const cleanName = newName.trim();
+  try {
+    const { error } = await sb.from('users').upsert({ id: s.id, full_name: cleanName }, { onConflict: 'id' });
+    if (error) {
+      await sb.from('users').update({ full_name: cleanName }).eq('id', s.id);
+    }
+
+    s.full_name = cleanName;
+    const nameEl = document.getElementById('m-student-name');
+    if (nameEl) nameEl.textContent = cleanName;
+
+    // تحديث في الجدول
+    filterStudentsTable();
+
+    Swal.fire({
+      icon: 'success',
+      title: 'تم حفظ الاسم',
+      text: `تم تحديث اسم الطالب بنجاح في قاعدة البيانات إلى: ${cleanName}`,
+      timer: 2000,
+      showConfirmButton: false
+    });
+  } catch (err) {
+    console.error('Error updating student name:', err);
+    Swal.fire({
+      icon: 'error',
+      title: 'تعذر حفظ الاسم',
+      text: err.message || 'حدث خطأ أثناء تحديث الاسم في قاعدة البيانات'
+    });
+  }
+}
+window.editStudentNameModal = editStudentNameModal;
 
 function closeStudentModal() {
   const modal = document.getElementById('modal-student-details');
