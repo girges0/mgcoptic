@@ -1026,11 +1026,18 @@
               return;
             }
 
-            // يلزم وجود قلب واحد على الأقل لدخول أي تمرين
+            // فحص ما إذا كان الدرس مكتملاً مسبقاً (وضع المراجعة لا يشترط قلوباً)
+            const baseLessonId = String(lessonId).replace(/_[pc]$/, '');
+            const isLessonCompleted = Boolean(activeLessonProgress && (
+              (activeLessonProgress[String(lessonId)] && activeLessonProgress[String(lessonId)].status === 'completed') ||
+              (baseLessonId && activeLessonProgress[baseLessonId] && activeLessonProgress[baseLessonId].status === 'completed')
+            ));
+
+            // يلزم وجود قلب واحد على الأقل لدخول أي تمرين إلا في وضع المراجعة
             const uid = getAuthUserId();
             const prog = (game.getProgressLocal ? game.getProgressLocal(uid) : null) || {};
             const currentHearts = Number(prog.hearts ?? 5);
-            if (currentHearts < 1) {
+            if (currentHearts < 1 && !isLessonCompleted) {
               if (game.sound) game.sound.playWrong();
               showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
               handleOutOfHearts();
@@ -1274,17 +1281,6 @@
       }
 
       window.openLessonDetails = function(lessonId) {
-        // التحقق من توفر قلب واحد على الأقل قبل فتح تفاصيل التمرين
-        const uid = getAuthUserId();
-        const prog = (game.getProgressLocal ? game.getProgressLocal(uid) : null) || {};
-        const currentHearts = Number(prog.hearts ?? 5);
-        if (currentHearts < 1) {
-          if (game.sound) game.sound.playWrong();
-          showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
-          handleOutOfHearts();
-          return;
-        }
-
         let foundLesson = null;
         let foundUnit = null;
 
@@ -1293,6 +1289,23 @@
         const isPractice = String(lessonId).endsWith('_p');
         const isChallenge = String(lessonId).endsWith('_c');
         const baseLessonId = String(lessonId).replace(/_[pc]$/, '');
+
+        // فحص ما إذا كان الدرس مكتملاً مسبقاً (وضع المراجعة)
+        const isLessonDone = Boolean(activeLessonProgress && (
+          (activeLessonProgress[String(lessonId)] && activeLessonProgress[String(lessonId)].status === 'completed') ||
+          (baseLessonId && activeLessonProgress[baseLessonId] && activeLessonProgress[baseLessonId].status === 'completed')
+        ));
+
+        // التحقق من توفر قلب واحد على الأقل قبل فتح تفاصيل التمرين (إلا إذا كان مراجعة)
+        const uid = getAuthUserId();
+        const prog = (game.getProgressLocal ? game.getProgressLocal(uid) : null) || {};
+        const currentHearts = Number(prog.hearts ?? 5);
+        if (currentHearts < 1 && !isLessonDone) {
+          if (game.sound) game.sound.playWrong();
+          showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
+          handleOutOfHearts();
+          return;
+        }
 
         activeCurriculum.units.forEach(u => {
           (u.lessons || []).forEach(l => {
@@ -1416,6 +1429,14 @@
               showToast('هذا الدرس قيد الإعداد ولا يحتوي على تمارين حالياً.');
               return;
             }
+
+            // فحص ما إذا كان الدرس مكتملاً مسبقاً (وضع المراجعة لا يشترط قلوباً)
+            const baseLessonId = String(selectedLesson.id).replace(/_[pc]$/, '');
+            const isLessonDone = Boolean(activeLessonProgress && (
+              (activeLessonProgress[String(selectedLesson.id)] && activeLessonProgress[String(selectedLesson.id)].status === 'completed') ||
+              (baseLessonId && activeLessonProgress[baseLessonId] && activeLessonProgress[baseLessonId].status === 'completed')
+            ));
+
             const uid = getAuthUserId();
             let prog = {};
             if (game.getProgress) {
@@ -1424,7 +1445,7 @@
               prog = game.getProgressLocal(uid) || {};
             }
             const hearts = Number(prog.hearts ?? 5);
-            if (hearts < 1) {
+            if (hearts < 1 && !isLessonDone) {
               lessonModal.style.display = 'none';
               currentRunnerHearts = 0;
               if (game.sound) game.sound.playWrong();
@@ -1507,31 +1528,20 @@
             if (btnCheckAction.disabled) return;
             const currentCh = currentChallenges[currentChallengeIndex];
 
-            // للشاشات التمهيدية (نبذة الحرف ونبذة الكلمة)، انتقال فوري ومريح للدارس بنقرة واحدة
+            // للشاشات التمهيدية (نبذة الحرف ونبذة الكلمة)، انتقال فوري ومريح للدارس بنقرة واحدة بدون احتساب XP
             if (currentCh && (currentCh.type === 'letter_overview' || currentCh.type === 'word_overview' || currentCh.type === 'lesson_overview')) {
-              if (currentRunnerHearts <= 0) {
+              if (currentRunnerHearts <= 0 && !isReplayingLesson) {
                 handleOutOfHearts();
                 return;
               }
               btnCheckAction.disabled = true;
               correctAnswersCount++;
-              if ((currentCh.type === 'letter_overview' || currentCh.type === 'lesson_overview') && !isReplayingLesson) {
-                const uid = getAuthUserId();
-                const chId = currentCh.id || `ch_letter_${selectedLesson?.id}`;
-                if (!sessionAnsweredChallenges.has(chId)) {
-                  sessionAnsweredChallenges.add(chId);
-                  sessionXpEarned += 1;
-                  if (game.addPointsLocalOnly) game.addPointsLocalOnly(uid, 1);
-                  showFloatingXpBadge('+1 XP ⭐');
-                  if (window.addTodayEarnedXP) window.addTodayEarnedXP(1);
-                }
-              }
               currentChallengeIndex++;
               loadChallenge(currentChallengeIndex);
               return;
             }
 
-            if (currentRunnerHearts < 1) {
+            if (currentRunnerHearts < 1 && !isReplayingLesson) {
               handleOutOfHearts();
               return;
             }
@@ -1547,7 +1557,7 @@
                 btnCheckAction.disabled = true;
                 await evaluateAnswer();
               } else if (runnerState === 'checked') {
-                if (currentRunnerHearts < 1) {
+                if (currentRunnerHearts < 1 && !isReplayingLesson) {
                   handleOutOfHearts();
                   return;
                 }
@@ -1589,6 +1599,22 @@
       async function startLessonRunner(lesson) {
         window.startLessonRunner = startLessonRunner;
         const uid = getAuthUserId();
+
+        // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً
+        try {
+          const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
+          const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
+          if (rawLP) {
+            const parsed = JSON.parse(rawLP);
+            if (parsed && typeof parsed === 'object') activeLessonProgress = parsed;
+          }
+        } catch(e) {}
+
+        // فحص ما إذا كان المستوى قد تم إكماله مسبقاً (وضع الإعادة/المراجعة)
+        const baseLId = String(lesson.id).replace(/_[pc]$/, '');
+        const currentProg = (activeLessonProgress && (activeLessonProgress[String(lesson.id)] || activeLessonProgress[baseLId])) || {};
+        isReplayingLesson = Boolean(currentProg.status === 'completed');
+
         let prog = {};
         if (game.getProgress) {
           prog = await game.getProgress(uid);
@@ -1597,7 +1623,7 @@
         }
         currentRunnerHearts = Number(prog.hearts ?? 5);
 
-        if (currentRunnerHearts < 1) {
+        if (currentRunnerHearts < 1 && !isReplayingLesson) {
           closeRunner();
           if (game.sound) game.sound.playWrong();
           showToast('تحتاج إلى قلب واحد على الأقل لبدء التمارين!');
@@ -1667,22 +1693,6 @@
         } catch (e) {
           console.warn('Error expanding letter/lesson overview:', e);
         }
-
-        // تحديث بيانات التقدم من أحدث نسخة محفوظة محلياً لمنع تكرار المكافآت
-        try {
-          const uid = getAuthUserId();
-          const userLpKey = uid ? `mg_coptic_lesson_progress_${uid}` : 'mg_coptic_lesson_progress';
-          const rawLP = (uid ? localStorage.getItem(userLpKey) : null) || localStorage.getItem('mg_coptic_lesson_progress');
-          if (rawLP) {
-            const parsed = JSON.parse(rawLP);
-            if (parsed && typeof parsed === 'object') activeLessonProgress = parsed;
-          }
-        } catch(e) {}
-
-        // فحص ما إذا كان المستوى قد تم إكماله مسبقاً (وضع الإعادة/المراجعة)
-        const baseLId = String(lesson.id).replace(/_[pc]$/, '');
-        const currentProg = (activeLessonProgress && (activeLessonProgress[String(lesson.id)] || activeLessonProgress[baseLId])) || {};
-        isReplayingLesson = Boolean(currentProg.status === 'completed');
 
         // تهيئة قائمة التمارين المُجاب عليها للجلسة الحالية
         sessionAnsweredChallenges = new Set();
@@ -2124,7 +2134,7 @@
           try { window.activeRunnerTracer.destroy(); } catch (_) {}
           window.activeRunnerTracer = null;
         }
-        if (currentRunnerHearts < 1) {
+        if (currentRunnerHearts < 1 && !isReplayingLesson) {
           handleOutOfHearts();
           return;
         }
@@ -3388,14 +3398,16 @@
         } else {
           currentChallenges.push(ch);
 
-          if (game.loseHeart) {
-            const prog = await game.loseHeart(uid);
-            currentRunnerHearts = Number(prog.hearts ?? 0);
-          } else {
-            currentRunnerHearts = Math.max(0, currentRunnerHearts - 1);
+          if (!isReplayingLesson) {
+            if (game.loseHeart) {
+              const prog = await game.loseHeart(uid);
+              currentRunnerHearts = Number(prog.hearts ?? 0);
+            } else {
+              currentRunnerHearts = Math.max(0, currentRunnerHearts - 1);
+            }
+            const runnerHearts = document.getElementById('runner-hearts-count');
+            if (runnerHearts) runnerHearts.textContent = currentRunnerHearts;
           }
-          const runnerHearts = document.getElementById('runner-hearts-count');
-          if (runnerHearts) runnerHearts.textContent = currentRunnerHearts;
           if (game.sound) game.sound.playWrong();
 
           if (feedbackBox) {
@@ -3421,7 +3433,7 @@
             }
           }
 
-          if (currentRunnerHearts <= 0) {
+          if (currentRunnerHearts <= 0 && !isReplayingLesson) {
             runnerState = 'out_of_hearts';
             if (btnCheck) {
               btnCheck.textContent = 'نفدت المحاولات';
