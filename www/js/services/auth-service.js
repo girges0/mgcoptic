@@ -1173,8 +1173,14 @@
     }
 
     function getUserProgressData() {
+      const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || currentAuthUser?.id || (window.game && typeof window.game.getCurrentUser === 'function' ? window.game.getCurrentUser()?.id : null);
+      if (window.MGCopticGame && typeof window.MGCopticGame.getProgressLocal === 'function') {
+        const p = window.MGCopticGame.getProgressLocal(uid);
+        if (p) return p;
+      }
+      const userKey = uid ? `mg_coptic_progress_${uid}` : 'mg_coptic_progress';
       try {
-        const raw = localStorage.getItem('mg_coptic_progress');
+        const raw = (uid ? localStorage.getItem(userKey) : null) || localStorage.getItem('mg_coptic_progress');
         if (raw) {
           const parsed = JSON.parse(raw);
           const points = parsed.points ?? parsed.total_points ?? 0;
@@ -1212,8 +1218,22 @@
         } catch (_) {}
         currentAuthUser.full_name = cleanName;
         localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+        localStorage.setItem('mg_coptic_user.full_name', cleanName);
+        if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+
+        if (typeof BroadcastChannel !== 'undefined') {
+          try {
+            const bc = new BroadcastChannel('mg_coptic_gamification_sync');
+            bc.postMessage({ type: 'student_name_updated', userId: currentAuthUser.id, full_name: cleanName });
+            setTimeout(() => { try { bc.close(); } catch (_) {} }, 1000);
+          } catch (_) {}
+        }
+
         if (typeof syncUserProfileUI === 'function') {
           try { syncUserProfileUI(); } catch (e) { console.warn(e); }
+        }
+        if (typeof window.hydrateHomeFromCacheSync === 'function') {
+          try { window.hydrateHomeFromCacheSync(); } catch (_) {}
         }
         if (typeof renderRealLeaderboard === 'function') {
           try { renderRealLeaderboard(); } catch (e) { console.warn(e); }
@@ -2510,6 +2530,40 @@
         });
       } else if (data.actionType === 'unban') {
         dismissBannedAccountScreen();
+      } else if (data.actionType === 'name_updated' || data.actionType === 'profile_updated') {
+        const cleanName = (data.full_name || '').trim();
+        if (cleanName) {
+          if (!currentAuthUser) {
+            try { currentAuthUser = JSON.parse(localStorage.getItem('mg_coptic_user') || '{}'); } catch (_) {}
+          }
+          if (currentAuthUser) {
+            currentAuthUser.full_name = cleanName;
+            try {
+              localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+              localStorage.setItem('mg_coptic_user.full_name', cleanName);
+            } catch (_) {}
+          }
+          if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+          if (typeof syncUserProfileUI === 'function') {
+            try { syncUserProfileUI(); } catch (_) {}
+          }
+          if (typeof window.hydrateHomeFromCacheSync === 'function') {
+            try { window.hydrateHomeFromCacheSync(); } catch (_) {}
+          }
+
+          // تحديث مباشر لكافة عناصر الاسم في الصفحة بدون إعادة تحميل
+          const greetEl = document.getElementById('home-greeting-name');
+          if (greetEl) {
+            const firstName = cleanName.split(' ')[0] || cleanName;
+            greetEl.textContent = 'أهلاً، ' + firstName;
+          }
+          const tbName = document.getElementById('topbar-username');
+          if (tbName) tbName.textContent = cleanName;
+          const profName = document.getElementById('profile-name');
+          if (profName) profName.textContent = cleanName;
+          const sInput = document.getElementById('settings-name-input') || document.getElementById('auth-name-input');
+          if (sInput) sInput.value = cleanName;
+        }
       } else if (data.actionType === 'xp') {
         const newPts = typeof data.points === 'number' ? data.points : 0;
         let cached = getUserProgressData();
@@ -2961,6 +3015,8 @@
             if (!data) return;
             if (data.type === 'ADMIN_ACTION' && (!data.userId || data.userId === userId)) {
               handleAdminActionEvent(data);
+            } else if ((data.type === 'student_name_updated' || data.type === 'profile_updated') && (!data.userId || data.userId === userId)) {
+              handleAdminActionEvent({ actionType: 'name_updated', full_name: data.full_name, userId: data.userId });
             }
           };
         } catch (_) {}
@@ -2995,11 +3051,19 @@
             }
 
             if (currentAuthUser) {
-              if (updated.full_name) currentAuthUser.full_name = updated.full_name;
+              if (updated.full_name) {
+                currentAuthUser.full_name = updated.full_name;
+                try {
+                  localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+                  localStorage.setItem('mg_coptic_user.full_name', updated.full_name);
+                } catch (_) {}
+                if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+              }
               if (updated.avatar_url) currentAuthUser.avatar_url = updated.avatar_url;
               currentAuthUser.is_banned = updated.is_banned || false;
               try { localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser)); } catch (_) {}
               if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+              if (typeof window.hydrateHomeFromCacheSync === 'function') window.hydrateHomeFromCacheSync();
             }
           })
           // استماع لتحديثات رصيد النقاط والقلوب والإنجازات (XP, Hearts, Streak)

@@ -2629,6 +2629,27 @@ function setupStudentsRealtime() {
       console.warn('Realtime presence subscription error:', e);
     }
   }
+
+  // 3) الاستماع لقناة البث المحلي للمتصفح لتحديث الداش بورد فوراً عند إكمال درس أو كسب نقاط
+  if (!window._adminBcSub && typeof BroadcastChannel !== 'undefined') {
+    try {
+      const bc = new BroadcastChannel('mg_coptic_gamification_sync');
+      bc.onmessage = (ev) => {
+        const msg = ev?.data;
+        if (!msg) return;
+        if (msg.type === 'lesson_completed' || msg.type === 'xp_updated' || msg.type === 'student_name_updated' || msg.type === 'user_profile_updated' || msg.type === 'progress_update') {
+          showRealtimePulse();
+          debouncedLoadUsers(true, 500);
+
+          // إذا كانت نافذة هذا الطالب مفتوحة حالياً، نقوم بتحديثها فوراً
+          if (activeSelectedStudent && msg.userId && activeSelectedStudent.id === msg.userId) {
+            viewStudentDetails(activeSelectedStudent.id);
+          }
+        }
+      };
+      window._adminBcSub = bc;
+    } catch (_) {}
+  }
 }
 
 // معالجة تغييرات التواجد اللحظي وتحديث الواجهة مباشرة بدون وميض
@@ -3534,6 +3555,35 @@ function viewStudentDetails(userId) {
   }
 
   modal.style.display = 'flex';
+
+  // مزامنة فورية مباشرة من السحابة لبيانات هذا الطالب المحددة لضمان أحدث تقدم ونقاط وسجل دروس
+  (async () => {
+    try {
+      const [progRes, lpsRes] = await Promise.all([
+        sb.from('user_progress').select('*').eq('user_id', student.id).maybeSingle(),
+        sb.from('user_lesson_progress').select('user_id, status, lesson_id, score, updated_at').eq('user_id', student.id)
+      ]);
+
+      if (activeSelectedStudent && activeSelectedStudent.id === student.id) {
+        if (progRes?.data) {
+          student.points = progRes.data.points ?? student.points;
+          student.hearts = progRes.data.hearts ?? student.hearts;
+          student.streak_days = progRes.data.streak_days ?? student.streak_days;
+          if (xpEl) xpEl.textContent = Number(student.points).toLocaleString() + ' XP';
+          if (heartsEl) heartsEl.innerHTML = `${ICONS_SVG.heart} <span>${student.hearts}</span>`;
+          if (streakEl) streakEl.innerHTML = `${ICONS_SVG.flame} <span>${student.streak_days} يوم</span>`;
+        }
+        if (lpsRes?.data && Array.isArray(lpsRes.data)) {
+          student.lessons_detail = lpsRes.data;
+          student.completed_lessons = lpsRes.data.filter(l => l.status === 'completed').length;
+          if (lessonsCountEl) lessonsCountEl.textContent = student.completed_lessons + ' درس';
+          renderStudentLessonsAudit(student);
+        }
+      }
+    } catch (e) {
+      console.warn('Live student details background sync error:', e);
+    }
+  })();
 }
 window.viewStudentDetails = viewStudentDetails;
 
@@ -3745,16 +3795,30 @@ async function editStudentNameModal() {
 
   const cleanName = newName.trim();
   try {
-    const { error } = await sb.from('users').upsert({ id: s.id, full_name: cleanName }, { onConflict: 'id' });
-    if (error) {
-      await sb.from('users').update({ full_name: cleanName }).eq('id', s.id);
+    // 1. تحديث جدول المستخدمين بدقة
+    const { error: updErr } = await sb.from('users').update({ full_name: cleanName }).eq('id', s.id);
+    if (updErr) {
+      const { error: upsErr } = await sb.from('users').upsert({ id: s.id, full_name: cleanName }, { onConflict: 'id' });
+      if (upsErr) throw upsErr;
     }
 
+    // 2. تحديث الكائن في الذاكرة والقائمة فوراً
     s.full_name = cleanName;
     const nameEl = document.getElementById('m-student-name');
     if (nameEl) nameEl.textContent = cleanName;
 
-    // تحديث في الجدول
+    // 3. بث فوري للطالب النشط عبر قناة Realtime وقناة البث المحلي للمتصفح
+    broadcastAdminActionToClient(s.id, 'name_updated', { full_name: cleanName });
+
+    if (typeof BroadcastChannel !== 'undefined') {
+      try {
+        const bc = new BroadcastChannel('mg_coptic_gamification_sync');
+        bc.postMessage({ type: 'student_name_updated', userId: s.id, full_name: cleanName });
+        setTimeout(() => { try { bc.close(); } catch (_) {} }, 1000);
+      } catch (_) {}
+    }
+
+    // 4. تحديث الجدول فوراً
     filterStudentsTable();
 
     Swal.fire({

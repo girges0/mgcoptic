@@ -696,7 +696,9 @@ const CurriculumAdminSystem = (function(){
       if(!u.lessons || !Array.isArray(u.lessons)) u.lessons = [];
       u.lessons.forEach((l, lIdx) => {
         l.order_index = l.order_index || (lIdx + 1);
-        l.xp_reward = (l.xp_reward !== undefined && l.xp_reward !== null && !isNaN(parseInt(l.xp_reward, 10))) ? parseInt(l.xp_reward, 10) : 5;
+        l.xp_reward = (l.xp_reward !== undefined && l.xp_reward !== null && !isNaN(parseInt(l.xp_reward, 10)))
+          ? parseInt(l.xp_reward, 10)
+          : (Array.isArray(l.challenges) ? l.challenges.filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type)).reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0) : 5);
         if(!l.challenges || !Array.isArray(l.challenges)) l.challenges = [];
         l.challenges.forEach((c, cIdx) => {
           c.order_index = c.order_index || (cIdx + 1);
@@ -2529,9 +2531,9 @@ const CurriculumAdminSystem = (function(){
             <div class="lesson-item-title-area">
               <span class="drag-handle-lesson" title="اسحب للترتيب">${SVG.gripVertical}</span>
               <h5>الدرس #${l.order_index || (lIdx + 1)}: ${escapeHtml(l.title)}</h5>
-              <span class="lesson-xp-badge" title="نقاط درس الشرح">${SVG.zap} درس: ${l.xp_reward ?? 20} XP</span>
-              <span class="lesson-xp-badge" style="background:#EDE9FE; color:#6D28D9; border-color:#DDD6FE;" title="نقاط محطة التطبيق والاستماع">${SVG.zap} تطبيق: ${l.practice_xp ?? 20} XP</span>
-              <span class="lesson-xp-badge" style="background:#FEF3C7; color:#B45309; border-color:#FDE68A;" title="نقاط محطة تحدي الإتقان">${SVG.zap} تحدي: ${l.challenge_xp ?? 30} XP</span>
+              <span class="lesson-xp-badge" title="نقاط درس الشرح">${SVG.zap} درس: ${l.xp_reward ?? (Array.isArray(l.challenges) ? l.challenges.filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type)).reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0) : 5)} XP</span>
+              <span class="lesson-xp-badge" style="background:#EDE9FE; color:#6D28D9; border-color:#DDD6FE;" title="نقاط محطة التطبيق والاستماع">${SVG.zap} تطبيق: ${l.practice_xp ?? (Array.isArray(l.challenges) ? l.challenges.filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type)).reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0) : 5)} XP</span>
+              <span class="lesson-xp-badge" style="background:#FEF3C7; color:#B45309; border-color:#FDE68A;" title="نقاط محطة تحدي الإتقان">${SVG.zap} تحدي: ${l.challenge_xp ?? (Array.isArray(l.challenges) ? l.challenges.filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type)).reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0) : 5)} XP</span>
               <span class="curriculum-chip">${allItems.length} عناصر تدريبية</span>
             </div>
             <div class="lesson-item-actions">
@@ -3951,9 +3953,9 @@ const CurriculumAdminSystem = (function(){
     document.getElementById('lesson-edit-id').value = '';
     populateUnitSelect('lesson-input-unit-id', currentUnitId);
     document.getElementById('lesson-input-title').value = '';
-    document.getElementById('lesson-input-xp').value = 20;
-    if(document.getElementById('lesson-input-practice-xp')) document.getElementById('lesson-input-practice-xp').value = 20;
-    if(document.getElementById('lesson-input-challenge-xp')) document.getElementById('lesson-input-challenge-xp').value = 30;
+    document.getElementById('lesson-input-xp').value = 5;
+    if(document.getElementById('lesson-input-practice-xp')) document.getElementById('lesson-input-practice-xp').value = 5;
+    if(document.getElementById('lesson-input-challenge-xp')) document.getElementById('lesson-input-challenge-xp').value = 5;
     document.getElementById('lesson-input-order').value = lessonsCount + 1;
     document.getElementById('modal-lesson-editor').style.display = 'flex';
   }
@@ -3971,12 +3973,16 @@ const CurriculumAdminSystem = (function(){
     document.getElementById('lesson-edit-id').value = foundLesson.id;
     populateUnitSelect('lesson-input-unit-id', parentUnit.id);
     document.getElementById('lesson-input-title').value = foundLesson.title || '';
-    document.getElementById('lesson-input-xp').value = foundLesson.xp_reward !== undefined ? foundLesson.xp_reward : 20;
+    const calcLessonChallengesXp = (chs) => (chs || [])
+      .filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type))
+      .reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0);
+    const dynamicLessonXp = calcLessonChallengesXp(foundLesson.challenges);
+    document.getElementById('lesson-input-xp').value = foundLesson.xp_reward !== undefined ? foundLesson.xp_reward : (dynamicLessonXp > 0 ? dynamicLessonXp : 5);
     if(document.getElementById('lesson-input-practice-xp')) {
-      document.getElementById('lesson-input-practice-xp').value = foundLesson.practice_xp !== undefined ? foundLesson.practice_xp : 20;
+      document.getElementById('lesson-input-practice-xp').value = foundLesson.practice_xp !== undefined ? foundLesson.practice_xp : (dynamicLessonXp > 0 ? dynamicLessonXp : 5);
     }
     if(document.getElementById('lesson-input-challenge-xp')) {
-      document.getElementById('lesson-input-challenge-xp').value = foundLesson.challenge_xp !== undefined ? foundLesson.challenge_xp : 30;
+      document.getElementById('lesson-input-challenge-xp').value = foundLesson.challenge_xp !== undefined ? foundLesson.challenge_xp : (dynamicLessonXp > 0 ? dynamicLessonXp : 5);
     }
     document.getElementById('lesson-input-order').value = foundLesson.order_index || 1;
     document.getElementById('modal-lesson-editor').style.display = 'flex';
@@ -4200,7 +4206,7 @@ const CurriculumAdminSystem = (function(){
     populateLessonSelect('challenge-input-lesson-id', preselectedLessonId || navState.lessonId);
     document.getElementById('challenge-input-type').value = 'select';
     document.getElementById('challenge-input-question').value = '';
-    document.getElementById('challenge-input-xp').value = 10;
+    document.getElementById('challenge-input-xp').value = 1;
     document.getElementById('challenge-input-coptic').value = '';
     document.getElementById('challenge-input-audio-text').value = '';
     document.getElementById('challenge-input-audio-url').value = '';
@@ -4225,7 +4231,7 @@ const CurriculumAdminSystem = (function(){
     populateLessonSelect('challenge-input-lesson-id', parentLesson ? parentLesson.id : null);
     document.getElementById('challenge-input-type').value = foundChallenge.type || 'select';
     document.getElementById('challenge-input-question').value = foundChallenge.question || '';
-    document.getElementById('challenge-input-xp').value = foundChallenge.xp_reward !== undefined ? foundChallenge.xp_reward : 10;
+    document.getElementById('challenge-input-xp').value = foundChallenge.xp_reward !== undefined ? foundChallenge.xp_reward : 1;
     document.getElementById('challenge-input-coptic').value = foundChallenge.coptic_display || '';
     document.getElementById('challenge-input-audio-text').value = foundChallenge.audio_text || '';
     document.getElementById('challenge-input-audio-url').value = foundChallenge.audio_url || '';
@@ -5014,7 +5020,7 @@ const CurriculumAdminSystem = (function(){
     const existingOrder = oldChallenge ? (oldChallenge.order_index || 1) : (targetLesson.challenges.length + 1);
     const rawXpVal = document.getElementById('challenge-input-xp')?.value;
     const parsedXp = parseInt(rawXpVal, 10);
-    const xpVal = (!isNaN(parsedXp) && parsedXp >= 0) ? parsedXp : ((type === 'image_view' || type === 'text_view') ? 0 : 10);
+    const xpVal = (!isNaN(parsedXp) && parsedXp >= 0) ? parsedXp : ((type === 'image_view' || type === 'text_view') ? 0 : 1);
 
     const editorImgVal = document.getElementById('challenge-input-image-url')?.value.trim() || null;
     const challengeObj = {
@@ -5285,6 +5291,7 @@ const CurriculumAdminSystem = (function(){
           lesson_id: parseInt(lessonId),
           type: challengeObj.type || 'select',
           question: challengeObj.question,
+          xp_reward: challengeObj.xp_reward !== undefined ? challengeObj.xp_reward : 1,
           coptic_display: challengeObj.coptic_display || null,
           audio_text: challengeObj.audio_text || null,
           audio_url: challengeObj.audio_url || null,
@@ -5669,7 +5676,7 @@ const CurriculumAdminSystem = (function(){
           const lPayload = {
             unit_id: mappedUnitId,
             title: l.title,
-            xp_reward: l.xp_reward || 20,
+            xp_reward: (l.xp_reward !== undefined && l.xp_reward !== null && !isNaN(parseInt(l.xp_reward, 10))) ? parseInt(l.xp_reward, 10) : 5,
             order_index: l.order_index || 1
           };
           const oldLessonId = l.id;
@@ -5694,6 +5701,7 @@ const CurriculumAdminSystem = (function(){
               lesson_id: mappedLessonId,
               type: c.type || 'select',
               question: c.question,
+              xp_reward: c.xp_reward !== undefined ? c.xp_reward : 1,
               coptic_display: c.coptic_display || null,
               audio_text: c.audio_text || null,
               audio_url: c.audio_url || null,
@@ -6214,7 +6222,7 @@ const CurriculumAdminSystem = (function(){
           previewState.isCorrect = true;
           previewState.correctCount++;
           const currentChallenge = previewState.challenges[previewState.currentIndex];
-          const earnedXp = currentChallenge && currentChallenge.xp_reward ? currentChallenge.xp_reward : 10;
+          const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : 1;
           previewState.score += earnedXp;
         }
         renderCurrentPreviewChallenge();
@@ -6741,7 +6749,7 @@ const CurriculumAdminSystem = (function(){
                 previewState.isAnswered = true;
                 previewState.isCorrect = true;
                 previewState.correctCount++;
-                const earnedXp = challenge.xp_reward || 10;
+                const earnedXp = (challenge && challenge.xp_reward !== undefined && challenge.xp_reward !== null) ? Number(challenge.xp_reward) : 1;
                 previewState.score += earnedXp;
                 toast(`ممتاز! الدقة ${res.finalScore}% — يمكنك المتابعة الآن`);
                 renderCurrentPreviewChallenge();
@@ -6878,7 +6886,7 @@ const CurriculumAdminSystem = (function(){
     if(isCorrect){
       previewState.correctCount++;
       const currentChallenge = previewState.challenges[previewState.currentIndex];
-      const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : ((currentChallenge && (currentChallenge.type === 'image_view' || currentChallenge.type === 'text_view')) ? 0 : 10);
+      const earnedXp = (currentChallenge && currentChallenge.xp_reward !== undefined && currentChallenge.xp_reward !== null) ? Number(currentChallenge.xp_reward) : ((currentChallenge && (currentChallenge.type === 'image_view' || currentChallenge.type === 'text_view')) ? 0 : 1);
       previewState.score += earnedXp;
       PreviewSound.playCorrect();
     } else {

@@ -1322,19 +1322,23 @@
         const realChallenges = Array.isArray(foundLesson.challenges) ? [...foundLesson.challenges] : [];
         lessonCopy.id = lessonId;
 
+        const calcChXp = (chs) => (chs || [])
+          .filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view')
+          .reduce((sum, c) => sum + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0);
+
         if (isPractice) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           const pracChallenges = realChallenges.filter(c => c.type === 'listen' || c.type === 'listen_write' || c.type === 'read_select' || c.type === 'image_select' || c.type === 'match' || c.type === 'fill_blank' || c.audio_url || c.audio_text);
           lessonCopy.challenges = pracChallenges.length >= 2 ? pracChallenges : realChallenges;
+          lessonCopy.xp_reward = calcChXp(lessonCopy.challenges);
         } else if (isChallenge) {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
+          lessonCopy.xp_reward = calcChXp(lessonCopy.challenges);
         } else {
           lessonCopy.title = foundLesson.title || foundUnit.title;
-          lessonCopy.xp_reward = lessonCopy.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length;
           lessonCopy.challenges = realChallenges;
+          lessonCopy.xp_reward = calcChXp(lessonCopy.challenges);
         }
 
         selectedLesson = lessonCopy;
@@ -3352,9 +3356,14 @@
 
         if (isCorrect) {
           correctAnswersCount++;
-          // تمارين النبذة 0 XP، وكل التمارين الأخرى 1 XP
+          // تمارين النبذة والتوضيح 0 XP، وكل التمارين التفاعلية الأخرى تأخذ قيمتها من الداشبورد (افتراضياً 1 XP)
           const isOverviewCh = (ch.type === 'letter_overview' || ch.type === 'word_overview' || ch.type === 'lesson_overview' || ch.type === 'text_view' || ch.type === 'image_view');
-          const challengeXp = isOverviewCh ? 0 : 1;
+          let challengeXp = 0;
+          if (!isOverviewCh) {
+            challengeXp = (ch.xp_reward !== undefined && ch.xp_reward !== null && !isNaN(parseInt(ch.xp_reward, 10)))
+              ? parseInt(ch.xp_reward, 10)
+              : 1;
+          }
 
           // منع احتساب نقاط XP نهائياً في حال إعادة المستوى أو التمرين المُجاب عليه مسبقاً
           const challengeUniqueId = ch.id || `ch_${currentChallengeIndex}_${(ch.question || ch.coptic_display || '').substring(0,20)}`;
@@ -3362,15 +3371,15 @@
 
           if (!isReplayingLesson && !alreadyAnsweredThisChallenge && challengeXp > 0) {
             sessionXpEarned += challengeXp;
-            if (game.addPointsLocalOnly) {
-              game.addPointsLocalOnly(uid, challengeXp);
+            sessionAnsweredChallenges.add(challengeUniqueId);
+
+            if (game && game.updateProgress) {
+              game.updateProgress(uid, { addPoints: challengeXp });
             }
+            if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
-          }
-
-          // تسجيل التمرين كمُجاب عليه في الجلسة
-          if (!alreadyAnsweredThisChallenge) {
+          } else if (!alreadyAnsweredThisChallenge) {
             sessionAnsweredChallenges.add(challengeUniqueId);
           }
 
@@ -3384,7 +3393,7 @@
               if (isReplayingLesson) {
                 feedbackText.textContent = 'إجابة صحيحة وممتازة! (مراجعة)';
               } else {
-                feedbackText.textContent = (challengeXp > 0) ? 'إجابة صحيحة وممتازة! (+1 XP)' : 'إجابة صحيحة وممتازة!';
+                feedbackText.textContent = (challengeXp > 0) ? `إجابة صحيحة وممتازة! (+${challengeXp} XP)` : 'إجابة صحيحة وممتازة!';
               }
             }
           }
@@ -3985,18 +3994,20 @@
 
         const accuracy = Math.round((correctAnswersCount / Math.max(1, currentChallenges.length)) * 100);
         const uid = getAuthUserId();
-        // ضمان تطابق الـ XP المكتسب بنسبة 100% مع الرقم المعروض والمضبوط من الداشبورد
         const earnableCount = (selectedLesson && Array.isArray(selectedLesson.challenges))
-          ? selectedLesson.challenges.filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view').length
-          : (parseInt(selectedLesson?.xp_reward, 10) || 1);
+          ? selectedLesson.challenges
+              .filter(c => c.type !== 'text_view' && c.type !== 'letter_overview' && c.type !== 'word_overview' && c.type !== 'lesson_overview' && c.type !== 'image_view')
+              .reduce((sum, c) => sum + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0)
+          : (parseInt(selectedLesson?.xp_reward, 10) || 5);
         const fullConfiguredXp = Math.max(1, earnableCount);
-        const earnedXp = isReplayingLesson ? 0 : fullConfiguredXp;
+        const earnedXp = isReplayingLesson ? 0 : (sessionXpEarned > 0 ? sessionXpEarned : fullConfiguredXp);
 
         const vXp = document.getElementById('v-xp-gained');
         const vAcc = document.getElementById('v-accuracy');
         const victoryModal = document.getElementById('victory-modal');
 
-        if (vXp) vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${earnedXp} XP`;
+        const displayedGainedXp = isReplayingLesson ? 'مراجعة (0 XP)' : `+${(sessionXpEarned > 0 ? sessionXpEarned : earnedXp)} XP`;
+        if (vXp) vXp.textContent = displayedGainedXp;
         if (vAcc) vAcc.textContent = `${accuracy}%`;
 
         // إظهار شاشة النصر فوراً بدون أي تعليق أو تأخير (0 ميلي ثانية)
@@ -4004,9 +4015,9 @@
 
         // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, isReplayingLesson ? 0 : earnedXp).then(res => {
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, 0).then(res => {
             if (vXp) {
-              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${(res && res.added_xp != null) ? res.added_xp : earnedXp} XP`;
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${sessionXpEarned} XP`;
             }
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();

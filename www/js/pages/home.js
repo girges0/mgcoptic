@@ -199,7 +199,9 @@
               unitIndex: uIdx + 1,
               levelId: levelId,
               levelTitle: levelTitle,
-              xpReward: parseInt(les.xp_reward, 10) || 20,
+              xpReward: (les.xp_reward !== undefined && les.xp_reward !== null && !isNaN(parseInt(les.xp_reward, 10)))
+                ? parseInt(les.xp_reward, 10)
+                : (Array.isArray(les.challenges) ? les.challenges.filter(c => !['text_view','letter_overview','word_overview','lesson_overview','image_view'].includes(c.type)).reduce((s, c) => s + ((c.xp_reward !== undefined && c.xp_reward !== null && !isNaN(parseInt(c.xp_reward, 10))) ? parseInt(c.xp_reward, 10) : 1), 0) : 5),
               kind: 'lesson'
             });
           });
