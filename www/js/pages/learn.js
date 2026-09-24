@@ -4093,9 +4093,11 @@
 
         // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, 0).then(res => {
+          const finalXpToPass = isReplayingLesson ? 0 : (sessionXpEarned > 0 ? sessionXpEarned : earnedXp);
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, finalXpToPass).then(res => {
             if (vXp) {
-              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${sessionXpEarned} XP`;
+              const gainedVal = res?.added_xp ?? (isReplayingLesson ? 0 : sessionXpEarned);
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${gainedVal} XP`;
             }
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();

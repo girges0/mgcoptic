@@ -16,23 +16,31 @@ const MG_CONFIG = {
   }
 };
 
-// إنشاء عميل Supabase إذا توفرت المكتبة
+// إنشاء عميل Supabase أو ربطه بالعميل العام المشترك
 let sbClient = null;
-if(window.supabase && typeof window.supabase.createClient === 'function'){
-  try {
-    sbClient = window.supabase.createClient(MG_CONFIG.SUPABASE_URL, MG_CONFIG.SUPABASE_ANON_KEY, {
-      auth: {
-        storageKey: 'mg_coptic_student_auth_token',
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    });
-    window.sbClient = sbClient;
-  } catch(e){
-    console.warn('Supabase client init error:', e);
+function getSbClient() {
+  if (window.sb) return window.sb;
+  if (window.sbClient) return window.sbClient;
+  if (sbClient) return sbClient;
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    try {
+      sbClient = window.supabase.createClient(MG_CONFIG.SUPABASE_URL, MG_CONFIG.SUPABASE_ANON_KEY, {
+        auth: {
+          storageKey: 'mg_coptic_student_auth_token',
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      });
+      window.sbClient = sbClient;
+      return sbClient;
+    } catch(e) {
+      console.warn('Supabase client init error:', e);
+    }
   }
+  return null;
 }
+getSbClient();
 
 /* ============================================================
    المنهج الافتراضي النظيف (جاهز لاستقبال المنهج الفعلي)
@@ -1208,10 +1216,28 @@ class GamificationService {
 
             const safeLocalPoints = Number(cached.points || 0);
             const resolvedPoints = Math.max(safeLocalPoints, serverPoints);
-            if (safeLocalPoints > serverPoints && uid) {
-              sbClient.from('user_progress').update({ points: safeLocalPoints, total_points: safeLocalPoints }).eq('user_id', uid).then(({ error }) => {
-                if (error) sbClient.from('user_progress').update({ points: safeLocalPoints }).eq('user_id', uid);
-              });
+            const activeSb = getSbClient();
+            if (safeLocalPoints > serverPoints && uid && activeSb) {
+              const uLpKey = `mg_coptic_lesson_progress_${uid}`;
+              const uLpRaw = localStorage.getItem(uLpKey) || localStorage.getItem(MG_CONFIG.STORAGE_KEYS.LESSON_PROGRESS);
+              let parsedLp = null;
+              try { parsedLp = uLpRaw ? JSON.parse(uLpRaw) : null; } catch (_) {}
+              const compIds = [];
+              if (parsedLp && typeof parsedLp === 'object') {
+                for (const [k, v] of Object.entries(parsedLp)) {
+                  if (!k.includes('_') && v && (v.status === 'completed' || v.isCompleted)) {
+                    const n = parseInt(k, 10);
+                    if (!isNaN(n) && n > 0) compIds.push(n);
+                  }
+                }
+              }
+              activeSb.rpc('sync_full_user_gamification', {
+                p_user_id: uid,
+                p_points: resolvedPoints,
+                p_hearts: serverHearts,
+                p_streak_days: serverStreak,
+                p_completed_lessons: compIds
+              }).then(() => {}, () => {});
             }
 
             if(cached.points !== resolvedPoints || cached.hearts !== serverHearts || cached.streak_days !== serverStreak){
@@ -1330,13 +1356,15 @@ class GamificationService {
     }
 
     // 1. المحاولة أولاً عبر الدالة الذرية الموثوقة على السيرفر (RPC)
-    if (sbClient && uid && !isNaN(numLessonId) && safeChId !== null) {
+    const activeSb = getSbClient();
+    if (activeSb && uid && !isNaN(numLessonId) && safeChId !== null) {
       try {
-        const { data: rpcData, error: rpcErr } = await sbClient.rpc('record_challenge_xp', {
+        const { data: rpcData, error: rpcErr } = await activeSb.rpc('record_challenge_xp', {
           p_lesson_id: numLessonId,
           p_challenge_id: safeChId,
           p_is_correct: true,
-          p_xp_amount: safeXpAmount
+          p_xp_amount: safeXpAmount,
+          p_user_id: uid
         });
 
         if (!rpcErr && rpcData && rpcData.success) {
@@ -2062,11 +2090,12 @@ class GamificationService {
       : 0;
 
     // المزامنة السحابية الموثوقة عبر complete_lesson_reward ثم record_lesson_completion
-    if(sbClient && uid && !isNaN(numLessonId)){
+    const activeSb = getSbClient();
+    if(activeSb && uid && !isNaN(numLessonId)){
       // إذا كان هناك مكافأة إضافية مطلوب احتسابها من السيرفر
       if(!wasAlreadyCompleted && safeXpReward > 0){
         try {
-          const { data: rpcData, error: rpcErr } = await sbClient.rpc('complete_lesson_reward', {
+          const { data: rpcData, error: rpcErr } = await activeSb.rpc('complete_lesson_reward', {
             p_lesson_id: numLessonId,
             p_score: parseInt(score, 10) || 100
           });
@@ -2099,14 +2128,15 @@ class GamificationService {
         try {
           const nextNum = (nextLessonId && !/_(p|c)$/.test(String(nextLessonId))) ? parseInt(nextLessonId, 10) : null;
           const earnedVal = wasAlreadyCompleted ? 0 : safeXpReward;
-          const { data: recData, error: recErr } = await sbClient.rpc('record_lesson_completion', {
+          const { data: recData, error: recErr } = await activeSb.rpc('record_lesson_completion', {
             p_lesson_id: numLessonId,
             p_score: parseInt(score, 10) || 100,
             p_xp_reward: earnedVal,
-            p_next_lesson_id: (!isNaN(nextNum) && nextNum > 0) ? nextNum : null
+            p_next_lesson_id: (!isNaN(nextNum) && nextNum > 0) ? nextNum : null,
+            p_user_id: uid
           });
 
-          if(!recErr && recData){
+          if(!recErr && recData && (recData.success !== false)){
             serverHandled = true;
             const curProg = this.getProgressLocal(uid) || {};
             curProg.points = Number(recData.points ?? recData.total_points ?? curProg.points ?? 0);
@@ -2129,11 +2159,49 @@ class GamificationService {
         }
       }
 
+      // المحاولة الثالثة: sync_full_user_gamification لضمان تسجيل النقاط والدروس ذرياً
+      if(!serverHandled && !wasAlreadyCompleted && safeXpReward > 0){
+        try {
+          const curProg = this.getProgressLocal(uid) || {};
+          const nextPoints = (curProg.points || 0) + safeXpReward;
+          curProg.points = nextPoints;
+          curProg.total_points = nextPoints;
+          this.saveProgressLocal(curProg, uid);
+
+          const compIds = [];
+          for (const [k, v] of Object.entries(map || {})) {
+            if (!k.includes('_') && v && (v.status === 'completed' || v.isCompleted)) {
+              const n = parseInt(k, 10);
+              if (!isNaN(n) && n > 0) compIds.push(n);
+            }
+          }
+          if (!compIds.includes(numLessonId)) compIds.push(numLessonId);
+
+          const { data: syncData, error: syncErr } = await activeSb.rpc('sync_full_user_gamification', {
+            p_user_id: uid,
+            p_points: nextPoints,
+            p_hearts: curProg.hearts || 5,
+            p_streak_days: curProg.streak_days || 1,
+            p_completed_lessons: compIds
+          });
+
+          if(!syncErr && syncData && syncData.success){
+            serverHandled = true;
+            map.added_xp = safeXpReward;
+            map.points = nextPoints;
+            map.hearts = curProg.hearts || 5;
+            this.recordTodayEarnedXP(uid, safeXpReward);
+          }
+        } catch(err){
+          console.warn('sync_full_user_gamification RPC error:', err);
+        }
+      }
+
       // فتح الدرس التالي بالسحابة
       if(nextLessonId && !/_(p|c)$/.test(String(nextLessonId))){
         const nextNumId = parseInt(nextLessonId, 10);
         if(!isNaN(nextNumId)){
-          sbClient.from('user_lesson_progress').upsert({
+          activeSb.from('user_lesson_progress').upsert({
             user_id: uid,
             lesson_id: nextNumId,
             status: 'in_progress',
@@ -2161,9 +2229,9 @@ class GamificationService {
     }
 
     // التأكيد المباشر الحتمي في جداول Supabase لضمان ظهور الدرس فوراً في الداش بورد
-    if(sbClient && uid && !isNaN(numLessonId)){
+    if(activeSb && uid && !isNaN(numLessonId)){
       const finalProg = this.getProgressLocal(uid) || {};
-      sbClient.from('user_lesson_progress').upsert({
+      activeSb.from('user_lesson_progress').upsert({
         user_id: uid,
         lesson_id: numLessonId,
         status: 'completed',
@@ -2171,7 +2239,7 @@ class GamificationService {
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id,lesson_id' }).then(()=>{}, (e)=>{ console.warn('user_lesson_progress upsert err:', e); });
 
-      sbClient.from('user_progress').upsert({
+      activeSb.from('user_progress').upsert({
         user_id: uid,
         points: finalProg.points || 0,
         total_points: finalProg.points || 0,
@@ -2180,11 +2248,10 @@ class GamificationService {
         last_active_date: new Date().toISOString().split('T')[0]
       }, { onConflict: 'user_id' }).then(({ error })=>{
         if (error) {
-          console.warn('[Gamification] user_progress upsert err in completeLesson:', error);
-          sbClient.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
+          activeSb.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
         }
-      }).catch((e)=>{
-        sbClient.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
+      }).catch(()=>{
+        activeSb.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
       });
     }
 

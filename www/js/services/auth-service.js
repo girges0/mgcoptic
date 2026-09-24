@@ -1001,10 +1001,34 @@
               localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
             }
 
-            let effectivePoints = serverPoints;
-            if (!resetOccurred && localPoints > serverPoints) {
-              effectivePoints = localPoints;
-              sb.from('user_progress').update({ points: localPoints, total_points: localPoints }).eq('user_id', uid).then(()=>{});
+            let effectivePoints = Math.max(localPoints, serverPoints);
+            if (!resetOccurred && (localPoints > serverPoints || (localPoints > 0 && serverPoints === 0))) {
+              effectivePoints = Math.max(localPoints, serverPoints);
+              
+              // جمع أرقام الدروس المكتملة محلياً إن وجدت لمزامنتها مع قاعدة البيانات
+              const uLpKey = `mg_coptic_lesson_progress_${uid}`;
+              const uLpRaw = localStorage.getItem(uLpKey) || localStorage.getItem('mg_coptic_lesson_progress');
+              let parsedLp = null;
+              try { parsedLp = uLpRaw ? JSON.parse(uLpRaw) : null; } catch (_) {}
+              const completedLessonIds = [];
+              if (parsedLp && typeof parsedLp === 'object') {
+                for (const [k, v] of Object.entries(parsedLp)) {
+                  if (!k.includes('_') && v && (v.status === 'completed' || v.isCompleted)) {
+                    const n = parseInt(k, 10);
+                    if (!isNaN(n) && n > 0) completedLessonIds.push(n);
+                  }
+                }
+              }
+
+              sb.rpc('sync_full_user_gamification', {
+                p_user_id: uid,
+                p_points: effectivePoints,
+                p_hearts: prog.hearts ?? 5,
+                p_streak_days: prog.streak_days || 1,
+                p_completed_lessons: completedLessonIds
+              }).then(({ error }) => {
+                if (!error) console.log('[Auth] User gamification synced to DB successfully');
+              });
             }
 
             const freshProg = {
@@ -1046,8 +1070,8 @@
               localStorage.setItem(userKey, JSON.stringify(merged));
               localStorage.setItem('mg_coptic_guest_migrated', 'true');
               localStorage.removeItem('mg_coptic_lesson_progress');
-            } else if (prog && Number(prog.points || 0) === 0) {
-              // إذا كان الحساب مصفراً (0 XP)، نمسح أي كاش قديم للدروس فورياً
+            } else if (resetOccurred) {
+              // مسح الكاش القديم للدروس فقط عند حدوث تصفير صريح للحساب من الإدارة
               localStorage.removeItem('mg_coptic_lesson_progress');
               localStorage.removeItem(`mg_coptic_lesson_progress_${activeSession.user.id}`);
             }
