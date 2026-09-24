@@ -77,15 +77,69 @@
         } catch(e){}
       }
 
+      // وظيفة التحديث الفوري واللحظي لنقاط XP (0 مللي ثانية) بدون أي تأخير أو انتظار للشبكة
+      function updateInstantXP(deltaXp = 0, newExactTotal = null) {
+        try {
+          const tbXp = document.getElementById('topbar-xp-val') || document.getElementById('points-val');
+          let currentVal = 0;
+          if (tbXp) {
+            currentVal = parseInt(tbXp.textContent, 10) || 0;
+          }
+          const targetXp = (newExactTotal !== null && newExactTotal !== undefined)
+            ? Number(newExactTotal)
+            : (currentVal + Number(deltaXp || 0));
+
+          if (tbXp) {
+            tbXp.textContent = targetXp;
+            // وميض وانتعاش حركي فوري لشارة XP
+            const badge = document.getElementById('topbar-xp-badge');
+            if (badge) {
+              badge.classList.remove('xp-updated-pop');
+              void badge.offsetWidth;
+              badge.classList.add('xp-updated-pop');
+            }
+          }
+
+          const homeCardXp = document.getElementById('home-card-xp');
+          if (homeCardXp) {
+            homeCardXp.textContent = targetXp;
+          }
+
+          if (newExactTotal !== null && newExactTotal !== undefined) {
+            const uid = (typeof getAuthUserId === 'function') ? getAuthUserId() : null;
+            const userKey = uid ? `mg_coptic_progress_${uid}` : 'mg_coptic_progress';
+            try {
+              const raw = localStorage.getItem(userKey) || localStorage.getItem('mg_coptic_progress');
+              let p = raw ? JSON.parse(raw) : {};
+              p.points = targetXp;
+              p.total_points = targetXp;
+              if (uid) localStorage.setItem(userKey, JSON.stringify(p));
+              localStorage.setItem('mg_coptic_progress', JSON.stringify(p));
+            } catch (_) {}
+          }
+
+          if (typeof window.invalidateMGCache === 'function') {
+            window.invalidateMGCache();
+          }
+        } catch (e) {
+          console.warn('updateInstantXP error:', e);
+        }
+      }
+      window.updateInstantXP = updateInstantXP;
+
       async function refreshStatsDisplay(forcedProg = null) {
         try {
           const uid = getAuthUserId();
           let prog = forcedProg;
           if (!prog) {
-            if (game && game.getProgress) {
-              prog = await game.getProgress(uid);
-            } else if (typeof getUserProgressData === 'function') {
+            if (game && typeof game.getProgressLocal === 'function') {
+              prog = game.getProgressLocal(uid);
+            }
+            if (!prog && typeof getUserProgressData === 'function') {
               prog = getUserProgressData();
+            }
+            if (!prog && game && game.getProgress) {
+              prog = await game.getProgress(uid);
             }
           }
           if (!prog) return;
@@ -98,7 +152,18 @@
           if (runnerHearts) runnerHearts.textContent = hearts;
 
           const tbXp = document.getElementById('topbar-xp-val') || document.getElementById('points-val');
-          if (tbXp) tbXp.textContent = xp;
+          if (tbXp) {
+            const oldVal = parseInt(tbXp.textContent, 10);
+            tbXp.textContent = xp;
+            if (!isNaN(oldVal) && xp > oldVal) {
+              const badge = document.getElementById('topbar-xp-badge');
+              if (badge) {
+                badge.classList.remove('xp-updated-pop');
+                void badge.offsetWidth;
+                badge.classList.add('xp-updated-pop');
+              }
+            }
+          }
           const tbStreak = document.getElementById('topbar-streak-val') || document.getElementById('streak-val');
           if (tbStreak) tbStreak.textContent = streak;
           const tbHearts = document.getElementById('topbar-hearts-val') || document.getElementById('hearts-val');
@@ -110,7 +175,12 @@
           if (cardStreak) cardStreak.textContent = streak;
 
           if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
-          if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
+
+          const runnerOverlay = document.getElementById('challenge-runner-overlay');
+          const isRunnerActive = runnerOverlay && (runnerOverlay.style.display === 'flex' || runnerOverlay.classList.contains('active'));
+          if (!isRunnerActive && typeof syncHomeLearningProgress === 'function') {
+            syncHomeLearningProgress();
+          }
         } catch(e){}
       }
       window.refreshStatsDisplay = refreshStatsDisplay;
@@ -1492,7 +1562,11 @@
               closeChestModal();
 
               if (claimed) {
-                showFloatingXpBadge('+30 XP  +1 قلب');
+                const chestXp = (currentActiveChestData && currentActiveChestData.xp_reward) ? parseInt(currentActiveChestData.xp_reward, 10) : 30;
+                if (typeof window.updateInstantXP === 'function' && chestXp > 0) {
+                  window.updateInstantXP(chestXp);
+                }
+                showFloatingXpBadge(`+${chestXp || 30} XP  +1 قلب`);
                 if (game.sound && typeof game.sound.playChestReward === 'function') {
                   game.sound.playChestReward();
                 } else if (game.sound && typeof game.sound.playVictory === 'function') {
@@ -3373,10 +3447,14 @@
             sessionXpEarned += challengeXp;
             sessionAnsweredChallenges.add(challengeUniqueId);
 
+            // تحديث فوري ولحظي لـ XP في الشريط العلوي والكاش (0 مللي ثانية)
+            if (typeof window.updateInstantXP === 'function') {
+              window.updateInstantXP(challengeXp);
+            }
+
             if (game && game.updateProgress) {
               game.updateProgress(uid, { addPoints: challengeXp });
             }
-            if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             showFloatingXpBadge(`+${challengeXp} XP ⭐`);
             if (window.addTodayEarnedXP) window.addTodayEarnedXP(challengeXp);
           } else if (!alreadyAnsweredThisChallenge) {

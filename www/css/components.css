@@ -450,6 +450,17 @@
       background: linear-gradient(135deg, rgba(0, 163, 255, 0.14) 0%, var(--parchment-card) 100%);
     }
 
+    @keyframes xpPopAnimation {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.22); box-shadow: 0 0 16px rgba(0, 163, 255, 0.65); border-color: #00A3FF; }
+      65% { transform: scale(0.96); }
+      100% { transform: scale(1); }
+    }
+    .topbar-stat-pill.topbar-xp.xp-updated-pop,
+    .stat-badge.stat-points.xp-updated-pop {
+      animation: xpPopAnimation 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
     /* 2. Streak / Flame Badge: Vibrant Orange */
     .topbar-stat-pill.topbar-streak,
     .stat-badge.stat-streak {

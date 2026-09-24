@@ -1001,10 +1001,16 @@
               localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
             }
 
+            let effectivePoints = serverPoints;
+            if (!resetOccurred && localPoints > serverPoints) {
+              effectivePoints = localPoints;
+              sb.from('user_progress').update({ points: localPoints, total_points: localPoints }).eq('user_id', uid).then(()=>{});
+            }
+
             const freshProg = {
               user_id: uid,
-              points: serverPoints,
-              total_points: serverPoints,
+              points: effectivePoints,
+              total_points: effectivePoints,
               streak_days: prog.streak_days || 1,
               hearts: prog.hearts ?? 5,
               reset_version: serverResetVersion,
@@ -2689,6 +2695,24 @@
         if (typeof showToast === 'function') {
           showToast('تم فتح جميع المستويات بنجاح بواسطة إدارة المنصة! 🔓', 'check');
         }
+      } else if (data.actionType === 'notification') {
+        const notifTitle = data.title || 'إشعار من الإدارة';
+        const notifMsg = data.message || data.body || '';
+        if (window.Swal) {
+          Swal.fire({
+            icon: 'info',
+            title: notifTitle,
+            text: notifMsg,
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#6B1530'
+          });
+        } else if (typeof showToast === 'function') {
+          showToast(`${notifTitle}: ${notifMsg}`, 'bell');
+        }
+      } else if (data.actionType === 'delete' || data.actionType === 'account_deleted') {
+        try {
+          if (typeof signOutStudent === 'function') signOutStudent();
+        } catch (_) {}
       }
     }
 

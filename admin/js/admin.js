@@ -2568,21 +2568,113 @@ window.currentOnlineUserIds = new Set();
 
 // الاشتراك اللحظي الفوري لتحديث قائمة الطلاب ورصد التواجد اللحظي (Realtime Presence) بدقة 100%
 function setupStudentsRealtime() {
-  // 1) الاشتراك في تحديثات قاعدة البيانات التلقائية
+  // 1) الاشتراك في تحديثات قاعدة البيانات التلقائية (Realtime Database Changes)
   if (!studentsRealtimeSub) {
     try {
       studentsRealtimeSub = sb.channel('realtime_admin_students_stream')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, (payload) => {
           showRealtimePulse();
+          const rec = payload?.new;
+          if (rec && rec.id && allLoadedStudents) {
+            const student = allLoadedStudents.find(s => String(s.id) === String(rec.id));
+            if (student) {
+              if (rec.full_name) student.full_name = rec.full_name;
+              if (rec.email) student.email = rec.email;
+              if (rec.phone !== undefined) student.phone = rec.phone;
+              if (rec.age !== undefined) student.age = rec.age;
+              if (rec.is_banned !== undefined) student.is_banned = rec.is_banned;
+              if (rec.ban_reason !== undefined) student.ban_reason = rec.ban_reason;
+              if (rec.banned_until !== undefined) student.banned_until = rec.banned_until;
+              if (rec.banned_at !== undefined) student.banned_at = rec.banned_at;
+              if (rec.is_deleted !== undefined) student.is_deleted = rec.is_deleted;
+              if (rec.deleted_at !== undefined) student.deleted_at = rec.deleted_at;
+              filterStudentsTable();
+            }
+          }
+          if (activeSelectedStudent && rec && String(activeSelectedStudent.id) === String(rec.id)) {
+            if (rec.full_name) {
+              activeSelectedStudent.full_name = rec.full_name;
+              const nameEl = document.getElementById('m-student-name');
+              if (nameEl) nameEl.textContent = rec.full_name;
+              const avatarEl = document.getElementById('m-student-avatar');
+              if (avatarEl && !activeSelectedStudent.avatar_url) {
+                avatarEl.textContent = rec.full_name.charAt(0).toUpperCase();
+              }
+            }
+            if (rec.email) {
+              activeSelectedStudent.email = rec.email;
+              const emailEl = document.getElementById('m-student-email');
+              if (emailEl) emailEl.textContent = rec.email;
+              const contactEl = document.getElementById('m-student-contact-email');
+              if (contactEl) contactEl.textContent = rec.email;
+            }
+            if (rec.is_banned !== undefined) {
+              activeSelectedStudent.is_banned = rec.is_banned;
+              activeSelectedStudent.ban_reason = rec.ban_reason;
+              activeSelectedStudent.banned_until = rec.banned_until;
+              activeSelectedStudent.banned_at = rec.banned_at;
+              viewStudentDetails(activeSelectedStudent.id);
+            }
+          }
           debouncedLoadUsers(true, 800);
         })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress' }, () => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_progress' }, (payload) => {
           showRealtimePulse();
-          debouncedLoadUsers(true, 800);
+          const rec = payload?.new;
+          if (rec && rec.user_id && allLoadedStudents) {
+            const student = allLoadedStudents.find(s => String(s.id) === String(rec.user_id));
+            const newPts = (rec.points !== undefined && rec.points !== null)
+              ? Number(rec.points)
+              : Number(rec.total_points ?? (student ? student.points : 0));
+            if (student) {
+              student.points = newPts;
+              if (rec.hearts != null) student.hearts = rec.hearts;
+              if (rec.streak_days != null) student.streak_days = rec.streak_days;
+              if (rec.last_active_date) student.last_active_date = rec.last_active_date;
+              updateStudentsSummaryStats(allLoadedStudents);
+              filterStudentsTable();
+            }
+
+            // تحديث نافذة التفاصيل فوراً إن كانت مفتوحة لهذا الطالب (0ms)
+            if (activeSelectedStudent && String(activeSelectedStudent.id) === String(rec.user_id)) {
+              activeSelectedStudent.points = newPts;
+              if (rec.hearts != null) activeSelectedStudent.hearts = rec.hearts;
+              if (rec.streak_days != null) activeSelectedStudent.streak_days = rec.streak_days;
+              if (rec.last_active_date) activeSelectedStudent.last_active_date = rec.last_active_date;
+
+              const xpEl = document.getElementById('m-student-xp');
+              if (xpEl) xpEl.textContent = newPts.toLocaleString() + ' XP';
+              const heartsEl = document.getElementById('m-student-hearts');
+              if (heartsEl && rec.hearts != null) heartsEl.innerHTML = `${ICONS_SVG.heart} <span>${rec.hearts}</span>`;
+              const streakEl = document.getElementById('m-student-streak');
+              if (streakEl && rec.streak_days != null) streakEl.innerHTML = `${ICONS_SVG.flame} <span>${rec.streak_days} يوم</span>`;
+            }
+          }
+          debouncedLoadUsers(true, 500);
         })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, () => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_lesson_progress' }, async (payload) => {
           showRealtimePulse();
-          debouncedLoadUsers(true, 800);
+          const rec = payload?.new || payload?.old;
+          const targetUserId = rec?.user_id;
+
+          // تحديث فوري ولحظي لسجل نشاط الطالب إذا كانت نافذته مفتوحة
+          if (activeSelectedStudent && targetUserId && String(activeSelectedStudent.id) === String(targetUserId)) {
+            try {
+              const { data: freshLps } = await sb.from('user_lesson_progress')
+                .select('user_id, status, lesson_id, score, updated_at')
+                .eq('user_id', activeSelectedStudent.id);
+              if (freshLps && Array.isArray(freshLps)) {
+                activeSelectedStudent.lessons_detail = freshLps;
+                activeSelectedStudent.completed_lessons = freshLps.filter(l => l.status === 'completed').length;
+                const lessonsCountEl = document.getElementById('m-student-lessons-count');
+                if (lessonsCountEl) lessonsCountEl.textContent = activeSelectedStudent.completed_lessons + ' درس';
+                renderStudentLessonsAudit(activeSelectedStudent);
+              }
+            } catch (err) {
+              console.warn('Realtime student lesson audit live update error:', err);
+            }
+          }
+          debouncedLoadUsers(true, 400);
         })
         .subscribe((status) => {
           const badge = document.getElementById('realtime-status-badge');
@@ -2634,17 +2726,48 @@ function setupStudentsRealtime() {
   if (!window._adminBcSub && typeof BroadcastChannel !== 'undefined') {
     try {
       const bc = new BroadcastChannel('mg_coptic_gamification_sync');
-      bc.onmessage = (ev) => {
+      bc.onmessage = async (ev) => {
         const msg = ev?.data;
         if (!msg) return;
         if (msg.type === 'lesson_completed' || msg.type === 'xp_updated' || msg.type === 'student_name_updated' || msg.type === 'user_profile_updated' || msg.type === 'progress_update') {
           showRealtimePulse();
-          debouncedLoadUsers(true, 500);
-
-          // إذا كانت نافذة هذا الطالب مفتوحة حالياً، نقوم بتحديثها فوراً
-          if (activeSelectedStudent && msg.userId && activeSelectedStudent.id === msg.userId) {
-            viewStudentDetails(activeSelectedStudent.id);
+          const targetUid = msg.userId || msg.payload?.user_id;
+          if (targetUid && allLoadedStudents) {
+            const student = allLoadedStudents.find(s => String(s.id) === String(targetUid));
+            if (student && typeof msg.points === 'number') {
+              student.points = msg.points;
+              updateStudentsSummaryStats(allLoadedStudents);
+              filterStudentsTable();
+            }
           }
+
+          // إذا كانت نافذة هذا الطالب مفتوحة حالياً، نقوم بتحديث سجل نشاطه فوراً (0ms)
+          if (activeSelectedStudent && targetUid && String(activeSelectedStudent.id) === String(targetUid)) {
+            if (msg.type === 'lesson_completed' && msg.lessonId) {
+              if (!activeSelectedStudent.lessons_detail) activeSelectedStudent.lessons_detail = [];
+              const numId = Number(msg.lessonId);
+              const existingIdx = activeSelectedStudent.lessons_detail.findIndex(l => Number(l.lesson_id) === numId);
+              const newItem = {
+                user_id: activeSelectedStudent.id,
+                lesson_id: numId,
+                status: 'completed',
+                score: msg.score || 100,
+                updated_at: new Date().toISOString()
+              };
+              if (existingIdx >= 0) {
+                activeSelectedStudent.lessons_detail[existingIdx] = newItem;
+              } else {
+                activeSelectedStudent.lessons_detail.push(newItem);
+              }
+              activeSelectedStudent.completed_lessons = activeSelectedStudent.lessons_detail.filter(l => l.status === 'completed').length;
+              const countEl = document.getElementById('m-student-lessons-count');
+              if (countEl) countEl.textContent = activeSelectedStudent.completed_lessons + ' درس';
+              renderStudentLessonsAudit(activeSelectedStudent);
+            } else {
+              viewStudentDetails(activeSelectedStudent.id);
+            }
+          }
+          debouncedLoadUsers(true, 500);
         }
       };
       window._adminBcSub = bc;
@@ -2933,7 +3056,7 @@ async function loadUsers(isSilent = false) {
       const completedLps = userLps.filter(l => l.status === 'completed');
       const completedCount = completedLps.length;
       const completedLessonIdSet = new Set(completedLps.map(l => String(l.lesson_id)));
-      const points = p.points ?? 0;
+      const points = (p.points !== undefined && p.points !== null) ? Number(p.points) : Number(p.total_points ?? 0);
 
       // تحديد المستوى الفعلي للطالب بناءً على مساره وإنجازه الدراسي الواقعي
       let actualLevel = 'المستوى 1';
@@ -3730,7 +3853,8 @@ async function promptSetStudentPasswordModal() {
     // 1. استدعاء RPC لتحديث auth.users و public.users
     const { data: rpcData, error: rpcErr } = await sb.rpc('reset_user_password_direct', {
       p_email: s.email,
-      p_new_password: newPw
+      p_new_password: newPw,
+      p_user_id: s.id
     });
 
     if (rpcErr) {
@@ -3748,6 +3872,9 @@ async function promptSetStudentPasswordModal() {
 
     isStudentPasswordVisible = true;
     renderStudentPasswordUI(s);
+
+    // 4. بث تحديث كلمة المرور للعميل
+    broadcastAdminActionToClient(s.id, 'password_updated');
 
     Swal.fire({
       icon: 'success',
@@ -3795,17 +3922,33 @@ async function editStudentNameModal() {
 
   const cleanName = newName.trim();
   try {
-    // 1. تحديث جدول المستخدمين بدقة
-    const { error: updErr } = await sb.from('users').update({ full_name: cleanName }).eq('id', s.id);
-    if (updErr) {
-      const { error: upsErr } = await sb.from('users').upsert({ id: s.id, full_name: cleanName }, { onConflict: 'id' });
-      if (upsErr) throw upsErr;
+    // 1. استدعاء RPC السحابي لتحديث public.users و auth.users
+    const { data: rpcRes, error: rpcErr } = await sb.rpc('admin_update_student_name', {
+      p_user_id: s.id,
+      p_new_name: cleanName
+    });
+
+    if (rpcErr) {
+      console.warn('admin_update_student_name RPC notice, fallback to direct update:', rpcErr);
+      const { error: updErr } = await sb.from('users').update({ full_name: cleanName }).eq('id', s.id);
+      if (updErr) {
+        const { error: upsErr } = await sb.from('users').upsert({ id: s.id, full_name: cleanName }, { onConflict: 'id' });
+        if (upsErr) throw upsErr;
+      }
     }
 
     // 2. تحديث الكائن في الذاكرة والقائمة فوراً
     s.full_name = cleanName;
+    const cached = allLoadedStudents.find(u => u.id === s.id);
+    if (cached) cached.full_name = cleanName;
+
     const nameEl = document.getElementById('m-student-name');
     if (nameEl) nameEl.textContent = cleanName;
+
+    const avatarEl = document.getElementById('m-student-avatar');
+    if (avatarEl && !s.avatar_url) {
+      avatarEl.textContent = cleanName.charAt(0).toUpperCase();
+    }
 
     // 3. بث فوري للطالب النشط عبر قناة Realtime وقناة البث المحلي للمتصفح
     broadcastAdminActionToClient(s.id, 'name_updated', { full_name: cleanName });
@@ -3823,7 +3966,7 @@ async function editStudentNameModal() {
 
     Swal.fire({
       icon: 'success',
-      title: 'تم حفظ الاسم',
+      title: 'تم حفظ الاسم بنجاح!',
       text: `تم تحديث اسم الطالب بنجاح في قاعدة البيانات إلى: ${cleanName}`,
       timer: 2000,
       showConfirmButton: false
@@ -4637,7 +4780,6 @@ window.openGiftStudentModal = openGiftStudentModal;
 function promptAdjustPointsModal() {
   if (!activeSelectedStudent) return;
   const s = activeSelectedStudent;
-  closeStudentModal();
   adjustUserXP(s.id, s.points);
 }
 window.promptAdjustPointsModal = promptAdjustPointsModal;
@@ -4718,7 +4860,6 @@ window.refillUserHearts = refillUserHearts;
 function refillStudentHeartsModal() {
   if (!activeSelectedStudent) return;
   const s = activeSelectedStudent;
-  closeStudentModal();
   refillUserHearts(s.id);
 }
 window.refillStudentHeartsModal = refillStudentHeartsModal;
@@ -5257,6 +5398,7 @@ async function deleteUser(userId, userName) {
     return;
   }
 
+  broadcastAdminActionToClient(userId, 'delete');
   toast('تم حذف حساب الطالب وتقدمه نهائياً بنجاح');
   loadUsers(true);
 }
@@ -5782,54 +5924,94 @@ async function populateNotifLessonsDropdown() {
 }
 window.populateNotifLessonsDropdown = populateNotifLessonsDropdown;
 
-function openSendNotificationForCurrentStudent() {
-  if (window.currentAdminRole !== 'super_admin') {
-    if (typeof Swal !== 'undefined') {
-      Swal.fire({
-        icon: 'error',
-        title: 'غير مصرح',
-        text: 'إرسال الإشعارات متاح فقط لحسابات Super Admin',
-        confirmButtonText: 'حسناً',
-        confirmButtonColor: '#6B1530'
-      });
-    } else {
-      alert('إرسال الإشعارات متاح فقط لحسابات Super Admin');
-    }
-    return;
-  }
-
+async function openSendNotificationForCurrentStudent() {
   if (!activeSelectedStudent) return;
   const student = activeSelectedStudent;
-  closeStudentModal();
-  switchAdminTab('notifications');
 
-  const audienceSelect = document.getElementById('notif-input-audience');
-  if (audienceSelect) {
-    audienceSelect.value = 'single';
-    toggleNotifTargetInput();
-  }
-
-  populateNotifStudentsDropdown().then(() => {
-    const userSelect = document.getElementById('notif-input-user');
-    if (userSelect) {
-      let opt = Array.from(userSelect.options).find(o => String(o.value) === String(student.id));
-      if (!opt) {
-        opt = document.createElement('option');
-        opt.value = student.id;
-        opt.textContent = `${student.full_name || 'طالب'} — ${student.email || ''}`;
-        userSelect.appendChild(opt);
+  const { value: formValues } = await Swal.fire({
+    title: 'إرسال إشعار فوري للطالب',
+    html: `
+      <div style="direction:rtl; text-align:right; font-family:'Cairo',sans-serif; color:#2E2018;">
+        <div style="background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:0.86rem; color:#1E40AF;">
+          إرسال إشعار فوري ومباشر إلى هاتف وجهاز الطالب: <strong>${esc(student.full_name)}</strong>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-weight:800; font-size:0.84rem; color:#1E3A8A; margin-bottom:4px;">عنوان الإشعار:</label>
+          <input type="text" id="swal-notif-title" class="swal2-input" value="تنبيه من إدارة MG Coptic" style="margin:0; width:100%; box-sizing:border-box; font-size:0.95rem; font-weight:700;">
+        </div>
+        <div>
+          <label style="display:block; font-weight:800; font-size:0.84rem; color:#1E3A8A; margin-bottom:4px;">نص الإشعار:</label>
+          <textarea id="swal-notif-body" class="swal2-textarea" placeholder="اكتب رسالتك للطالب هنا..." style="margin:0; width:100%; box-sizing:border-box; font-size:0.9rem; min-height:80px;"></textarea>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'إرسال الإشعار الآن 🚀',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#2563EB',
+    cancelButtonColor: '#6B7280',
+    preConfirm: () => {
+      const title = document.getElementById('swal-notif-title')?.value.trim();
+      const body = document.getElementById('swal-notif-body')?.value.trim();
+      if (!title) {
+        Swal.showValidationMessage('يرجى إدخال عنوان الإشعار');
+        return false;
       }
-      userSelect.value = student.id;
+      if (!body) {
+        Swal.showValidationMessage('يرجى إدخال نص الإشعار');
+        return false;
+      }
+      return { title, body };
     }
   });
 
-  setTimeout(() => {
-    const titleInput = document.getElementById('notif-input-title');
-    if (titleInput) {
-      titleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      titleInput.focus();
-    }
-  }, 250);
+  if (!formValues) return;
+  const { title, body } = formValues;
+
+  Swal.fire({
+    title: 'جارٍ إرسال الإشعار...',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    // 1. تسجيل الإشعار في notification_events
+    await sb.from('notification_events').insert({
+      event_type: 'admin_broadcast',
+      target_user_id: student.id,
+      title: title,
+      body: body,
+      deep_link: 'index.html',
+      status: 'pending'
+    });
+
+    // 2. إرسال Push Notification
+    const anonKey = window.SUPABASE_ANON_KEY || window.SB_ANON_KEY || SUPABASE_ANON_KEY;
+    fetch('https://kdoanxzpfiscprjjzzic.supabase.co/functions/v1/send-notifications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
+      }
+    }).catch(e => console.log('[Push Notif Dispatch]', e));
+
+    // 3. بث فوري لجهاز الطالب عبر Realtime
+    broadcastAdminActionToClient(student.id, 'notification', { title, message: body });
+
+    Swal.close();
+    Swal.fire({
+      icon: 'success',
+      title: 'تم إرسال الإشعار بنجاح! 🔔',
+      text: `تم تسليم الإشعار الفوري للطالب "${student.full_name}" لحظياً.`,
+      timer: 2500,
+      showConfirmButton: false
+    });
+  } catch (err) {
+    Swal.close();
+    console.error('Error sending instant notification:', err);
+    toast('تعذر إرسال الإشعار: ' + (err.message || err), true);
+  }
 }
 window.openSendNotificationForCurrentStudent = openSendNotificationForCurrentStudent;
 

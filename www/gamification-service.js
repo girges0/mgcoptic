@@ -1206,9 +1206,17 @@ class GamificationService {
               return;
             }
 
-            if(cached.points !== serverPoints || cached.hearts !== serverHearts || cached.streak_days !== serverStreak){
-              cached.points = serverPoints;
-              cached.total_points = serverPoints;
+            const safeLocalPoints = Number(cached.points || 0);
+            const resolvedPoints = Math.max(safeLocalPoints, serverPoints);
+            if (safeLocalPoints > serverPoints && uid) {
+              sbClient.from('user_progress').update({ points: safeLocalPoints, total_points: safeLocalPoints }).eq('user_id', uid).then(({ error }) => {
+                if (error) sbClient.from('user_progress').update({ points: safeLocalPoints }).eq('user_id', uid);
+              });
+            }
+
+            if(cached.points !== resolvedPoints || cached.hearts !== serverHearts || cached.streak_days !== serverStreak){
+              cached.points = resolvedPoints;
+              cached.total_points = resolvedPoints;
               cached.hearts = serverHearts;
               cached.streak_days = serverStreak;
               if(Array.isArray(data.claimed_chests)) cached.claimed_chests = data.claimed_chests;
@@ -1247,7 +1255,7 @@ class GamificationService {
           if (serverPoints === 0 && localPoints > 0) {
             serverPoints = localPoints;
             try {
-              sbClient.from('user_progress').update({ points: serverPoints }).eq('user_id', uid).then(()=>{}, ()=>{});
+              sbClient.from('user_progress').update({ points: serverPoints, total_points: serverPoints }).eq('user_id', uid).then(()=>{}, ()=>{});
             } catch (_) {}
           }
 
@@ -1478,13 +1486,21 @@ class GamificationService {
     prog.points = Math.max(0, (prog.points || 0) + safePoints);
     prog.total_points = prog.points;
     this.saveProgressLocal(prog, uid, true);
+    if(typeof window !== 'undefined'){
+      if(typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+      if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(prog);
+    }
     return prog;
   }
 
   // تحديث التقدم سحابياً في Supabase لحساب المستخدم بدقة دون مساس بالنقاط إلا إذا حُددت
   async updateProgress(userId, updates = {}){
     const uid = userId || this.getCurrentUser()?.id;
-    let prog = await this.getProgress(uid);
+    let prog = this.getProgressLocal(uid);
+    if (!prog) {
+      prog = await this.getProgress(uid);
+    }
+    if (!prog) prog = { points: 0, total_points: 0, hearts: 5, streak_days: 1 };
     let pointsChanged = false;
     if(typeof updates.hearts === 'number') prog.hearts = Math.max(0, Math.min(5, updates.hearts));
     if(typeof updates.addPoints === 'number') {
@@ -1495,6 +1511,14 @@ class GamificationService {
         pointsChanged = true;
       }
     }
+    if(typeof updates.points === 'number') {
+      const targetPoints = Math.max(0, parseInt(updates.points, 10) || 0);
+      if (prog.points !== targetPoints) {
+        prog.points = targetPoints;
+        prog.total_points = targetPoints;
+        pointsChanged = true;
+      }
+    }
     if(typeof updates.addHearts === 'number') {
       const safeHearts = Math.max(0, parseInt(updates.addHearts, 10) || 0);
       prog.hearts = Math.max(0, Math.min(5, (prog.hearts ?? 5) + safeHearts));
@@ -1502,7 +1526,12 @@ class GamificationService {
     if(typeof updates.streak_days === 'number') prog.streak_days = Math.max(1, updates.streak_days);
     if(Array.isArray(updates.claimed_chests)) prog.claimed_chests = updates.claimed_chests;
 
+    // حفظ فوري محلياً وتحديث الواجهة والذاكرة بلحظية تامة
     this.saveProgressLocal(prog, uid);
+    if(typeof window !== 'undefined'){
+      if(typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+      if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(prog);
+    }
 
     if(sbClient && uid){
       // تحديث الحقول المعدلة فعلياً فقط دون كتابة عشوائية فوق النقاط
@@ -1511,7 +1540,10 @@ class GamificationService {
       if(typeof updates.streak_days === 'number') dbUpdates.streak_days = prog.streak_days;
       if(Array.isArray(updates.claimed_chests)) dbUpdates.claimed_chests = prog.claimed_chests || [];
       if(updates.last_active_date) dbUpdates.last_active_date = prog.last_active_date;
-      if(pointsChanged) dbUpdates.points = prog.points;
+      if(pointsChanged) {
+        dbUpdates.points = prog.points;
+        dbUpdates.total_points = prog.points;
+      }
 
       if(Object.keys(dbUpdates).length > 0){
         const payload = {
@@ -1523,8 +1555,13 @@ class GamificationService {
           last_active_date: prog.last_active_date || new Date().toISOString().split('T')[0],
           ...dbUpdates
         };
-        sbClient.from('user_progress').upsert(payload, { onConflict: 'user_id' }).then(()=>{}, (e) => {
-          sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid).then(()=>{}, ()=>{});
+        sbClient.from('user_progress').upsert(payload, { onConflict: 'user_id' }).then(({ error }) => {
+          if (error) {
+            console.warn('[Gamification] user_progress upsert err, fallback to update:', error);
+            sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
+          }
+        }).catch(() => {
+          sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
         });
       }
 
@@ -2072,7 +2109,7 @@ class GamificationService {
           if(!recErr && recData){
             serverHandled = true;
             const curProg = this.getProgressLocal(uid) || {};
-            curProg.points = Number(recData.points ?? curProg.points ?? 0);
+            curProg.points = Number(recData.points ?? recData.total_points ?? curProg.points ?? 0);
             curProg.total_points = curProg.points;
             if(recData.hearts != null) curProg.hearts = Number(recData.hearts);
             if(recData.streak_days != null) curProg.streak_days = Number(recData.streak_days);
@@ -2141,7 +2178,14 @@ class GamificationService {
         hearts: finalProg.hearts || 5,
         streak_days: finalProg.streak_days || 1,
         last_active_date: new Date().toISOString().split('T')[0]
-      }, { onConflict: 'user_id' }).then(()=>{}, (e)=>{ console.warn('user_progress upsert err:', e); });
+      }, { onConflict: 'user_id' }).then(({ error })=>{
+        if (error) {
+          console.warn('[Gamification] user_progress upsert err in completeLesson:', error);
+          sbClient.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
+        }
+      }).catch((e)=>{
+        sbClient.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
+      });
     }
 
     // إشعار الداش بورد فوراً عبر قناة البث المحلي للمتصفح

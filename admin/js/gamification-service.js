@@ -1495,6 +1495,14 @@ class GamificationService {
         pointsChanged = true;
       }
     }
+    if(typeof updates.points === 'number') {
+      const targetPoints = Math.max(0, parseInt(updates.points, 10) || 0);
+      if (prog.points !== targetPoints) {
+        prog.points = targetPoints;
+        prog.total_points = targetPoints;
+        pointsChanged = true;
+      }
+    }
     if(typeof updates.addHearts === 'number') {
       const safeHearts = Math.max(0, parseInt(updates.addHearts, 10) || 0);
       prog.hearts = Math.max(0, Math.min(5, (prog.hearts ?? 5) + safeHearts));
@@ -1511,7 +1519,10 @@ class GamificationService {
       if(typeof updates.streak_days === 'number') dbUpdates.streak_days = prog.streak_days;
       if(Array.isArray(updates.claimed_chests)) dbUpdates.claimed_chests = prog.claimed_chests || [];
       if(updates.last_active_date) dbUpdates.last_active_date = prog.last_active_date;
-      if(pointsChanged) dbUpdates.points = prog.points;
+      if(pointsChanged) {
+        dbUpdates.points = prog.points;
+        dbUpdates.total_points = prog.points;
+      }
 
       if(Object.keys(dbUpdates).length > 0){
         const payload = {
@@ -1523,8 +1534,13 @@ class GamificationService {
           last_active_date: prog.last_active_date || new Date().toISOString().split('T')[0],
           ...dbUpdates
         };
-        sbClient.from('user_progress').upsert(payload, { onConflict: 'user_id' }).then(()=>{}, (e) => {
-          sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid).then(()=>{}, ()=>{});
+        sbClient.from('user_progress').upsert(payload, { onConflict: 'user_id' }).then(({ error }) => {
+          if (error) {
+            console.warn('[Gamification] user_progress upsert err, fallback to update:', error);
+            sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
+          }
+        }).catch(() => {
+          sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
         });
       }
 
