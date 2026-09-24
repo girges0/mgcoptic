@@ -86,7 +86,7 @@
 
   <!-- Admin Modular CSS Styles -->
   <link rel="stylesheet" href="css/variables.css?v=3.6.0">
-  <link rel="stylesheet" href="css/admin.css?v=3.6.0">
+  <link rel="stylesheet" href="css/admin.css?v=3.7.0">
 
   <!-- External Vendor Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1221,219 +1221,430 @@
 
     <!-- ============ PANEL: NOTIFICATIONS (إدارة الإشعارات وبث التنبيهات) ============ -->
     <section class="panel" id="panel-notifications">
-      <div class="toolbar" style="flex-wrap:wrap; gap:12px; align-items:center;">
-        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-          <h2 style="margin:0;">إدارة وبث الإشعارات (Push Notifications)</h2>
-          <div style="display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:16px; background:#F5EFE0; border:1px solid #D6C8B2; color:#6F1737; font-size:0.82rem; font-weight:800;">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span>FCM HTTP v1 + Edge Function</span>
+      
+      <!-- 1. Header & Live Engine Status Bar -->
+      <div class="notifications-page-header">
+        <div class="notif-header-title-box">
+          <div class="notif-header-icon-badge">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div>
+            <h2 class="notif-header-title">أستوديو وبث الإشعارات الفورية (Push Notifications Studio)</h2>
+            <p class="notif-header-sub">بث تنبيهات ورسائل تفاعلية مباشرة لهواتف وأجهزة الطلاب عبر محرك FCM HTTP v1 المباشر</p>
+          </div>
+        </div>
+        <div class="notif-header-badges">
+          <div class="notif-engine-pill is-active" title="محرك البث المباشر يعمل بكفاءة">
+            <span class="live-dot-pulse"></span>
+            <span>FCM HTTP v1 + Edge Functions متصل ونشط</span>
           </div>
         </div>
       </div>
 
-      <!-- نموذج إرسال إشعار إداري جديد -->
-      <div class="quiz-settings-box" style="margin-bottom:24px; background:#FFFDF8; border:1.5px solid #E7DCC8; border-radius:16px; padding:20px 24px;">
-        <h3 style="margin:0 0 8px 0; color:#6B1530; font-size:1.15rem; font-weight:900; display:flex; align-items:center; gap:8px;">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          <span>إرسال إشعار جديد للطلاب</span>
-        </h3>
-        <p style="margin:0 0 18px 0; font-size:0.86rem; color:#746B6F; line-height:1.5;">
-          يمكنك إرسال إشعار عام فوري لجميع الطلاب، أو اختيار طالب محدد. سيتم وضع الإشعار في طابور الإرسال وإيصاله عبر خدمة FCM مباشرة لهواتف المستخدمين.
-        </p>
+      <!-- 2. Top KPI Overview Cards -->
+      <div class="notif-stats-grid">
+        <div class="notif-kpi-card kpi-total">
+          <div class="kpi-icon-box">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-num" id="notif-kpi-total">0</span>
+            <span class="kpi-label">إجمالي الإشعارات الصادرة</span>
+          </div>
+        </div>
 
-        <form id="form-send-notification" onsubmit="event.preventDefault(); sendAdminNotification();">
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:14px;">
-            <div>
-              <label for="notif-input-title" style="display:block; font-weight:800; font-size:0.88rem; color:#2E2018; margin-bottom:6px;">عنوان الإشعار *</label>
-              <input type="text" id="notif-input-title" placeholder="مثال: درس جديد متاح الآن للمذاكرة" required style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none;">
+        <div class="notif-kpi-card kpi-sent">
+          <div class="kpi-icon-box">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-num" id="notif-kpi-sent">0</span>
+            <span class="kpi-label">تم الإرسال والتسليم</span>
+          </div>
+        </div>
+
+        <div class="notif-kpi-card kpi-pending">
+          <div class="kpi-icon-box">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-num" id="notif-kpi-pending">0</span>
+            <span class="kpi-label">قيد المعالجة والطابور</span>
+          </div>
+        </div>
+
+        <div class="notif-kpi-card kpi-audience">
+          <div class="kpi-icon-box">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-num" id="notif-kpi-students">0</span>
+            <span class="kpi-label">الطلاب وأجهزة الهواتف المتاحة</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Two-Column Workspace: Compose Form (Left) & Smartphone Live Preview (Right) -->
+      <div class="notif-workspace-grid">
+        
+        <!-- Left Column: The Notification Composer Card -->
+        <div class="notif-composer-card">
+          <div class="composer-header">
+            <div class="composer-title-wrap">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <h3>صياغة إشعار فوري جديد</h3>
             </div>
+            <span class="composer-badge">بث لحظي مباشر</span>
+          </div>
 
-            <div>
-              <label for="notif-input-audience" style="display:block; font-weight:800; font-size:0.88rem; color:#2E2018; margin-bottom:6px;">الجمهور المستهدف *</label>
-              <select id="notif-input-audience" onchange="toggleNotifTargetInput()" style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; font-weight:700; cursor:pointer;">
-                <option value="broadcast">جميع الطلاب (إرسال عام لجميع الأجهزة)</option>
+          <!-- Quick Template Presets (نماذج جاهزة بنقرة واحدة) -->
+          <div class="notif-presets-container">
+            <span class="presets-label">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>قوالب سريعة جاهزة:</span>
+            </span>
+            <div class="presets-chips-row">
+              <button type="button" class="preset-chip" onclick="applyNotifPreset('reminder')">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>تذكير المذاكرة اليومي</span>
+              </button>
+              <button type="button" class="preset-chip" onclick="applyNotifPreset('new_lesson')">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span>درس تعليمي جديد</span>
+              </button>
+              <button type="button" class="preset-chip" onclick="applyNotifPreset('competition')">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 3h12v7a6 6 0 0 1-12 0V3z"/></svg>
+                <span>تحدي ومسابقة جديدة</span>
+              </button>
+              <button type="button" class="preset-chip" onclick="applyNotifPreset('hearts')">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <span>هدية قلوب تشجيعية</span>
+              </button>
+            </div>
+          </div>
+
+          <form id="form-send-notification" onsubmit="event.preventDefault(); sendAdminNotification();">
+            
+            <!-- Audience Segment Selection -->
+            <div class="composer-field-group">
+              <label class="composer-field-label">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>الجمهور المستهدف (Target Audience) *</span>
+              </label>
+              <div class="audience-toggle-grid">
+                <label class="audience-toggle-option" id="aud-opt-broadcast">
+                  <input type="radio" name="notif_audience_choice" value="broadcast" checked onchange="syncAudienceSelect('broadcast')">
+                  <div class="audience-card-inner">
+                    <div class="aud-icon">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="aud-text">
+                      <strong>جميع الطلاب (عام Broadcast)</strong>
+                      <span>بث فوري لجميع الأجهزة والهواتف المسجلة</span>
+                    </div>
+                  </div>
+                </label>
+                <label class="audience-toggle-option" id="aud-opt-single">
+                  <input type="radio" name="notif_audience_choice" value="single" onchange="syncAudienceSelect('single')">
+                  <div class="audience-card-inner">
+                    <div class="aud-icon">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="aud-text">
+                      <strong>طالب محدد فقط (Direct)</strong>
+                      <span>إرسال مخصص وخاص لحساب طالب واحد</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              <!-- Hidden select matching original JS -->
+              <select id="notif-input-audience" onchange="toggleNotifTargetInput()" style="display:none;">
+                <option value="broadcast" selected>جميع الطلاب (إرسال عام لجميع الأجهزة)</option>
                 <option value="single">طالب محدد فقط (إرسال فردي)</option>
               </select>
             </div>
-          </div>
 
-          <!-- اختيار طالب محدد مع بحث فوري وتحديث تلقائي -->
-          <div id="notif-target-user-wrapper" style="display:none; margin-bottom:16px; background:#FAF6EE; padding:14px 18px; border-radius:12px; border:1.5px dashed #D6C8B2;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
-              <label for="notif-user-search" style="font-weight:800; font-size:0.9rem; color:#6B1530; display:inline-flex; align-items:center; gap:6px;">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span>اختر الطالب المستهدف للإشعار *</span>
-              </label>
-              <button type="button" class="btn secondary" onclick="refreshNotifStudentsList()" style="display:inline-flex; align-items:center; gap:5px; padding:3px 10px; font-size:0.78rem;" title="تحديث وإعادة جلب قائمة الطلاب">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                <span>تحديث قائمة الطلاب</span>
-              </button>
+            <!-- Single Student Target Drawer (Shows when single is selected) -->
+            <div id="notif-target-user-wrapper" class="notif-student-picker-drawer" style="display:none;">
+              <div class="picker-header">
+                <span class="picker-title">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>تحديد الطالب المستهدف بالاسم أو البريد</span>
+                </span>
+                <button type="button" class="btn-picker-refresh" onclick="refreshNotifStudentsList()" title="تحديث وإعادة جلب قائمة الطلاب">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  <span>تحديث القائمة</span>
+                </button>
+              </div>
+              <div class="picker-search-wrap">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#8C7B6D" stroke-width="2.2" class="picker-search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="notif-user-search" placeholder="ابحث باسم الطالب أو بريده الإلكتروني للفلترة الفورية..." oninput="filterNotifStudents(this.value)">
+              </div>
+              <select id="notif-input-user" class="picker-select" onchange="updateLivePhonePreview()">
+                <option value="">-- اضغط لاختيار الطالب --</option>
+              </select>
+              <div id="notif-user-count-hint" class="picker-count-hint"></div>
             </div>
-            <div style="position:relative; margin-bottom:8px;">
-              <input type="text" id="notif-user-search" placeholder="اكتب اسم الطالب أو بريده الإلكتروني للبحث والفلترة الفورية..." oninput="filterNotifStudents(this.value)" style="width:100%; padding:9px 12px; border-radius:8px; border:1.5px solid #D6C8B2; font-family:inherit; font-size:0.88rem; outline:none; background:#FFF;">
-            </div>
-            <select id="notif-input-user" style="width:100%; padding:10px 14px; border-radius:8px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none; font-weight:700; color:#2E2018;">
-              <option value="">-- اضغط لاختيار الطالب --</option>
-            </select>
-            <div id="notif-user-count-hint" style="font-size:0.8rem; color:#746B6F; margin-top:5px; font-weight:600;"></div>
-          </div>
 
-          <div style="margin-bottom:14px;">
-            <label for="notif-input-body" style="display:block; font-weight:800; font-size:0.88rem; color:#2E2018; margin-bottom:6px;">نص الإشعار *</label>
-            <textarea id="notif-input-body" rows="3" placeholder="اكتب نص الرسالة التي ستظهر في شريط تنبيهات هاتف الطالب..." required style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none; resize:vertical;"></textarea>
-          </div>
-
-          <!-- متصفح الروابط المباشرة ودروس المنهج المتحدثة تلقائياً -->
-          <div style="margin-bottom:20px; background:#FAF6EE; border:1.5px solid #E2D4BF; border-radius:14px; padding:16px 18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-              <div>
-                <label for="notif-input-link" style="display:inline-flex; align-items:center; gap:6px; font-weight:800; font-size:0.92rem; color:#6B1530;">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  <span>الرابط الداخلي المباشر عند النقر (Deep Link - اختياري)</span>
+            <!-- Notification Title Field -->
+            <div class="composer-field-group">
+              <div class="field-label-row">
+                <label for="notif-input-title" class="composer-field-label">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <span>عنوان الإشعار *</span>
                 </label>
-                <div style="font-size:0.8rem; color:#746B6F; margin-top:2px;">
-                  اختر من صفحات ودروس الموقع المحدثة أدناه أو اكتب مساراً، ليفتح التطبيق عليه مباشرة
-                </div>
+                <span class="field-counter" id="notif-title-count">0 / 60</span>
               </div>
-              <button type="button" class="btn secondary" onclick="clearNotifLink()" style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; font-size:0.78rem;" title="مسح الرابط المختار">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                <span>مسح الرابط</span>
-              </button>
+              <input type="text" id="notif-input-title" class="composer-input" placeholder="مثال: درس جديد متاح الآن للمذاكرة" required maxlength="60" oninput="onNotifContentChange()">
             </div>
 
-            <!-- حقل الرابط المكتوب -->
-            <div style="margin-bottom:10px;">
-              <input type="text" id="notif-input-link" placeholder="مثال: index.html#leaderboard أو learn.html?lesson=1" style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.92rem; outline:none; font-weight:700; color:#2E2018;">
+            <!-- Notification Message Body Field -->
+            <div class="composer-field-group">
+              <div class="field-label-row">
+                <label for="notif-input-body" class="composer-field-label">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span>نص ورسالة الإشعار *</span>
+                </label>
+                <span class="field-counter" id="notif-body-count">0 / 180</span>
+              </div>
+              <textarea id="notif-input-body" class="composer-textarea" rows="3" placeholder="اكتب نص الرسالة التي ستظهر في شاشة القفل وشريط تنبيهات هاتف الطالب..." required maxlength="180" oninput="onNotifContentChange()"></textarea>
             </div>
 
-            <!-- بطاقة تأكيد ومعاينة الرابط المختار -->
-            <div id="notif-link-preview-badge" style="display:none; align-items:center; gap:8px; margin-bottom:12px; padding:8px 14px; border-radius:8px; background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-size:0.85rem; font-weight:800;">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>الوجهة المحددة:</span>
-              <span id="notif-link-preview-text"></span>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:12px;">
-
-              <!-- 1. صفحات المنصة الرئيسية -->
-              <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:inline-flex; align-items:center; gap:6px;">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <span>صفحات المنصة الرئيسية:</span>
+            <!-- Deep Link Interactive Browser -->
+            <div class="composer-deep-link-card">
+              <div class="deep-link-card-header">
+                <div class="dl-title-box">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  <strong>التوجيه الداخلي الذكي عند النقر (Deep Link - اختياري)</strong>
                 </div>
-                <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#home', 'الصفحة الرئيسية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <span>الرئيسية</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#learn', 'مسار التعلّم (خريطة المنهج)')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px; border-color:#6B1530; color:#6B1530; font-weight:800;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                    <span>مسار التعلّم</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#leaderboard', 'لوحة المتصدرين والتصنيف')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7"/><path d="M14 14.66V17c0 .55.45 1 1 1h2"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-                    <span>المتصدرين</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#settings', 'الملف الشخصي والإعدادات')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                    <span>الملف الشخصي</span>
-                  </button>
-                </div>
+                <button type="button" class="btn-clear-link" onclick="clearNotifLink()" title="مسح الرابط">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  <span>مسح الرابط</span>
+                </button>
               </div>
 
-              <!-- 2. الأقسام التعليمية والتفاعلية -->
-              <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:inline-flex; align-items:center; gap:6px;">
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                  <span>الأقسام التعليمية والتفاعلية:</span>
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#alphabet', 'قسم الحروف القبطية')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                    <span>الحروف القبطية</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#quiz', 'بنك التحديات والاختبارات')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                    <span>الاختبارات</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#vocab', 'التقويم القبطي والشهور')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <span>التقويم القبطي</span>
-                  </button>
-                  <button type="button" class="btn secondary" onclick="setNotifLink('index.html#competitions', 'قسم المسابقات والتنافس')" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; font-size:0.82rem; border-radius:20px;">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7"/><path d="M14 14.66V17c0 .55.45 1 1 1h2"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-                    <span>المسابقات</span>
-                  </button>
-                </div>
+              <!-- Input field for manual or picked link -->
+              <div class="dl-input-wrap">
+                <input type="text" id="notif-input-link" class="composer-input dl-input" placeholder="مثال: index.html#learn أو index.html#leaderboard" oninput="updateLivePhonePreview()">
               </div>
 
-              <!-- 3. الدروس والمستويات التعليمية المحدثة دائماً -->
-              <div>
-                <div style="font-size:0.82rem; font-weight:800; color:#5D4037; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <span style="display:inline-flex; align-items:center; gap:6px;">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6B1530" stroke-width="2.2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                    <span>دروس المنهج (متحدثة ومستخرجة تلقائياً من المنهج):</span>
-                  </span>
-                  <button type="button" class="btn secondary" onclick="populateNotifLessonsDropdown()" style="display:inline-flex; align-items:center; gap:5px; padding:3px 9px; font-size:0.75rem;">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-                    <span>تحديث قائمة الدروس</span>
-                  </button>
+              <!-- Active Destination Preview Badge -->
+              <div id="notif-link-preview-badge" class="dl-active-badge" style="display:none;">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>الوجهة المحددة:</span>
+                <strong id="notif-link-preview-text"></strong>
+              </div>
+
+              <!-- Categories Quick Tabs -->
+              <div class="dl-categories-wrap">
+                <!-- 1. Main Pages -->
+                <div class="dl-cat-row">
+                  <span class="dl-cat-label">الصفحات الرئيسية:</span>
+                  <div class="dl-chips-group">
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#home', 'الصفحة الرئيسية')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                      <span>الرئيسية</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip chip-highlight" onclick="setNotifLink('index.html#learn', 'مسار التعلّم')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                      <span>مسار التعلّم</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#leaderboard', 'لوحة المتصدرين')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7"/><path d="M14 14.66V17c0 .55.45 1 1 1h2"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+                      <span>المتصدرين</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#settings', 'الملف الشخصي')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                      <span>الملف الشخصي</span>
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <select id="notif-select-lesson" onchange="onNotifLessonSelected(this)" style="width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid #D6C8B2; background:#FFF; font-family:inherit; font-size:0.88rem; outline:none; font-weight:700; color:#2E2018;">
+
+                <!-- 2. Modules & Features -->
+                <div class="dl-cat-row">
+                  <span class="dl-cat-label">الأقسام التعليمية:</span>
+                  <div class="dl-chips-group">
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#alphabet', 'الحروف القبطية')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                      <span>الحروف القبطية</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#quiz', 'بنك الاختبارات')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      <span>بنك الاختبارات</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#vocab', 'التقويم والشهور القبطية')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      <span>التقويم القبطي</span>
+                    </button>
+                    <button type="button" class="dl-quick-chip" onclick="setNotifLink('index.html#competitions', 'قسم المسابقات والتنافس')">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2"/><path d="M18 9h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M6 3h12v7a6 6 0 0 1-12 0V3z"/></svg>
+                      <span>المسابقات</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 3. Lessons Dropdown -->
+                <div class="dl-cat-row">
+                  <div class="dl-lesson-header-row">
+                    <span class="dl-cat-label">ربط بدرس تعليمي محدد:</span>
+                    <button type="button" class="btn-refresh-lessons" onclick="populateNotifLessonsDropdown()" title="تحديث الدروس الحية">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                      <span>تحديث الدروس</span>
+                    </button>
+                  </div>
+                  <select id="notif-select-lesson" class="composer-select dl-lesson-select" onchange="onNotifLessonSelected(this)">
                     <option value="">-- اضغط لاختيار درس محدد لفتحه مباشرة في هاتف الطالب --</option>
                   </select>
                 </div>
               </div>
-
             </div>
+
+            <!-- Composer Action Buttons Footer -->
+            <div class="composer-actions-bar">
+              <button type="button" class="btn-composer-reset" onclick="resetNotifForm()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>تفريغ الحقول</span>
+              </button>
+              <button type="submit" class="btn-composer-submit" id="btn-submit-notif">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span>بث الإشعار الآن للطلاب</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Right Column: Interactive Smartphone Push Notification Preview Card -->
+        <div class="notif-phone-preview-card">
+          <div class="phone-preview-header">
+            <div class="phone-preview-title">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              <h4>المعاينة الحية على هاتف الطالب</h4>
+            </div>
+            <span class="phone-preview-tag">محاكاة فورية Live</span>
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button type="submit" class="btn" id="btn-submit-notif" style="display:inline-flex; align-items:center; gap:8px; padding:11px 24px; font-size:0.95rem; font-weight:800;">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              <span>إرسال الإشعار الآن</span>
+          <div class="phone-device-mockup">
+            <!-- Phone Speaker & Camera Notch -->
+            <div class="phone-notch-bar">
+              <div class="phone-camera-lens"></div>
+              <div class="phone-speaker"></div>
+            </div>
+
+            <!-- Phone Lockscreen Clock -->
+            <div class="phone-lockscreen-clock">
+              <div class="clock-time" id="preview-mockup-time">12:45</div>
+              <div class="clock-date">اليوم • شاشة القفل</div>
+            </div>
+
+            <!-- The Notification Card as rendered on Android / iOS lockscreen -->
+            <div class="phone-push-notification-banner">
+              <div class="push-banner-top">
+                <div class="push-app-badge">
+                  <img src="assets/images/favicon.png" alt="MG COPTIC" class="push-app-logo">
+                  <span class="push-app-name">MG COPTIC</span>
+                  <span class="push-dot">•</span>
+                  <span class="push-timestamp">الآن</span>
+                </div>
+                <div class="push-expand-icon">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+
+              <div class="push-banner-body">
+                <h5 class="push-title-text" id="phone-preview-title">درس جديد متاح الآن للمذاكرة</h5>
+                <p class="push-desc-text" id="phone-preview-body">حافظ على حماستك واستمراريتك! درسك القبطي لليوم بانتظارك داخل التطبيق الآن...</p>
+              </div>
+
+              <div class="push-banner-action" id="phone-preview-action-row" style="display:none;">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                <span id="phone-preview-action-label">فتح: مسار التعلّم</span>
+              </div>
+            </div>
+
+            <!-- Phone Bottom Home Indicator -->
+            <div class="phone-home-indicator"></div>
+          </div>
+
+          <div class="phone-preview-tips">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#6F1737" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>يدعم الإشعار التوجيه المباشر بالعمق (Deep Link) لفتح الدرس أو الصفحة المحددة فور نقر الطالب.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. Notifications History & Broadcast Logs Section -->
+      <div class="notif-history-section">
+        
+        <div class="history-section-header">
+          <div class="history-title-wrap">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h3>سجل وبنك الإشعارات الصادرة (Broadcast Logs)</h3>
+            <span class="history-count-pill" id="notif-total-badge">0 إشعار</span>
+          </div>
+
+          <div class="history-actions-cluster">
+            <button type="button" class="btn-history-tool" onclick="loadNotificationsAdmin()" title="تحديث السجل من السيرفر">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              <span>تحديث السجل</span>
+            </button>
+            <button type="button" class="btn-history-tool btn-tool-danger" onclick="clearAllNotificationsHistory()" title="مسح السجل بالكامل">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>مسح السجل</span>
             </button>
           </div>
-        </form>
-      </div>
-
-      <!-- جدول آخر 20 إشعار -->
-      <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <h3 style="margin:0; font-size:1.1rem; font-weight:900; color:#2E2018;">سجل آخر الإشعارات الصادرة (آخر 20 إشعار)</h3>
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <span id="notif-total-badge" style="font-size:0.84rem; font-weight:800; color:#6B1530;"></span>
-          <button class="btn secondary" type="button" onclick="loadNotificationsAdmin()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.84rem;" title="تحديث السجل">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            <span>تحديث السجل</span>
-          </button>
-          <button class="btn secondary" type="button" onclick="clearAllNotificationsHistory()" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:0.84rem;color:#D92D20;border-color:#FECDCA;background:#FFF5F5;" title="مسح سجل الإشعارات بالكامل">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-            <span>مسح السجل</span>
-          </button>
         </div>
+
+        <!-- Live Search & Filter Bar -->
+        <div class="history-filter-bar">
+          <div class="history-search-wrap">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#8C7B6D" stroke-width="2.2" class="history-search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="notif-history-search-input" placeholder="بحث في الإشعارات بالعنوان أو النص أو المستهدف..." oninput="filterNotificationsHistoryLive()">
+          </div>
+
+          <div class="history-dropdowns-group">
+            <select id="notif-history-status-filter" class="history-filter-select" onchange="filterNotificationsHistoryLive()">
+              <option value="all">جميع الحالات</option>
+              <option value="sent">تم الإرسال (Sent)</option>
+              <option value="pending">قيد الانتظار (Pending)</option>
+              <option value="failed">تعذر الإرسال (Failed)</option>
+            </select>
+
+            <select id="notif-history-audience-filter" class="history-filter-select" onchange="filterNotificationsHistoryLive()">
+              <option value="all">كل الجماهير</option>
+              <option value="broadcast">إرسال عام (Broadcast)</option>
+              <option value="single">إرسال فردي (Single)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Notifications Table with Sticky Headers & Modern Rows -->
+        <div class="table-wrap notif-table-wrapper">
+          <table id="table-notifications" class="modern-notif-table">
+            <thead>
+              <tr>
+                <th style="width:12%;">النوع</th>
+                <th style="width:16%;">المستهدف</th>
+                <th style="width:34%;">العنوان والرسالة</th>
+                <th style="width:14%;">الرابط الداخلي</th>
+                <th style="width:10%;">الحالة</th>
+                <th style="width:10%;">التاريخ</th>
+                <th style="width:4%; text-align:center;">إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-notifications">
+              <tr>
+                <td colspan="7" class="notif-table-empty">
+                  جارٍ تحميل سجل الإشعارات...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
-      <table id="table-notifications" style="width:100%;">
-        <thead>
-          <tr>
-            <th style="width:105px;">النوع</th>
-            <th style="width:150px;">المستهدف</th>
-            <th>العنوان والرسالة</th>
-            <th style="width:130px;">الرابط</th>
-            <th style="width:95px;">الحالة</th>
-            <th style="width:130px;">التاريخ</th>
-            <th style="width:65px; text-align:center;">إجراء</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-notifications">
-          <tr>
-            <td colspan="7" style="text-align:center; padding:24px; color:#8C857E;">
-              جارٍ تحميل سجل الإشعارات...
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </section>
   </main>
 </div>
@@ -1865,7 +2076,7 @@
 </div>
 
   <!-- Admin Logic Modules -->
-  <script src="js/admin.js?v=3.6.0"></script>
+  <script src="js/admin.js?v=3.7.0"></script>
   <script src="js/curriculum-admin.js?v=3.6.0"></script>
   <script src="../js/pwa-register.js?v=3.0.0" defer></script>
   <script>

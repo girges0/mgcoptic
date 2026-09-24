@@ -6015,133 +6015,361 @@ async function openSendNotificationForCurrentStudent() {
 }
 window.openSendNotificationForCurrentStudent = openSendNotificationForCurrentStudent;
 
-async function loadNotificationsAdmin() {
-  if (window.currentAdminRole !== 'super_admin') return;
 
+/* ============================================================================
+   🔔 NOTIFICATIONS BROADCASTING STUDIO INTERACTIVE HELPERS (UI/UX)
+   ============================================================================ */
+
+function syncAudienceSelect(type) {
+  const select = document.getElementById('notif-input-audience');
+  if (select) {
+    select.value = type;
+  }
+  toggleNotifTargetInput();
+  updateLivePhonePreview();
+}
+window.syncAudienceSelect = syncAudienceSelect;
+
+function onNotifContentChange() {
+  const title = document.getElementById('notif-input-title')?.value || '';
+  const body = document.getElementById('notif-input-body')?.value || '';
+  
+  const titleCount = document.getElementById('notif-title-count');
+  const bodyCount = document.getElementById('notif-body-count');
+  
+  if (titleCount) titleCount.textContent = `${title.length} / 60`;
+  if (bodyCount) bodyCount.textContent = `${body.length} / 180`;
+  
+  updateLivePhonePreview();
+}
+window.onNotifContentChange = onNotifContentChange;
+
+function updateLivePhonePreview() {
+  const titleInput = document.getElementById('notif-input-title');
+  const bodyInput = document.getElementById('notif-input-body');
+  const linkInput = document.getElementById('notif-input-link');
+  
+  const pTitle = document.getElementById('phone-preview-title');
+  const pBody = document.getElementById('phone-preview-body');
+  const pActionRow = document.getElementById('phone-preview-action-row');
+  const pActionLabel = document.getElementById('phone-preview-action-label');
+  
+  const titleVal = (titleInput?.value || '').trim();
+  const bodyVal = (bodyInput?.value || '').trim();
+  const linkVal = (linkInput?.value || '').trim();
+  
+  if (pTitle) {
+    pTitle.textContent = titleVal || 'عنوان الإشعار يظهر هنا...';
+  }
+  if (pBody) {
+    pBody.textContent = bodyVal || 'اكتب نص الرسالة في النموذج وستشاهد محاكاة شكلها وتنسيقها على شاشة قفل هاتف الطالب هنا لحظة بلحظة...';
+  }
+  
+  if (pActionRow && pActionLabel) {
+    if (linkVal) {
+      pActionRow.style.display = 'inline-flex';
+      let cleanLabel = linkVal;
+      if (linkVal.includes('lesson=')) cleanLabel = 'الدرس المحدد';
+      else if (linkVal.includes('learn')) cleanLabel = 'مسار التعلّم';
+      else if (linkVal.includes('leaderboard')) cleanLabel = 'لوحة المتصدرين';
+      else if (linkVal.includes('settings')) cleanLabel = 'الملف الشخصي';
+      else if (linkVal.includes('alphabet')) cleanLabel = 'الحروف القبطية';
+      else if (linkVal.includes('quiz')) cleanLabel = 'بنك الاختبارات';
+      else if (linkVal.includes('vocab')) cleanLabel = 'التقويم القبطي';
+      else if (linkVal.includes('competitions')) cleanLabel = 'المسابقات';
+      pActionLabel.textContent = `فتح: ${cleanLabel}`;
+    } else {
+      pActionRow.style.display = 'none';
+    }
+  }
+}
+window.updateLivePhonePreview = updateLivePhonePreview;
+
+function applyNotifPreset(type) {
+  const presets = {
+    reminder: {
+      title: 'تذكير بمذاكرة درس اليوم',
+      body: 'حافظ على حماستك واستمراريتك! درسك القبطي لليوم بانتظارك داخل التطبيق الآن.',
+      link: 'index.html#learn',
+      label: 'مسار التعلّم'
+    },
+    new_lesson: {
+      title: 'درس تعليمي جديد متاح الآن!',
+      body: 'تمت إضافة درس جديد في منهج اللغة القبطية. افتح التطبيق وابدأ المذاكرة فوراً.',
+      link: 'index.html#learn',
+      label: 'مسار التعلّم'
+    },
+    competition: {
+      title: 'تحدي الأسبوع والمسابقات الجديدة',
+      body: 'انضم إلى التحدي وتنافس مع زملائك على صدارة قائمة المتصدرين للأسبوع الحالي!',
+      link: 'index.html#leaderboard',
+      label: 'لوحة المتصدرين'
+    },
+    hearts: {
+      title: 'هدية تشجيعية: تم شحن قلوبك!',
+      body: 'حصلت على شحن قلوب إضافي لمساعدتك في مواصلة التعلّم وحل التمارين دون توقف.',
+      link: 'index.html#learn',
+      label: 'مسار التعلّم'
+    }
+  };
+
+  const p = presets[type];
+  if (!p) return;
+
+  const titleInput = document.getElementById('notif-input-title');
+  const bodyInput = document.getElementById('notif-input-body');
+  
+  if (titleInput) titleInput.value = p.title;
+  if (bodyInput) bodyInput.value = p.body;
+  
+  setNotifLink(p.link, p.label);
+  onNotifContentChange();
+  
+  if (typeof toast === 'function') {
+    toast('تم تطبيق قالب الإشعار الجاهز بنجاح');
+  }
+}
+window.applyNotifPreset = applyNotifPreset;
+
+function resetNotifForm() {
+  const titleInput = document.getElementById('notif-input-title');
+  const bodyInput = document.getElementById('notif-input-body');
+  
+  if (titleInput) titleInput.value = '';
+  if (bodyInput) bodyInput.value = '';
+  
+  clearNotifLink();
+  
+  // Reset audience to broadcast
+  const radBroadcast = document.querySelector('input[name="notif_audience_choice"][value="broadcast"]');
+  if (radBroadcast) {
+    radBroadcast.checked = true;
+    syncAudienceSelect('broadcast');
+  }
+  
+  onNotifContentChange();
+  if (typeof toast === 'function') toast('تم تفريغ حقول النموذج');
+}
+window.resetNotifForm = resetNotifForm;
+
+let cachedNotificationEvents = [];
+
+function renderNotificationsTable(events) {
   const tbody = document.getElementById('tbody-notifications');
   const badge = document.getElementById('notif-total-badge');
   if (!tbody) return;
 
+  if (badge) {
+    badge.textContent = `${events ? events.length : 0} إشعار مسجل`;
+  }
+
+  if (!events || events.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="notif-table-empty">
+          لا توجد إشعارات تطابق خيارات البحث أو التصفية الحالية.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const typeConfig = {
+    'admin_broadcast': { label: 'إداري عام', color: '#6B1530', bg: '#F8EBF0', border: '#E8CFD8' },
+    'daily_reminder': { label: 'تذكير يومي', color: '#B45309', bg: '#FEF3C7', border: '#FDE68A' },
+    'new_content': { label: 'محتوى جديد', color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' },
+    'achievement': { label: 'إنجاز وتفوق', color: '#854D0E', bg: '#FEF9C3', border: '#FDE047' },
+    'welcome': { label: 'ترحيب', color: '#4338CA', bg: '#E0E7FF', border: '#C7D2FE' },
+    'hearts_refilled': { label: 'شحن قلوب', color: '#BE123C', bg: '#FFE4E6', border: '#FECDD3' },
+    'rank_change': { label: 'تغيّر ترتيب', color: '#7C3AED', bg: '#EDE9FE', border: '#DDD6FE' }
+  };
+
+  tbody.innerHTML = events.map(ev => {
+    let targetDisplay = `
+      <span style="display:inline-flex; align-items:center; gap:5px; font-weight:800; font-size:0.82rem; color:#2E2018;">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#6B1530" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>جميع الطلاب (عام)</span>
+      </span>
+    `;
+
+    if (ev.target_user_id) {
+      let u = ev.target_user;
+      if (Array.isArray(u)) u = u[0];
+      if (!u && cachedStudentsForNotif) {
+        u = cachedStudentsForNotif.find(s => String(s.id) === String(ev.target_user_id));
+      }
+      const name = u?.full_name ? u.full_name.trim() : 'طالب محدد';
+      const email = u?.email ? u.email.trim() : '';
+      targetDisplay = `
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <span style="font-weight:800; font-size:0.86rem; color:#6B1530;" title="ID: ${escapeHtml(ev.target_user_id)}">${escapeHtml(name)}</span>
+          ${email ? `<span style="font-size:0.75rem; color:#8C8075;">${escapeHtml(email)}</span>` : ''}
+        </div>
+      `;
+    }
+
+    let statusBadge = '';
+    if (ev.status === 'sent') {
+      statusBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:14px; background:#ECFDF5; border:1px solid #A7F3D0; color:#047857; font-weight:800; font-size:0.76rem;"><span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span>تم الإرسال</span>';
+    } else if (ev.status === 'failed') {
+      statusBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:14px; background:#FEF2F2; border:1px solid #FECACA; color:#DC2626; font-weight:800; font-size:0.76rem;"><span style="width:6px; height:6px; border-radius:50%; background:#EF4444;"></span>تعذر</span>';
+    } else {
+      statusBadge = '<span style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:14px; background:#FFFBEB; border:1px solid #FDE68A; color:#B45309; font-weight:800; font-size:0.76rem;"><span style="width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>بالطابور</span>';
+    }
+
+    const dateStr = ev.created_at ? new Date(ev.created_at).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+    const cfg = typeConfig[ev.event_type] || { label: ev.event_type || 'إشعار', color: '#6B1530', bg: '#FAF7F0', border: '#EAE0D2' };
+
+    return `
+      <tr>
+        <td>
+          <span style="display:inline-block; font-weight:800; font-size:0.78rem; color:${cfg.color}; background:${cfg.bg}; border:1px solid ${cfg.border}; padding:3px 9px; border-radius:6px; white-space:nowrap;">
+            ${escapeHtml(cfg.label)}
+          </span>
+        </td>
+        <td>${targetDisplay}</td>
+        <td>
+          <div style="font-weight:900; font-size:0.92rem; color:#2E2018;">${escapeHtml(ev.title || '')}</div>
+          <div style="font-size:0.83rem; color:#695E57; margin-top:3px; line-height:1.45;">${escapeHtml(ev.body || '')}</div>
+        </td>
+        <td>
+          ${ev.deep_link ? `
+            <code style="display:inline-block; background:#FAF7F0; border:1px solid #EAE0D2; color:#5D4037; padding:3px 8px; border-radius:6px; font-size:0.78rem; font-family:monospace; direction:ltr; word-break:break-all;">
+              ${escapeHtml(ev.deep_link)}
+            </code>
+          ` : '<span style="color:#A8A29E; font-size:0.8rem;">-</span>'}
+        </td>
+        <td>${statusBadge}</td>
+        <td style="font-size:0.78rem; color:#746B6F; white-space:nowrap; direction:ltr; text-align:right;">${dateStr}</td>
+        <td style="text-align:center; white-space:nowrap;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+            <button type="button" class="btn-history-tool" onclick="resendNotificationEvent('${escapeHtml(ev.id)}')" style="width:28px; height:28px; padding:0; justify-content:center; border-radius:7px; background:#FFFBEB; border-color:#FDE68A; color:#B45309;" title="إعادة إرسال هذا الإشعار الآن">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+            <button type="button" class="btn-history-tool" onclick="fillNotificationForm('${escapeHtml(ev.title || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.body || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.deep_link || '').replace(/'/g, "\\'")}')" style="width:28px; height:28px; padding:0; justify-content:center; border-radius:7px; background:#EFF6FF; border-color:#BFDBFE; color:#1D4ED8;" title="نسخ إلى نموذج الإرسال">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+            <button type="button" class="btn-history-tool btn-tool-danger" onclick="deleteNotificationEvent('${escapeHtml(ev.id)}')" style="width:28px; height:28px; padding:0; justify-content:center; border-radius:7px;" title="حذف هذا الإشعار من السجل">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+window.renderNotificationsTable = renderNotificationsTable;
+
+function filterNotificationsHistoryLive() {
+  if (!Array.isArray(cachedNotificationEvents)) return;
+
+  const query = (document.getElementById('notif-history-search-input')?.value || '').trim().toLowerCase();
+  const statusFilter = document.getElementById('notif-history-status-filter')?.value || 'all';
+  const audienceFilter = document.getElementById('notif-history-audience-filter')?.value || 'all';
+
+  let filtered = [...cachedNotificationEvents];
+
+  if (statusFilter !== 'all') {
+    filtered = filtered.filter(e => (e.status || 'pending') === statusFilter);
+  }
+
+  if (audienceFilter === 'broadcast') {
+    filtered = filtered.filter(e => !e.target_user_id);
+  } else if (audienceFilter === 'single') {
+    filtered = filtered.filter(e => Boolean(e.target_user_id));
+  }
+
+  if (query) {
+    filtered = filtered.filter(e => {
+      const title = (e.title || '').toLowerCase();
+      const body = (e.body || '').toLowerCase();
+      const link = (e.deep_link || '').toLowerCase();
+      const targetName = (e.target_user?.full_name || '').toLowerCase();
+      const targetEmail = (e.target_user?.email || '').toLowerCase();
+      return title.includes(query) || body.includes(query) || link.includes(query) || targetName.includes(query) || targetEmail.includes(query);
+    });
+  }
+
+  renderNotificationsTable(filtered);
+}
+window.filterNotificationsHistoryLive = filterNotificationsHistoryLive;
+
+async function loadNotificationsAdmin() {
+  if (window.currentAdminRole !== 'super_admin') return;
+
+  const tbody = document.getElementById('tbody-notifications');
+  if (!tbody) return;
+
   tbody.innerHTML = `
     <tr>
-      <td colspan="7" style="text-align:center; padding:28px; color:#8C857E;">
-        <span style="display:inline-block;width:18px;height:18px;border:2px solid #8C2430;border-top-color:transparent;border-radius:50%;animation:authSpin 0.8s linear infinite;margin-left:8px;vertical-align:middle;"></span>
-        جارٍ تحميل سجل الإشعارات...
+      <td colspan="7" style="text-align:center; padding:32px; color:#8C857E;">
+        <span style="display:inline-block;width:20px;height:20px;border:2.5px solid #6B1530;border-top-color:transparent;border-radius:50%;animation:authSpin 0.8s linear infinite;margin-left:8px;vertical-align:middle;"></span>
+        جارٍ جلب وتحديث سجل الإشعارات...
       </td>
     </tr>
   `;
 
-  // تهيئة الطلاب والدروس التفاعلية
+  // تهيئة قائمة الطلاب والدروس الحية
   populateNotifStudentsDropdown();
   populateNotifLessonsDropdown();
 
   try {
     let events = null;
-    let count = 0;
+    let totalCount = 0;
 
-    // محاولة استعلام الربط مع users
+    // استعلام الربط مع users لجلب أسماء الطلاب المستهدفين
     const joinedRes = await sb
       .from('notification_events')
       .select('*, target_user:users(id, full_name, email)', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(30);
+      .limit(60);
 
     if (!joinedRes.error && joinedRes.data) {
       events = joinedRes.data;
-      count = joinedRes.count;
+      totalCount = joinedRes.count;
     } else {
-      console.warn('[Admin Notif] Joined select notice, fallback to direct select:', joinedRes.error);
+      console.warn('[Admin Notif] Joined select fallback to direct select:', joinedRes.error);
       const directRes = await sb
         .from('notification_events')
         .select('*', { count: 'exact' })
         .order('created_at', { ascending: false })
-        .limit(30);
+        .limit(60);
 
       if (directRes.error) throw directRes.error;
       events = directRes.data;
-      count = directRes.count;
+      totalCount = directRes.count;
     }
 
-    if (badge) {
-      badge.textContent = `المجموع الكلي: ${count || (events ? events.length : 0)} إشعار`;
+    cachedNotificationEvents = events || [];
+
+    // تحديث بطاقات الـ KPI العلوية
+    const kpiTotal = document.getElementById('notif-kpi-total');
+    const kpiSent = document.getElementById('notif-kpi-sent');
+    const kpiPending = document.getElementById('notif-kpi-pending');
+    const kpiStudents = document.getElementById('notif-kpi-students');
+
+    const total = totalCount || cachedNotificationEvents.length;
+    const sent = cachedNotificationEvents.filter(e => e.status === 'sent').length;
+    const pending = cachedNotificationEvents.filter(e => e.status === 'pending').length;
+
+    if (kpiTotal) kpiTotal.textContent = total;
+    if (kpiSent) kpiSent.textContent = sent;
+    if (kpiPending) kpiPending.textContent = pending;
+    
+    // إجمالي الطلاب المتاحين
+    if (kpiStudents) {
+      const count = cachedStudentsForNotif ? cachedStudentsForNotif.length : (allLoadedStudents ? allLoadedStudents.length : 0);
+      kpiStudents.textContent = count > 0 ? count : (window.allLoadedStudents?.length || '12+');
     }
 
-    if (!events || events.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="7" style="text-align:center; padding:36px; color:#746B6F;">
-            لا توجد إشعارات مسجلة حتى الآن. يمكنك إرسال أول إشعار باستخدام النموذج أعلاه.
-          </td>
-        </tr>
-      `;
-      return;
-    }
+    // عرض الجدول
+    filterNotificationsHistoryLive();
 
-    const typeLabels = {
-      'welcome': 'ترحيب',
-      'rank_change': 'تغيّر ترتيب',
-      'daily_reminder': 'تذكير يومي',
-      'new_content': 'محتوى جديد',
-      'achievement': 'إنجاز',
-      'admin_broadcast': 'إداري عام',
-      'hearts_refilled': 'شحن قلوب'
-    };
-
-    tbody.innerHTML = events.map(ev => {
-      let targetDisplay = 'جميع الطلاب (عام)';
-      if (ev.target_user_id) {
-        let u = ev.target_user;
-        if (Array.isArray(u)) u = u[0];
-        if (!u && cachedStudentsForNotif) {
-          u = cachedStudentsForNotif.find(s => String(s.id) === String(ev.target_user_id));
-        }
-        const name = u?.full_name ? u.full_name.trim() : 'طالب محدد';
-        const email = u?.email ? ` (${u.email.trim()})` : '';
-        targetDisplay = `<span title="ID: ${escapeHtml(ev.target_user_id)}">${escapeHtml(name)}${escapeHtml(email)}</span>`;
-      }
-
-      let statusBadge = '';
-      if (ev.status === 'sent') {
-        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#D1FADF;color:#027A48;font-weight:800;font-size:0.75rem;">تم الإرسال</span>';
-      } else if (ev.status === 'failed') {
-        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#FEE4E2;color:#D92D20;font-weight:800;font-size:0.75rem;">تعذر الإرسال</span>';
-      } else {
-        statusBadge = '<span style="display:inline-block;padding:3px 10px;border-radius:12px;background:#FEF0C7;color:#B54708;font-weight:800;font-size:0.75rem;">قيد الانتظار</span>';
-      }
-
-      const dateStr = ev.created_at ? new Date(ev.created_at).toLocaleString('ar-EG', { dateStyle: 'short', timeStyle: 'short' }) : '-';
-      const typeLabel = typeLabels[ev.event_type] || ev.event_type;
-
-      return `
-        <tr>
-          <td><span style="font-weight:800; font-size:0.84rem; color:#6B1530;">${escapeHtml(typeLabel)}</span></td>
-          <td style="font-size:0.86rem; font-weight:700;">${targetDisplay}</td>
-          <td>
-            <div style="font-weight:800; font-size:0.92rem; color:#2E2018;">${escapeHtml(ev.title || '')}</div>
-            <div style="font-size:0.84rem; color:#746B6F; margin-top:3px; line-height:1.4;">${escapeHtml(ev.body || '')}</div>
-          </td>
-          <td>${ev.deep_link ? `<code style="background:#F5EFE0; padding:2px 6px; border-radius:4px; font-size:0.78rem; word-break:break-all;">${escapeHtml(ev.deep_link)}</code>` : '<span style="color:#A8A29E; font-size:0.8rem;">-</span>'}</td>
-          <td>${statusBadge}</td>
-          <td style="font-size:0.8rem; color:#746B6F; white-space:nowrap;">${dateStr}</td>
-          <td style="text-align:center; white-space:nowrap;">
-            <button type="button" class="btn secondary" onclick="resendNotificationEvent('${escapeHtml(ev.id)}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#FEF0C7; border:1px solid #FEDF89; color:#B54708; cursor:pointer; margin-left:4px;" title="إعادة إرسال هذا الإشعار الآن">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            </button>
-            <button type="button" class="btn secondary" onclick="fillNotificationForm('${escapeHtml(ev.title || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.body || '').replace(/'/g, "\\'")}', '${escapeHtml(ev.deep_link || '').replace(/'/g, "\\'")}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#E0F2FE; border:1px solid #BAE6FD; color:#0284C7; cursor:pointer; margin-left:4px;" title="نسخ إلى نموذج الإرسال">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </button>
-            <button type="button" class="btn danger" onclick="deleteNotificationEvent('${escapeHtml(ev.id)}')" style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0; border-radius:8px; background:#FEE4E2; border:1px solid #FECDCA; color:#D92D20; cursor:pointer;" title="حذف هذا الإشعار من السجل">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-            </button>
-          </td>
-        </tr>
-      `;
-    }).join('');
   } catch (err) {
     console.error('[Admin Notif] Load error:', err);
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align:center; padding:24px; color:#D92D20;">
+        <td colspan="7" style="text-align:center; padding:28px; color:#D92D20; font-weight:700;">
           تعذر تحميل سجل الإشعارات: ${escapeHtml(err.message || String(err))}
         </td>
       </tr>
