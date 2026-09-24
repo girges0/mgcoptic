@@ -3605,17 +3605,235 @@
     }
 
     /* ============================================================
+       بطاقة المستويات القادمة الفاخرة (Modern Upcoming Level Card)
+       تعتمد هوية وألوان المنصة: العنابي القبطي، الذهبي الفاخر، والبردي
+       ============================================================ */
+    .modern-level-card.is-upcoming {
+      position: relative;
+      background: linear-gradient(135deg, #FFFDF9 0%, #FAF3E6 55%, #F4E8D3 100%) !important;
+      border: 2px dashed #C4A052 !important;
+      border-radius: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(184, 137, 46, 0.08), 0 1px 3px rgba(107, 21, 48, 0.04);
+    }
+
+    /* شريط لمعان سينمائي ناعم يمر على البطاقة */
+    .modern-level-card.is-upcoming::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(245, 222, 179, 0.3) 75%,
+        transparent 100%
+      );
+      transform: skewX(-22deg);
+      animation: upcomingCardShimmer 4.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes upcomingCardShimmer {
+      0% { left: -120%; }
+      35% { left: 160%; }
+      100% { left: 160%; }
+    }
+
+    .modern-level-card.is-upcoming:hover {
+      transform: translateY(-3px);
+      border-color: #8C1B3E !important;
+      background: linear-gradient(135deg, #FFFFFF 0%, #FBF4E6 50%, #F3E6D0 100%) !important;
+      box-shadow: 0 10px 24px rgba(107, 21, 48, 0.12), 0 0 16px rgba(196, 160, 82, 0.22);
+    }
+
+    /* شارة الأيقونة الملكية للبطاقة */
+    .level-card-num-badge.upcoming-badge {
+      background: linear-gradient(135deg, #7A1736 0%, #4D0D20 100%) !important;
+      border: 2px solid #E8C172 !important;
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+      color: #FFECA8 !important;
+      font-size: 1.25rem !important;
+      position: relative;
+      overflow: visible;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .modern-level-card.is-upcoming:hover .level-card-num-badge.upcoming-badge {
+      transform: scale(1.08) rotate(4deg);
+      border-color: #FFD978 !important;
+      box-shadow: 0 6px 16px rgba(107, 21, 48, 0.38), 0 0 12px rgba(255, 223, 109, 0.4) !important;
+    }
+
+    .upcoming-badge-icon {
+      display: inline-block;
+      animation: upcomingIconFloat 2.8s ease-in-out infinite;
+    }
+
+    @keyframes upcomingIconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    /* التاج والبادج بالهيدر */
+    .level-card-tag.upcoming-tag {
+      background: linear-gradient(135deg, #FFF2D6 0%, #FFE5B4 100%);
+      color: #7A4B05;
+      border: 1px solid #E8CA88;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      box-shadow: 0 1px 3px rgba(184, 137, 46, 0.1);
+    }
+
+    /* نقطة النبض التفاعلية المضيئة */
+    .upcoming-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #D97706;
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .upcoming-live-dot::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: #F59E0B;
+      opacity: 0.75;
+      animation: upcomingPulse 1.8s ease-out infinite;
+    }
+
+    @keyframes upcomingPulse {
+      0% { transform: scale(0.8); opacity: 0.9; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .level-card-badge.upcoming-pill-badge {
+      background: rgba(107, 21, 48, 0.08);
+      color: #6B1530;
+      border: 1px solid rgba(107, 21, 48, 0.18);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 800;
+    }
+
+    .upcoming-title {
+      color: #4A0E21 !important;
+      font-size: 0.96rem;
+      font-weight: 900;
+      margin: 3px 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .upcoming-sparkle {
+      display: inline-block;
+      animation: upcomingRotateSparkle 3s ease-in-out infinite;
+    }
+
+    @keyframes upcomingRotateSparkle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.2) rotate(15deg); }
+    }
+
+    .upcoming-desc {
+      color: #635246 !important;
+      font-size: 0.79rem;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    /* شريط الضغط التفاعلي السفلي العصري */
+    .upcoming-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(184, 137, 46, 0.12) 0%, rgba(107, 21, 48, 0.06) 100%);
+      border: 1px solid rgba(196, 160, 82, 0.35);
+      border-radius: 9px;
+      padding: 6px 10px;
+      transition: all 0.22s ease;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .upcoming-action-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: #6B1530;
+    }
+
+    .upcoming-action-content svg {
+      color: #B8892E;
+      flex-shrink: 0;
+      transition: transform 0.22s ease;
+    }
+
+    .upcoming-action-arrow {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(107, 21, 48, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6B1530;
+      transition: all 0.22s ease;
+      flex-shrink: 0;
+    }
+
+    .modern-level-card.is-upcoming:hover .upcoming-action-bar {
+      background: linear-gradient(135deg, #6B1530 0%, #851C3D 100%);
+      border-color: #6B1530;
+    }
+
+    .modern-level-card.is-upcoming:hover .upcoming-action-content {
+      color: #FFFDF5;
+    }
+
+    .modern-level-card.is-upcoming:hover .upcoming-action-content svg {
+      color: #FFDF6D;
+      transform: rotate(360deg);
+    }
+
+    .modern-level-card.is-upcoming:hover .upcoming-action-arrow {
+      background: #E8C172;
+      color: #4A0E21;
+      transform: translateX(-4px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ============================================================
        بطاقة الاحتفال باكتمال جميع المستويات (All Levels Completed)
        ============================================================ */
     .all-levels-celebration-card {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #4338ca 100%);
-      border: 2px solid #fbbf24;
+      background: linear-gradient(135deg, #4A0E21 0%, #6B1530 45%, #8B1B3E 100%);
+      border: 2px solid #E8C172;
       border-radius: 24px;
       padding: 26px 20px;
       margin: 36px auto 24px;
       max-width: 480px;
       text-align: center;
-      box-shadow: 0 16px 36px rgba(49, 46, 129, 0.35), 0 0 0 1px rgba(251, 191, 36, 0.25);
+      box-shadow: 0 16px 36px rgba(107, 21, 48, 0.35), 0 0 0 1px rgba(232, 193, 114, 0.25);
       position: relative;
       overflow: hidden;
       cursor: pointer;
@@ -3623,7 +3841,7 @@
     }
     .all-levels-celebration-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 22px 45px rgba(49, 46, 129, 0.45), 0 0 20px rgba(251, 191, 36, 0.4);
+      box-shadow: 0 22px 45px rgba(107, 21, 48, 0.45), 0 0 20px rgba(232, 193, 114, 0.4);
     }
     .all-levels-celebration-card::before {
       content: '';
@@ -3632,7 +3850,7 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(251, 191, 36, 0.15) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(232, 193, 114, 0.15) 0%, transparent 60%);
       pointer-events: none;
     }
     .celebration-badge-row {
@@ -3653,9 +3871,9 @@
       border-radius: 20px;
     }
     .celebration-pill-soon {
-      background: rgba(99, 102, 241, 0.35);
-      border: 1px solid rgba(165, 180, 252, 0.4);
-      color: #e0e7ff;
+      background: rgba(232, 193, 114, 0.2);
+      border: 1px solid rgba(232, 193, 114, 0.45);
+      color: #FFF2D6;
       font-size: 0.78rem;
       font-weight: 800;
       padding: 3px 12px;
@@ -3689,7 +3907,7 @@
     }
     .celebration-desc {
       font-size: 0.88rem;
-      color: #e0e7ff;
+      color: #FCE7ED;
       line-height: 1.6;
       margin: 0 0 16px;
       font-weight: 500;
@@ -4078,7 +4296,16 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 0 2px;
+  padding: 0 4px;
+  position: relative;
+}
+
+.settings-slider-container {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
 }
 
 .settings-duration-slider {
@@ -4090,46 +4317,113 @@
   background: #EADDC7;
   outline: none;
   cursor: pointer;
-  margin: 4px 0;
-  transition: background 0.2s;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+  direction: rtl;
+}
+
+.settings-duration-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 6px;
+  background: transparent;
 }
 
 .settings-duration-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--madder) 0%, #8C2438 100%);
   border: 2.5px solid #FFFFFF;
-  box-shadow: 0 2px 6px rgba(107, 21, 48, 0.35);
+  box-shadow: 0 2px 7px rgba(107, 21, 48, 0.4);
   cursor: pointer;
+  margin-top: -8px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  z-index: 3;
 }
 
 .settings-duration-slider::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 3px 8px rgba(107, 21, 48, 0.45);
+  box-shadow: 0 4px 10px rgba(107, 21, 48, 0.5);
 }
 
 .settings-duration-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--madder) 0%, #8C2438 100%);
   border: 2.5px solid #FFFFFF;
-  box-shadow: 0 2px 6px rgba(107, 21, 48, 0.35);
+  box-shadow: 0 2px 7px rgba(107, 21, 48, 0.4);
   cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.settings-slider-dots-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+  direction: rtl;
+}
+
+.slider-dot {
+  position: absolute;
+  right: calc(11px + var(--p) * (100% - 22px));
+  top: -3px;
+  transform: translateX(50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C4B59D;
+  transition: all 0.2s ease;
+}
+
+.slider-dot.active {
+  background: var(--madder);
+  transform: translateX(50%) scale(1.25);
 }
 
 .settings-slider-ticks {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--ink-soft);
-  padding: 0 4px;
+  position: relative;
+  width: 100%;
+  height: 24px;
   direction: rtl;
+  user-select: none;
+  margin-top: 2px;
+}
+
+.settings-tick-btn {
+  position: absolute;
+  right: calc(11px + var(--p) * (100% - 22px));
+  transform: translateX(50%);
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: #7A695A;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  line-height: 1.2;
+  transition: color 0.18s ease, font-weight 0.18s ease, transform 0.18s ease;
+}
+
+.settings-tick-btn:hover {
+  color: var(--madder);
+}
+
+.settings-tick-btn.active {
+  color: var(--madder);
+  font-weight: 900;
+  transform: translateX(50%) scale(1.08);
 }
 
 .settings-timer-tip {

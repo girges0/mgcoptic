@@ -329,44 +329,70 @@
       }
       window.areAllLevelsCompleted = areAllLevelsCompleted;
 
-      function showAllLevelsCompletedModal() {
+      function showUpcomingLevelsModal(forceCompletedState = false) {
         if (typeof Swal === 'undefined') return;
+        const allDone = forceCompletedState || (typeof areAllLevelsCompleted === 'function' && areAllLevelsCompleted(activeCurriculum, activeLessonProgress));
+        
+        const headerTitle = allDone 
+          ? 'تهانينا يا بطل! أتممت كل المستويات 🎉🏆' 
+          : 'المستويات القادمة والتحديثات الكبرى 🚀✨';
+        
+        const badgeTag = allDone
+          ? 'إنجاز استثنائي • مكتمل بنسبة 100%'
+          : 'قريباً جداً • قيد الإعداد والإطلاق ⏳';
+        
+        const leadText = allDone
+          ? 'لقد أنهيت ببراعة واجتهاد <b>كافة مستويات منصة MG COPTIC</b> المتاحة حالياً!'
+          : 'نعمل بكل شغف على إعداد وتطوير <b>مجموعة مستويات تفاعلية كبرى</b> لنقلك لمستوى الإتقان والتحدث بطلاقة!';
+
         Swal.fire({
-          title: '<span style="color:#0f172a;font-weight:900;font-size:1.35rem;">تهانينا يا بطل! 🎉🏆</span>',
+          title: `<span style="color:#4A0E21;font-weight:900;font-size:1.3rem;font-family:'Cairo',var(--font-display),sans-serif;">${headerTitle}</span>`,
           html: `
-            <div style="text-align:center;direction:rtl;padding:4px 0;font-family:'Tajawal','Cairo',sans-serif;">
-              <div style="font-size:3.5rem;margin-bottom:12px;line-height:1;">🎓</div>
-              <p style="font-size:1.05rem;color:#1e293b;font-weight:800;line-height:1.7;margin-bottom:14px;">
-                لقد أتممت ببراعة واجتهاد <b>جميع مستويات منصة MG COPTIC</b> المتاحة حالياً! 🌟
-              </p>
-              <div style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:1.5px solid #86efac;border-radius:18px;padding:16px;text-align:right;margin-bottom:16px;box-shadow:0 4px 12px rgba(22,101,52,0.06);">
-                <div style="display:flex;align-items:center;gap:8px;font-weight:900;color:#166534;font-size:1rem;margin-bottom:8px;">
-                  <span style="font-size:1.2rem;">🚀</span>
-                  <span>مستويات وتحديثات جديدة قادمة قريباً:</span>
-                </div>
-                <p style="font-size:0.88rem;color:#15803d;line-height:1.6;margin:0 0 8px;font-weight:700;">
-                  نعمل حالياً بكل شغف على مراجعة وتجهيز المستويات المتقدمة التالية:
-                </p>
-                <ul style="font-size:0.85rem;color:#166534;margin:0 18px 0 0;padding:0;line-height:1.9;font-weight:700;text-align:right;">
-                  <li>📖 <b>المستوى الثالث: تراكيب وقواعد لغوية متقدمة</b></li>
-                  <li>🗣️ <b>محادثات قبطية تفاعلية وجمل مستخدمة يومياً</b></li>
-                  <li>⛪ <b>صلوات وألحان ونصوص كنسية معربة ومترجمة</b></li>
-                </ul>
+            <div style="text-align:center;direction:rtl;padding:4px 0;font-family:'Cairo','Tajawal',sans-serif;">
+              <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#7A1736 0%,#4A0E21 100%);border:2.5px solid #E8C172;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 8px 20px rgba(107,21,48,0.25);">
+                ${allDone ? '🏆' : '⏳'}
               </div>
-              <p style="font-size:0.84rem;color:#64748b;margin:0;line-height:1.5;font-weight:600;">
-                💡 يمكنك في هذه الأثناء مراجعة الدروس السابقة لتثبيت معلوماتك، أو تصفح القاموس والأبجدية والنتيجة القبطية!
+              <div style="display:inline-block;background:linear-gradient(135deg,#FFF2D6 0%,#FFE5B4 100%);color:#7A4B05;border:1px solid #E8CA88;padding:3px 14px;border-radius:20px;font-size:0.78rem;font-weight:800;margin-bottom:12px;">
+                ${badgeTag}
+              </div>
+              <p style="font-size:0.95rem;color:#2E2018;font-weight:700;line-height:1.65;margin:0 0 14px;">
+                ${leadText}
+              </p>
+              <div style="background:linear-gradient(135deg,#FFFDF9 0%,#FAF3E6 100%);border:1.5px solid #E2D5BE;border-radius:16px;padding:14px;text-align:right;margin-bottom:14px;box-shadow:0 3px 10px rgba(46,32,24,0.04);">
+                <div style="display:flex;align-items:center;gap:6px;font-weight:900;color:#6B1530;font-size:0.95rem;margin-bottom:10px;">
+                  <span>✨</span>
+                  <span>ما الذي ينتظرك في التحديثات القادمة:</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:0.85rem;color:#4A3828;line-height:1.6;font-weight:700;">
+                  <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,0.75);padding:8px 10px;border-radius:10px;border:1px solid rgba(196,160,82,0.25);">
+                    <span style="font-size:1.15rem;line-height:1;">🌟</span>
+                    <div><b>مستويات ودروس تفاعلية جديدة</b><br><span style="font-size:0.76rem;color:#7A695A;font-weight:600;">محتوى تعليمي متدرج مع تمارين مبتكرة لتطوير مهاراتك خطوة بخطوة.</span></div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,0.75);padding:8px 10px;border-radius:10px;border:1px solid rgba(196,160,82,0.25);">
+                    <span style="font-size:1.15rem;line-height:1;">🎯</span>
+                    <div><b>تحديات وأنشطة تطبيقية مشوقة</b><br><span style="font-size:0.76rem;color:#7A695A;font-weight:600;">أنشطة تفاعلية متنوعة تعزز ثقتك وتثبت ما تعلمته بأسلوب ممتع.</span></div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,0.75);padding:8px 10px;border-radius:10px;border:1px solid rgba(196,160,82,0.25);">
+                    <span style="font-size:1.15rem;line-height:1;">🚀</span>
+                    <div><b>ميزات وتطويرات كبرى للمنصة</b><br><span style="font-size:0.76rem;color:#7A695A;font-weight:600;">أدوات ذكية وتحديثات بصرية تجعل تجربة التعلم أكثر سهولة وروعة.</span></div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:0.8rem;color:#7A695A;margin:0;line-height:1.5;font-weight:600;">
+                💡 يمكنك في هذه الأثناء مراجعة دروسك السابقة، أو تصفح القاموس والأبجدية لتثبيت معلوماتك!
               </p>
             </div>
           `,
-          confirmButtonText: 'رائع، في انتظار المستويات القادمة! 🌟',
+          confirmButtonText: 'ممتاز، في انتظار الانطلاق! 🌟',
           confirmButtonColor: '#6B1530',
-          backdrop: 'rgba(15, 23, 42, 0.75)',
+          backdrop: 'rgba(30, 20, 15, 0.75)',
           customClass: {
             popup: 'swal2-celebration-popup'
           }
         });
       }
-      window.showAllLevelsCompletedModal = showAllLevelsCompletedModal;
+      window.showUpcomingLevelsModal = showUpcomingLevelsModal;
+      window.showAllLevelsCompletedModal = () => showUpcomingLevelsModal(true);
 
       function renderLevelCapsuleHeader(activeLvlId, curriculum, progress) {
         const levels = (curriculum.levels || []).slice().sort((a,b) => (Number(a.order_index) || 1) - (Number(b.order_index) || 1));
@@ -553,30 +579,40 @@
         });
 
         html += `
-          <div class="level-card level-card-upcoming" onclick="window.showAllLevelsCompletedModal()" style="cursor:pointer;border:2px dashed #818cf8;background:linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);">
-            <div class="level-card-icon-col" style="background:#4338ca;color:#fef08a;border-color:#818cf8;">
-              <span style="font-size:1.4rem;">🔜</span>
+          <div class="modern-level-card is-upcoming" onclick="window.showUpcomingLevelsModal ? window.showUpcomingLevelsModal() : window.showAllLevelsCompletedModal()" role="button" tabindex="0">
+            <div class="level-card-num-badge upcoming-badge">
+              <span class="upcoming-badge-icon">⏳</span>
             </div>
             <div class="level-card-main-col">
               <div class="level-card-top-meta">
-                <span class="level-card-tag" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;">قريباً جداً • قيد الإعداد</span>
-                <span class="level-card-badge" style="background:#e0e7ff;color:#3730a3;border:1px solid #c7d2fe;">
+                <span class="level-card-tag upcoming-tag">
+                  <span class="upcoming-live-dot"></span>
+                  <span>قريباً جداً • قيد الإعداد</span>
+                </span>
+                <span class="level-card-badge upcoming-pill-badge">
                   <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                   </svg>
-                  <span>مستويات متقدمة</span>
+                  <span>تحديثات جديدة</span>
                 </span>
               </div>
-              <h4 class="level-card-title" style="color:#1e1b4b;">المستويات القادمة: محادثات وتراكيب ونصوص كنسية 🚀</h4>
-              <p class="level-card-desc" style="color:#475569;">نعمل على تجهيز مستويات جديدة تشمل المحادثات اليومية والقواعد المتقدمة والنصوص الكنسية والصلوات المعربة</p>
-              <div class="level-card-stats-row">
-                <span class="stat-pill" style="color:#4338ca;font-weight:800;">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <h4 class="level-card-title upcoming-title">
+                <span>المستويات القادمة</span>
+                <span class="upcoming-sparkle">✨</span>
+              </h4>
+              <p class="level-card-desc upcoming-desc">نعمل بكل شغف على إعداد وتجهيز مستويات ودروس جديدة لإثراء رحلتك التعليمية، ترقبوها قريباً!</p>
+              <div class="upcoming-action-bar">
+                <div class="upcoming-action-content">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                   </svg>
                   <span>اضغط لمعرفة ما ينتظرك في التحديث القادم ✨</span>
-                </span>
+                </div>
+                <div class="upcoming-action-arrow">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -1853,6 +1889,32 @@
         }
       }
 
+      const BRIEF_TIMER_PRESETS = [5, 15, 30, 45, 60];
+
+      function secondsToSliderIndex(seconds) {
+        seconds = parseInt(seconds, 10) || 15;
+        const idx = BRIEF_TIMER_PRESETS.indexOf(seconds);
+        if (idx !== -1) return idx;
+        if (seconds <= 5) return 0;
+        if (seconds <= 15) return 0 + (seconds - 5) / 10;
+        if (seconds <= 30) return 1 + (seconds - 15) / 15;
+        if (seconds <= 45) return 2 + (seconds - 30) / 15;
+        if (seconds <= 60) return 3 + (seconds - 45) / 15;
+        return 4;
+      }
+
+      function handleTimerSliderInput(sliderVal) {
+        const val = parseFloat(sliderVal);
+        const roundedIdx = Math.max(0, Math.min(4, Math.round(val)));
+        const seconds = BRIEF_TIMER_PRESETS[roundedIdx];
+        
+        const rangeInput = document.getElementById('settings-timer-range');
+        if (rangeInput) rangeInput.value = roundedIdx;
+
+        setBriefTimerDuration(seconds, false);
+      }
+      window.handleTimerSliderInput = handleTimerSliderInput;
+
       function stepBriefTimerDuration(delta) {
         const customInput = document.getElementById('settings-timer-custom-input');
         let current = parseInt(customInput ? customInput.value : getBriefTimerDuration(), 10) || 15;
@@ -1867,7 +1929,7 @@
         setBriefTimerDuration(num);
       }
 
-      function setBriefTimerDuration(seconds) {
+      function setBriefTimerDuration(seconds, updateSlider = true) {
         seconds = parseInt(seconds, 10) || 15;
         seconds = Math.max(3, Math.min(180, seconds));
 
@@ -1886,9 +1948,24 @@
         }
 
         const rangeInput = document.getElementById('settings-timer-range');
-        if (rangeInput && seconds >= 5 && seconds <= 60 && parseInt(rangeInput.value, 10) !== seconds) {
-          rangeInput.value = seconds;
+        if (rangeInput && updateSlider) {
+          rangeInput.value = secondsToSliderIndex(seconds);
         }
+
+        // تحديث حالة الأزرار والنقاط النشطة لربط المؤشر بالعلامة مباشرة
+        document.querySelectorAll('.settings-tick-btn').forEach(btn => {
+          const p = parseFloat(btn.style.getPropertyValue('--p'));
+          const idx = Math.round(p * 4);
+          const presetSec = BRIEF_TIMER_PRESETS[idx];
+          btn.classList.toggle('active', presetSec === seconds);
+        });
+
+        document.querySelectorAll('.slider-dot').forEach(dot => {
+          const p = parseFloat(dot.style.getPropertyValue('--p'));
+          const idx = Math.round(p * 4);
+          const presetSec = BRIEF_TIMER_PRESETS[idx];
+          dot.classList.toggle('active', presetSec === seconds);
+        });
 
         document.querySelectorAll('.duration-chip-btn').forEach(btn => {
           const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
@@ -1920,9 +1997,24 @@
         if (customInput) {
           customInput.value = duration;
         }
-        if (rangeInput && duration >= 5 && duration <= 60) {
-          rangeInput.value = duration;
+        if (rangeInput) {
+          rangeInput.value = secondsToSliderIndex(duration);
         }
+
+        document.querySelectorAll('.settings-tick-btn').forEach(btn => {
+          const p = parseFloat(btn.style.getPropertyValue('--p'));
+          const idx = Math.round(p * 4);
+          const presetSec = BRIEF_TIMER_PRESETS[idx];
+          btn.classList.toggle('active', presetSec === duration);
+        });
+
+        document.querySelectorAll('.slider-dot').forEach(dot => {
+          const p = parseFloat(dot.style.getPropertyValue('--p'));
+          const idx = Math.round(p * 4);
+          const presetSec = BRIEF_TIMER_PRESETS[idx];
+          dot.classList.toggle('active', presetSec === duration);
+        });
+
         document.querySelectorAll('.duration-chip-btn').forEach(btn => {
           const btnSec = parseInt(btn.getAttribute('data-sec'), 10);
           btn.classList.toggle('active', btnSec === duration);
@@ -2174,6 +2266,7 @@
       window.isBriefTimerEnabled = isBriefTimerEnabled;
       window.getBriefTimerDuration = getBriefTimerDuration;
       window.handleBriefTimerToggleChange = handleBriefTimerToggleChange;
+      window.handleTimerSliderInput = handleTimerSliderInput;
       window.setBriefTimerDuration = setBriefTimerDuration;
       window.toggleCustomDurationPanel = function() {};
       window.stepBriefTimerDuration = stepBriefTimerDuration;
