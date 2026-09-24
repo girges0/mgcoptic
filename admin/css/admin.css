@@ -197,11 +197,17 @@
   #login-msg{font-size:.85rem;margin-top:10px;min-height:1.2em;}
   .config-warning{background:#fbe6c8;border:1px solid #d9a442;padding:14px 18px;border-radius:10px;margin:16px auto;max-width:600px;font-size:.88rem;}
 
-  #shell{display:none;min-height:100vh;grid-template-columns:260px 1fr;}
-  #shell.show{display:grid;}
-  aside{background:linear-gradient(175deg,var(--madder),var(--madder-dark));color:#f4e9c9;padding:16px 12px 14px;
+  #shell{display:none;min-height:100vh;width:100%;box-sizing:border-box;}
+  #shell.show{display:block;}
+  aside#main-sidebar, aside{
+    background:linear-gradient(175deg,var(--madder),var(--madder-dark));color:#f4e9c9;padding:16px 12px 14px;
     display:flex;flex-direction:column;gap:4px;
-    position:sticky; top:0; align-self:start; height:100vh; max-height:100vh; box-sizing:border-box; overflow:hidden; z-index:100;}
+    position:fixed !important; top:0 !important; right:0 !important; bottom:0 !important; width:260px !important;
+    height:100vh !important; height:100dvh !important; max-height:100vh !important; box-sizing:border-box !important; overflow:hidden !important; z-index:1000 !important;
+    box-shadow:-4px 0 20px rgba(0,0,0,0.18) !important;
+  }
+  [dir="rtl"] aside#main-sidebar, [dir="rtl"] aside{ right:0 !important; left:auto !important; }
+  [dir="ltr"] aside#main-sidebar, [dir="ltr"] aside{ left:0 !important; right:auto !important; }
   aside .brand{font-family:var(--font-display);font-weight:800;font-size:1.05rem;margin-bottom:14px;padding:0 6px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
   aside .brand img{width:36px;height:36px;border-radius:8px;background:#fff;object-fit:contain;flex:0 0 auto;box-shadow:0 2px 6px rgba(0,0,0,0.25);}
   aside .brand-name{display:flex;flex-direction:column;}
@@ -235,7 +241,18 @@
     color:#f4e9c9;background:rgba(255,255,255,.14);padding:7px 8px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:background .2s;text-align:center;}
   #logout-btn:hover{background:rgba(255,255,255,.26);color:#ffffff;}
 
-  main{padding:26px 30px;overflow-x:hidden;}
+  main{
+    padding:26px 30px;
+    overflow-x:hidden;
+    margin-right:260px;
+    margin-left:0;
+    width:calc(100% - 260px);
+    max-width:calc(100% - 260px);
+    box-sizing:border-box;
+    min-width:0;
+  }
+  [dir="rtl"] main{ margin-right:260px; margin-left:0; }
+  [dir="ltr"] main{ margin-left:260px; margin-right:0; }
   .stats-row{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
   main:has(#panel-users.active) #stats-row,
   main:has(#panel-curriculum.active) #stats-row,
@@ -410,7 +427,14 @@
     :root{ --topbar-h:48px; }
     #shell.show{display:block;}
 
-    main{ padding:14px 12px 24px; margin-top:calc(var(--topbar-h) + env(safe-area-inset-top)); }
+    main{ 
+      padding:14px 12px 24px; 
+      margin-top:calc(var(--topbar-h) + env(safe-area-inset-top)); 
+      margin-right:0 !important; 
+      margin-left:0 !important; 
+      width:100% !important; 
+      max-width:100% !important; 
+    }
     .toolbar{gap:8px;}
     .toolbar h2{font-size:1.15rem;}
     .toolbar .btn{ width:100%; padding:11px; } /* full-width, easy to tap, stays inline (no floating chrome) */
