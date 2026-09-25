@@ -166,11 +166,12 @@
 
     function handleForgotPassword(prefilledEmail) {
       const emailInput = document.querySelector('[name="email"], #auth-email-input');
-      const defaultEmail = (prefilledEmail || (emailInput ? emailInput.value.trim() : '') || (currentAuthUser ? currentAuthUser.email : '')).trim();
+      const phoneInput = document.querySelector('[name="phone"], #auth-phone-input');
+      const identifier = (prefilledEmail || (emailInput && emailInput.value.trim()) || (phoneInput && phoneInput.value.trim()) || (currentAuthUser ? (currentAuthUser.phone || currentAuthUser.email) : '')).trim();
 
       let msg = 'مرحباً الدعم الفني لمنصة MG Coptic 👋\nلقد نسيت كلمة المرور الخاصة بحسابي وأحتاج إلى المساعدة في استعادة الحساب.';
-      if (defaultEmail) {
-        msg += `\n• البريد الإلكتروني المسجل: ${defaultEmail}`;
+      if (identifier) {
+        msg += `\n• بيانات الحساب المسجلة: ${identifier}`;
       }
 
       openWhatsAppSupport(msg);
@@ -600,10 +601,10 @@
           let createdUser = null;
           try {
             createdUser = (signData && signData.user) || (await sb.auth.getUser()).data?.user;
-            if (createdUser) {
               const fullProfile = {
                 id: createdUser.id,
                 full_name: fullName,
+                email: norm.isPhone ? (createdUser.email && !createdUser.email.includes('@phone.mgcoptic.com') ? createdUser.email : null) : (email || createdUser.email || null),
                 password: password,
                 age: age,
                 phone: userPhone,
@@ -668,7 +669,16 @@
           // مزامنة البيانات وتحديث كلمة المرور بالخلفية دون حجب أو تأخير النقل اللحظي
           if (targetUser) {
             try {
-              sb.from('users').upsert({ id: targetUser.id, full_name: fullName, password: password, age: age, phone: userPhone, auth_type: authType }, { onConflict: 'id' }).then(() => {}, () => {
+              const upsertData = {
+                id: targetUser.id,
+                full_name: fullName,
+                password: password,
+                age: age,
+                phone: userPhone,
+                auth_type: authType
+              };
+              if (!norm.isPhone && email) upsertData.email = email;
+              sb.from('users').upsert(upsertData, { onConflict: 'id' }).then(() => {}, () => {
                 sb.from('users').upsert({ id: targetUser.id, full_name: fullName, password: password, age: age }, { onConflict: 'id' }).catch(() => {});
               });
             } catch (_) {}
@@ -679,7 +689,39 @@
 
         } else {
           // Sign In
-          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          // دعم تسجيل الدخول المزدوج: إمكانية الدخول برقم الموبايل أو بالبريد الإلكتروني بالتبادل
+          let targetAuthEmail = email;
+          try {
+            const { data: resolvedEmail, error: rpcErr } = await sb.rpc('resolve_login_auth_email', { p_identifier: rawIdentifier });
+            if (!rpcErr && resolvedEmail && typeof resolvedEmail === 'string' && resolvedEmail.trim()) {
+              targetAuthEmail = resolvedEmail.trim();
+            }
+          } catch (rErr) {
+            console.warn('[Auth] Dual identifier resolve notice, fallback to direct identifier:', rErr);
+          }
+
+          let authResult = await sb.auth.signInWithPassword({ email: targetAuthEmail, password });
+
+          // في حالة فشل المحاولة بالبريد المحلول، تجربة المعرف البديل كشبكة أمان
+          if (authResult.error && targetAuthEmail !== email) {
+            const fallbackRes = await sb.auth.signInWithPassword({ email: email, password });
+            if (!fallbackRes.error) {
+              authResult = fallbackRes;
+            }
+          }
+
+          // تجربة صيغة phone_... كاحتياطي إذا كان المدخل رقم هاتف ولم يتم الدخول بعد
+          if (authResult.error && norm.isPhone) {
+            const phoneEmailCandidate = `phone_${norm.cleanPhone}@phone.mgcoptic.com`;
+            if (targetAuthEmail !== phoneEmailCandidate && email !== phoneEmailCandidate) {
+              const phoneRes = await sb.auth.signInWithPassword({ email: phoneEmailCandidate, password });
+              if (!phoneRes.error) {
+                authResult = phoneRes;
+              }
+            }
+          }
+
+          const { data, error } = authResult;
           if (error) throw error;
 
           // فحص حالة الحظر للطالب قبل السماح له بالدخول

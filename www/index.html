@@ -18706,7 +18706,7 @@
         </button>
       </div>
 
-      <form id="auth-form" data-auth-type="phone" onsubmit="handleAuthSubmit(event)">
+      <form id="auth-form" data-auth-type="phone" onsubmit="handleAuthSubmit(event)" novalidate>
         <div id="auth-name-group" style="display:none;margin-bottom:12px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div>
@@ -18759,7 +18759,7 @@
                 <polyline points="22,6 12,13 2,6"/>
               </svg>
             </span>
-            <input type="email" id="auth-email-input" name="email" class="settings-input" placeholder="name@example.com" dir="ltr"
+            <input type="text" id="auth-email-input" name="email" class="settings-input" placeholder="name@example.com" dir="ltr" inputmode="email" autocomplete="email"
               style="width:100%;padding:10px 38px 10px 12px;box-sizing:border-box;">
           </div>
         </div>

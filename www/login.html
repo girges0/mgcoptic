@@ -559,7 +559,7 @@
       </button>
     </div>
 
-    <form id="auth-form" data-auth-mode="signin" data-auth-type="phone" onsubmit="handleAuthSubmit(event, 'signin')">
+    <form id="auth-form" data-auth-mode="signin" data-auth-type="phone" onsubmit="handleAuthSubmit(event, 'signin')" novalidate>
       
       <!-- حقل رقم الموبايل (الافتراضي) -->
       <div class="form-group" id="group-phone-input">
@@ -590,8 +590,8 @@
               <polyline points="22,6 12,13 2,6"/>
             </svg>
           </span>
-          <input type="email" id="auth-email-input" name="email" class="settings-input" placeholder="name@example.com"
-            dir="ltr" autocomplete="email">
+          <input type="text" id="auth-email-input" name="email" class="settings-input" placeholder="name@example.com"
+            dir="ltr" inputmode="email" autocomplete="email">
         </div>
       </div>
 
