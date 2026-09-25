@@ -302,9 +302,17 @@ function applyRoleBasedUI() {
     if (notifsNavBtn) {
       notifsNavBtn.remove();
     }
+    const devicesNavBtn = document.querySelector('aside .navlink[data-tab="devices"]');
+    if (devicesNavBtn) {
+      devicesNavBtn.remove();
+    }
     const usersPanel = document.getElementById('panel-users');
     if (usersPanel && usersPanel.classList.contains('active')) {
       usersPanel.classList.remove('active');
+    }
+    const devicesPanel = document.getElementById('panel-devices');
+    if (devicesPanel && devicesPanel.classList.contains('active')) {
+      devicesPanel.classList.remove('active');
     }
     const notifsPanel = document.getElementById('panel-notifications');
     if (notifsPanel && notifsPanel.classList.contains('active')) {
@@ -441,7 +449,7 @@ if(logoutBtn){
 function switchAdminTab(tab, updateUrl = true) {
   if (!tab) return;
   if (tab === 'grammar') tab = 'competitions';
-  if ((tab === 'users' || tab === 'notifications') && window.currentAdminRole !== 'super_admin') {
+  if ((tab === 'users' || tab === 'notifications' || tab === 'devices') && window.currentAdminRole !== 'super_admin') {
     tab = 'articles';
   }
   const btn = document.querySelector(`aside .navlink[data-tab="${tab}"]`);
@@ -473,6 +481,9 @@ function switchAdminTab(tab, updateUrl = true) {
   if (tab === 'vocabulary' && typeof loadVocabulary === 'function') loadVocabulary();
   if (tab === 'users' && typeof loadUsers === 'function') loadUsers();
   if (tab === 'notifications' && typeof loadNotificationsAdmin === 'function' && window.currentAdminRole === 'super_admin') loadNotificationsAdmin();
+  if (tab === 'devices' && window.AdminDeviceIntel && typeof window.AdminDeviceIntel.initDeviceIntelTab === 'function') {
+    window.AdminDeviceIntel.initDeviceIntelTab();
+  }
   if (tab === 'curriculum' && window.CurriculumAdminSystem && typeof window.CurriculumAdminSystem.renderLevelsOverview === 'function') {
     window.CurriculumAdminSystem.renderLevelsOverview();
     window.CurriculumAdminSystem.refreshStats();
@@ -482,9 +493,9 @@ window.switchAdminTab = switchAdminTab;
 
 function restoreAdminTabFromHash() {
   const hash = (window.location.hash || '').replace('#', '').trim();
-  const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'curriculum', 'notifications'];
+  const validTabs = ['articles', 'letters', 'vocabulary', 'grammar', 'quizzes', 'users', 'devices', 'curriculum', 'notifications'];
   if (hash && validTabs.includes(hash)) {
-    if ((hash === 'users' || hash === 'notifications') && window.currentAdminRole !== 'super_admin') {
+    if ((hash === 'users' || hash === 'notifications' || hash === 'devices') && window.currentAdminRole !== 'super_admin') {
       switchAdminTab('articles', true);
     } else {
       switchAdminTab(hash, false);
@@ -502,7 +513,7 @@ window.restoreAdminTabFromHash = restoreAdminTabFromHash;
 document.querySelectorAll('aside .navlink').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
-    if ((tab === 'users' || tab === 'notifications') && window.currentAdminRole !== 'super_admin') {
+    if ((tab === 'users' || tab === 'notifications' || tab === 'devices') && window.currentAdminRole !== 'super_admin') {
       if (typeof Swal !== 'undefined') {
         Swal.fire({
           icon: 'error',
@@ -3678,6 +3689,11 @@ function viewStudentDetails(userId) {
   }
 
   modal.style.display = 'flex';
+
+  // عرض بطاقات أجهزة وجلسات الطالب في المودال
+  if (window.AdminDeviceIntel && typeof window.AdminDeviceIntel.renderUserDeviceCards === 'function') {
+    window.AdminDeviceIntel.renderUserDeviceCards(student.id, 'm-student-devices-section');
+  }
 
   // مزامنة فورية مباشرة من السحابة لبيانات هذا الطالب المحددة لضمان أحدث تقدم ونقاط وسجل دروس
   (async () => {

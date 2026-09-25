@@ -759,6 +759,9 @@
               if (typeof syncDeviceToken === 'function') {
                 syncDeviceToken(data.user.id);
               }
+              if (window.MGDeviceTracker && typeof window.MGDeviceTracker.trackDevice === 'function') {
+                window.MGDeviceTracker.trackDevice(true);
+              }
             } catch (tokenSyncErr) {
               console.warn('[Push] Signin token sync notice:', tokenSyncErr);
             }
@@ -1129,6 +1132,11 @@
       // تفعيل الاستماع اللحظي لتحديثات المشرف بالسحابة فورا (0ms) دون ريلود
       if (currentAuthUser && currentAuthUser.id) {
         initRealtimeAccountSync(currentAuthUser.id);
+        try {
+          if (window.MGDeviceTracker && typeof window.MGDeviceTracker.trackDevice === 'function') {
+            window.MGDeviceTracker.trackDevice(true);
+          }
+        } catch (_) {}
         setTimeout(() => {
           if (typeof checkPendingStudentGifts === 'function') {
             checkPendingStudentGifts(currentAuthUser.id);
