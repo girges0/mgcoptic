@@ -1060,6 +1060,19 @@
       color: #FFFFFF;
       border-color: #8C6214;
     }
+    .mg-notif-action-btn.gift-action-claimed {
+      background: #F3F4F6;
+      color: #6B7280;
+      border-color: #E5E7EB;
+      font-weight: 700;
+      box-shadow: none;
+    }
+    .mg-notif-action-btn.gift-action-claimed:hover {
+      background: #E5E7EB;
+      color: #374151;
+      border-color: #D1D5DB;
+      transform: none;
+    }
 
     /* Single Delete Button */
     .mg-notif-delete-single-btn {
@@ -13148,7 +13161,9 @@
     function getUserProgressData() {
       if (_memUserProgress) return _memUserProgress;
       try {
-        const raw = localStorage.getItem('mg_coptic_progress');
+        const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : null);
+        const userKey = uid ? `mg_coptic_progress_${uid}` : 'mg_coptic_progress';
+        const raw = (uid ? localStorage.getItem(userKey) : null) || localStorage.getItem('mg_coptic_progress');
         if (raw) {
           const parsed = JSON.parse(raw);
           const points = parsed.points ?? parsed.total_points ?? 0;
@@ -16060,7 +16075,9 @@
           btnVictoryContinue.onclick = async () => {
             victoryModal.style.display = 'none';
             closeRunner();
-            await refreshStatsDisplay();
+            if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+            if (typeof refreshStatsDisplay === 'function') await refreshStatsDisplay();
+            if (typeof syncHomeLearningProgress === 'function') await syncHomeLearningProgress();
             const uid = getAuthUserId();
             if (game.getLessonProgress) activeLessonProgress = await game.getLessonProgress(uid);
             renderSkillMap();
@@ -18498,9 +18515,11 @@
 
         // حفظ التقدم ومزامنة السحابة في الخلفية مع تحديث واجهة النصر بالقيمة الحقيقية
         if (game.completeLesson && selectedLesson) {
-          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, 0).then(res => {
+          const finalXpToPass = isReplayingLesson ? 0 : (sessionXpEarned > 0 ? sessionXpEarned : fullConfiguredXp);
+          game.completeLesson(uid, selectedLesson.id, accuracy, selectedNextLessonId, finalXpToPass).then(res => {
             if (vXp) {
-              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${sessionXpEarned} XP`;
+              const gainedVal = res?.added_xp ?? (isReplayingLesson ? 0 : (sessionXpEarned > 0 ? sessionXpEarned : fullConfiguredXp));
+              vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${gainedVal} XP`;
             }
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();

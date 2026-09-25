@@ -998,13 +998,32 @@
     }
 
     let html = '';
+    const activeUid = getActiveUserId();
+    const giftKey = `mg_claimed_gifts_${activeUid}`;
+    let claimedGiftsSet = new Set();
+    try {
+      const stored = JSON.parse(localStorage.getItem(giftKey) || '[]');
+      if (Array.isArray(stored)) claimedGiftsSet = new Set(stored);
+    } catch (_) {}
+
     displayItems.forEach(item => {
       const isRead = readSet.has(String(item.id));
       const meta = getNotificationBadgeMeta(item);
       const timeAgo = formatArabicRelativeTime(item.created_at);
       const hasAction = item.deep_link && item.deep_link.trim().length > 0;
       const isGift = isGiftNotification(item);
-      const actionText = isGift ? 'استلام الهدية 🎁' : 'عرض والتنقل ←';
+      
+      let giftId = String(item.id);
+      if (isGift && item.deep_link && item.deep_link.includes('gift')) {
+        try {
+          const rawParams = item.deep_link.includes('?') ? item.deep_link.split('?')[1] : item.deep_link;
+          const p = new URLSearchParams(rawParams);
+          if (p.get('id') || p.get('gift_id')) giftId = p.get('id') || p.get('gift_id');
+        } catch (_) {}
+      }
+      const isAlreadyClaimed = isGift && (item.is_claimed === true || claimedGiftsSet.has(giftId) || claimedGiftsSet.has(String(item.id)));
+      const actionText = isGift ? (isAlreadyClaimed ? 'تم الاستلام ✓' : 'استلام الهدية 🎁') : 'عرض والتنقل ←';
+      const actionClass = isGift ? (isAlreadyClaimed ? 'gift-action-claimed' : 'gift-action') : '';
 
       html += `
         <div class="mg-notif-item ${isRead ? 'is-read' : 'is-unread'}" id="notif-item-${item.id}" data-id="${item.id}" onclick="window.handleNotificationCardClick && window.handleNotificationCardClick('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
@@ -1027,7 +1046,7 @@
             <div class="mg-notif-item-body">${item.body || ''}</div>
             ${hasAction ? `
               <div class="mg-notif-item-actions">
-                <button type="button" class="mg-notif-action-btn ${isGift ? 'gift-action' : ''}" onclick="event.stopPropagation(); window.handleNotificationAction && window.handleNotificationAction('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
+                <button type="button" class="mg-notif-action-btn ${actionClass}" onclick="event.stopPropagation(); window.handleNotificationAction && window.handleNotificationAction('${item.id}', '${encodeURIComponent(item.deep_link || '')}')">
                   <span>${actionText}</span>
                 </button>
               </div>
@@ -1240,21 +1259,37 @@
 
     if (deepLink.includes('gift')) {
       const item = cachedNotificationsList.find(n => String(n.id) === String(notifId));
+      let giftId = notifId;
+      let xp = 0;
+      let hearts = 0;
+      let title = item?.title || 'هدية خاصة';
+      let message = item?.body || '';
+      try {
+        const rawParams = deepLink.includes('?') ? deepLink.split('?')[1] : '';
+        const params = new URLSearchParams(rawParams);
+        if (params.get('id') || params.get('gift_id')) giftId = params.get('id') || params.get('gift_id');
+        if (params.get('xp')) xp = parseInt(params.get('xp'), 10) || 0;
+        if (params.get('hearts')) hearts = parseInt(params.get('hearts'), 10) || 0;
+        if (params.get('title')) title = decodeURIComponent(params.get('title'));
+      } catch (_) {}
+
+      // التحقق هل تم استلام هذه المكافأة مسبقاً
+      const key = `mg_claimed_gifts_${uid}`;
+      let claimed = [];
+      try { claimed = JSON.parse(localStorage.getItem(key) || '[]'); } catch (_) {}
+      const isAlreadyClaimed = (item && item.is_claimed === true) || claimed.includes(giftId) || claimed.includes(notifId);
+
+      if (isAlreadyClaimed) {
+        if (typeof showToast === 'function') {
+          showToast('تم استلام هذه المكافأة التقديرية مسبقاً وإيداعها في رصيدك ✨', 'check');
+        } else if (typeof toast === 'function') {
+          toast('تم استلام هذه المكافأة التقديرية مسبقاً وإيداعها في رصيدك ✨');
+        }
+        return;
+      }
+
       if (typeof window.showStudentGiftCelebration === 'function') {
-        let giftId = notifId;
-        let xp = 0;
-        let hearts = 0;
-        let title = item?.title || 'هدية خاصة';
-        let message = item?.body || '';
-        try {
-          const rawParams = deepLink.includes('?') ? deepLink.split('?')[1] : '';
-          const params = new URLSearchParams(rawParams);
-          if (params.get('id') || params.get('gift_id')) giftId = params.get('id') || params.get('gift_id');
-          if (params.get('xp')) xp = parseInt(params.get('xp'), 10) || 0;
-          if (params.get('hearts')) hearts = parseInt(params.get('hearts'), 10) || 0;
-          if (params.get('title')) title = decodeURIComponent(params.get('title'));
-        } catch (_) {}
-        window.showStudentGiftCelebration({ giftId, xp, hearts, title, message });
+        window.showStudentGiftCelebration({ giftId, notificationId: notifId, xp, hearts, title, message });
         return;
       }
     }

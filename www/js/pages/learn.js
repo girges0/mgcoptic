@@ -1691,6 +1691,9 @@
           btnVictoryContinue.onclick = async () => {
             victoryModal.style.display = 'none';
             closeRunner();
+            if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+            if (typeof refreshStatsDisplay === 'function') await refreshStatsDisplay();
+            if (typeof syncHomeLearningProgress === 'function') await syncHomeLearningProgress();
             await refreshStatsDisplay();
             const uid = getAuthUserId();
             if (game.getLessonProgress) activeLessonProgress = await game.getLessonProgress(uid);

@@ -141,7 +141,7 @@
         const userId = user ? user.id : null;
 
         const curriculum = await game.getCurriculum();
-        const userProg = (await game.getProgress(userId)) || getUserProgressData();
+        const userProg = (await game.getProgress(userId, false)) || getUserProgressData();
         const progressMap = await game.getLessonProgress(userId, false);
 
         const xp = userProg.points ?? userProg.total_points ?? 0;

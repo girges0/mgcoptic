@@ -1039,7 +1039,8 @@
               hearts: prog.hearts ?? 5,
               reset_version: serverResetVersion,
               reset_at: prog.reset_at || null,
-              claimed_chests: Array.isArray(prog.claimed_chests) ? prog.claimed_chests : []
+              claimed_chests: Array.isArray(prog.claimed_chests) ? prog.claimed_chests : [],
+              claimed_gifts: Array.isArray(prog.claimed_gifts) ? prog.claimed_gifts : []
             };
 
             localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
@@ -1047,6 +1048,16 @@
             localStorage.setItem(`mg_coptic_claimed_chests_${uid}`, JSON.stringify(freshProg.claimed_chests));
             localStorage.setItem('mg_coptic_claimed_chests', JSON.stringify(freshProg.claimed_chests));
             localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
+
+            // مزامنة الهدايا المستلمة سحابياً مع الكاش المحلي لضمان عدم تكرار ظهور النوافذ عند فتح أجهزة أخرى
+            if (Array.isArray(freshProg.claimed_gifts)) {
+              try {
+                const giftKey = `mg_claimed_gifts_${uid}`;
+                const curLocalGifts = JSON.parse(localStorage.getItem(giftKey) || '[]');
+                const mergedGifts = Array.from(new Set([...curLocalGifts, ...freshProg.claimed_gifts]));
+                localStorage.setItem(giftKey, JSON.stringify(mergedGifts));
+              } catch (_) {}
+            }
 
             if (window.MGCopticGame && window.MGCopticGame.saveProgressLocal) {
               window.MGCopticGame.saveProgressLocal(freshProg, uid);
@@ -2952,13 +2963,39 @@
       const claimBtn = document.getElementById('btn-claim-gift-modal');
       if (claimBtn) {
         claimBtn.addEventListener('click', () => {
+          const uid = currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : 'anon');
+          const notifId = data.notificationId || data.id || null;
+
+          // 1. الحفظ الفوري في التخزين المحلي للجهاز الحالي
           try {
-            const uid = currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : 'anon');
             const key = `mg_claimed_gifts_${uid}`;
             const claimed = JSON.parse(localStorage.getItem(key) || '[]');
-            if (!claimed.includes(giftId)) {
-              claimed.push(giftId);
-              localStorage.setItem(key, JSON.stringify(claimed));
+            if (giftId && !claimed.includes(giftId)) claimed.push(giftId);
+            if (notifId && !claimed.includes(notifId)) claimed.push(notifId);
+            localStorage.setItem(key, JSON.stringify(claimed));
+          } catch (_) {}
+
+          // 2. المزامنة السحابية الفورية في Supabase لمنع ظهور النافذة على أي جهاز آخر نهائياً
+          try {
+            if (window.sb && uid && uid !== 'anon') {
+              window.sb.rpc('claim_student_gift', {
+                p_gift_id: giftId,
+                p_notification_id: notifId
+              }).catch(() => {});
+
+              // تحديث إضافي كضمانة مضاعفة في notification_events
+              window.sb.from('notification_events')
+                .update({ is_claimed: true, claimed_at: new Date().toISOString() })
+                .eq('target_user_id', uid)
+                .or(`id.eq.${notifId || '00000000-0000-0000-0000-000000000000'},deep_link.ilike.%${giftId}%`)
+                .then(() => {}, () => {});
+            }
+          } catch (_) {}
+
+          // 3. بث التحديث محلياً لباقي التابات المفتوحة
+          try {
+            if (localAdminSyncChannel) {
+              localAdminSyncChannel.postMessage({ type: 'GIFT_CLAIMED', giftId, notificationId: notifId, userId: uid });
             }
           } catch (_) {}
 
@@ -2984,16 +3021,20 @@
           .from('notification_events')
           .select('*')
           .eq('target_user_id', userId)
+          .eq('is_claimed', false)
           .like('deep_link', '%gift%')
           .order('created_at', { ascending: false })
-          .limit(3);
+          .limit(10);
 
         if (!notifs || notifs.length === 0) return;
 
         const key = `mg_claimed_gifts_${userId}`;
-        const claimed = JSON.parse(localStorage.getItem(key) || '[]');
+        let claimed = [];
+        try { claimed = JSON.parse(localStorage.getItem(key) || '[]'); } catch (_) {}
 
         for (const ev of notifs) {
+          if (ev.is_claimed === true) continue;
+
           let giftId = ev.id;
           let xp = 0;
           let hearts = 0;
@@ -3009,12 +3050,17 @@
             if (params.get('title')) title = decodeURIComponent(params.get('title'));
           } catch (_) {}
 
-          if (!claimed.includes(giftId)) {
-            setTimeout(() => {
-              showStudentGiftCelebration({ giftId, xp, hearts, title, message });
-            }, 1200);
-            break;
+          // إذا كانت الهدية مستلمة مسبقاً، قم بتثبيت استلامها في السحابة وتجاوز إظهارها
+          if (claimed.includes(giftId) || claimed.includes(ev.id)) {
+            sb.rpc('claim_student_gift', { p_gift_id: giftId, p_notification_id: ev.id }).catch(() => {});
+            continue;
           }
+
+          // عرض نافذة المكافأة فقط إن لم تكن مستلمة نهائياً
+          setTimeout(() => {
+            showStudentGiftCelebration({ giftId, notificationId: ev.id, xp, hearts, title, message });
+          }, 1200);
+          break;
         }
       } catch (e) {
         console.warn('checkPendingStudentGifts error:', e);
@@ -3030,6 +3076,20 @@
         const xp = parseInt(params.get('xp'), 10) || 0;
         const hearts = parseInt(params.get('hearts'), 10) || 0;
         const title = params.get('title');
+
+        const uid = currentAuthUser?.id || (typeof getUserProfileData === 'function' ? getUserProfileData()?.id : null);
+        if (giftId && uid) {
+          const key = `mg_claimed_gifts_${uid}`;
+          const claimed = JSON.parse(localStorage.getItem(key) || '[]');
+          if (claimed.includes(giftId)) {
+            // مستلمة مسبقاً، تنظيف الرابط والتراجع عن إظهار النافذة
+            try {
+              const cleanUrl = window.location.pathname + window.location.hash;
+              window.history.replaceState({}, document.title, cleanUrl);
+            } catch (_) {}
+            return;
+          }
+        }
 
         if (giftId || xp > 0 || hearts > 0) {
           setTimeout(() => {
@@ -3061,7 +3121,15 @@
           localAdminSyncChannel.onmessage = (event) => {
             const data = event.data;
             if (!data) return;
-            if (data.type === 'ADMIN_ACTION' && (!data.userId || data.userId === userId)) {
+            if (data.type === 'GIFT_CLAIMED' && (!data.userId || data.userId === userId)) {
+              const key = `mg_claimed_gifts_${userId}`;
+              const cur = JSON.parse(localStorage.getItem(key) || '[]');
+              if (data.giftId && !cur.includes(data.giftId)) cur.push(data.giftId);
+              if (data.notificationId && !cur.includes(data.notificationId)) cur.push(data.notificationId);
+              localStorage.setItem(key, JSON.stringify(cur));
+              const overlay = document.getElementById('mg-student-gift-modal-overlay');
+              if (overlay) overlay.remove();
+            } else if (data.type === 'ADMIN_ACTION' && (!data.userId || data.userId === userId)) {
               handleAdminActionEvent(data);
             } else if ((data.type === 'student_name_updated' || data.type === 'profile_updated') && (!data.userId || data.userId === userId)) {
               handleAdminActionEvent({ actionType: 'name_updated', full_name: data.full_name, userId: data.userId });
@@ -3125,11 +3193,18 @@
               total_points: prog.points ?? 0,
               streak_days: prog.streak_days || 1,
               hearts: prog.hearts ?? 5,
-              claimed_chests: prog.claimed_chests || []
+              claimed_chests: prog.claimed_chests || [],
+              claimed_gifts: prog.claimed_gifts || []
             };
             try {
               localStorage.setItem('mg_coptic_progress', JSON.stringify(freshProg));
               localStorage.setItem(`mg_coptic_progress_${userId}`, JSON.stringify(freshProg));
+              if (Array.isArray(prog.claimed_gifts)) {
+                const giftKey = `mg_claimed_gifts_${userId}`;
+                const curLocalGifts = JSON.parse(localStorage.getItem(giftKey) || '[]');
+                const mergedGifts = Array.from(new Set([...curLocalGifts, ...prog.claimed_gifts]));
+                localStorage.setItem(giftKey, JSON.stringify(mergedGifts));
+              }
             } catch (_) {}
             if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(freshProg);
             if (typeof window.syncHomeLearningProgress === 'function') window.syncHomeLearningProgress();

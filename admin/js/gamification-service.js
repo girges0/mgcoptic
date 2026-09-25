@@ -19,8 +19,14 @@ const MG_CONFIG = {
 // إنشاء عميل Supabase أو ربطه بالعميل العام المشترك
 let sbClient = null;
 function getSbClient() {
-  if (window.sb) return window.sb;
-  if (window.sbClient) return window.sbClient;
+  if (typeof window !== 'undefined' && window.sb) {
+    sbClient = window.sb;
+    return sbClient;
+  }
+  if (typeof window !== 'undefined' && window.sbClient) {
+    sbClient = window.sbClient;
+    return sbClient;
+  }
   if (sbClient) return sbClient;
   if (window.supabase && typeof window.supabase.createClient === 'function') {
     try {
@@ -1199,9 +1205,10 @@ class GamificationService {
     // إذا كان التقدم مسجلاً محلياً ولم يُطلب الجلب الإجباري، نرجعه فوراً مع مزامنة غير مدمرة في الخلفية
     if(progress && !forceRemote){
       const cached = this.checkAndRegenerateHearts(progress, uid);
-      if(sbClient && uid && !this._bgSyncActive){
+      const activeSb = getSbClient();
+      if(activeSb && uid && !this._bgSyncActive){
         this._bgSyncActive = true;
-        sbClient.from('user_progress').select('*').eq('user_id', uid).maybeSingle().then(async ({ data, error }) => {
+        activeSb.from('user_progress').select('*').eq('user_id', uid).maybeSingle().then(async ({ data, error }) => {
           this._bgSyncActive = false;
           if(!error && data){
             const serverPoints = Number(data.points ?? 0);
@@ -1273,31 +1280,44 @@ class GamificationService {
           }
           localStorage.setItem(`mg_coptic_reset_version_${uid}`, String(serverResetVersion));
 
-          let serverPoints = Number(data.points ?? 0);
-
-          // فحص ومطابقة النقاط مع الرصيد المحلي إذا كان رصيد السيرفر صفر ولديه رصيد محلي مكتسب
+          const activeSb = getSbClient();
+          const serverPoints = Number(data.points ?? 0);
           const localProg = this.getProgressLocal(uid);
           const localPoints = Number(localProg?.points ?? localProg?.total_points ?? 0);
-          if (serverPoints === 0 && localPoints > 0) {
-            serverPoints = localPoints;
-            try {
-              sbClient.from('user_progress').update({ points: serverPoints, total_points: serverPoints }).eq('user_id', uid).then(()=>{}, ()=>{});
-            } catch (_) {}
-          }
 
-          // فحص واستعادة النقاط تلقائياً إذا كانت صفر والدروس مكتملة
-          if (serverPoints === 0) {
+          // القاعدة الذهبية: النقاط لا تقل إطلاقاً بل تأخذ القيمة الأعلى دائماً (Non-Decreasing XP)
+          let resolvedPoints = Math.max(localPoints, serverPoints);
+
+          if (serverPoints === 0 && resolvedPoints === 0) {
             const recovered = await this.checkAndRecoverLostXp(uid);
             if (recovered && recovered.points != null) {
-              serverPoints = recovered.points;
+              resolvedPoints = Math.max(resolvedPoints, Number(recovered.points));
             }
+          }
+
+          // إذا كانت النقاط المحلية أعلى من السيرفر، يتم مزامنتها فوراً مع قاعدة البيانات والداش بورد
+          if (resolvedPoints > serverPoints && uid && activeSb) {
+            try {
+              activeSb.rpc('sync_full_user_gamification', {
+                p_user_id: uid,
+                p_points: resolvedPoints,
+                p_hearts: Number(data.hearts ?? 5),
+                p_streak_days: Number(data.streak_days ?? 1),
+                p_completed_lessons: []
+              }).catch(() => {});
+              activeSb.from('user_progress').update({
+                points: resolvedPoints,
+                total_points: resolvedPoints,
+                last_active_date: new Date().toISOString().split('T')[0]
+              }).eq('user_id', uid).then(() => {}, () => {});
+            } catch (_) {}
           }
 
           progress = {
             user_id: uid,
             hearts: data.hearts ?? 5,
-            points: serverPoints,
-            total_points: serverPoints,
+            points: resolvedPoints,
+            total_points: resolvedPoints,
             streak_days: data.streak_days ?? 1,
             reset_version: serverResetVersion,
             reset_at: data.reset_at || null,
@@ -1500,6 +1520,9 @@ class GamificationService {
         localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(normalized));
       }
       localStorage.setItem(MG_CONFIG.STORAGE_KEYS.PROGRESS, JSON.stringify(normalized));
+      if(typeof window !== 'undefined' && typeof window.invalidateMGCache === 'function'){
+        window.invalidateMGCache();
+      }
       if(broadcast){
         this.broadcastUpdate('progress', normalized);
       }
@@ -1561,37 +1584,34 @@ class GamificationService {
       if(typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(prog);
     }
 
-    if(sbClient && uid){
-      // تحديث الحقول المعدلة فعلياً فقط دون كتابة عشوائية فوق النقاط
-      const dbUpdates = {};
-      if(typeof updates.hearts === 'number' || typeof updates.addHearts === 'number') dbUpdates.hearts = prog.hearts;
-      if(typeof updates.streak_days === 'number') dbUpdates.streak_days = prog.streak_days;
-      if(Array.isArray(updates.claimed_chests)) dbUpdates.claimed_chests = prog.claimed_chests || [];
-      if(updates.last_active_date) dbUpdates.last_active_date = prog.last_active_date;
+    const activeSb = getSbClient();
+    if(activeSb && uid){
+      // 1. مزامنة ذرية موثقة فورية في قاعدة البيانات لضمان عدم ضياع أي نقطة
       if(pointsChanged) {
-        dbUpdates.points = prog.points;
-        dbUpdates.total_points = prog.points;
+        activeSb.rpc('sync_full_user_gamification', {
+          p_user_id: uid,
+          p_points: prog.points,
+          p_hearts: prog.hearts ?? 5,
+          p_streak_days: prog.streak_days || 1,
+          p_completed_lessons: []
+        }).catch(() => {});
       }
 
-      if(Object.keys(dbUpdates).length > 0){
-        const payload = {
-          user_id: uid,
-          points: prog.points || 0,
-          total_points: prog.points || 0,
-          hearts: prog.hearts ?? 5,
-          streak_days: prog.streak_days || 1,
-          last_active_date: prog.last_active_date || new Date().toISOString().split('T')[0],
-          ...dbUpdates
-        };
-        sbClient.from('user_progress').upsert(payload, { onConflict: 'user_id' }).then(({ error }) => {
-          if (error) {
-            console.warn('[Gamification] user_progress upsert err, fallback to update:', error);
-            sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
-          }
-        }).catch(() => {
-          sbClient.from('user_progress').update(dbUpdates).eq('user_id', uid);
-        });
-      }
+      // 2. تحديث مباشر للحقول في جدول user_progress لظهورها بالداشبورد
+      const dbUpdates = {
+        points: prog.points || 0,
+        total_points: prog.points || 0,
+        hearts: prog.hearts ?? 5,
+        streak_days: prog.streak_days || 1,
+        last_active_date: prog.last_active_date || new Date().toISOString().split('T')[0]
+      };
+      if(Array.isArray(updates.claimed_chests)) dbUpdates.claimed_chests = prog.claimed_chests || [];
+
+      activeSb.from('user_progress').update(dbUpdates).eq('user_id', uid).then(({ error }) => {
+        if(error) {
+          activeSb.from('user_progress').upsert({ user_id: uid, ...dbUpdates }, { onConflict: 'user_id' }).catch(()=>{});
+        }
+      }).catch(()=>{});
 
       if (pointsChanged && typeof BroadcastChannel !== 'undefined') {
         try {
@@ -2083,179 +2103,91 @@ class GamificationService {
       ? parseInt(String(lessonId).replace(/_(p|c)$/, ''), 10)
       : parseInt(lessonId, 10);
 
-    let serverHandled = false;
-
     const safeXpReward = (xpReward !== undefined && xpReward !== null && !isNaN(parseInt(xpReward, 10)))
       ? Math.max(0, parseInt(xpReward, 10))
       : 0;
 
-    // المزامنة السحابية الموثوقة عبر complete_lesson_reward ثم record_lesson_completion
+    const curProg = this.getProgressLocal(uid) || {};
+    let currentLocalPoints = Number(curProg.points || curProg.total_points || 0);
+
     const activeSb = getSbClient();
+    const compIds = [];
+    for (const [k, v] of Object.entries(map || {})) {
+      if (!k.includes('_') && v && (v.status === 'completed' || v.isCompleted)) {
+        const n = parseInt(k, 10);
+        if (!isNaN(n) && n > 0 && !compIds.includes(n)) compIds.push(n);
+      }
+    }
+    if (!isNaN(numLessonId) && !compIds.includes(numLessonId)) compIds.push(numLessonId);
+
     if(activeSb && uid && !isNaN(numLessonId)){
-      // إذا كان هناك مكافأة إضافية مطلوب احتسابها من السيرفر
-      if(!wasAlreadyCompleted && safeXpReward > 0){
-        try {
-          const { data: rpcData, error: rpcErr } = await activeSb.rpc('complete_lesson_reward', {
-            p_lesson_id: numLessonId,
-            p_score: parseInt(score, 10) || 100
-          });
+      try {
+        const nextNum = (nextLessonId && !/_(p|c)$/.test(String(nextLessonId))) ? parseInt(nextLessonId, 10) : null;
+        const earnedVal = wasAlreadyCompleted ? 0 : safeXpReward;
 
-          if(!rpcErr && rpcData && rpcData.success){
-            serverHandled = true;
-            const curProg = this.getProgressLocal(uid) || {};
-            curProg.points = Number(rpcData.points ?? curProg.points ?? 0);
-            curProg.total_points = curProg.points;
-            if(rpcData.hearts != null) curProg.hearts = Number(rpcData.hearts);
-            if(rpcData.streak_days != null) curProg.streak_days = Number(rpcData.streak_days);
-            this.saveProgressLocal(curProg, uid);
+        const { data: recData } = await activeSb.rpc('record_lesson_completion', {
+          p_lesson_id: numLessonId,
+          p_score: parseInt(score, 10) || 100,
+          p_xp_reward: earnedVal,
+          p_next_lesson_id: (!isNaN(nextNum) && nextNum > 0) ? nextNum : null,
+          p_user_id: uid
+        });
 
-            const awardedXp = wasAlreadyCompleted ? 0 : Number(rpcData.added_xp || 0);
-            map.added_xp = awardedXp;
-            map.points = curProg.points;
-            map.hearts = curProg.hearts;
-
-            if(awardedXp > 0){
-              this.recordTodayEarnedXP(uid, awardedXp);
-            }
-          }
-        } catch(err){
-          console.warn('complete_lesson_reward RPC error:', err);
-        }
+        const serverPointsReturned = Number(recData?.points ?? recData?.total_points ?? 0);
+        // لا نسمح إطلاقاً بأن تنقص النقاط عن رصيد الطالب الفعلي
+        currentLocalPoints = Math.max(currentLocalPoints, serverPointsReturned);
+        if(recData?.hearts != null) curProg.hearts = Number(recData.hearts);
+        if(recData?.streak_days != null) curProg.streak_days = Number(recData.streak_days);
+      } catch (recErr) {
+        console.warn('record_lesson_completion error:', recErr);
       }
 
-      // المحاولة الثانية: دالة record_lesson_completion القياسية في قاعدة البيانات
-      if(!serverHandled){
-        try {
-          const nextNum = (nextLessonId && !/_(p|c)$/.test(String(nextLessonId))) ? parseInt(nextLessonId, 10) : null;
-          const earnedVal = wasAlreadyCompleted ? 0 : safeXpReward;
-          const { data: recData, error: recErr } = await activeSb.rpc('record_lesson_completion', {
-            p_lesson_id: numLessonId,
-            p_score: parseInt(score, 10) || 100,
-            p_xp_reward: earnedVal,
-            p_next_lesson_id: (!isNaN(nextNum) && nextNum > 0) ? nextNum : null,
-            p_user_id: uid
-          });
-
-          if(!recErr && recData && (recData.success !== false)){
-            serverHandled = true;
-            const curProg = this.getProgressLocal(uid) || {};
-            curProg.points = Number(recData.points ?? recData.total_points ?? curProg.points ?? 0);
-            curProg.total_points = curProg.points;
-            if(recData.hearts != null) curProg.hearts = Number(recData.hearts);
-            if(recData.streak_days != null) curProg.streak_days = Number(recData.streak_days);
-            this.saveProgressLocal(curProg, uid);
-
-            const awardedXp = wasAlreadyCompleted ? 0 : Number(recData.added_xp ?? earnedVal);
-            map.added_xp = awardedXp;
-            map.points = curProg.points;
-            map.hearts = curProg.hearts;
-
-            if(awardedXp > 0){
-              this.recordTodayEarnedXP(uid, awardedXp);
-            }
-          }
-        } catch(err){
-          console.warn('record_lesson_completion RPC error:', err);
-        }
+      // تأكيد مزامنة النقاط والدروس عبر sync_full_user_gamification
+      try {
+        await activeSb.rpc('sync_full_user_gamification', {
+          p_user_id: uid,
+          p_points: currentLocalPoints,
+          p_hearts: curProg.hearts || 5,
+          p_streak_days: curProg.streak_days || 1,
+          p_completed_lessons: compIds
+        });
+      } catch (syncErr) {
+        console.warn('sync_full_user_gamification error in completeLesson:', syncErr);
       }
 
-      // المحاولة الثالثة: sync_full_user_gamification لضمان تسجيل النقاط والدروس ذرياً
-      if(!serverHandled && !wasAlreadyCompleted && safeXpReward > 0){
-        try {
-          const curProg = this.getProgressLocal(uid) || {};
-          const nextPoints = (curProg.points || 0) + safeXpReward;
-          curProg.points = nextPoints;
-          curProg.total_points = nextPoints;
-          this.saveProgressLocal(curProg, uid);
+      // تحديث مباشر في user_progress و user_lesson_progress لظهور الدرس والنقاط فوراً في الداش بورد
+      try {
+        await activeSb.from('user_progress').update({
+          points: currentLocalPoints,
+          total_points: currentLocalPoints,
+          hearts: curProg.hearts || 5,
+          streak_days: curProg.streak_days || 1,
+          last_active_date: new Date().toISOString().split('T')[0]
+        }).eq('user_id', uid);
 
-          const compIds = [];
-          for (const [k, v] of Object.entries(map || {})) {
-            if (!k.includes('_') && v && (v.status === 'completed' || v.isCompleted)) {
-              const n = parseInt(k, 10);
-              if (!isNaN(n) && n > 0) compIds.push(n);
-            }
-          }
-          if (!compIds.includes(numLessonId)) compIds.push(numLessonId);
-
-          const { data: syncData, error: syncErr } = await activeSb.rpc('sync_full_user_gamification', {
-            p_user_id: uid,
-            p_points: nextPoints,
-            p_hearts: curProg.hearts || 5,
-            p_streak_days: curProg.streak_days || 1,
-            p_completed_lessons: compIds
-          });
-
-          if(!syncErr && syncData && syncData.success){
-            serverHandled = true;
-            map.added_xp = safeXpReward;
-            map.points = nextPoints;
-            map.hearts = curProg.hearts || 5;
-            this.recordTodayEarnedXP(uid, safeXpReward);
-          }
-        } catch(err){
-          console.warn('sync_full_user_gamification RPC error:', err);
-        }
-      }
-
-      // فتح الدرس التالي بالسحابة
-      if(nextLessonId && !/_(p|c)$/.test(String(nextLessonId))){
-        const nextNumId = parseInt(nextLessonId, 10);
-        if(!isNaN(nextNumId)){
-          activeSb.from('user_lesson_progress').upsert({
-            user_id: uid,
-            lesson_id: nextNumId,
-            status: 'in_progress',
-            score: 0,
-            updated_at: new Date().toISOString()
-          }, { onConflict: 'user_id,lesson_id' }).then(()=>{}, ()=>{});
-        }
-      }
+        await activeSb.from('user_lesson_progress').upsert({
+          user_id: uid,
+          lesson_id: numLessonId,
+          status: 'completed',
+          score: parseInt(score, 10) || 100,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id,lesson_id' });
+      } catch (_) {}
     }
 
-    // احتياطي غير متصل (Offline fallback) إذا لم يتعامل السيرفر عبر الـ RPC
-    if(!serverHandled){
-      const curProg = this.getProgressLocal(uid) || {};
-      const earnedFallback = wasAlreadyCompleted ? 0 : safeXpReward;
-      if (earnedFallback > 0) {
-        curProg.points = (curProg.points || 0) + earnedFallback;
-        curProg.total_points = curProg.points;
-        this.recordTodayEarnedXP(uid, earnedFallback);
-      }
-      this.saveProgressLocal(curProg, uid);
+    curProg.points = currentLocalPoints;
+    curProg.total_points = currentLocalPoints;
+    this.saveProgressLocal(curProg, uid);
 
-      map.added_xp = earnedFallback;
-      map.points = curProg.points;
-      map.hearts = curProg.hearts || 5;
+    if (typeof window !== 'undefined') {
+      if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+      if (typeof window.refreshStatsDisplay === 'function') window.refreshStatsDisplay(curProg);
     }
 
-    // التأكيد المباشر الحتمي في جداول Supabase لضمان ظهور الدرس فوراً في الداش بورد
-    if(activeSb && uid && !isNaN(numLessonId)){
-      const finalProg = this.getProgressLocal(uid) || {};
-      activeSb.from('user_lesson_progress').upsert({
-        user_id: uid,
-        lesson_id: numLessonId,
-        status: 'completed',
-        score: parseInt(score, 10) || 100,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id,lesson_id' }).then(()=>{}, (e)=>{ console.warn('user_lesson_progress upsert err:', e); });
+    map.added_xp = wasAlreadyCompleted ? 0 : safeXpReward;
+    map.points = currentLocalPoints;
+    map.hearts = curProg.hearts || 5;
 
-      activeSb.from('user_progress').upsert({
-        user_id: uid,
-        points: finalProg.points || 0,
-        total_points: finalProg.points || 0,
-        hearts: finalProg.hearts || 5,
-        streak_days: finalProg.streak_days || 1,
-        last_active_date: new Date().toISOString().split('T')[0]
-      }, { onConflict: 'user_id' }).then(({ error })=>{
-        if (error) {
-          activeSb.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
-        }
-      }).catch(()=>{
-        activeSb.from('user_progress').update({ points: finalProg.points || 0, total_points: finalProg.points || 0 }).eq('user_id', uid);
-      });
-    }
-
-    // إشعار الداش بورد فوراً عبر قناة البث المحلي للمتصفح
     if (typeof BroadcastChannel !== 'undefined') {
       try {
         const bc = new BroadcastChannel('mg_coptic_gamification_sync');
@@ -2264,7 +2196,7 @@ class GamificationService {
           userId: uid,
           lessonId: numLessonId,
           score: parseInt(score, 10) || 100,
-          points: map.points || (this.getProgressLocal(uid)?.points || 0)
+          points: currentLocalPoints
         });
         setTimeout(() => { try { bc.close(); } catch (_) {} }, 1000);
       } catch (_) {}
