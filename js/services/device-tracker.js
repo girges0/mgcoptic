@@ -71,12 +71,14 @@
                         window.Capacitor.isNativePlatform();
     
     if (isCapacitor) {
-      const platform = window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'web';
-      result.platform = platform === 'android' ? 'android' : (platform === 'ios' ? 'ios' : 'web');
+      const platform = window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'android';
+      result.platform = platform === 'android' ? 'android' : (platform === 'ios' ? 'ios' : 'android');
     } else if (/Android/i.test(ua)) {
-      result.platform = 'web'; // Android browser (not native app)
+      result.platform = 'android';
     } else if (/iPhone|iPad|iPod/i.test(ua)) {
-      result.platform = 'web'; // iOS browser (not native app)
+      result.platform = 'ios';
+    } else {
+      result.platform = 'web';
     }
 
     // ── Detect OS ──
