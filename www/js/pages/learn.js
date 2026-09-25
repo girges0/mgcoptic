@@ -1213,7 +1213,7 @@
                     <div class="reward-card-val xp-val" dir="ltr">
                       <span>${xpText}</span>
                     </div>
-                    <div class="reward-card-lbl">نقاط خبرة إضافية</div>
+                    <div class="reward-card-lbl">نقاط XP زيادة</div>
                   </div>
 
                   ${heartsCount > 0 ? `
@@ -1502,7 +1502,7 @@
         }
         if (modalXp) modalXp.textContent = isAlreadyDone ? 'مراجعة (0 XP)' : `+${lessonCopy.xp_reward} XP`;
         const btnModalStart = document.getElementById('btn-modal-start');
-        if (btnModalStart) btnModalStart.textContent = isAlreadyDone ? 'مراجعة الدرس' : 'ابدأ الدرس';
+        if (btnModalStart) btnModalStart.textContent = isAlreadyDone ? 'راجع الدرس' : 'يلا نبدأ الدرس';
         const count = lessonCopy.challenges.length;
         if (modalCount) {
           modalCount.textContent = count === 0 ? 'لا توجد تمارين بعد' : (count === 1 ? 'تمرين واحد' : (count === 2 ? 'تمرينان' : (count >= 3 && count <= 10 ? `${count} تمارين` : `${count} تمرين`)));
@@ -3565,15 +3565,15 @@
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
             if (feedbackText) {
               if (isReplayingLesson) {
-                feedbackText.textContent = 'إجابة صحيحة وممتازة! (مراجعة)';
+                feedbackText.textContent = 'عاش يا بطل! إجابة صح ومظبوطة 🌟 (مراجعة)';
               } else {
-                feedbackText.textContent = (challengeXp > 0) ? `إجابة صحيحة وممتازة! (+${challengeXp} XP)` : 'إجابة صحيحة وممتازة!';
+                feedbackText.textContent = (challengeXp > 0) ? `عاش يا بطل! إجابة صح ومظبوطة 🌟 (+${challengeXp} XP)` : 'عاش يا بطل! إجابة صح ومظبوطة 🌟';
               }
             }
           }
 
           if (btnCheck) {
-            btnCheck.textContent = 'متابعة';
+            btnCheck.textContent = 'يلا كمّل';
             btnCheck.className = 'btn-check-answer btn-continue-ok';
             btnCheck.disabled = false;
             btnCheck.style.pointerEvents = 'auto';
@@ -3599,18 +3599,18 @@
             if (feedbackIcon) feedbackIcon.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
             if (feedbackText) {
               if (ch.type === 'fill_blank' && ch.correct_word) {
-                feedbackText.textContent = `إجابة غير صحيحة — الكلمة الصحيحة: «${ch.correct_word}»`;
+                feedbackText.textContent = `مش مظبوطة — الكلمة الصح هي: «${ch.correct_word}»`;
               } else if (ch.type === 'listen_write' && (ch.correct_word || ch.coptic_display)) {
-                feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${ch.correct_word || ch.coptic_display}»`;
+                feedbackText.textContent = `مش مظبوطة — الصح هو: «${ch.correct_word || ch.coptic_display}»`;
               } else {
                 const correctOpt = (ch.options || []).find(o => o.is_correct);
                 if (correctOpt) {
                   const correctText = (typeof window.formatPronunciationOption === 'function' && ch.type === 'read_select')
                     ? window.formatPronunciationOption(correctOpt.text)
                     : correctOpt.text;
-                  feedbackText.textContent = `إجابة غير صحيحة — الإجابة الصحيحة هي: «${correctText}»`;
+                  feedbackText.textContent = `مش مظبوطة — الصح هو: «${correctText}»`;
                 } else {
-                  feedbackText.textContent = 'إجابة غير صحيحة، حاول مجددًا في التمرين القادم';
+                  feedbackText.textContent = 'مش مظبوطة، معلش ركز وجرب تاني في التمرين الجاي 💪';
                 }
               }
             }
@@ -3619,7 +3619,7 @@
           if (currentRunnerHearts <= 0 && !isReplayingLesson) {
             runnerState = 'out_of_hearts';
             if (btnCheck) {
-              btnCheck.textContent = 'نفدت المحاولات';
+              btnCheck.textContent = 'قلوبك خلصت';
               btnCheck.className = 'btn-check-answer btn-continue-err';
               btnCheck.disabled = false;
               btnCheck.style.pointerEvents = 'auto';
@@ -3627,7 +3627,7 @@
             setTimeout(() => handleOutOfHearts(), 350);
           } else {
             if (btnCheck) {
-              btnCheck.textContent = 'متابعة';
+              btnCheck.textContent = 'يلا كمّل';
               btnCheck.className = 'btn-check-answer btn-continue-err';
               btnCheck.disabled = false;
               btnCheck.style.pointerEvents = 'auto';
@@ -3976,8 +3976,8 @@
               <div class="ooh-badge-circle"><svg viewBox="0 0 24 24" width="38" height="38" fill="#f43f5e"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09L12 10.5l1.5-2.5L12 5.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/><path d="M12 5l-1.5 3 2 2.5-2 3.5 2 3-1 2" stroke="#ffffff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
             </div>
 
-            <h2 class="ooh-title">نفدت محاولاتك!</h2>
-            <p class="ooh-subtitle">تحتاج إلى قلوب لمواصلة التمارين في هذا المستوى</p>
+            <h2 class="ooh-title">قلوبك خلصت يا بطل!</h2>
+            <p class="ooh-subtitle">محتاج قلوب علشان تكمل التمارين في المستوى ده</p>
 
             <div class="ooh-hearts-track" title="${hearts} من 5 قلوب">
               ${Array.from({length: 5}, (_, i) => i < hearts
@@ -3992,16 +3992,16 @@
                 <span class="ooh-recharge-max">حتى 5 قلوب</span>
               </div>
               <div class="ooh-recharge-desc">
-                يتم شحن القلوب تلقائياً كل 24 ساعة حتى تكتمل إلى 5 قلوب كاملة (قلب جديد كل 4.8 ساعة).
+                القلوب بتتشحن لوحدها كل ٢٤ ساعة لحد ما تكمل ٥ قلوب كاملة (قلب جديد كل ٤.٨ ساعة).
               </div>
               <div class="ooh-recharge-timer">
-                <span style="display:inline-flex;align-items:center;gap:5px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M12 2v3M9 2h6M19 6l1.5-1.5"/></svg> القلب القادم يتشحن خلال:</span>
-                <span id="ooh-live-timer" style="font-weight:900;color:#0284c7;">جارٍ الحساب...</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M12 2v3M9 2h6M19 6l1.5-1.5"/></svg> القلب اللي جاي هيتشحن خلال:</span>
+                <span id="ooh-live-timer" style="font-weight:900;color:#0284c7;">ثواني بنحسب...</span>
               </div>
             </div>
 
             <div class="ooh-wallet-strip">
-              <span class="ooh-wallet-label">رصيدك الحالي:</span>
+              <span class="ooh-wallet-label">رصيدك دلوقتي:</span>
               <span class="ooh-wallet-val"><svg viewBox="0 0 24 24" width="17" height="17" fill="#f59e0b" stroke="#d97706" stroke-width="1.2" style="vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <b>${currentXP} XP</b></span>
             </div>
 
@@ -4009,8 +4009,8 @@
               <div class="ooh-actions">
                 <button type="button" id="swal-buy-1-heart" class="ooh-btn-buy ooh-btn-single">
                   <div class="ooh-btn-text-side">
-                    <span class="ooh-btn-main-text">شراء 1 قلب <svg viewBox="0 0 24 24" width="16" height="16" fill="#ffffff" style="vertical-align:middle;display:inline-block;margin:0 2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
-                    <span class="ooh-btn-sub-text">مواصلة التمرين فوراً</span>
+                    <span class="ooh-btn-main-text">شراء قلب واحد <svg viewBox="0 0 24 24" width="16" height="16" fill="#ffffff" style="vertical-align:middle;display:inline-block;margin:0 2px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+                    <span class="ooh-btn-sub-text">كمّل التمرين علطول</span>
                   </div>
                   <span class="ooh-btn-price-pill">${costPerHeart} XP</span>
                 </button>
@@ -4018,10 +4018,10 @@
                   <button type="button" id="swal-buy-all-hearts" class="ooh-btn-buy ooh-btn-all">
                     <div class="ooh-btn-text-side">
                       <span class="ooh-btn-main-text">
-                        ملء كل القلوب (${heartsNeeded} قلوب)
-                        <span class="ooh-tag-best">الأوفر</span>
+                        املا القلوب كلها (${heartsNeeded} قلوب)
+                        <span class="ooh-tag-best">أوفرلك</span>
                       </span>
-                      <span class="ooh-btn-sub-text">استعادة 5 قلوب كاملة فوراً</span>
+                      <span class="ooh-btn-sub-text">ارجع بـ ٥ قلوب كاملة فوراً</span>
                     </div>
                     <span class="ooh-btn-price-pill">${fullCost} XP</span>
                   </button>
@@ -4029,7 +4029,7 @@
               </div>
             ` : `
               <div class="ooh-insufficient-card">
-                <div class="ooh-insufficient-title"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18h6m-4 3h2m-1-18a7 7 0 0 0-4.9 12c.7.7 1.1 1.6 1.1 2.5v.5h7.6v-.5c0-.9.4-1.8 1.1-2.5A7 7 0 0 0 12 3z"/></svg> رصيد الـ XP لا يكفي للشراء حالياً</div>
+                <div class="ooh-insufficient-title"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M9 18h6m-4 3h2m-1-18a7 7 0 0 0-4.9 12c.7.7 1.1 1.6 1.1 2.5v.5h7.6v-.5c0-.9.4-1.8 1.1-2.5A7 7 0 0 0 12 3z"/></svg> رصيدك من الـ XP مش كفاية للشراء دلوقتي</div>
                 <p class="ooh-insufficient-desc">
                   سعر القلب الواحد <b>${costPerHeart} XP</b> ورصيدك <b>${currentXP} XP</b>.<br>
                   يمكنك الانتظار حتى اكتمال شحن القلوب كل 24 ساعة، أو مراجعة الدروس السابقة لكسب المزيد من الـ XP!

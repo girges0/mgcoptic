@@ -28,11 +28,11 @@
       audioText: 'ألفا بيتا غما دلتا إي',
       rulesTitle: 'أهم قواعد الحروف الخمسة الأولى:',
       ruleList: [
-        '<strong>Ⲁ (ألفا)</strong>: يُنطق دائماً ألفاً مفتوحة مشبعة مثل نطق الألف في (باب).',
-        '<strong>Ⲃ (بيتا)</strong>: يُنطق <strong>(ڤ)</strong> إذا جاء بعده متحرك، ويُنطق <strong>(ب)</strong> إذا لم يليه متحرك أو في نهاية الكلمة.',
-        '<strong>Ⲅ (غما)</strong>: يُنطق <strong>(جـ معطشة)</strong> بعده كسر يوناني، و<strong>(ن)</strong> قبل الحلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ)، و<strong>(غ)</strong> في باقي الحالات.',
-        '<strong>Ⲇ (دلتا)</strong>: يُنطق <strong>(د)</strong> في أسماء الأعلام، و<strong>(ذ)</strong> في باقي الكلمات اليونانية.',
-        '<strong>Ⲉ (إي)</strong>: يُنطق فتحة قصيرة مائلة للكسر خطافة مثل الألف المكسورة الخفيفة.'
+        '<strong>Ⲁ (ألفا)</strong>: بيتنطق علطول ألف مفتوحة واضحة وممدودة زي حرف الألف في كلمة (باب).',
+        '<strong>Ⲃ (بيتا)</strong>: بيتنطق <strong>(ڤ)</strong> لو جه بعده حرف متحرك، وبيتنطق <strong>(ب)</strong> لو ماجاش بعده متحرك أو جه في آخر الكلمة.',
+        '<strong>Ⲅ (غما)</strong>: بيتنطق <strong>(جـ معطشة)</strong> لو جه بعده كسر يوناني، و<strong>(ن)</strong> لو جه قبل حروف حلقية (Ⲅ, Ⲕ, Ⲭ, Ⲝ)، و<strong>(غ)</strong> في باقي الحالات.',
+        '<strong>Ⲇ (دلتا)</strong>: بيتنطق <strong>(د)</strong> في أسماء الناس والبلاد (أسماء الأعلام)، و<strong>(ذ)</strong> في باقي الكلمات اليونانية.',
+        '<strong>Ⲉ (إي)</strong>: بيتنطق فتحة قصيرة خطافة مايلة للكسر خفيفة زي الألف المكسورة السريعة.'
       ],
       examples: [
         { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلُـومْ', meaning: 'جبنة' },
@@ -41,7 +41,7 @@
         { coptic: 'ⲇⲱⲣⲟⲛ', phoneticAr: 'ذُورُون', meaning: 'هدية / عطية' },
         { coptic: 'ⲉϩⲟⲟⲩ', phoneticAr: 'إيهُـوؤُو', meaning: 'يوم' }
       ],
-      specialNote: 'تذكر دائماً أن حروف Ⲃ و Ⲇ و Ⲅ تتغير أصواتها وفقاً للحرف الذي يليها مباشرة.'
+      specialNote: 'افتكر علطول: حروف Ⲃ و Ⲇ و Ⲅ نطقهم بيتغير على حسب الحرف اللي جاي وراهم على طول.'
     },
     166: {
       lessonId: 166,
@@ -54,18 +54,18 @@
       audioText: 'زيتا إيتا ثيتا إيوتا',
       rulesTitle: 'أهم قواعد حروف الوحدة الثانية:',
       ruleList: [
-        '<strong>Ⲍ (زيتا)</strong>: يُنطق دائماً زاي صريحة (ز).',
-        '<strong>Ⲏ (إيتا)</strong>: حرف متحرك للكسر، يُنطق ياءً ممدودة مشبعة طويلة (إيي).',
-        '<strong>Ⲑ (ثيتا)</strong>: يُنطق <strong>(ت)</strong> إذا سبقه سيما (Ⲥ) أو شاي (Ϣ)، ويُنطق <strong>(ث)</strong> في جميع الحالات الأخرى.',
-        '<strong>Ⲓ (إيوتا)</strong>: حرف متحرك للكسر، يُنطق ياءً خفيفة قصيرة خطافة.'
+        '<strong>Ⲍ (زيتا)</strong>: بيتنطق علطول زي حرف (الزين) الصريح.',
+        '<strong>Ⲏ (إيتا)</strong>: حرف متحرك للكسر، بيتنطق ياء ممدودة طويلة ومشبعة براحتها (إيي).',
+        '<strong>Ⲑ (ثيتا)</strong>: بيتنطق <strong>(ت)</strong> لو جه قبله سيما (Ⲥ) أو شاي (Ϣ)، وبيتنطق <strong>(ث)</strong> في أي حالة تانية.',
+        '<strong>Ⲓ (إيوتا)</strong>: حرف متحرك للكسر، بيتنطق ياء خفيفة قصيرة وخطافة.'
       ],
       examples: [
         { coptic: 'ⲍⲩⲅⲟⲥ', phoneticAr: 'زِيغُوس', meaning: 'ميزان' },
-        { coptic: 'ⲏⲓ', phoneticAr: 'إِيـي', meaning: 'بيت / منزل' },
-        { coptic: 'ⲑⲱⲕ', phoneticAr: 'ثُـوك', meaning: 'لك / خاصتك' },
-        { coptic: 'ⲓⲱⲧ', phoneticAr: 'يُـوت', meaning: 'أب / والد' }
+        { coptic: 'ⲏⲓ', phoneticAr: 'إِيـي', meaning: 'بيت' },
+        { coptic: 'ⲑⲱⲕ', phoneticAr: 'ثُـوك', meaning: 'بتاعك / ليك' },
+        { coptic: 'ⲓⲱⲧ', phoneticAr: 'يُـوت', meaning: 'أب / بابا' }
       ],
-      specialNote: 'لاحظ الفارق الزمني الحاسم: Ⲏ ممدودة بزمن مضاعف، بينما Ⲓ قصيرة خاطفة.'
+      specialNote: 'خد بالك من الفرق في وقت النطق: حرف Ⲏ بتطوّل وتمد فيه، أما Ⲓ بيكون قصير وخاطف وسريع.'
     },
     167: {
       lessonId: 167,
@@ -76,22 +76,22 @@
       glyph: 'Ⲕ Ⲗ Ⲙ Ⲛ Ⲝ',
       pronunciationSummary: 'ك ، ل ، م ، ن ، كـ+س',
       audioText: 'كابا لابدا مي ني كسي',
-      rulesTitle: 'قواعد حروف الرنين والكسي المركب:',
+      rulesTitle: 'قواعد حروف الرنين وحرف الكسي المزدوج:',
       ruleList: [
-        '<strong>Ⲕ (كابا)</strong>: يُنطق دائماً كافاً صريحة (ك).',
-        '<strong>Ⲗ (لابدا)</strong>: يُنطق دائماً لاماً صريحة (ل).',
-        '<strong>Ⲙ (مي)</strong>: يُنطق دائماً ميماً صريحة (م).',
-        '<strong>Ⲛ (ني)</strong>: يُنطق دائماً نوناً صريحة (ن).',
-        '<strong>Ⲝ (كسي)</strong>: حرف مركب مزدوج، يُنطق دائماً بصوتين متتابعين (كـ + س) في نفس الحرف.'
+        '<strong>Ⲕ (كابا)</strong>: بيتنطق علطول كاف صريحة (ك).',
+        '<strong>Ⲗ (لابدا)</strong>: بيتنطق علطول لام صريحة (ل).',
+        '<strong>Ⲙ (مي)</strong>: بيتنطق علطول ميم صريحة (م).',
+        '<strong>Ⲛ (ني)</strong>: بيتنطق علطول نون صريحة (ن).',
+        '<strong>Ⲝ (كسي)</strong>: حرف مركب مزدوج، بيتنطق علطول صوتين ورا بعض في نفس الحرف (كـ + س).'
       ],
       examples: [
         { coptic: 'ⲕⲁϩⲓ', phoneticAr: 'كَـاهِي', meaning: 'أرض / تراب' },
         { coptic: 'ⲗⲁⲥ', phoneticAr: 'لَاس', meaning: 'لسان' },
-        { coptic: 'ⲙⲁⲩ', phoneticAr: 'مَـاوْ (مَاڤ)', meaning: 'أم / والدة' },
-        { coptic: 'ⲛⲟⲩϯ', phoneticAr: 'نُـوتِي', meaning: 'الله / إله' },
+        { coptic: 'ⲙⲁⲩ', phoneticAr: 'مَـاوْ (مَاڤ)', meaning: 'أم / ماما' },
+        { coptic: 'ⲛⲟⲩϯ', phoneticAr: 'نُـوتِي', meaning: 'ربنا / إله' },
         { coptic: 'ⲝⲩⲗⲟⲛ', phoneticAr: 'كسِيلُون', meaning: 'خشبة / صليب' }
       ],
-      specialNote: 'الحروف Ⲗ, Ⲙ, Ⲛ تسمى حروف الرنين، وتلعب دوراً أساسياً في تشكيل المقاطع الكنسية.'
+      specialNote: 'حروف Ⲗ و Ⲙ و Ⲛ بيسموها حروف الرنين، وبتساعد جداً على سلاسة نطق الألحان في الكنيسة.'
     },
     168: {
       lessonId: 168,
@@ -104,20 +104,20 @@
       audioText: 'أو بي رو سيما تاف',
       rulesTitle: 'قواعد حروف الوحدة الرابعة:',
       ruleList: [
-        '<strong>Ⲟ (أو قصيرة)</strong>: حرف متحرك للضم، يُنطق واواً قصيرة خطافة خفيفة.',
-        '<strong>Ⲡ (بي)</strong>: يُنطق دائماً باءً صريحة غير معطشة خفيفة (ب).',
-        '<strong>Ⲣ (رو)</strong>: يُنطق دائماً راءً مفخمة مطروقة (ر).',
-        '<strong>Ⲥ (سيما)</strong>: يُنطق دائماً سيناً صريحة (س).',
-        '<strong>Ⲧ (تاف)</strong>: يُنطق دائماً تاءً صريحة مرققة (ت).'
+        '<strong>Ⲟ (أو قصيرة)</strong>: حرف متحرك للضم، بيتنطق واو قصيرة وخطافة خفيفة.',
+        '<strong>Ⲡ (بي)</strong>: بيتنطق علطول باء عادية صريحة وخفيفة (ب).',
+        '<strong>Ⲣ (رو)</strong>: بيتنطق علطول راء واضحة ومظبوطة (ر).',
+        '<strong>Ⲥ (سيما)</strong>: بيتنطق علطول سين صريحة (س).',
+        '<strong>Ⲧ (تاف)</strong>: بيتنطق علطول تاء مرققة وخفيفة (ت).'
       ],
       examples: [
-        { coptic: 'ⲟⲩⲱⲓⲕ', phoneticAr: 'أُوِيـك', meaning: 'خبز' },
-        { coptic: 'ⲡⲉ', phoneticAr: 'بِـي', meaning: 'السماء' },
+        { coptic: 'ⲟⲩⲱⲓⲕ', phoneticAr: 'أُوِيـك', meaning: 'عيش / خبز' },
+        { coptic: 'ⲡⲉ', phoneticAr: 'بِـي', meaning: 'السما' },
         { coptic: 'ⲣⲁⲛ', phoneticAr: 'رَان', meaning: 'اسم' },
         { coptic: 'ⲥⲟⲛ', phoneticAr: 'سُـون', meaning: 'أخ' },
-        { coptic: 'ⲧⲱⲧ', phoneticAr: 'تُـوت', meaning: 'يد' }
+        { coptic: 'ⲧⲱⲧ', phoneticAr: 'تُـوت', meaning: 'إيد' }
       ],
-      specialNote: 'حرف Ⲡ يُنطق دائماً (ب) خفيفة مثل نطق الباء العربية الصريحة في كلمة (باب).'
+      specialNote: 'افتكر علطول: حرف Ⲡ بيتنطق (ب) خفيفة وعادية زي حرف الباء في كلمة (باب).'
     },
     169: {
       lessonId: 169,
@@ -128,22 +128,22 @@
       glyph: 'Ⲩ Ⲫ Ⲭ Ⲯ Ⲱ',
       pronunciationSummary: 'ڤ/أو/ي ، ف ، ش/ك/خ ، بـ+س ، و طويلة',
       audioText: 'إبسلون في خي إبسي أوميغا',
-      rulesTitle: 'قواعد الحروف الثلاثية والمركبة والأوميغا:',
+      rulesTitle: 'قواعد الحروف الثلاثية والمركبة وحرف الأوميغا:',
       ruleList: [
-        '<strong>Ⲩ (إبسيلون)</strong>: يُنطق <strong>(ڤ)</strong> بعد Ⲁ أو Ⲉ، و<strong>(أو ممدودة)</strong> بعد Ⲟ، و<strong>(ياء)</strong> منفرداً.',
-        '<strong>Ⲫ (في)</strong>: يُنطق دائماً فاءً صريحة (ف).',
-        '<strong>Ⲭ (خي)</strong>: يُنطق <strong>(ك)</strong> في القبطي، و<strong>(ش)</strong> في اليوناني بعده كسر، و<strong>(خ)</strong> في اليوناني باقي الحالات.',
-        '<strong>Ⲯ (إبسي)</strong>: حرف مركب يُنطق بصوتين متتابعين (بـ + س) في نفس الحرف.',
-        '<strong>Ⲱ (أوميغا)</strong>: حرف متحرك للضم، يُنطق واواً طويلة مفخمة مفتوحة الشفتين.'
+        '<strong>Ⲩ (إبسيلون)</strong>: بيتنطق <strong>(ڤ)</strong> لو جه قبله Ⲁ أو Ⲉ، وبيتنطق <strong>(أو ممدودة)</strong> لو جه قبله Ⲟ، وبيتنطق <strong>(ياء)</strong> لو جه لوحده.',
+        '<strong>Ⲫ (في)</strong>: بيتنطق علطول فاء صريحة (ف).',
+        '<strong>Ⲭ (خي)</strong>: بيتنطق <strong>(ك)</strong> في الكلمات القبطية، و<strong>(ش)</strong> في اليونانية لو بعده كسر، و<strong>(خ)</strong> في اليونانية في باقي الحالات.',
+        '<strong>Ⲯ (إبسي)</strong>: حرف مركب بيتنطق بصوتين ورا بعض في نفس الحرف (بـ + س).',
+        '<strong>Ⲱ (أوميغا)</strong>: حرف متحرك للضم، بيتنطق واو طويلة ومفخمة والشفايف مفتوحة شوية.'
       ],
       examples: [
         { coptic: 'ⲩⲓⲟⲥ', phoneticAr: 'إِيُـوس', meaning: 'ابن' },
-        { coptic: 'ⲫⲏ', phoneticAr: 'فِـي', meaning: 'السماء' },
-        { coptic: 'ⲭⲁⲕⲓ', phoneticAr: 'كَـاكِي', meaning: 'ظلمة' },
+        { coptic: 'ⲫⲏ', phoneticAr: 'فِـي', meaning: 'السما' },
+        { coptic: 'ⲭⲁⲕⲓ', phoneticAr: 'كَـاكِي', meaning: 'ضلمة / عتمة' },
         { coptic: 'ⲯⲁⲗⲙⲟⲥ', phoneticAr: 'بصَـالْمُوس', meaning: 'مزمور' },
-        { coptic: 'ⲱⲛϧ', phoneticAr: 'أُونَـخ', meaning: 'حياة' }
+        { coptic: 'ⲱⲛϧ', phoneticAr: 'أُونَـخ', meaning: 'حياة / عايش' }
       ],
-      specialNote: 'قارن بين Ⲟ (واو قصيرة) و Ⲱ (واو طويلة مفخمة) و ⲞⲨ (واو طويلة مضمومة مقفلة الشفتين).'
+      specialNote: 'قارن بين نطق التلاتة: Ⲟ (واو قصيرة)، و Ⲱ (واو طويلة ومفخمة)، و ⲞⲨ (واو طويلة مضمومة والشفايف مقفولة).'
     },
     170: {
       lessonId: 170,
@@ -154,70 +154,70 @@
       glyph: 'Ϣ Ϥ Ϧ Ϩ Ϫ',
       pronunciationSummary: 'ش ، ف ، خ ، هـ ، جـ معطشة / ج صلبة',
       audioText: 'شاي فاي خاي هوري جانجا',
-      rulesTitle: 'قواعد الحروف المصرية الأصيلة صك الهوية القبطية:',
+      rulesTitle: 'قواعد الحروف المصرية الأصيلة أصل الهوية القبطية:',
       ruleList: [
-        '<strong>Ϣ (شاي)</strong>: يُنطق دائماً شيناً صريحة (ش).',
-        '<strong>Ϥ (فاي)</strong>: يُنطق دائماً فاءً صريحة (ف).',
-        '<strong>Ϧ (خاي)</strong>: يُنطق دائماً خاءً صريحة (خ).',
-        '<strong>Ϩ (هوري)</strong>: يُنطق دائماً هاءً صريحة (هـ).',
-        '<strong>Ϫ (جانجا)</strong>: يُنطق <strong>(جيم معطشة)</strong> إذا تلاه حرف كسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ)، ويُنطق <strong>(جيم صلبة)</strong> فيما عدا ذلك.'
+        '<strong>Ϣ (شاي)</strong>: بيتنطق علطول شين صريحة (ش).',
+        '<strong>Ϥ (فاي)</strong>: بيتنطق علطول فاء صريحة (ف).',
+        '<strong>Ϧ (خاي)</strong>: بيتنطق علطول خاء صريحة (خ).',
+        '<strong>Ϩ (هوري)</strong>: بيتنطق علطول هاء صريحة (هـ).',
+        '<strong>Ϫ (جانجا)</strong>: بيتنطق <strong>(جيم معطشة)</strong> لو جه بعده كسر (Ⲉ, Ⲏ, Ⲓ, Ⲩ)، وبيتنطق <strong>(جيم مصرية عادية صلبة)</strong> في غير كده.'
       ],
       examples: [
         { coptic: 'ϣⲗⲏⲗ', phoneticAr: 'شلِـيل', meaning: 'صلاة' },
-        { coptic: 'ϥⲁⲓ', phoneticAr: 'فَـاي', meaning: 'يحمل / حامل' },
-        { coptic: 'ϧⲉⲛ', phoneticAr: 'خِـين', meaning: 'في / داخل' },
+        { coptic: 'ϥⲁⲓ', phoneticAr: 'فَـاي', meaning: 'يشيل / شايل' },
+        { coptic: 'ϧⲉⲛ', phoneticAr: 'خِـين', meaning: 'جوه / في' },
         { coptic: 'ϩⲏⲧ', phoneticAr: 'هِـيت', meaning: 'قلب / عقل' },
-        { coptic: 'ϫⲱⲙ', phoneticAr: 'جُـوم (صلبة)', meaning: 'كتاب / قوة / جلد' }
+        { coptic: 'ϫⲱⲙ', phoneticAr: 'جُـوم (صلبة)', meaning: 'كتاب / قوة' }
       ],
-      specialNote: 'وجود أي حرف من هذه الحروف في الكلمة هو دليل قاطع لا يقبل الشك على أن الكلمة قبطية مصرية أصيلة وليست يونانية.'
+      specialNote: 'لو شفت أي حرف من الحروف دي في أي كلمة، اعرف فوراً ومن غير تردد إن الكلمة دي أصلها قبطي مصري مش يوناني!'
     },
     171: {
       lessonId: 171,
       unitTitle: 'الوحدة ٧: الحروف الختامية والمراجعة الكبرى (Ϭ – Ϯ)',
       badgeText: 'المراجعة الشاملة الكبرى',
       badgeClass: 'badge-review',
-      headerTitle: 'المراجعة الشاملة للأبجدية القبطية الكاملة (32 حرفاً)',
+      headerTitle: 'المراجعة الشاملة لكل حروف الأبجدية القبطية (32 حرف)',
       glyph: 'Ϭ ϭ • Ϯ ϯ • ⲋ',
       pronunciationSummary: 'تـ+ش (تش) ، تـ+ي (تي) ، سو (رقم 6)',
       audioText: 'تشيما تي سو الأبجدية القبطية الكاملة',
-      rulesTitle: 'الحروف الختامية وهيكل الأبجدية الكامل:',
+      rulesTitle: 'آخر حروف في الأبجدية وهيكل الحروف كلها:',
       ruleList: [
-        '<strong>Ϭ (تشيما)</strong>: يُنطق دائماً مركباً بصوتين (تـ + ش = تش) مثل الكلمة الكنسية الشهيرة <strong>ϭⲟⲓⲥ</strong> (تشويس = الرب).',
-        '<strong>Ϯ (تي)</strong>: يُنطق دائماً مقطعاً صوتياً مركباً (تـ + ي = تي) مثل أداة التعريف <strong>ϯ</strong> (تي = الـ للمؤنث).',
-        '<strong>ⲋ (سو)</strong>: رمز ورقم قبطي يعني العدد (6) ولا يُستخدم كحرف هجائي داخل الكلمات.',
-        '<strong>الهيكل الكلي</strong>: 32 حرفاً ورمزاً = 7 حروف متحركة + 24 حرفاً ساكناً + 1 رمز رقمي (سو).'
+        '<strong>Ϭ (تشيما)</strong>: بيتنطق علطول مركب بصوتين مع بعض (تـ + ش = تش) زي الكلمة الكنسية المشهورة <strong>ϭⲟⲓⲥ</strong> (تشويس = الرب).',
+        '<strong>Ϯ (تي)</strong>: بيتنطق علطول مقطع صوتي مركب (تـ + ي = تي) زي أداة التعريف للمؤنث <strong>ϯ</strong> (تي = الـ).',
+        '<strong>ⲋ (سو)</strong>: ده رمز ورقم قبطي معناه رقم (6)، ومش بيجي كحرف جوه الكلمات العادية.',
+        '<strong>عدد الحروف كلها</strong>: 32 حرف ورمز = 7 حروف متحركة + 24 حرف ساكن + 1 رمز رقمي (سو).'
       ],
       examples: [
         { coptic: 'ϭⲟⲓⲥ', phoneticAr: 'تشُـويـس', meaning: 'الرب / السيد' },
-        { coptic: 'ϯ', phoneticAr: 'تِـي', meaning: 'أنا / أُعطي' },
+        { coptic: 'ϯ', phoneticAr: 'تِـي', meaning: 'أنا / بدي (أُعطي)' },
         { coptic: 'ⲡⲓⲣⲁⲛ', phoneticAr: 'بِـيرَان', meaning: 'الاسم' },
-        { coptic: 'ⲛⲟⲩϯ', phoneticAr: 'نُـوتِي', meaning: 'الله' }
+        { coptic: 'ⲛⲟⲩϯ', phoneticAr: 'نُـوتِي', meaning: 'ربنا / الله' }
       ],
-      specialNote: 'أنت الآن على وشك إتمام المستوى الأول بالكامل بعد أن أتقنت جميع أصوات وحروف لغة أجدادنا العظيمة!'
+      specialNote: 'عاش يا بطل! إنت خلاص قربت تخلص المستوى الأول بالكامل بعد ما اتعلمت كل أصوات وحروف لغة أجدادنا العظيمة!'
     },
     172: {
       lessonId: 172,
       unitTitle: 'الوحدة ٧: الاختبار النهائي الشامل',
-      badgeText: 'الاختبار النهائي للمستوى الأول',
+      badgeText: 'الامتحان النهائي للمستوى الأول',
       badgeClass: 'badge-exam',
-      headerTitle: 'دليل وتعليمات الاختبار النهائي الشامل للمستوى الأول',
+      headerTitle: 'دليل وتعليمات الامتحان النهائي الشامل للمستوى الأول',
       glyph: '32 Ⲁ-Ϯ',
-      pronunciationSummary: 'امتحان شامل لجميع حروف وقواعد المستوى الأول',
+      pronunciationSummary: 'امتحان شامل لكل حروف وقواعد المستوى الأول',
       audioText: 'الاختبار النهائي الشامل للمستوى الأول',
-      rulesTitle: 'محاور التقييم في الاختبار النهائي:',
+      rulesTitle: 'هتمتحن في إيه في الاختبار النهائي:',
       ruleList: [
-        '<strong>التمييز الصوتي والشكلي</strong>: التأكد من معرفة الفوارق بين الحروف المتشابهة في الرسم (مثل: Ⲁ و Ⲗ، Ⲟ و Ⲱ، Ϣ و Ϧ).',
-        '<strong>الحروف ذات الحالات الشرطية</strong>: استحضار شروط نطق (Ⲃ, Ⲅ, Ⲇ, Ⲑ, Ⲭ, Ϫ).',
-        '<strong>الحروف المركبة</strong>: تذكر الأصوات المزدوجة لـ (Ⲝ = كـ+س، ⲯ = بـ+س، Ϭ = تـ+ش، Ϯ = تـ+ي).',
-        '<strong>قراءة الكلمات التطبيقية</strong>: التعرف على الكلمات التأسيسية التي درستها على مدار الـ 40 درساً.'
+        '<strong>الفرق بين الحروف في الصوت والشكل</strong>: تتأكد من معرفتك للفروق بين الحروف اللي شكلها شبه بعض (زي: Ⲁ و Ⲗ، Ⲟ و Ⲱ، Ϣ و Ϧ).',
+        '<strong>الحروف اللي نطقها بيتغير بشروط</strong>: افتكر شروط نطق حروف (Ⲃ, Ⲅ, Ⲇ, Ⲑ, Ⲭ, Ϫ).',
+        '<strong>الحروف المركبة</strong>: افتكر الصوتين المزدوجين لـ (Ⲝ = كـ+س، ⲯ = بـ+س، Ϭ = تـ+ش، Ϯ = تـ+ي).',
+        '<strong>قراءة كلمات عملية</strong>: تقرأ وتتعرف على الكلمات الأساسية اللي اتعلمتها طول الدروس اللي فاتت.'
       ],
       examples: [
         { coptic: 'ⲁⲗⲱⲙ', phoneticAr: 'آلُـومْ', meaning: 'جبنة (حرف Ⲁ)' },
-        { coptic: 'ⲑⲱⲕ', phoneticAr: 'ثُـوك', meaning: 'لك (حرف Ⲑ)' },
+        { coptic: 'ⲑⲱⲕ', phoneticAr: 'ثُـوك', meaning: 'بتاعك (حرف Ⲑ)' },
         { coptic: 'ϣⲗⲏⲗ', phoneticAr: 'شلِـيل', meaning: 'صلاة (حرف Ϣ)' },
         { coptic: 'ϭⲟⲓⲥ', phoneticAr: 'تشُـويـس', meaning: 'الرب (حرف Ϭ)' }
       ],
-      specialNote: 'خذ وقتك في قراءة كل سؤال بتأنٍ، وركز في حركة الحرف وموقعه داخل الكلمة قبل الإجابة.'
+      specialNote: 'خد وقتك واقرأ كل سؤال على مهلك وبروقان، وركز في تشكيل الحرف ومكانه في الكلمة قبل ما تختار!'
     },
 
     // === المستوى الثاني: قواعد القراءة ونطق الكلمات ===
@@ -1103,7 +1103,7 @@
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
-          نبذة تمهيدية تفصيلية • ${escapeHtml(unitTitle)}
+           نبذة تمهيدية تفصيلية • ${escapeHtml(unitTitle)}
         </span>
       </div>
 
@@ -1145,13 +1145,13 @@
 
               ${audioFile || audioText ? `
                 <div class="letter-audio-action">
-                  <button type="button" class="btn-listen-letter hero-audio-btn" aria-label="استمع للشرح أو النطق" title="استمع للشرح أو النطق" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('${audioFile}', '${audioText}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('${audioFile}', '${audioText}', this); }" style="background:linear-gradient(135deg, #6F1737 0%, #8A1E46 100%); color:#FFFFFF; border:none; border-radius:20px; padding:8px 16px; font-weight:800; font-size:0.86rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(111,23,55,0.2); transition:all .2s ease;">
+                  <button type="button" class="btn-listen-letter hero-audio-btn" aria-label="اسمع الشرح أو النطق" title="اسمع الشرح أو النطق" onclick="if(window.playChallengeAudio){ window.playChallengeAudio('${audioFile}', '${audioText}', this); } else if(window.CurriculumAdminSystem && CurriculumAdminSystem.playAudioSnippet){ CurriculumAdminSystem.playAudioSnippet('${audioFile}', '${audioText}', this); }" style="background:linear-gradient(135deg, #6F1737 0%, #8A1E46 100%); color:#FFFFFF; border:none; border-radius:20px; padding:8px 16px; font-weight:800; font-size:0.86rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(111,23,55,0.2); transition:all .2s ease;">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
                       <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
                     </svg>
-                    <span>استمع للفظ الصوتي</span>
+                    <span>اسمع النطق الصوتي</span>
                   </button>
                 </div>
               ` : ''}
@@ -1182,15 +1182,15 @@
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                   <line x1="9" y1="3" x2="9" y2="21"/>
                 </svg>
-                <span>أمثلة تطبيقية وشواهد كنسية:</span>
+                <span>أمثلة وكلمات بنشوفها في الكنيسة:</span>
               </div>
               <div style="overflow-x:auto; border:1.5px solid #E5D7C5; border-radius:14px; background:#FFFFFF;">
                 <table style="width:100%; border-collapse:collapse; text-align:right; font-size:0.94rem;">
                   <thead>
                     <tr style="background:#FAF4E8; border-bottom:1.5px solid #E5D7C5; color:#6F1737; font-weight:800;">
-                      <th style="padding:11px 16px;">الكلمة بالقبطية</th>
-                      <th style="padding:11px 16px;">النطق الصوتي (مُشكّل)</th>
-                      <th style="padding:11px 16px;">المعنى بالعربية</th>
+                      <th style="padding:11px 16px;">الكلمة بالقبطي</th>
+                      <th style="padding:11px 16px;">طريقة النطق بالعربي</th>
+                      <th style="padding:11px 16px;">معناها بالعربي</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1216,6 +1216,7 @@
                 <line x1="12" y1="8" x2="12.01" y2="8"/>
               </svg>
               <div style="color:#5A4031; font-size:0.9rem; font-weight:700; line-height:1.6;">
+                <strong style="color:#B8860B; display:block; margin-bottom:4px;">خد بالك من الملاحظة دي:</strong>
                 ${escapeHtml(specialNote)}
               </div>
             </div>
