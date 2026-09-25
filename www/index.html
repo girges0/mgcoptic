@@ -3991,13 +3991,13 @@
       color: var(--madder);
     }
 
-    /* ============ 7-DAY STREAK CARD (SITE COLORS: MADER & GOLD) ============ */
+    /* ============ 7-DAY STREAK CARD (SITE COLORS: MADDER & GOLD) ============ */
     .duo-streak-card {
       background: var(--parchment-card, #FAF6E9);
       border: 1.5px solid rgba(168, 130, 58, 0.24);
       border-top: 3px solid var(--madder, #6B1530);
       border-radius: 20px;
-      padding: 18px 20px 16px;
+      padding: 16px 18px 14px;
       box-shadow: 0 4px 16px rgba(107, 21, 48, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
       direction: rtl;
       text-align: right;
@@ -4019,7 +4019,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .duo-streak-text-side {
@@ -4031,7 +4031,7 @@
     .duo-streak-title {
       font-family: var(--font-display, 'Cairo', sans-serif);
       font-weight: 900;
-      font-size: clamp(1.1rem, 3.2vw, 1.25rem);
+      font-size: clamp(1.05rem, 3.2vw, 1.22rem);
       color: var(--ink, #241B12);
       line-height: 1.25;
       display: flex;
@@ -4059,8 +4059,8 @@
     }
 
     .duo-streak-flame-wrap {
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
       background: linear-gradient(135deg, #FFF6E5 0%, #FFE9CC 100%);
       border: 1.5px solid #F5C68C;
@@ -4077,20 +4077,21 @@
       50% { transform: translateY(-3px); }
     }
 
-    /* Days Bar (Parchment & Gold harmony) */
+    /* Days Bar: 7 Days Challenge Row */
     .duo-streak-days-bar {
-      background: #F3E9D9;
+      background: var(--parchment-deep, #F3E9D9);
       border-radius: 16px;
-      padding: 10px 12px;
+      padding: 10px 8px 12px;
       border: 1px solid rgba(168, 130, 58, 0.22);
       box-shadow: inset 0 1px 3px rgba(36, 27, 18, 0.06);
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+      gap: 4px;
       align-items: center;
       justify-items: center;
       box-sizing: border-box;
       width: 100%;
+      direction: rtl;
     }
 
     .duo-day-col {
@@ -4099,15 +4100,18 @@
       align-items: center;
       gap: 5px;
       width: 100%;
+      min-width: 0;
       cursor: default;
+      position: relative;
     }
 
     .duo-day-letter {
       font-family: var(--font-display, 'Cairo', sans-serif);
-      font-size: 0.88rem;
-      font-weight: 800;
+      font-size: 0.74rem;
+      font-weight: 700;
       color: var(--ink-soft, #6B5D4D);
       line-height: 1;
+      white-space: nowrap;
       transition: color 0.2s, font-weight 0.2s;
     }
 
@@ -4117,29 +4121,51 @@
       font-weight: 900;
     }
 
+    .duo-day-circle-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .duo-day-circle {
-      width: 32px;
-      height: 32px;
+      width: 33px;
+      height: 33px;
       border-radius: 50%;
-      background: #E5D7C3;
-      border: 1px solid #D9C8B0;
+      background: rgba(229, 215, 195, 0.55);
+      border: 1.5px dashed rgba(168, 130, 58, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #8C7A65;
-      font-size: 0.78rem;
-      font-weight: 900;
+      color: var(--ink-soft, #7A6953);
+      font-size: 0.82rem;
+      font-weight: 800;
+      font-family: var(--font-display, 'Cairo', sans-serif);
       box-sizing: border-box;
-      transition: all 0.22s var(--ease-float);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
+    }
+
+    .duo-day-num {
+      line-height: 1;
+      font-size: 0.80rem;
+      font-weight: 800;
     }
 
     /* Completed day circle (Royal Madder with White checkmark) */
     .duo-day-col.completed .duo-day-circle {
       background: linear-gradient(135deg, var(--madder, #6B1530) 0%, #4A0D20 100%);
-      border: 1px solid #FFE8A3;
+      border: 1.5px solid #FFE8A3;
       color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(107, 21, 48, 0.32);
+      box-shadow: 0 3px 8px rgba(107, 21, 48, 0.28);
+      animation: streakDayPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+      animation-delay: calc(var(--day-idx, 1) * 60ms);
+    }
+
+    @keyframes streakDayPop {
+      0% { transform: scale(0.7); opacity: 0.5; }
+      60% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .duo-day-col.completed .duo-day-circle svg {
@@ -4147,26 +4173,56 @@
       stroke-width: 3.2;
     }
 
-    /* Today Active Day */
+    /* Today / Current Day: Visually distinct highlighted ring / pulsing border, slightly larger */
+    .duo-day-col.active-today .duo-day-circle {
+      border: 2px solid var(--gold, #A8823A);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.35), 0 3px 10px rgba(107, 21, 48, 0.25);
+      transform: scale(1.08);
+      animation: duoActivePulse 2s ease-in-out infinite;
+    }
+
     .duo-day-col.active-today:not(.completed) .duo-day-circle {
       background: #FFFFFF;
       border: 2px solid var(--gold, #A8823A);
       color: var(--gold, #A8823A);
-      box-shadow: 0 0 8px rgba(168, 130, 58, 0.4);
-      animation: duoActivePulse 1.8s infinite;
     }
 
     @keyframes duoActivePulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 6px rgba(168, 130, 58, 0.35); }
-      50% { transform: scale(1.08); box-shadow: 0 0 12px rgba(168, 130, 58, 0.6); }
+      0%, 100% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4), 0 3px 8px rgba(107, 21, 48, 0.25);
+      }
+      50% {
+        transform: scale(1.14);
+        box-shadow: 0 0 0 5px rgba(212, 175, 55, 0.22), 0 4px 12px rgba(107, 21, 48, 0.32);
+      }
     }
 
-    /* Day 7 Grand Reward styling */
-    .duo-day-col.grand-reward .duo-day-circle {
-      border: 1.5px solid var(--gold, #A8823A);
+    /* Day 7 Specifically: Attached Reward Icon directly on the day marker */
+    .duo-day-reward-badge {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #D4AF37 0%, #A8823A 100%);
+      border: 1.5px solid #FFFFFF;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(168, 130, 58, 0.5);
+      z-index: 2;
+      animation: rewardBadgeFloat 2.2s ease-in-out infinite;
     }
 
-    .duo-day-col.grand-reward.completed .duo-day-circle {
+    @keyframes rewardBadgeFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-2px) scale(1.1); }
+    }
+
+    .duo-day-col.day-7-reward.completed .duo-day-circle {
       background: linear-gradient(135deg, #C99632 0%, #9E7017 100%);
       border-color: #FFF2D6;
       box-shadow: 0 0 12px rgba(201, 150, 50, 0.6);
@@ -4231,25 +4287,70 @@
 
     @media (max-width: 480px) {
       .duo-streak-card {
-        padding: 14px 14px 12px;
+        padding: 13px 12px 11px;
         border-radius: 16px;
       }
       .duo-streak-top-row {
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 10px;
       }
       .duo-streak-flame-wrap {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
       }
       .duo-streak-flame-wrap svg {
         width: 22px;
         height: 24px;
       }
       .duo-streak-days-bar {
-        padding: 8px 6px;
+        padding: 8px 4px 10px;
         gap: 3px;
-        border-radius: 12px;
+        border-radius: 14px;
+      }
+      .duo-day-col {
+        gap: 4px;
+      }
+      .duo-day-letter {
+        font-size: 0.70rem;
+      }
+      .duo-day-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.74rem;
+      }
+      .duo-day-num {
+        font-size: 0.72rem;
+      }
+      .duo-day-col.active-today .duo-day-circle {
+        transform: scale(1.06);
+      }
+      .duo-day-reward-badge {
+        width: 15px;
+        height: 15px;
+        top: -4px;
+        left: -4px;
+      }
+      .duo-day-reward-badge svg {
+        width: 8px;
+        height: 8px;
+      }
+      .duo-streak-reward-hint {
+        font-size: 0.72rem;
+        padding: 4px 8px;
+      }
+      .duo-claim-reward-btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.82rem;
+        padding: 8px 14px;
+      }
+    }
+
+    @media (max-width: 365px) {
+      .duo-streak-days-bar {
+        gap: 2px;
+        padding: 6px 2px 8px;
       }
       .duo-day-circle {
         width: 26px;
@@ -4257,11 +4358,7 @@
         font-size: 0.70rem;
       }
       .duo-day-letter {
-        font-size: 0.78rem;
-      }
-      .duo-claim-reward-btn {
-        width: 100%;
-        justify-content: center;
+        font-size: 0.65rem;
       }
     }
 
@@ -10938,20 +11035,77 @@
             </div>
           </div>
 
-          <!-- Days Bar: 7 Days (ح ن ث ر خ ج س) in Parchment Palette -->
-          <div class="duo-streak-days-bar" id="duo-streak-days-bar">
-            <!-- Dynamically populated 7 days -->
+          <!-- Days Bar: 7 Days Challenge Row (Day 1 to 7) in Parchment Palette -->
+          <div class="duo-streak-days-bar" id="duo-streak-days-bar" dir="rtl">
+            <!-- Day 1 (Default active/completed for Day 1) -->
+            <div class="duo-day-col completed active-today" data-day="1" style="--day-idx: 1">
+              <span class="duo-day-letter">يوم ١</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <!-- Day 2 -->
+            <div class="duo-day-col" data-day="2" style="--day-idx: 2">
+              <span class="duo-day-letter">يوم ٢</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٢</span></div>
+              </div>
+            </div>
+            <!-- Day 3 -->
+            <div class="duo-day-col" data-day="3" style="--day-idx: 3">
+              <span class="duo-day-letter">يوم ٣</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٣</span></div>
+              </div>
+            </div>
+            <!-- Day 4 -->
+            <div class="duo-day-col" data-day="4" style="--day-idx: 4">
+              <span class="duo-day-letter">يوم ٤</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٤</span></div>
+              </div>
+            </div>
+            <!-- Day 5 -->
+            <div class="duo-day-col" data-day="5" style="--day-idx: 5">
+              <span class="duo-day-letter">يوم ٥</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٥</span></div>
+              </div>
+            </div>
+            <!-- Day 6 -->
+            <div class="duo-day-col" data-day="6" style="--day-idx: 6">
+              <span class="duo-day-letter">يوم ٦</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٦</span></div>
+              </div>
+            </div>
+            <!-- Day 7 (Payoff day with attached reward star) -->
+            <div class="duo-day-col day-7-reward" data-day="7" style="--day-idx: 7">
+              <span class="duo-day-letter">يوم ٧</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle"><span class="duo-day-num">٧</span></div>
+                <div class="duo-day-reward-badge" title="جائزة اليوم السابع: +10% XP وشحن القلوب">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Bottom Info / Reward Claim Bar -->
           <div class="duo-streak-bottom-bar" id="duo-streak-bottom-bar">
             <div class="duo-streak-reward-hint" id="duo-streak-reward-hint">
               <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>جائزة الـ ٧ أيام: +10 XP وشحن القلوب كاملة مجاناً</span>
+              <span>جائزة الـ ٧ أيام: +10% XP وشحن القلوب كاملة مجاناً</span>
             </div>
             <button type="button" class="duo-claim-reward-btn" id="duo-claim-reward-btn" style="display:none;" onclick="claimWeeklyStreakReward()">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <span>استلم الجائزة الكبرى (+10 XP & ❤️)</span>
+              <span>استلم الجائزة الكبرى (+10% XP & ❤️)</span>
             </button>
           </div>
         </div>
@@ -14242,8 +14396,23 @@
           if (fillEl) fillEl.style.width = '0%';
         }
 
-        // ============================================================
-    // نظام أيام الاستمرارية الأسبوعي (7-Day Streak & Rewards System)
+        // تحديث هدف اليوم الحقيقي
+        updateDailyGoalUI();
+
+        // تحديث كارت تحدي الـ ٧ أيام للاستمرارية
+        if (typeof checkAndSyncStreakCycle === 'function') {
+          checkAndSyncStreakCycle();
+        }
+
+      } catch (e) {
+        console.warn('syncHomeLearningProgress error:', e);
+      } finally {
+        isSyncingHomeProgress = false;
+      }
+    }
+
+    // ============================================================
+    // نظام تحدي الـ ٧ أيام للاستمرارية والمكافآت (7-Day Streak System)
     // ============================================================
     function getStreakCycleStorageKey() {
       const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : 'guest');
@@ -14275,7 +14444,7 @@
       const yesterdayStr = yesterday.toISOString().split('T')[0];
 
       let data = getStreakCycleData();
-      const prog = getUserProgressData();
+      const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { streak_days: 1 };
       const generalStreak = prog.streak_days || 1;
 
       if (!data) {
@@ -14287,7 +14456,11 @@
         };
       } else {
         if (data.lastDate === todayStr) {
-          // Already logged in today, keep cycleDay
+          // Already logged in today, keep cycleDay aligned with progress
+          if (data.streakDays !== generalStreak) {
+            data.streakDays = generalStreak;
+            data.cycleDay = ((generalStreak - 1) % 7) + 1;
+          }
         } else if (data.lastDate === yesterdayStr) {
           // Consecutive day!
           data.streakDays = (data.streakDays || 0) + 1;
@@ -14295,8 +14468,8 @@
           data.lastDate = todayStr;
         } else {
           // Streak broken (missed more than 1 day)
-          data.streakDays = 1;
-          data.cycleDay = 1;
+          data.streakDays = generalStreak > 0 ? generalStreak : 1;
+          data.cycleDay = ((data.streakDays - 1) % 7) + 1;
           data.lastDate = todayStr;
         }
       }
@@ -14307,11 +14480,22 @@
     }
 
     function renderStreakWeeklyUI(data) {
-      if (!data) data = getStreakCycleData();
-      if (!data) return;
+      if (!data) {
+        try { data = getStreakCycleData(); } catch(e) {}
+      }
+      if (!data) {
+        const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { streak_days: 1 };
+        const s = prog.streak_days || 1;
+        data = {
+          streakDays: s,
+          cycleDay: ((s - 1) % 7) + 1,
+          lastDate: new Date().toISOString().split('T')[0],
+          claimedMilestones: []
+        };
+      }
 
       const streakDays = Math.max(1, data.streakDays || 1);
-      const cycleDay = Math.min(7, Math.max(1, data.cycleDay || 1));
+      const cycleDay = Math.min(7, Math.max(1, data.cycleDay || (((streakDays - 1) % 7) + 1)));
       const milestoneKey = `cycle_${Math.floor((streakDays - 1) / 7)}_${data.lastDate}`;
       const isClaimed = (data.claimedMilestones || []).includes(milestoneKey);
 
@@ -14322,7 +14506,7 @@
       const claimBtn = document.getElementById('duo-claim-reward-btn');
       const hintEl = document.getElementById('duo-streak-reward-hint');
 
-      // Title formatting in Arabic (matching screenshot)
+      // Title formatting in Arabic
       if (titleEl) {
         let label = 'حماسة يوم واحد';
         if (streakDays === 2) label = 'حماسة يومين';
@@ -14341,68 +14525,60 @@
         }
       }
 
-      // Day of week in Arabic RTL (matching screenshot: ح ن ث ر خ ج س)
-      // 0 = Sunday (ح), 1 = Monday (ن), 2 = Tuesday (ث), 3 = Wednesday (ر), 4 = Thursday (خ), 5 = Friday (ج), 6 = Saturday (س)
-      const weekDays = [
-        { letter: 'ح', name: 'الأحد', idx: 0 },
-        { letter: 'ن', name: 'الإثنين', idx: 1 },
-        { letter: 'ث', name: 'الثلاثاء', idx: 2 },
-        { letter: 'ر', name: 'الأربعاء', idx: 3 },
-        { letter: 'خ', name: 'الخميس', idx: 4 },
-        { letter: 'ج', name: 'الجمعة', idx: 5 },
-        { letter: 'س', name: 'السبت', idx: 6 }
-      ];
-
-      const todayDayOfWeek = (new Date()).getDay();
+      // Eastern Arabic Numerals
+      const easternNums = ['١', '٢', '٣', '٤', '٥', '٦', '٧'];
 
       if (daysBarEl) {
         let barHtml = '';
-        weekDays.forEach(day => {
-          // Check if this day is today or active in the streak
-          // If the day is today: it is completed if user has active check-in
-          const isToday = (day.idx === todayDayOfWeek);
-          // Calculate if this weekday was part of the streak count
-          // Days in the past up to streak count within the week
-          let isDayCompleted = false;
-          let diff = (todayDayOfWeek - day.idx + 7) % 7;
-          if (diff < streakDays) {
-            isDayCompleted = true;
-          }
+        for (let dayNum = 1; dayNum <= 7; dayNum++) {
+          const isCompleted = (dayNum <= cycleDay);
+          const isToday = (dayNum === cycleDay);
+          const isDay7 = (dayNum === 7);
 
-          const isGrand = (day.idx === 6 || cycleDay === 7); // Grand day
           let colClasses = 'duo-day-col';
-          if (isDayCompleted) colClasses += ' completed';
+          if (isCompleted) colClasses += ' completed';
           if (isToday) colClasses += ' active-today';
-          if (isGrand) colClasses += ' grand-reward';
+          if (isDay7) colClasses += ' day-7-reward';
 
           let circleContent = '';
-          if (isDayCompleted) {
-            // Bold checkmark like in reference screenshot
+          if (isCompleted) {
+            // Completed days: filled circle with checkmark
             circleContent = `
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#141E28" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             `;
-          } else if (isToday) {
-            // Active fire dot
-            circleContent = `
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="#FFA000">
-                <path d="M12 2c.5 3-1 5.5-2.5 7C8 10.5 7 12 7 14.5c0 3 2.5 5.5 5 5.5s5-2.5 5-5.5c0-1.8-.8-3.3-2-4.5.3 1.5-.2 2.5-1 3.5-.8-2-1-4-2-6.5z"/>
-              </svg>
+          } else {
+            // Upcoming/locked days: outlined/muted circle showing Eastern Arabic day number
+            circleContent = `<span class="duo-day-num">${easternNums[dayNum - 1]}</span>`;
+          }
+
+          // Day 7 specifically: attached small reward icon directly attached to the day marker
+          let rewardBadge = '';
+          if (isDay7) {
+            rewardBadge = `
+              <div class="duo-day-reward-badge" title="جائزة اليوم السابع: +10% XP وشحن القلوب">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
             `;
           }
 
           barHtml += `
-            <div class="${colClasses}" title="${day.name}">
-              <span class="duo-day-letter">${day.letter}</span>
-              <div class="duo-day-circle">${circleContent}</div>
+            <div class="${colClasses}" data-day="${dayNum}" style="--day-idx: ${dayNum}">
+              <span class="duo-day-letter">يوم ${easternNums[dayNum - 1]}</span>
+              <div class="duo-day-circle-wrap">
+                <div class="duo-day-circle">${circleContent}</div>
+                ${rewardBadge}
+              </div>
             </div>
           `;
-        });
+        }
         daysBarEl.innerHTML = barHtml;
       }
 
-      // Claim button
+      // Claim button and hint
       if (cycleDay === 7 && !isClaimed) {
         if (claimBtn) claimBtn.style.display = 'inline-flex';
         if (hintEl) hintEl.style.display = 'none';
@@ -14413,12 +14589,12 @@
           const left = 7 - cycleDay;
           if (left > 0) {
             hintEl.innerHTML = `
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFD54F"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span>متبقي ${left} أيام للحصول على +10 XP وشحن القلوب كاملاً!</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span>متبقي ${left} أيام للحصول على +10% XP وشحن القلوب كاملاً!</span>
             `;
           } else {
             hintEl.innerHTML = `
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFD54F"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
               <span>تم استلام جائزة هذا الأسبوع بنجاح! أحسنت يا بطل.</span>
             `;
           }
@@ -14452,7 +14628,7 @@
           });
         } else {
           // Direct fallback
-          const prog = getUserProgressData();
+          const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { points: 0, hearts: 5 };
           prog.points = (prog.points || 0) + 10;
           prog.total_points = (prog.total_points || 0) + 10;
           prog.hearts = 5;
@@ -14489,7 +14665,7 @@
                     <span>شحن القلوب (5/5)</span>
                   </div>
                 </div>
-                تمت إضافة النقاط وملء قلوبك بالكامل. واصل حماسك يومياً لتتصدر قائمة الأبطال!
+                تمت إضافة النقاط وملء قلوبك بالكامل (+10% XP وشحن القلوب). واصل حماسك يومياً لتتصدر قائمة الأبطال!
               </div>
             `,
             icon: 'success',
@@ -14508,15 +14684,10 @@
       }
     }
 
-    // تحديث هدف اليوم الحقيقي
-        updateDailyGoalUI();
-
-      } catch (e) {
-        console.warn('syncHomeLearningProgress error:', e);
-      } finally {
-        isSyncingHomeProgress = false;
-      }
-    }
+    // Attach to global window scope
+    window.checkAndSyncStreakCycle = checkAndSyncStreakCycle;
+    window.renderStreakWeeklyUI = renderStreakWeeklyUI;
+    window.claimWeeklyStreakReward = claimWeeklyStreakReward;
 
     function syncUserProfileUI() {
       const user = currentAuthUser || getUserProfileData();
