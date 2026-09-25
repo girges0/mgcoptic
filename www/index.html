@@ -3991,12 +3991,14 @@
       color: var(--madder);
     }
 
-    /* ============ 7-DAY DUOLINGO-STYLE STREAK CARD ============ */
+    /* ============ 7-DAY STREAK CARD (SITE COLORS: MADER & GOLD) ============ */
     .duo-streak-card {
-      background: linear-gradient(135deg, #E67A00 0%, #CC6300 50%, #A84800 100%);
-      border-radius: 24px;
-      padding: 22px 22px 18px;
-      box-shadow: 0 10px 28px rgba(184, 75, 0, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+      background: var(--parchment-card, #FAF6E9);
+      border: 1.5px solid rgba(168, 130, 58, 0.24);
+      border-top: 3px solid var(--madder, #6B1530);
+      border-radius: 20px;
+      padding: 18px 20px 16px;
+      box-shadow: 0 4px 16px rgba(107, 21, 48, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
       direction: rtl;
       text-align: right;
       width: 100%;
@@ -4004,15 +4006,20 @@
       position: relative;
       overflow: hidden;
       margin-bottom: 6px;
-      transition: transform 0.25s var(--ease-float), box-shadow 0.25s;
+      transition: transform 0.22s var(--ease-float), box-shadow 0.22s, border-color 0.22s;
+    }
+
+    .duo-streak-card:hover {
+      box-shadow: 0 8px 24px rgba(107, 21, 48, 0.09);
+      border-color: rgba(168, 130, 58, 0.38);
     }
 
     .duo-streak-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 16px;
+      gap: 14px;
+      margin-bottom: 14px;
     }
 
     .duo-streak-text-side {
@@ -4024,42 +4031,59 @@
     .duo-streak-title {
       font-family: var(--font-display, 'Cairo', sans-serif);
       font-weight: 900;
-      font-size: clamp(1.2rem, 3.8vw, 1.45rem);
-      color: #FFFFFF;
+      font-size: clamp(1.1rem, 3.2vw, 1.25rem);
+      color: var(--ink, #241B12);
       line-height: 1.25;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .duo-streak-title .duo-streak-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, var(--madder, #6B1530) 0%, #8C2430 100%);
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
     }
 
     .duo-streak-desc {
-      font-size: clamp(0.82rem, 2.4vw, 0.90rem);
-      font-weight: 700;
-      color: #FFF2D6;
-      margin-top: 5px;
+      font-size: clamp(0.78rem, 2.2vw, 0.85rem);
+      font-weight: 600;
+      color: var(--ink-soft, #5A4A34);
+      margin-top: 4px;
       line-height: 1.45;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
     }
 
     .duo-streak-flame-wrap {
-      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #FFF6E5 0%, #FFE9CC 100%);
+      border: 1.5px solid #F5C68C;
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: duoFlameFloat 2.8s ease-in-out infinite;
-      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(230, 81, 0, 0.15);
+      animation: duoFlameFloat 3s ease-in-out infinite;
     }
 
     @keyframes duoFlameFloat {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-4px) scale(1.03); }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
-    /* Dark Days Bar */
+    /* Days Bar (Parchment & Gold harmony) */
     .duo-streak-days-bar {
-      background: #141E28;
-      border-radius: 18px;
-      padding: 12px 14px;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #F3E9D9;
+      border-radius: 16px;
+      padding: 10px 12px;
+      border: 1px solid rgba(168, 130, 58, 0.22);
+      box-shadow: inset 0 1px 3px rgba(36, 27, 18, 0.06);
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
@@ -4073,82 +4097,84 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       width: 100%;
       cursor: default;
     }
 
     .duo-day-letter {
       font-family: var(--font-display, 'Cairo', sans-serif);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 800;
-      color: #8C9CAE;
+      color: var(--ink-soft, #6B5D4D);
       line-height: 1;
-      transition: color 0.2s, text-shadow 0.2s;
+      transition: color 0.2s, font-weight 0.2s;
     }
 
     .duo-day-col.completed .duo-day-letter,
     .duo-day-col.active-today .duo-day-letter {
-      color: #FFA726;
+      color: var(--madder, #6B1530);
       font-weight: 900;
-      text-shadow: 0 0 8px rgba(255, 167, 38, 0.45);
     }
 
     .duo-day-circle {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: #233142;
+      background: #E5D7C3;
+      border: 1px solid #D9C8B0;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #55687D;
-      font-size: 0.82rem;
+      color: #8C7A65;
+      font-size: 0.78rem;
       font-weight: 900;
       box-sizing: border-box;
       transition: all 0.22s var(--ease-float);
       position: relative;
     }
 
-    /* Completed day circle - matching the screenshot */
+    /* Completed day circle (Royal Madder with White checkmark) */
     .duo-day-col.completed .duo-day-circle {
-      background: #FFA000;
-      color: #141E28;
-      box-shadow: 0 0 12px rgba(255, 160, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, var(--madder, #6B1530) 0%, #4A0D20 100%);
+      border: 1px solid #FFE8A3;
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(107, 21, 48, 0.32);
     }
 
     .duo-day-col.completed .duo-day-circle svg {
-      stroke: #141E28;
+      stroke: #FFFFFF;
       stroke-width: 3.2;
     }
 
-    /* Today Active Day (if not yet completed) */
+    /* Today Active Day */
     .duo-day-col.active-today:not(.completed) .duo-day-circle {
-      background: #2A3B4E;
-      border: 2px solid #FFA000;
-      color: #FFA000;
-      box-shadow: 0 0 10px rgba(255, 160, 0, 0.4);
+      background: #FFFFFF;
+      border: 2px solid var(--gold, #A8823A);
+      color: var(--gold, #A8823A);
+      box-shadow: 0 0 8px rgba(168, 130, 58, 0.4);
       animation: duoActivePulse 1.8s infinite;
     }
 
     @keyframes duoActivePulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 8px rgba(255, 160, 0, 0.4); }
-      50% { transform: scale(1.08); box-shadow: 0 0 14px rgba(255, 160, 0, 0.7); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 6px rgba(168, 130, 58, 0.35); }
+      50% { transform: scale(1.08); box-shadow: 0 0 12px rgba(168, 130, 58, 0.6); }
     }
 
     /* Day 7 Grand Reward styling */
     .duo-day-col.grand-reward .duo-day-circle {
-      border: 1.5px solid rgba(255, 215, 0, 0.5);
+      border: 1.5px solid var(--gold, #A8823A);
     }
 
     .duo-day-col.grand-reward.completed .duo-day-circle {
-      background: linear-gradient(135deg, #FFD54F 0%, #FFA000 100%);
-      box-shadow: 0 0 16px rgba(255, 213, 79, 0.7);
+      background: linear-gradient(135deg, #C99632 0%, #9E7017 100%);
+      border-color: #FFF2D6;
+      box-shadow: 0 0 12px rgba(201, 150, 50, 0.6);
     }
 
     /* Bottom claim / hint bar */
     .duo-streak-bottom-bar {
-      margin-top: 14px;
+      margin-top: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -4160,13 +4186,17 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: #FFF2D6;
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 5px 12px;
-      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--ink-soft, #5A4A34);
+      background: rgba(168, 130, 58, 0.08);
+      border: 1px solid rgba(168, 130, 58, 0.2);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .duo-streak-reward-hint svg {
+      color: var(--gold, #A8823A);
     }
 
     .duo-claim-reward-btn {
@@ -4174,23 +4204,24 @@
       box-sizing: border-box;
       cursor: pointer;
       font-family: var(--font-display, 'Cairo', sans-serif);
-      font-weight: 900;
-      font-size: 0.88rem;
-      color: #141E28;
-      background: linear-gradient(135deg, #FFE082 0%, #FFCA28 50%, #FFA000 100%);
-      padding: 9px 20px;
-      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.84rem;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, var(--madder, #6B1530) 0%, #520F24 100%);
+      border: 1px solid var(--gold, #A8823A);
+      padding: 7px 16px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.28);
       animation: duoClaimPulse 1.6s infinite ease-in-out;
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .duo-claim-reward-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 16px rgba(107, 21, 48, 0.38);
     }
 
     @keyframes duoClaimPulse {
@@ -4200,29 +4231,33 @@
 
     @media (max-width: 480px) {
       .duo-streak-card {
-        padding: 16px 16px 14px;
-        border-radius: 20px;
+        padding: 14px 14px 12px;
+        border-radius: 16px;
       }
       .duo-streak-top-row {
         gap: 10px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+      }
+      .duo-streak-flame-wrap {
+        width: 40px;
+        height: 40px;
       }
       .duo-streak-flame-wrap svg {
-        width: 52px;
-        height: 58px;
+        width: 22px;
+        height: 24px;
       }
       .duo-streak-days-bar {
-        padding: 10px 8px;
-        gap: 4px;
-        border-radius: 14px;
+        padding: 8px 6px;
+        gap: 3px;
+        border-radius: 12px;
       }
       .duo-day-circle {
-        width: 28px;
-        height: 28px;
-        font-size: 0.72rem;
+        width: 26px;
+        height: 26px;
+        font-size: 0.70rem;
       }
       .duo-day-letter {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
       }
       .duo-claim-reward-btn {
         width: 100%;
@@ -10873,44 +10908,37 @@
         </div>
       </div>
 
-      <!-- 4.8 Duolingo-Style 7-Day Streak Challenge ("حماسة الاستمرارية") -->
+      <!-- 4.8 Streak Challenge in Platform Colors ("حماسة الاستمرارية") -->
       <div class="section-container" id="streak-weekly-section">
         <div class="duo-streak-card" id="streak-challenge-card">
-          <!-- Top Row: Title + Flame SVG -->
+          <!-- Top Row: Title + Clean Flame SVG -->
           <div class="duo-streak-top-row">
             <div class="duo-streak-text-side">
-              <div class="duo-streak-title" id="duo-streak-title">حماسة يوم واحد</div>
+              <div class="duo-streak-title" id="duo-streak-title">
+                <span>حماسة يوم واحد</span>
+                <span class="duo-streak-badge">تحدي ٧ أيام</span>
+              </div>
               <div class="duo-streak-desc" id="duo-streak-desc">هذه أطول حماسة وصلت إليها على الإطلاق! أكمل 7 أيام لتكسب +10 XP وشحن القلوب.</div>
             </div>
-            <!-- Custom Layered SVG Duolingo Flame (No Stickers / Emojis) -->
+            <!-- Clean SVG Flame in Website Accent -->
             <div class="duo-streak-flame-wrap">
-              <svg width="64" height="70" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Outer Glow / Shadow -->
-                <path d="M50 4C52 16 46 25 40 33C33 42 28 50 28 62C28 75.8 37.8 87 50 87C62.2 87 72 75.8 72 62C72 53.5 67.5 45.5 62 39C63.5 46.5 61 51 57 55.5C53.5 45 56.5 35 63 26C74 38 84 52 84 66C84 86 68.8 102 50 102C31.2 102 16 86 16 66C16 46 28 32 38 20C44 13 48.5 7 50 4Z" fill="rgba(0,0,0,0.18)" transform="translate(0, 3)"/>
-                <!-- White Border Contour (Like Duolingo) -->
-                <path d="M50 2C52.5 15.5 46 25 39.5 33.5C32 43 26 51.5 26 64C26 79.5 36.8 91 50 91C63.2 91 74 79.5 74 64C74 54.5 69 46 63 39C64.8 47.5 62 52.5 57.5 57.5C53.5 46 56.8 35 64 25.5C76 38.5 86 53.5 86 68C86 90.1 69.9 107 50 107C30.1 107 14 90.1 14 68C14 46.5 26.5 31.5 37 19C43.5 11.5 48.5 5 50 2Z" fill="#FFFFFF"/>
-                <!-- Main Orange Flame Body -->
-                <path d="M50 6C52 17.5 46.5 26 41 33.5C34 43 29 51 29 63C29 76.8 38.4 87 50 87C61.6 87 71 76.8 71 63C71 54.5 66.5 47 61 40.5C62.5 48 60 52.5 56 56.5C52.5 46 55.5 36 62.5 27C73.5 39 82 53 82 66C82 85.9 67.7 102 50 102C32.3 102 18 85.9 18 66C18 47 29.5 33.5 39 21.5C44.5 14.5 48.5 8.5 50 6Z" fill="url(#duoFlameGrad)"/>
-                <!-- Inner Bright Yellow Flame Drop -->
-                <path d="M50 48C51.5 56 48 61 44.5 65C41 69 38 73.5 38 80C38 87.7 43.4 93 50 93C56.6 93 62 87.7 62 80C62 74 58.5 68.5 55 64C56 68 54 71 51.5 73.5C49 67 51 60 55 55C60 62 65 70 65 78C65 89 58.3 97 50 97C41.7 97 35 89 35 78C35 68 41 60 46 54C48 51 49.5 49 50 48Z" fill="url(#duoInnerYellowGrad)"/>
-                <!-- Gradients Def -->
+              <svg width="26" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Fire Outer Body in Warm Gold/Amber -->
+                <path d="M12 2C12.5 5 11 7.5 9.5 9.5C8 11.5 7 13.5 7 16C7 18.8 9.2 21 12 21C14.8 21 17 18.8 17 16C17 14 15.8 12.2 14.5 10.8C15 12.5 14.2 13.8 13 14.8C12 12.2 12.8 9.8 14.5 7.5C17.2 10.5 19.5 13.8 19.5 17C19.5 21.1 16.1 24.5 12 24.5C7.9 24.5 4.5 21.1 4.5 17C4.5 12.5 7.2 9.2 9.5 6.5C10.8 5 11.6 3.5 12 2Z" fill="url(#mgStreakFlameGrad)"/>
+                <!-- Inner Flame Core in Soft Gold -->
+                <path d="M12 11C12.3 12.8 11.5 14 10.5 15C9.5 16 9 17 9 18.5C9 20.2 10.3 21.5 12 21.5C13.7 21.5 15 20.2 15 18.5C15 17.2 14.2 16 13.2 15C13.5 16 13 16.8 12.2 17.2C11.5 15.5 12 14 13 12.5C14.2 14.2 15.5 16 15.5 18C15.5 20.5 13.8 22.2 12 22.2C10.2 22.2 8.5 20.5 8.5 18C8.5 15.5 9.8 13.8 11 12.2C11.6 11.5 11.8 11.2 12 11Z" fill="#FFE8A3"/>
                 <defs>
-                  <linearGradient id="duoFlameGrad" x1="50" y1="6" x2="50" y2="102" gradientUnits="userSpaceOnUse">
+                  <linearGradient id="mgStreakFlameGrad" x1="12" y1="2" x2="12" y2="24.5" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stop-color="#FFB300"/>
-                    <stop offset="35%" stop-color="#FF9100"/>
-                    <stop offset="100%" stop-color="#FF3D00"/>
-                  </linearGradient>
-                  <linearGradient id="duoInnerYellowGrad" x1="50" y1="48" x2="50" y2="97" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#FFF59D"/>
-                    <stop offset="50%" stop-color="#FFEB3B"/>
-                    <stop offset="100%" stop-color="#FFC107"/>
+                    <stop offset="50%" stop-color="#FF8A00"/>
+                    <stop offset="100%" stop-color="#E65100"/>
                   </linearGradient>
                 </defs>
               </svg>
             </div>
           </div>
 
-          <!-- Bottom Dark Strip: The 7 Days (ح ن ث ر خ ج س) -->
+          <!-- Days Bar: 7 Days (ح ن ث ر خ ج س) in Parchment Palette -->
           <div class="duo-streak-days-bar" id="duo-streak-days-bar">
             <!-- Dynamically populated 7 days -->
           </div>
@@ -10918,11 +10946,11 @@
           <!-- Bottom Info / Reward Claim Bar -->
           <div class="duo-streak-bottom-bar" id="duo-streak-bottom-bar">
             <div class="duo-streak-reward-hint" id="duo-streak-reward-hint">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFD54F"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               <span>جائزة الـ ٧ أيام: +10 XP وشحن القلوب كاملة مجاناً</span>
             </div>
             <button type="button" class="duo-claim-reward-btn" id="duo-claim-reward-btn" style="display:none;" onclick="claimWeeklyStreakReward()">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <span>استلم الجائزة الكبرى (+10 XP & ❤️)</span>
             </button>
           </div>
@@ -14296,15 +14324,11 @@
 
       // Title formatting in Arabic (matching screenshot)
       if (titleEl) {
-        if (streakDays === 1) {
-          titleEl.textContent = 'حماسة يوم واحد';
-        } else if (streakDays === 2) {
-          titleEl.textContent = 'حماسة يومين';
-        } else if (streakDays >= 3 && streakDays <= 10) {
-          titleEl.textContent = `حماسة ${streakDays} أيام`;
-        } else {
-          titleEl.textContent = `حماسة ${streakDays} يوماً`;
-        }
+        let label = 'حماسة يوم واحد';
+        if (streakDays === 2) label = 'حماسة يومين';
+        else if (streakDays >= 3 && streakDays <= 10) label = `حماسة ${streakDays} أيام`;
+        else if (streakDays > 10) label = `حماسة ${streakDays} يوماً`;
+        titleEl.innerHTML = `<span>${label}</span><span class="duo-streak-badge">تحدي ٧ أيام</span>`;
       }
 
       if (descEl) {
