@@ -3991,6 +3991,351 @@
       color: var(--madder);
     }
 
+    /* ============ 7-DAY STREAK WEEKLY CHALLENGE CARD ============ */
+    .streak-cycle-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #926315;
+      background: #FFF4D6;
+      border: 1px solid #E6D08C;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .streak-reward-pill-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: #7D1D35;
+      background: #FDF2F4;
+      border: 1px solid #F5C6CB;
+      padding: 3px 10px;
+      border-radius: 14px;
+    }
+
+    .streak-challenge-card {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+      border: 1.5px solid #EBE0D0;
+      border-radius: 20px;
+      padding: 16px 18px;
+      box-shadow: 0 4px 16px rgba(45, 27, 18, 0.05);
+      direction: rtl;
+      text-align: right;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 4px;
+      transition: transform 0.25s var(--ease-float), box-shadow 0.25s;
+    }
+
+    .streak-challenge-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FF9600 0%, #FF5722 50%, #D4AF37 100%);
+    }
+
+    .streak-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .streak-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+      border: 1px solid #FFCC80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(255, 138, 0, 0.2);
+    }
+
+    .streak-top-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .streak-top-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(0.88rem, 2.8vw, 0.98rem);
+      color: var(--ink, #241B12);
+      line-height: 1.3;
+    }
+
+    .streak-top-sub {
+      font-size: 0.78rem;
+      color: var(--ink-soft, #6B5D4D);
+      font-weight: 600;
+      margin-top: 2px;
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .streak-count-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FFF5E5 0%, #FFE4C4 100%);
+      border: 1.5px solid #FFB74D;
+      border-radius: 14px;
+      padding: 4px 10px;
+      flex-shrink: 0;
+      min-width: 48px;
+    }
+
+    .streak-count-pill .num {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #E65100;
+      line-height: 1;
+    }
+
+    .streak-count-pill .lbl {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #9A3412;
+      margin-top: 2px;
+    }
+
+    /* Timeline 7 days */
+    .streak-timeline-track {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .streak-day-capsule {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #FDFBF7;
+      border: 1.5px solid #EBE0D0;
+      border-radius: 14px;
+      padding: 8px 4px;
+      text-align: center;
+      position: relative;
+      transition: all 0.22s var(--ease-float);
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    .streak-day-capsule:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .streak-day-capsule .sd-name {
+      font-size: 0.70rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+
+    .streak-day-capsule .sd-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F2ECE0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #A89885;
+      font-size: 0.8rem;
+      font-weight: 800;
+      box-sizing: border-box;
+      transition: all 0.22s;
+    }
+
+    /* Completed day */
+    .streak-day-capsule.completed {
+      background: linear-gradient(180deg, #FFF9F2 0%, #FFF3E5 100%);
+      border-color: #FFB74D;
+    }
+
+    .streak-day-capsule.completed .sd-circle {
+      background: linear-gradient(135deg, #FF9600 0%, #FF5722 100%);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(255, 87, 34, 0.35);
+    }
+
+    .streak-day-capsule.completed .sd-name {
+      color: #C2410C;
+    }
+
+    /* Today Active Day */
+    .streak-day-capsule.active-today {
+      background: linear-gradient(180deg, #FFFDF5 0%, #FFF8E6 100%);
+      border-color: #D4AF37;
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
+    }
+
+    .streak-day-capsule.active-today .sd-circle {
+      background: linear-gradient(135deg, #D4AF37 0%, #A8823A 100%);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      animation: pulseDayNode 1.8s infinite;
+    }
+
+    .streak-day-capsule.active-today .sd-name {
+      color: #8C5E0E;
+      font-weight: 900;
+    }
+
+    @keyframes pulseDayNode {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* Day 7 Grand Reward Capsule */
+    .streak-day-capsule.grand-reward {
+      background: linear-gradient(180deg, #FFFBF0 0%, #FFF3D6 100%);
+      border: 1.5px solid #E6CA65;
+      box-shadow: 0 3px 10px rgba(212, 175, 55, 0.18);
+    }
+
+    .streak-day-capsule.grand-reward .sd-circle {
+      background: linear-gradient(135deg, #FAD961 0%, #F76B1C 100%);
+      color: #FFFFFF;
+      border: 1.5px solid #FFFFFF;
+      box-shadow: 0 3px 8px rgba(247, 107, 28, 0.35);
+    }
+
+    .streak-day-capsule.grand-reward .sd-reward-tag {
+      font-size: 0.62rem;
+      font-weight: 900;
+      color: #7D1D35;
+      background: #FFFFFF;
+      border: 1px solid rgba(125, 29, 53, 0.2);
+      padding: 1px 4px;
+      border-radius: 6px;
+      margin-top: 5px;
+      white-space: nowrap;
+      line-height: 1.1;
+    }
+
+    /* Footer Motivation / Claim */
+    .streak-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #F0E6D8;
+      flex-wrap: wrap;
+    }
+
+    .streak-motivate-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    .streak-fire-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FF5722;
+      box-shadow: 0 0 6px #FF5722;
+      animation: pulseFireDot 1.4s infinite;
+    }
+
+    @keyframes pulseFireDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .streak-claim-btn {
+      all: unset;
+      box-sizing: border-box;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 0.85rem;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
+      padding: 8px 18px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+      animation: streakBtnPulse 1.6s infinite ease-in-out;
+      transition: all 0.2s;
+    }
+
+    .streak-claim-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(217, 119, 6, 0.45);
+    }
+
+    @keyframes streakBtnPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    @media (max-width: 480px) {
+      .streak-challenge-card {
+        padding: 12px 14px;
+        border-radius: 16px;
+      }
+      .streak-timeline-track {
+        gap: 3px;
+      }
+      .streak-day-capsule {
+        padding: 6px 2px;
+        border-radius: 10px;
+      }
+      .streak-day-capsule .sd-name {
+        font-size: 0.62rem;
+      }
+      .streak-day-capsule .sd-circle {
+        width: 26px;
+        height: 26px;
+        font-size: 0.72rem;
+      }
+      .streak-day-capsule.grand-reward .sd-reward-tag {
+        font-size: 0.55rem;
+        padding: 0 2px;
+      }
+      .streak-top-title {
+        font-size: 0.86rem;
+      }
+      .streak-top-sub {
+        font-size: 0.72rem;
+      }
+      .streak-claim-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    
     .goal-card {
       background-color: var(--parchment-card, #F7F1E1);
       border-radius: 18px;
@@ -10634,6 +10979,56 @@
         </div>
       </div>
 
+      <!-- 4.8 7-Day Continuous Streak Challenge ("تحدي الاستمرارية الأسبوعي") -->
+      <div class="section-container" id="streak-weekly-section">
+        <div class="section-header-row">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h3 class="section-heading" style="margin:0;">تحدي الاستمرارية</h3>
+            <span class="streak-cycle-badge" id="streak-cycle-badge">دورة ٧ أيام</span>
+          </div>
+          <div class="streak-reward-pill-hint" id="streak-reward-hint">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="#D4AF37"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>جائزة: +10 XP & ❤️ شحن</span>
+          </div>
+        </div>
+
+        <div class="streak-challenge-card" id="streak-challenge-card">
+          <!-- Card Header Info -->
+          <div class="streak-card-top">
+            <div class="streak-icon-box">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="#FF8A00" stroke="#E65100" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2c.5 3-1 5.5-2.5 7C8 10.5 7 12 7 14.5c0 3 2.5 5.5 5 5.5s5-2.5 5-5.5c0-1.8-.8-3.3-2-4.5.3 1.5-.2 2.5-1 3.5-.8-2-1-4-2-6.5z"/>
+              </svg>
+            </div>
+            <div class="streak-top-info">
+              <div class="streak-top-title" id="streak-status-headline">استمرارية اليوم الأول نشطة! 🔥</div>
+              <div class="streak-top-sub" id="streak-status-sub">أكمل 7 أيام متتالية واكسب 10 نقاط XP وشحن جميع القلوب مجاناً</div>
+            </div>
+            <div class="streak-count-pill" id="streak-count-display">
+              <span class="num" id="streak-cycle-num">1</span>
+              <span class="lbl">من ٧</span>
+            </div>
+          </div>
+
+          <!-- 7-Day Timeline Track -->
+          <div class="streak-timeline-track" id="streak-timeline-track">
+            <!-- Dynamically populated 7 days -->
+          </div>
+
+          <!-- Footer Action / Motivation banner -->
+          <div class="streak-card-footer" id="streak-card-footer">
+            <div class="streak-motivate-wrap">
+              <span class="streak-fire-dot"></span>
+              <span class="streak-motivate-text" id="streak-motivate-text">حافظ على دخولك اليومي لتصل لليوم السابع وتفوز بالجائزة!</span>
+            </div>
+            <button type="button" class="streak-claim-btn" id="streak-claim-btn" style="display:none;" onclick="claimWeeklyStreakReward()">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>استلم الجائزة الكبرى (+10 XP & ❤️)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- 5. Today's Goal Section ("هدف اليوم") -->
       <div class="section-container">
         <div class="section-header-row">
@@ -13546,6 +13941,7 @@
     
     // استعادة فورية (0 مللي ثانية) لبيانات الكروت والمسار من الذاكرة المحلية لمنع أي وميض أو تأخير
     function hydrateHomeFromCacheSync() {
+        try { checkAndSyncStreakCycle(); } catch(e){}
       try {
         // 1. استعادة نقاط XP والستريك والرتبة
         const prog = getUserProgressData();
@@ -13918,7 +14314,244 @@
           if (fillEl) fillEl.style.width = '0%';
         }
 
-        // تحديث هدف اليوم الحقيقي
+        // ============================================================
+    // نظام أيام الاستمرارية الأسبوعي (7-Day Streak & Rewards System)
+    // ============================================================
+    function getStreakCycleStorageKey() {
+      const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : 'guest');
+      return `mg_coptic_streak_cycle_${uid}`;
+    }
+
+    function getStreakCycleData() {
+      try {
+        const key = getStreakCycleStorageKey();
+        const raw = localStorage.getItem(key);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      return null;
+    }
+
+    function saveStreakCycleData(data) {
+      try {
+        const key = getStreakCycleStorageKey();
+        localStorage.setItem(key, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function checkAndSyncStreakCycle() {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      let data = getStreakCycleData();
+      const prog = getUserProgressData();
+      const generalStreak = prog.streak_days || 1;
+
+      if (!data) {
+        data = {
+          streakDays: generalStreak,
+          cycleDay: ((generalStreak - 1) % 7) + 1,
+          lastDate: todayStr,
+          claimedMilestones: []
+        };
+      } else {
+        if (data.lastDate === todayStr) {
+          // Already logged in today, keep cycleDay
+        } else if (data.lastDate === yesterdayStr) {
+          // Consecutive day!
+          data.streakDays = (data.streakDays || 0) + 1;
+          data.cycleDay = ((data.streakDays - 1) % 7) + 1;
+          data.lastDate = todayStr;
+        } else {
+          // Streak broken (missed more than 1 day)
+          data.streakDays = 1;
+          data.cycleDay = 1;
+          data.lastDate = todayStr;
+        }
+      }
+
+      saveStreakCycleData(data);
+      renderStreakWeeklyUI(data);
+      return data;
+    }
+
+    function renderStreakWeeklyUI(data) {
+      if (!data) data = getStreakCycleData();
+      if (!data) return;
+
+      const cycleDay = Math.min(7, Math.max(1, data.cycleDay || 1));
+      const streakDays = data.streakDays || 1;
+      const milestoneKey = `cycle_${Math.floor((streakDays - 1) / 7)}_${data.lastDate}`;
+      const isClaimed = (data.claimedMilestones || []).includes(milestoneKey);
+
+      // Elements
+      const headlineEl = document.getElementById('streak-status-headline');
+      const subEl = document.getElementById('streak-status-sub');
+      const cycleNumEl = document.getElementById('streak-cycle-num');
+      const trackEl = document.getElementById('streak-timeline-track');
+      const motivateEl = document.getElementById('streak-motivate-text');
+      const claimBtn = document.getElementById('streak-claim-btn');
+
+      if (cycleNumEl) cycleNumEl.textContent = cycleDay;
+
+      const dayNames = ['اليوم ١', 'اليوم ٢', 'اليوم ٣', 'اليوم ٤', 'اليوم ٥', 'اليوم ٦', 'اليوم ٧'];
+
+      if (headlineEl) {
+        if (cycleDay === 7 && !isClaimed) {
+          headlineEl.textContent = '🎉 مبروك! أكملت تحدي الـ 7 أيام!';
+        } else if (cycleDay === 7 && isClaimed) {
+          headlineEl.textContent = '✨ أسبوع مكتمل بامتياز!';
+        } else {
+          headlineEl.textContent = `استمرارية اليوم ${cycleDay} نشطة! 🔥`;
+        }
+      }
+
+      if (subEl) {
+        if (cycleDay === 7 && !isClaimed) {
+          subEl.textContent = 'مكافأتك الكبرى جاهزة للاستلام الآن: +10 XP وشحن القلوب كاملة';
+        } else {
+          const left = 7 - cycleDay;
+          subEl.textContent = left > 0 ? `متبقي ${left} أيام للحصول على +10 XP وشحن القلوب بالكامل!` : 'حصلت على مكافأة هذا الأسبوع، استمر غداً لدورة جديدة';
+        }
+      }
+
+      // Render 7 timeline capsules
+      if (trackEl) {
+        let trackHtml = '';
+        for (let i = 1; i <= 7; i++) {
+          const isGrand = (i === 7);
+          const isCompleted = (i < cycleDay) || (i === 7 && cycleDay === 7 && isClaimed);
+          const isActive = (i === cycleDay && !(i === 7 && isClaimed));
+          
+          let capsuleClasses = 'streak-day-capsule';
+          if (isGrand) capsuleClasses += ' grand-reward';
+          if (isCompleted) capsuleClasses += ' completed';
+          if (isActive) capsuleClasses += ' active-today';
+
+          let iconHtml = '';
+          if (isCompleted) {
+            iconHtml = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          } else if (isActive) {
+            iconHtml = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2c.5 3-1 5.5-2.5 7C8 10.5 7 12 7 14.5c0 3 2.5 5.5 5 5.5s5-2.5 5-5.5c0-1.8-.8-3.3-2-4.5.3 1.5-.2 2.5-1 3.5-.8-2-1-4-2-6.5z"/></svg>';
+          } else if (isGrand) {
+            iconHtml = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 12v10H4V12h16zm1-5l-1.5 2H4.5L3 7l2-4h14l2 4z"/></svg>';
+          } else {
+            iconHtml = '<span>' + i + '</span>';
+          }
+
+          trackHtml += `
+            <div class="${capsuleClasses}" title="${dayNames[i-1]}">
+              <span class="sd-name">${dayNames[i-1]}</span>
+              <div class="sd-circle">${iconHtml}</div>
+              ${isGrand ? '<span class="sd-reward-tag">+10 XP & ❤️</span>' : ''}
+            </div>
+          `;
+        }
+        trackEl.innerHTML = trackHtml;
+      }
+
+      // Claim button vs motivation text
+      if (cycleDay === 7 && !isClaimed) {
+        if (claimBtn) claimBtn.style.display = 'inline-flex';
+        if (motivateEl) motivateEl.textContent = 'اضغط على الزر الذهبي لاستلام جائزتك الكبرى الآن!';
+      } else {
+        if (claimBtn) claimBtn.style.display = 'none';
+        if (motivateEl) {
+          if (cycleDay === 7 && isClaimed) {
+            motivateEl.textContent = 'تم استلام الجائزة! ستبدأ الدورة التالية غداً لمواصلة الحماس.';
+          } else {
+            motivateEl.textContent = `أنت في اليوم ${cycleDay} من ٧. حافظ على دخولك اليومي للوصول للهدف!`;
+          }
+        }
+      }
+    }
+
+    async function claimWeeklyStreakReward() {
+      const data = getStreakCycleData();
+      if (!data) return;
+
+      const streakDays = data.streakDays || 1;
+      const milestoneKey = `cycle_${Math.floor((streakDays - 1) / 7)}_${data.lastDate}`;
+      if (!data.claimedMilestones) data.claimedMilestones = [];
+      if (data.claimedMilestones.includes(milestoneKey)) {
+        showToast('تم استلام هذه المكافأة بالفعل!');
+        return;
+      }
+
+      data.claimedMilestones.push(milestoneKey);
+      saveStreakCycleData(data);
+
+      const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : null);
+
+      // Award +10 XP and Refill Hearts to max (5/5)
+      try {
+        if (window.gamificationService && typeof window.gamificationService.updateProgress === 'function' && uid) {
+          await window.gamificationService.updateProgress(uid, {
+            addPoints: 10,
+            addHearts: 5 // Refills hearts
+          });
+        } else {
+          // Direct fallback
+          const prog = getUserProgressData();
+          prog.points = (prog.points || 0) + 10;
+          prog.total_points = (prog.total_points || 0) + 10;
+          prog.hearts = 5;
+          if (uid) {
+            localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(prog));
+          }
+          localStorage.setItem('mg_coptic_progress', JSON.stringify(prog));
+        }
+
+        if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
+        if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
+
+        // Play fanfare sound
+        try {
+          if (window.gamificationService && typeof window.gamificationService.playFanfare === 'function') {
+            window.gamificationService.playFanfare();
+          }
+        } catch(e) {}
+
+        // Confetti / Celebration modal
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            title: 'مبروك يا بطل الاستمرارية! 🌟',
+            html: `
+              <div style="font-size:0.95rem; line-height:1.6; color:#241B12; margin-top:8px;">
+                أكملت <strong>٧ أيام متتالية</strong> بنجاح من تعلّم وممارسة اللغة القبطية!<br>
+                <div style="display:flex; justify-content:center; gap:12px; margin:16px 0; flex-wrap:wrap;">
+                  <div style="background:#FFF9E6; border:1.5px solid #E6CA65; border-radius:14px; padding:10px 18px; font-weight:900; color:#8C5E0E; display:flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#F59E0B"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>+10 نقاط XP</span>
+                  </div>
+                  <div style="background:#FDF2F4; border:1.5px solid #F5C6CB; border-radius:14px; padding:10px 18px; font-weight:900; color:#7D1D35; display:flex; align-items:center; gap:6px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#E11D48"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span>شحن القلوب (5/5)</span>
+                  </div>
+                </div>
+                تمت إضافة النقاط وملء قلوبك بالكامل. واصل حماسك يومياً لتتصدر قائمة الأبطال!
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'رائع، استمرارية مباركة!',
+            confirmButtonColor: '#6B1530',
+            backdrop: 'rgba(58, 8, 26, 0.45)'
+          });
+        } else {
+          showToast('مبروك! تم شحن القلوب (5/5) وإضافة 10 XP بنجاح!');
+        }
+
+        renderStreakWeeklyUI(data);
+
+      } catch (err) {
+        console.error('Error claiming weekly streak reward:', err);
+      }
+    }
+
+    // تحديث هدف اليوم الحقيقي
         updateDailyGoalUI();
 
       } catch (e) {
