@@ -285,14 +285,68 @@
         if (typeof showToast === 'function') showToast('خدمة التحقق غير متاحة حالياً', 'error');
         return;
       }
+
+      // 1. محاولة استخدام شاشة اختيار الحساب المدمجة داخل التطبيق (Google One Tap / Prompt) إن وُجدت
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try {
+          let prompted = false;
+          window.google.accounts.id.initialize({
+            client_id: '8581354408-9qudpcih1d0k70e55g07skeefb7i9d0f.apps.googleusercontent.com',
+            callback: async (response) => {
+              if (response && response.credential) {
+                try {
+                  const { data, error } = await sb.auth.signInWithIdToken({
+                    provider: 'google',
+                    token: response.credential
+                  });
+                  if (error) throw error;
+                  if (typeof initUserSession === 'function') initUserSession();
+                } catch (e) {
+                  console.warn('signInWithIdToken error:', e);
+                  fallbackOAuthGoogle();
+                }
+              }
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true
+          });
+
+          window.google.accounts.id.prompt((notification) => {
+            prompted = true;
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+              console.log('[Google Auth] One-tap not displayed, falling back to standard redirect...');
+              fallbackOAuthGoogle();
+            }
+          });
+
+          // إعطاء مهلة قصيرة لعرض شاشة اختيار الحساب
+          setTimeout(() => {
+            if (!prompted) fallbackOAuthGoogle();
+          }, 1500);
+          return;
+        } catch (gErr) {
+          console.warn('Google Identity Services prompt notice:', gErr);
+        }
+      }
+
+      // 2. التحويل القياسي (Standard OAuth)
+      fallbackOAuthGoogle();
+    }
+
+    async function fallbackOAuthGoogle() {
       try {
+        const isNative = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+        
         let redirectUrl = window.location.origin + window.location.pathname;
         if (redirectUrl.endsWith('/login.html') || redirectUrl.endsWith('/signup.html')) {
           redirectUrl = redirectUrl.replace(/\/(login|signup)\.html$/, '/index.html');
         }
         if (redirectUrl.startsWith('file://')) {
+          redirectUrl = isNative ? 'com.mgcoptic.app://auth-callback' : 'https://mgcoptic.vercel.app/';
+        } else if (isNative) {
           redirectUrl = 'https://mgcoptic.vercel.app/';
         }
+
         const { data, error } = await sb.auth.signInWithOAuth({
           provider: 'google',
           options: {
@@ -308,7 +362,7 @@
             html: `
               <div style="text-align:right;font-family:'Tajawal','Cairo',sans-serif;direction:rtl;color:#2E2018;line-height:1.7;font-size:0.95rem;">
                 <p style="margin-bottom:12px;font-weight:700;">
-                  لتفعيل الربط التلقائي المباشر بزر Google، يرجى تفعيل مزود <b>Google</b> في لوحة تحكم Supabase (Authentication → Providers → Google) وإدخال Client ID.
+                  لتفعيل الربط التلقائي المباشر بزر Google، يرجى تفعيل مزود <b>Google</b> في لوحة تحكم Supabase وإدخال Client ID.
                 </p>
                 <div style="background:#FAF3E4;border:1.5px solid #C4A052;border-radius:12px;padding:14px;font-size:0.9rem;margin-top:10px;">
                   <p style="margin:0 0 6px 0;font-weight:800;color:#6B1530;">الحل المتاح فوراً وبدون أي خطوات إضافية:</p>
@@ -322,10 +376,30 @@
             confirmButtonText: 'حسناً، فهمت',
             confirmButtonColor: '#6B1530'
           });
-        } else {
-          alert('يمكنك استخدام رقم الموبايل أو كتابة بريدك الإلكتروني للدخول الفوري.');
         }
       }
+    }
+
+    // الاستماع لروابط الـ Deep Links عند العودة للتطبيق من تسجيل الدخول
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+      window.Capacitor.Plugins.App.addListener('appUrlOpen', async (data) => {
+        if (!data || !data.url) return;
+        console.log('[Auth] Capacitor appUrlOpen deep link received:', data.url);
+        try {
+          if (data.url.includes('#') || data.url.includes('?')) {
+            const hashOrQuery = data.url.includes('#') ? data.url.split('#')[1] : data.url.split('?')[1];
+            const params = new URLSearchParams(hashOrQuery);
+            const access_token = params.get('access_token');
+            const refresh_token = params.get('refresh_token');
+            if (access_token && refresh_token && window.sb && window.sb.auth) {
+              await window.sb.auth.setSession({ access_token, refresh_token });
+              if (typeof initUserSession === 'function') initUserSession();
+            }
+          }
+        } catch (e) {
+          console.warn('[Auth] Deep link session handling notice:', e);
+        }
+      });
     }
     window.signInWithGoogle = signInWithGoogle;
 

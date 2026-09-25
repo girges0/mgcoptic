@@ -20,6 +20,22 @@
                 <action android:name="FCM_PLUGIN_ACTIVITY" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- Custom URL Scheme for Google OAuth & Deep Links in APK -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.mgcoptic.app" />
+            </intent-filter>
+
+            <!-- App Links for mgcoptic.vercel.app so APK handles redirects directly -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="mgcoptic.vercel.app" />
+            </intent-filter>
         </activity>
 
         <provider
