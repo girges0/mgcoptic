@@ -291,7 +291,7 @@
           redirectUrl = redirectUrl.replace(/\/(login|signup)\.html$/, '/index.html');
         }
         if (redirectUrl.startsWith('file://')) {
-          redirectUrl = 'https://girges0.github.io/mgcoptic/index.html';
+          redirectUrl = 'https://mgcoptic.vercel.app/';
         }
         const { data, error } = await sb.auth.signInWithOAuth({
           provider: 'google',
