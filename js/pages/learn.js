@@ -1888,7 +1888,7 @@
           else durBlock.classList.add('disabled');
         }
         if (typeof showToast === 'function') {
-          showToast(enabled ? 'تم تفعيل مؤقت القراءة قبل التمارين' : 'تم إيقاف مؤقت القراءة قبل التمارين');
+          showToast(enabled ? 'تم تشغيل عداد القراءة' : 'تم قفل عداد القراءة');
         }
       }
 
@@ -2052,10 +2052,10 @@
             <div class="brief-timer-main">
               <div class="brief-timer-info-col">
                 <div class="brief-timer-title">
-                  <span>تمهّل لفهم القاعدة ونطق الحرف</span>
+                  <span>اقرأ القاعدة وشوف نطق الحرف</span>
                 </div>
                 <div class="brief-timer-desc">
-                  راجع النطق والقاعدة جيداً قبل بدء التمارين
+                  راجع النطق على مهلك قبل ما تبدأ التمارين
                 </div>
               </div>
 
@@ -2183,7 +2183,7 @@
           dot.className = 'brief-timer-status-dot done';
         }
         if (statusText) {
-          statusText.textContent = isSkip ? 'تم التخطي ✓' : 'اكتمل وقت القراءة ✓';
+          statusText.textContent = isSkip ? 'عدّيناها ✓' : 'خلص وقت القراءة يلا نبدأ ✓';
           statusText.style.color = '#059669';
           statusText.style.fontWeight = '800';
         }

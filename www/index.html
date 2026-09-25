@@ -11165,13 +11165,13 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            <span>مؤقت نبذة القراءة والتعلم</span>
+            <span>وقت قراءة الشرح</span>
           </h3>
 
           <div class="settings-timer-row">
             <div class="settings-timer-text-col">
-              <div class="settings-timer-title">تفعيل مؤقت القراءة قبل التمارين</div>
-              <div class="settings-timer-sub">عرض عد تنازلي ذكي قبل التمارين لإتاحة وقت كافٍ لقراءة وفهم القاعدة والحروف بدقة.</div>
+              <div class="settings-timer-title">عداد القراءة قبل التمارين</div>
+              <div class="settings-timer-sub">يديك وقت تقرأ القاعدة والشرح براحتك قبل الأسئلة.</div>
             </div>
             <label class="mg-toggle-switch" title="تفعيل أو إيقاف المؤقت">
               <input type="checkbox" id="settings-timer-toggle" checked onchange="handleBriefTimerToggleChange(this.checked)">
@@ -11182,8 +11182,8 @@
           <div class="settings-timer-duration-block" id="settings-timer-duration-block">
             <div class="settings-duration-top-row">
               <div class="settings-timer-text-col">
-                <div class="settings-timer-title">مدة القراءة التمهيدية</div>
-                <div class="settings-timer-sub">حدد عدد الثواني للقراءة والاستيعاب قبل بدء الأسئلة</div>
+                <div class="settings-timer-title">وقت القراءة</div>
+                <div class="settings-timer-sub">اختار كام ثانية محتاجها تقرأ فيها.</div>
               </div>
 
               <div class="settings-stepper-box">
@@ -11212,11 +11212,11 @@
                 </div>
               </div>
               <div class="settings-slider-ticks">
-                <button type="button" class="settings-tick-btn" style="--p: 0;" onclick="setBriefTimerDuration(5)">5 ثوانٍ</button>
-                <button type="button" class="settings-tick-btn active" style="--p: 0.25;" onclick="setBriefTimerDuration(15)">15 ثانية</button>
-                <button type="button" class="settings-tick-btn" style="--p: 0.5;" onclick="setBriefTimerDuration(30)">30 ثانية</button>
-                <button type="button" class="settings-tick-btn" style="--p: 0.75;" onclick="setBriefTimerDuration(45)">45 ثانية</button>
-                <button type="button" class="settings-tick-btn" style="--p: 1;" onclick="setBriefTimerDuration(60)">60 ثانية</button>
+                <button type="button" class="settings-tick-btn" style="--p: 0;" onclick="setBriefTimerDuration(5)">٥ ثواني</button>
+                <button type="button" class="settings-tick-btn active" style="--p: 0.25;" onclick="setBriefTimerDuration(15)">١٥ ثانية</button>
+                <button type="button" class="settings-tick-btn" style="--p: 0.5;" onclick="setBriefTimerDuration(30)">٣٠ ثانية</button>
+                <button type="button" class="settings-tick-btn" style="--p: 0.75;" onclick="setBriefTimerDuration(45)">٤٥ ثانية</button>
+                <button type="button" class="settings-tick-btn" style="--p: 1;" onclick="setBriefTimerDuration(60)">٦٠ ثانية</button>
               </div>
             </div>
           </div>
@@ -11227,7 +11227,7 @@
               <line x1="12" y1="16" x2="12" y2="12"></line>
               <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
-            <span>يمكنك دائماً إيقاف المؤقت مؤقتاً أو تخطيه مباشرة أثناء حل التمارين.</span>
+            <span>تقدر توقف العداد مؤقتاً أو تعدّيه وإنت بتحل.</span>
           </div>
         </div>
 
@@ -16281,7 +16281,7 @@
           else durBlock.classList.add('disabled');
         }
         if (typeof showToast === 'function') {
-          showToast(enabled ? 'تم تفعيل مؤقت القراءة قبل التمارين' : 'تم إيقاف مؤقت القراءة قبل التمارين');
+          showToast(enabled ? 'تم تشغيل عداد القراءة' : 'تم قفل عداد القراءة');
         }
       }
 
@@ -16445,10 +16445,10 @@
             <div class="brief-timer-main">
               <div class="brief-timer-info-col">
                 <div class="brief-timer-title">
-                  <span>تمهّل لفهم القاعدة ونطق الحرف</span>
+                  <span>اقرأ القاعدة وشوف نطق الحرف</span>
                 </div>
                 <div class="brief-timer-desc">
-                  راجع النطق والقاعدة جيداً قبل بدء التمارين
+                  راجع النطق على مهلك قبل ما تبدأ التمارين
                 </div>
               </div>
 
@@ -16576,7 +16576,7 @@
           dot.className = 'brief-timer-status-dot done';
         }
         if (statusText) {
-          statusText.textContent = isSkip ? 'تم التخطي ✓' : 'اكتمل وقت القراءة ✓';
+          statusText.textContent = isSkip ? 'عدّيناها ✓' : 'خلص وقت القراءة يلا نبدأ ✓';
           statusText.style.color = '#059669';
           statusText.style.fontWeight = '800';
         }
