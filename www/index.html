@@ -14029,6 +14029,191 @@
       }
     }
 
+    /* ==================== إكمال بيانات الحساب الإلزامية للمستخدم الجديد ==================== */
+    let _activeUserPendingCompletion = null;
+
+    function checkAndPromptProfileCompletion(authUser, profile) {
+      if (!authUser || !authUser.id) return;
+      
+      const role = (profile && profile.role) || (authUser.user_metadata && authUser.user_metadata.role);
+      if (role === 'admin') return;
+
+      const hasAge = profile && typeof profile.age === 'number' && profile.age >= 4 && profile.age <= 110;
+      const hasPhone = profile && profile.phone && String(profile.phone).trim().length >= 8;
+      const fullName = (profile && profile.full_name) || '';
+      const genericNames = ['مستخدم قبطي', 'طالب قبطي', 'بطل قبطي', ''];
+      const hasValidName = fullName.trim().length > 3 && !genericNames.includes(fullName.trim());
+
+      if (!hasAge || !hasPhone || !hasValidName) {
+        setTimeout(() => openCompleteProfileModal(authUser, profile), 450);
+      }
+    }
+    window.checkAndPromptProfileCompletion = checkAndPromptProfileCompletion;
+
+    function openCompleteProfileModal(authUser, profile) {
+      _activeUserPendingCompletion = { authUser, profile };
+      const modal = document.getElementById('complete-profile-modal');
+      if (!modal) return;
+
+      // إغلاق أي نافذة تسجيل دخول قديمة
+      const authModal = document.getElementById('auth-modal');
+      if (authModal) authModal.style.display = 'none';
+
+      // استخراج الاسم وتفكيكه
+      const meta = (authUser && authUser.user_metadata) || {};
+      let fullName = (profile && profile.full_name) || meta.full_name || meta.name || '';
+      const genericNames = ['مستخدم قبطي', 'طالب قبطي', 'بطل قبطي', ''];
+      if (genericNames.includes(fullName.trim())) fullName = '';
+
+      let firstName = meta.first_name || '';
+      let fatherName = meta.father_name || '';
+      if (!firstName && fullName) {
+        const parts = fullName.trim().split(/\s+/);
+        firstName = parts[0] || '';
+        fatherName = parts.slice(1).join(' ') || '';
+      }
+
+      const fnInp = document.getElementById('cp-firstname-input');
+      const faInp = document.getElementById('cp-fathername-input');
+      const ageInp = document.getElementById('cp-age-input');
+      const phoneInp = document.getElementById('cp-phone-input');
+      const statusEl = document.getElementById('cp-status-msg');
+
+      if (fnInp) fnInp.value = firstName;
+      if (faInp) faInp.value = fatherName;
+      if (ageInp) ageInp.value = (profile && profile.age && profile.age >= 4) ? profile.age : '';
+      if (phoneInp) phoneInp.value = (profile && profile.phone) ? profile.phone : (meta.phone || '');
+      if (statusEl) { statusEl.textContent = ''; statusEl.style.color = ''; }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // تركيز أول حقل فارغ
+      setTimeout(() => {
+        if (!fnInp.value) fnInp.focus();
+        else if (!faInp.value) faInp.focus();
+        else if (!ageInp.value) ageInp.focus();
+        else if (!phoneInp.value) phoneInp.focus();
+      }, 150);
+    }
+    window.openCompleteProfileModal = openCompleteProfileModal;
+
+    async function handleCompleteProfileSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const fnInp = document.getElementById('cp-firstname-input');
+      const faInp = document.getElementById('cp-fathername-input');
+      const ageInp = document.getElementById('cp-age-input');
+      const phoneInp = document.getElementById('cp-phone-input');
+      const statusEl = document.getElementById('cp-status-msg');
+      const submitBtn = document.getElementById('cp-submit-btn');
+
+      const firstName = fnInp ? fnInp.value.trim() : '';
+      const fatherName = faInp ? faInp.value.trim() : '';
+      const ageVal = ageInp ? parseInt(ageInp.value, 10) : 0;
+      const phoneVal = phoneInp ? phoneInp.value.trim() : '';
+
+      if (!firstName || firstName.length < 2) {
+        if (statusEl) { statusEl.textContent = 'من فضلك اكتب اسمك الأول بشكل صحيح.'; statusEl.style.color = '#B91C1C'; }
+        if (fnInp) fnInp.focus();
+        return;
+      }
+      if (!fatherName || fatherName.length < 2) {
+        if (statusEl) { statusEl.textContent = 'من فضلك اكتب اسم الأب.'; statusEl.style.color = '#B91C1C'; }
+        if (faInp) faInp.focus();
+        return;
+      }
+      if (!ageVal || isNaN(ageVal) || ageVal < 4 || ageVal > 110) {
+        if (statusEl) { statusEl.textContent = 'يرجى كتابة عمرك بالسنوات بشكل صحيح (بين 4 و100 سنة).'; statusEl.style.color = '#B91C1C'; }
+        if (ageInp) ageInp.focus();
+        return;
+      }
+      if (!phoneVal || phoneVal.replace(/[^0-9]/g, '').length < 8) {
+        if (statusEl) { statusEl.textContent = 'من فضلك أدخل رقم موبايل صحيح (8 أرقام على الأقل).'; statusEl.style.color = '#B91C1C'; }
+        if (phoneInp) phoneInp.focus();
+        return;
+      }
+
+      const fullCombinedName = `${firstName} ${fatherName}`.trim();
+      const user = (_activeUserPendingCompletion && _activeUserPendingCompletion.authUser) || currentAuthUser;
+      const uid = user ? user.id : null;
+      if (!uid) {
+        if (statusEl) { statusEl.textContent = 'حدث خطأ في الجلسة، يرجى إعادة تحميل الصفحة.'; statusEl.style.color = '#B91C1C'; }
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg class="auth-btn-spinner" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" style="animation:spin 1s linear infinite;">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+            <path d="M12 2a10 10 0 0 1 10 10"></path>
+          </svg>
+          <span>جارٍ حفظ بياناتك...</span>
+        `;
+      }
+
+      try {
+        // 1. تحديث جدول users في Supabase
+        const { error: dbErr } = await sb.from('users').upsert({
+          id: uid,
+          full_name: fullCombinedName,
+          age: ageVal,
+          phone: phoneVal,
+          email: user.email || null,
+          role: 'student'
+        }, { onConflict: 'id' });
+
+        if (dbErr) throw dbErr;
+
+        // 2. تحديث الميتاداتا في Auth
+        try {
+          await sb.auth.updateUser({
+            data: {
+              full_name: fullCombinedName,
+              first_name: firstName,
+              father_name: fatherName,
+              age: ageVal,
+              phone: phoneVal
+            }
+          });
+        } catch (_) {}
+
+        // 3. تحديث الكاش المحلي
+        if (currentAuthUser) {
+          currentAuthUser.full_name = fullCombinedName;
+          currentAuthUser.age = ageVal;
+          currentAuthUser.phone = phoneVal;
+          localStorage.setItem('mg_coptic_user', JSON.stringify(currentAuthUser));
+        }
+
+        // 4. تحديث واجهات المنصة
+        if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
+        const settingsNameInp = document.getElementById('settings-name-input');
+        if (settingsNameInp) settingsNameInp.value = fullCombinedName;
+
+        // 5. إغلاق النافذة بنجاح
+        const modal = document.getElementById('complete-profile-modal');
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+
+        if (typeof showToast === 'function') {
+          showToast(`عاش يا ${firstName}! تم حفظ بياناتك بنجاح 🌟`);
+        }
+      } catch (err) {
+        console.error('handleCompleteProfileSubmit error:', err);
+        if (statusEl) {
+          statusEl.textContent = 'تعذر الحفظ الآن، يرجى المحاولة مرة أخرى.';
+          statusEl.style.color = '#B91C1C';
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>حفظ ومتابعة التعلّم</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+        }
+      }
+    }
+    window.handleCompleteProfileSubmit = handleCompleteProfileSubmit;
+
     async function initUserSession() {
       try {
         // تنظيف أي جلسة أدمن قديمة تسربت سابقاً بالمفتاح العام القديم
@@ -14222,6 +14407,11 @@
               if (typeof renderSkillMap === 'function') renderSkillMap();
               if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
             }).catch(() => {});
+          }
+
+          // فحص استكمال بيانات الحساب الإلزامية (الاسم، العمر، رقم الموبايل)
+          if (typeof checkAndPromptProfileCompletion === 'function') {
+            checkAndPromptProfileCompletion(session.user, profile);
           }
         } else {
           // لم نتمكن من الوصول لشبكة Supabase لكن لدينا مستخدم مخزن محلياً: نحتفظ به ولا نسجل خروجه!
@@ -20352,6 +20542,95 @@
         <button type="submit" id="auth-submit-btn" class="btn" style="width:100%;padding:12px;font-size:0.98rem;font-weight:800;background:linear-gradient(135deg, var(--madder) 0%, #8C2430 100%);border:none;border-radius:10px;color:#FFFFFF;cursor:pointer;box-shadow:0 4px 14px rgba(107,21,48,0.25);display:flex;align-items:center;justify-content:center;gap:8px;">
           <span>دخول</span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة استكمال بيانات الحساب الإلزامية ==================== -->
+  <div class="modal-overlay" id="complete-profile-modal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(36,27,18,0.78); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px; box-sizing:border-box;" role="dialog" aria-modal="true" aria-labelledby="cp-modal-title">
+    <div style="background:#FFFDF9; border:1.5px solid #EAE0C8; border-radius:24px; max-width:440px; width:100%; padding:26px 22px; box-shadow:0 16px 40px rgba(36,27,18,0.22); position:relative; box-sizing:border-box; animation: mgModalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
+      
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:18px;">
+        <div style="width:62px; height:62px; margin:0 auto 12px; border-radius:50%; background:linear-gradient(135deg, rgba(140,36,48,0.1) 0%, rgba(184,137,46,0.15) 100%); border:1.5px solid rgba(184,137,46,0.3); display:flex; align-items:center; justify-content:center; color:#8C2430;">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <span style="display:inline-block; font-size:0.78rem; font-weight:800; background:rgba(184,137,46,0.15); color:#8C6214; padding:3px 12px; border-radius:20px; border:1px solid rgba(184,137,46,0.3); margin-bottom:6px;">خطوة أخيرة لازمة 🌟</span>
+        <h3 id="cp-modal-title" style="margin:4px 0 6px; font-family:var(--font-display); color:#241B12; font-size:1.35rem; font-weight:800;">استكمال بيانات حسابك</h3>
+        <p style="margin:0; font-size:0.88rem; color:#6B5D52; line-height:1.55;">
+          أهلاً بيك يا بطل! كمّل باقي بياناتك عشان نحدد مرحلتك ونحفظ تقدمك ونقاطك.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form id="complete-profile-form" onsubmit="handleCompleteProfileSubmit(event)" novalidate>
+        
+        <!-- Name Row -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+          <div>
+            <label for="cp-firstname-input" style="display:block; font-size:0.83rem; font-weight:700; margin-bottom:4px; color:#241B12;">
+              الاسم <span style="color:#8C2430;">*</span>
+            </label>
+            <input type="text" id="cp-firstname-input" class="settings-input" placeholder="اسمك..." required maxlength="25"
+              style="width:100%; box-sizing:border-box; padding:10px 12px; border-radius:10px; border:1px solid #D8CCB5; background:#FFFFFF;">
+          </div>
+          <div>
+            <label for="cp-fathername-input" style="display:block; font-size:0.83rem; font-weight:700; margin-bottom:4px; color:#241B12;">
+              اسم الأب <span style="color:#8C2430;">*</span>
+            </label>
+            <input type="text" id="cp-fathername-input" class="settings-input" placeholder="اسم الأب..." required maxlength="25"
+              style="width:100%; box-sizing:border-box; padding:10px 12px; border-radius:10px; border:1px solid #D8CCB5; background:#FFFFFF;">
+          </div>
+        </div>
+
+        <!-- Age Field -->
+        <div style="margin-bottom:12px;">
+          <label for="cp-age-input" style="display:block; font-size:0.83rem; font-weight:700; margin-bottom:4px; color:#241B12;">
+            العمر (بالسنوات) <span style="color:#8C2430;">*</span>
+          </label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; right:12px; color:#8A7B6E; pointer-events:none;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            <input type="number" id="cp-age-input" class="settings-input" placeholder="مثال: 15" min="4" max="110" required
+              style="width:100%; box-sizing:border-box; padding:10px 38px 10px 12px; border-radius:10px; border:1px solid #D8CCB5; background:#FFFFFF;">
+          </div>
+        </div>
+
+        <!-- Phone Field -->
+        <div style="margin-bottom:16px;">
+          <label for="cp-phone-input" style="display:block; font-size:0.83rem; font-weight:700; margin-bottom:4px; color:#241B12;">
+            رقم الموبايل / واتساب <span style="color:#8C2430;">*</span>
+          </label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; right:12px; color:#8A7B6E; pointer-events:none;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="3" ry="3"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </span>
+            <input type="tel" id="cp-phone-input" class="settings-input" placeholder="01012345678" dir="ltr" required
+              style="width:100%; box-sizing:border-box; padding:10px 38px 10px 12px; border-radius:10px; border:1px solid #D8CCB5; background:#FFFFFF;">
+          </div>
+          <span style="font-size:0.75rem; color:#7A6B60; display:block; margin-top:4px;">ضروري لمتابعة تقدمك والتواصل معك عند الفوز بالمسابقات.</span>
+        </div>
+
+        <!-- Status Message -->
+        <div id="cp-status-msg" style="margin-bottom:12px; font-size:0.86rem; text-align:center; min-height:18px;"></div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="cp-submit-btn" style="width:100%; padding:13px; font-size:1rem; font-weight:800; background:linear-gradient(135deg, #8C2430 0%, #6B1530 100%); border:none; border-radius:12px; color:#FFFFFF; cursor:pointer; box-shadow:0 4px 14px rgba(107,21,48,0.28); display:flex; align-items:center; justify-content:center; gap:8px; font-family:var(--font-display);">
+          <span>حفظ ومتابعة التعلّم</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
