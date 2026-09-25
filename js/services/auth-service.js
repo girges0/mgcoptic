@@ -620,7 +620,6 @@
               try {
                 await sb.auth.updateUser({ data: { full_name: fullName, first_name: firstName, father_name: fatherName, phone: userPhone } });
               } catch (_) {}
-            }
           } catch (e) {
             console.warn('Password profile sync notice:', e);
           }

@@ -333,10 +333,185 @@
   box-shadow: 0 1px 0 #4A0E21;
 }
 
-/* Home Section In-App Dynamic Skeleton (Reusable) */
+/* Universal Page Skeleton Container (Responsive & Centered) */
+.mg-page-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 8px 4px 32px;
+  box-sizing: border-box;
+  animation: mgSkelFadeIn 0.3s ease-out;
+}
+
 .home-skeleton-wrapper {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 100%;
 }
+
+/* ==========================================================================
+   2. Learn Path Skeleton (مسار التعلّم التفاعلي)
+   ========================================================================== */
+.mg-skel-learn-unit {
+  background: #FFFDF9;
+  border: 1.5px solid rgba(217, 201, 160, 0.55);
+  border-radius: 20px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(38, 25, 18, 0.03);
+}
+
+.mg-skel-path-track {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 24px 0 32px;
+  width: 100%;
+}
+
+.mg-skel-path-track::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  background: repeating-linear-gradient(to bottom, rgba(217, 201, 160, 0.4) 0px, rgba(217, 201, 160, 0.4) 8px, transparent 8px, transparent 16px);
+  z-index: 1;
+}
+
+.mg-skel-path-node-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mg-skel-path-node-row.pos-right { justify-content: flex-end; padding-left: 20px; }
+.mg-skel-path-node-row.pos-center { justify-content: center; }
+.mg-skel-path-node-row.pos-left { justify-content: flex-start; padding-right: 20px; }
+
+.mg-skel-path-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(38, 25, 18, 0.06);
+}
+
+.mg-skel-path-chest {
+  width: 74px;
+  height: 64px;
+  border-radius: 18px;
+}
+
+/* ==========================================================================
+   3. Settings Page Skeleton (الإعدادات والملف الشخصي)
+   ========================================================================== */
+.mg-skel-settings-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.5);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 14px rgba(38, 25, 18, 0.03);
+}
+
+.mg-skel-profile-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.mg-skel-settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* ==========================================================================
+   4. Alphabet Page Skeleton (جدول الحروف القبطية)
+   ========================================================================== */
+.mg-skel-alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .mg-skel-alphabet-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
+.mg-skel-alphabet-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.45);
+  border-radius: 16px;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 6px;
+  box-shadow: 0 3px 10px rgba(38, 25, 18, 0.02);
+}
+
+/* ==========================================================================
+   5. Vocab & Calendar Page Skeleton (المعجم والتقويم)
+   ========================================================================== */
+.mg-skel-vocab-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: hidden;
+  padding: 2px 0 6px;
+}
+
+.mg-skel-vocab-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.5);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(38, 25, 18, 0.03);
+}
+
+/* ==========================================================================
+   6. Competitions & Quiz Page Skeleton (المسابقات والتحديات)
+   ========================================================================== */
+.mg-skel-comp-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.mg-skel-comp-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.5);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 14px rgba(38, 25, 18, 0.03);
+}
+

@@ -11,8 +11,6 @@
 (function () {
   const CATALOG = [
     // الوحدة 1 (Ⲁ - Ⲉ)
-  const CATALOG = [
-    // الوحدة 1 (Ⲁ - Ⲉ)
     {
       id: 1, upper: 'Ⲁ', lower: 'ⲁ', pair: 'Ⲁ ⲁ', name: 'ألفا',
       isVowel: true, vowelType: 'متحرك للفتح', letterTypeBadge: 'حرف متحرك (للفتح)',

@@ -11331,6 +11331,58 @@
         <span class="toast-icon-box"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
         <span id="duo-toast-text"></span>
       </div>
+
+      <!-- Dedicated Learn Path Skeleton Loading (Duolingo Style) -->
+      <div id="learn-skeleton-loading" class="mg-page-skeleton" style="display:none;" aria-hidden="true">
+        <!-- Minimal Spinner Header -->
+        <div class="mg-skeleton-header-bar">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">ثواني وبنحمّل مسار التعلّم والدروس...</span>
+          </div>
+        </div>
+        <!-- Level Selector Skeleton -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#FFFDF9; border:1px solid rgba(217,201,160,0.45); border-radius:18px; padding:12px 18px;">
+          <div style="display:flex; gap:10px; align-items:center;">
+            <div class="mg-skeleton-shimmer" style="width:28px; height:28px; border-radius:8px;"></div>
+            <div class="mg-skeleton-shimmer" style="width:140px; height:18px; border-radius:6px;"></div>
+          </div>
+          <div class="mg-skeleton-shimmer" style="width:32px; height:32px; border-radius:50%;"></div>
+        </div>
+        <!-- Unit Card Skeleton -->
+        <div class="mg-skel-learn-unit">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="mg-skeleton-shimmer" style="width:90px; height:20px; border-radius:999px;"></div>
+            <div class="mg-skeleton-shimmer" style="width:50px; height:16px; border-radius:999px;"></div>
+          </div>
+          <div class="mg-skeleton-shimmer" style="width:70%; height:22px; border-radius:6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width:50%; height:13px; border-radius:5px;"></div>
+        </div>
+        <!-- Winding Path Nodes Skeleton -->
+        <div class="mg-skel-path-track">
+          <!-- Node 1 (Center) -->
+          <div class="mg-skel-path-node-row pos-center">
+            <div class="mg-skeleton-shimmer mg-skel-path-circle"></div>
+          </div>
+          <!-- Node 2 (Right) -->
+          <div class="mg-skel-path-node-row pos-right">
+            <div class="mg-skeleton-shimmer mg-skel-path-circle"></div>
+          </div>
+          <!-- Node 3 (Center) -->
+          <div class="mg-skel-path-node-row pos-center">
+            <div class="mg-skeleton-shimmer mg-skel-path-circle"></div>
+          </div>
+          <!-- Node 4 (Left) -->
+          <div class="mg-skel-path-node-row pos-left">
+            <div class="mg-skeleton-shimmer mg-skel-path-circle"></div>
+          </div>
+          <!-- Node 5: Milestone Chest (Center) -->
+          <div class="mg-skel-path-node-row pos-center">
+            <div class="mg-skeleton-shimmer mg-skel-path-chest"></div>
+          </div>
+        </div>
+      </div>
+
       <div id="curriculum-units-container"></div>
     </section>
 
@@ -11608,6 +11660,26 @@
     </div>
 
     <section id="alphabet" class="tab-panel">
+      <!-- Dedicated Alphabet Skeleton Loading -->
+      <div id="alphabet-skeleton-loading" class="mg-page-skeleton" style="display:none;" aria-hidden="true">
+        <div class="mg-skeleton-header-bar">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">جارٍ تحميل جدول الحروف والنطق الصوتي...</span>
+          </div>
+        </div>
+        <div class="mg-skel-alphabet-grid">
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+          <div class="mg-skel-alphabet-card"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:8px;"></div><div class="mg-skeleton-shimmer" style="width:40px;height:10px;border-radius:4px;"></div></div>
+        </div>
+      </div>
+
       <button type="button" class="back-to-home-btn" onclick="switchTab('home')">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round">
@@ -11622,6 +11694,26 @@
 
     <!-- ============ قسم التقويم القبطي (Coptic Calendar) ============ -->
     <section id="vocab" class="tab-panel">
+      <!-- Dedicated Vocab & Calendar Skeleton Loading -->
+      <div id="vocab-skeleton-loading" class="mg-page-skeleton" style="display:none;" aria-hidden="true">
+        <div class="mg-skeleton-header-bar">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">جارٍ تحميل المعجم والتقويم القبطي...</span>
+          </div>
+        </div>
+        <div class="mg-skeleton-shimmer" style="width:100%; height:44px; border-radius:14px;"></div>
+        <div class="mg-skel-vocab-chips">
+          <div class="mg-skeleton-shimmer" style="width:72px; height:32px; border-radius:999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width:84px; height:32px; border-radius:999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width:96px; height:32px; border-radius:999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width:78px; height:32px; border-radius:999px;"></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="mg-skel-vocab-card"><div style="display:flex; gap:12px; align-items:center;"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:10px;"></div><div style="display:flex;flex-direction:column;gap:6px;"><div class="mg-skeleton-shimmer" style="width:100px;height:16px;border-radius:4px;"></div><div class="mg-skeleton-shimmer" style="width:140px;height:12px;border-radius:4px;"></div></div></div><div class="mg-skeleton-shimmer" style="width:32px;height:32px;border-radius:50%;"></div></div>
+          <div class="mg-skel-vocab-card"><div style="display:flex; gap:12px; align-items:center;"><div class="mg-skeleton-shimmer" style="width:36px;height:36px;border-radius:10px;"></div><div style="display:flex;flex-direction:column;gap:6px;"><div class="mg-skeleton-shimmer" style="width:100px;height:16px;border-radius:4px;"></div><div class="mg-skeleton-shimmer" style="width:140px;height:12px;border-radius:4px;"></div></div></div><div class="mg-skeleton-shimmer" style="width:32px;height:32px;border-radius:50%;"></div></div>
+        </div>
+      </div>
       <!-- يتم بناء وعرض التقويم القبطي بالكامل ديناميكياً عبر js/coptic-calendar.js -->
     </section>
 
@@ -11835,6 +11927,21 @@
 
     <!-- ============ COMPETITIONS / المسابقات والتحديات ============ -->
     <section id="competitions" class="tab-panel">
+      <!-- Dedicated Competitions Skeleton Loading -->
+      <div id="comp-skeleton-loading" class="mg-page-skeleton" style="display:none;" aria-hidden="true">
+        <div class="mg-skeleton-header-bar">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">ثواني وبنجهّزلك المسابقات والتحديات...</span>
+          </div>
+        </div>
+        <div class="mg-skel-comp-modes">
+          <div class="mg-skel-comp-card"><div class="mg-skeleton-shimmer" style="width:44px;height:44px;border-radius:12px;"></div><div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div class="mg-skeleton-shimmer" style="width:120px;height:18px;border-radius:5px;"></div><div class="mg-skeleton-shimmer" style="width:180px;height:12px;border-radius:4px;"></div></div></div>
+          <div class="mg-skel-comp-card"><div class="mg-skeleton-shimmer" style="width:44px;height:44px;border-radius:12px;"></div><div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div class="mg-skeleton-shimmer" style="width:120px;height:18px;border-radius:5px;"></div><div class="mg-skeleton-shimmer" style="width:180px;height:12px;border-radius:4px;"></div></div></div>
+          <div class="mg-skel-comp-card"><div class="mg-skeleton-shimmer" style="width:44px;height:44px;border-radius:12px;"></div><div style="display:flex;flex-direction:column;gap:6px;flex:1;"><div class="mg-skeleton-shimmer" style="width:120px;height:18px;border-radius:5px;"></div><div class="mg-skeleton-shimmer" style="width:180px;height:12px;border-radius:4px;"></div></div></div>
+        </div>
+      </div>
+
       <button type="button" class="back-to-home-btn" onclick="switchTab('home')">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
           stroke-linecap="round" stroke-linejoin="round">
@@ -12036,6 +12143,38 @@
 
     <!-- ============ SETTINGS / الإعدادات ============ -->
     <section id="settings" class="tab-panel">
+      <!-- Dedicated Settings Skeleton Loading -->
+      <div id="settings-skeleton-loading" class="mg-page-skeleton" style="display:none;" aria-hidden="true">
+        <div class="mg-skeleton-header-bar">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">ثواني وبنجهّزلك إعدادات حسابك...</span>
+          </div>
+        </div>
+        <!-- Profile Card Skeleton -->
+        <div class="mg-skel-settings-card">
+          <div class="mg-skel-profile-top">
+            <div class="mg-skeleton-shimmer" style="width:76px; height:76px; border-radius:50%;"></div>
+            <div class="mg-skeleton-shimmer" style="width:110px; height:18px; border-radius:6px;"></div>
+            <div style="display:flex; gap:10px;">
+              <div class="mg-skeleton-shimmer" style="width:110px; height:34px; border-radius:12px;"></div>
+              <div class="mg-skeleton-shimmer" style="width:100px; height:34px; border-radius:12px;"></div>
+            </div>
+          </div>
+          <div class="mg-skeleton-shimmer" style="width:100%; height:44px; border-radius:12px; margin-top:8px;"></div>
+        </div>
+        <!-- Reading Timer Card Skeleton -->
+        <div class="mg-skel-settings-card">
+          <div class="mg-skel-settings-row">
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="mg-skeleton-shimmer" style="width:140px; height:18px; border-radius:6px;"></div>
+              <div class="mg-skeleton-shimmer" style="width:210px; height:12px; border-radius:5px;"></div>
+            </div>
+            <div class="mg-skeleton-shimmer" style="width:48px; height:26px; border-radius:999px;"></div>
+          </div>
+        </div>
+      </div>
+
       <div style="text-align:center;margin-bottom:22px;">
         <h2 class="rubric" style="margin-bottom:0;">الإعدادات</h2>
       </div>
@@ -12753,6 +12892,10 @@
       }
 
       if (tabName === 'learn') {
+        const learnCont = document.getElementById('curriculum-units-container');
+        if (!learnCont || !learnCont.children || learnCont.children.length === 0) {
+          if (typeof window.showPageSkeleton === 'function') window.showPageSkeleton('learn');
+        }
         if (typeof window.renderSkillMap === 'function') {
           window.renderSkillMap();
         }
@@ -12760,15 +12903,33 @@
           window.refreshStatsDisplay();
         }
       }
-      if (tabName === 'alphabet' && typeof renderAlphabet === 'function') renderAlphabet();
-      if (tabName === 'vocab' && typeof window.renderCopticCalendar === 'function') window.renderCopticCalendar();
+      if (tabName === 'alphabet') {
+        if (typeof window.showPageSkeleton === 'function') window.showPageSkeleton('alphabet');
+        if (typeof renderAlphabet === 'function') renderAlphabet();
+        setTimeout(() => { if (typeof window.hidePageSkeleton === 'function') window.hidePageSkeleton('alphabet'); }, 260);
+      }
+      if (tabName === 'vocab') {
+        if (typeof window.showPageSkeleton === 'function') window.showPageSkeleton('vocab');
+        if (typeof window.renderCopticCalendar === 'function') window.renderCopticCalendar();
+        setTimeout(() => { if (typeof window.hidePageSkeleton === 'function') window.hidePageSkeleton('vocab'); }, 260);
+      }
       if (tabName === 'quiz') showQuizSetup();
+      if (tabName === 'competitions') {
+        if (typeof window.showPageSkeleton === 'function') window.showPageSkeleton('comp');
+        setTimeout(() => { if (typeof window.hidePageSkeleton === 'function') window.hidePageSkeleton('comp'); }, 260);
+      }
       if (tabName === 'home') {
         if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
         if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
       }
-      if (tabName === 'leaderboard' && typeof window.renderRealLeaderboard === 'function') window.renderRealLeaderboard();
-      if (tabName === 'settings' && typeof window.initBriefTimerSettingsUI === 'function') window.initBriefTimerSettingsUI();
+      if (tabName === 'leaderboard') {
+        if (typeof window.renderRealLeaderboard === 'function') window.renderRealLeaderboard();
+      }
+      if (tabName === 'settings') {
+        if (typeof window.showPageSkeleton === 'function') window.showPageSkeleton('settings');
+        if (typeof window.initBriefTimerSettingsUI === 'function') window.initBriefTimerSettingsUI();
+        setTimeout(() => { if (typeof window.hidePageSkeleton === 'function') window.hidePageSkeleton('settings'); }, 220);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     window.switchTab = switchTab;
@@ -14280,6 +14441,15 @@
     };
     window.hideHomeSkeleton = function() {
       const skel = document.getElementById('home-skeleton-loading');
+      if (skel) skel.style.display = 'none';
+    };
+
+    window.showPageSkeleton = function(pageId) {
+      const skel = document.getElementById(`${pageId}-skeleton-loading`);
+      if (skel) skel.style.display = 'flex';
+    };
+    window.hidePageSkeleton = function(pageId) {
+      const skel = document.getElementById(`${pageId}-skeleton-loading`);
       if (skel) skel.style.display = 'none';
     };
 
@@ -16874,6 +17044,7 @@
         }
 
         container.innerHTML = html;
+        if (typeof window.hidePageSkeleton === 'function') window.hidePageSkeleton('learn');
 
         container.querySelectorAll('.lesson-node-btn').forEach(btn => {
           btn.addEventListener('click', () => {
