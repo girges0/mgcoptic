@@ -10686,22 +10686,114 @@
 
 <body>
 
-  <!-- MG COPTIC Preloader -->
-  <div id="mg-preloader" role="status" aria-label="جارٍ التحميل" style="background:#F8EFE0;">
-    <div class="mg-preloader-content" id="mg-loader-main-box">
-      <div class="mg-loader-logo-wrap">
-        <img src="logo.png" alt="MG COPTIC" decoding="async" width="40" height="40">
+  <!-- MG COPTIC Universal Skeleton Shimmer Preloader (Duolingo / Apple Standard) -->
+  <div id="mg-preloader" role="status" aria-label="جارٍ التحميل">
+    <div class="mg-skeleton-screen" id="mg-loader-main-box">
+      <!-- 1. Minimal Spinner & Live Status Header -->
+      <div class="mg-skeleton-header-bar">
+        <div class="mg-skeleton-status-wrap">
+          <div class="mg-minimal-spinner"></div>
+          <span class="mg-skeleton-status-title" id="mg-loader-subtext">ثواني وبنجهّزلك المحتوى...</span>
+        </div>
+        <div class="mg-skeleton-logo-badge">
+          <img src="logo.png" alt="MG" width="20" height="20" decoding="async">
+          <span class="mg-skeleton-brand-text">MG COPTIC</span>
+        </div>
       </div>
-      <div class="mg-spinner-wrap">
-        <div class="mg-spinner"></div>
-      </div>
-      <div class="mg-loading-text">MG COPTIC</div>
-      <div class="mg-loading-subtext" id="mg-loader-subtext">ثواني وبيفتح معاك...</div>
       <div class="mg-slow-notice" id="mg-slow-notice" style="display:none;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>النت عندك بطيء شوية، ثواني وبنكمّل...</span>
+        <span>النت بطيء شوية، ثواني وبنكمّل...</span>
+      </div>
+
+      <!-- 2. Skeleton Topbar -->
+      <div class="mg-skel-topbar">
+        <div class="mg-skeleton-shimmer" style="width: 110px; height: 32px; border-radius: 999px;"></div>
+        <div class="mg-skel-topbar-chips">
+          <div class="mg-skeleton-shimmer" style="width: 54px; height: 32px; border-radius: 999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 54px; height: 32px; border-radius: 999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 54px; height: 32px; border-radius: 999px;"></div>
+        </div>
+      </div>
+
+      <!-- 3. Skeleton Greeting -->
+      <div class="mg-skel-greeting">
+        <div class="mg-skeleton-shimmer" style="width: 48px; height: 48px; border-radius: 50%;"></div>
+        <div class="mg-skel-greeting-lines">
+          <div class="mg-skeleton-shimmer" style="width: 130px; height: 18px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 190px; height: 12px; border-radius: 6px;"></div>
+        </div>
+      </div>
+
+      <!-- 4. Skeleton 3 Stat Cards Row -->
+      <div class="mg-skel-stats-grid">
+        <div class="mg-skel-stat-box">
+          <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 32px; height: 20px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 60px; height: 10px; border-radius: 4px;"></div>
+        </div>
+        <div class="mg-skel-stat-box">
+          <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 32px; height: 20px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 60px; height: 10px; border-radius: 4px;"></div>
+        </div>
+        <div class="mg-skel-stat-box">
+          <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 42px; height: 20px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 50px; height: 10px; border-radius: 4px;"></div>
+        </div>
+      </div>
+
+      <!-- 5. Skeleton Hero Lesson Banner Card -->
+      <div class="mg-skel-hero-card">
+        <div class="mg-skeleton-shimmer" style="width: 130px; height: 22px; border-radius: 999px;"></div>
+        <div class="mg-skeleton-shimmer" style="width: 78%; height: 24px; border-radius: 8px;"></div>
+        <div class="mg-skeleton-shimmer" style="width: 55%; height: 14px; border-radius: 6px;"></div>
+        <div class="mg-skeleton-shimmer" style="width: 100%; height: 10px; border-radius: 999px; margin-top: 4px;"></div>
+        <div class="mg-skel-hero-bottom">
+          <div class="mg-skeleton-shimmer" style="width: 70px; height: 14px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 110px; height: 38px; border-radius: 14px;"></div>
+        </div>
+      </div>
+
+      <!-- 6. Skeleton 7-Day Streak Challenge Card -->
+      <div class="mg-skel-streak-card">
+        <div class="mg-skel-streak-top">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="mg-skeleton-shimmer" style="width: 105px; height: 18px; border-radius: 6px;"></div>
+              <div class="mg-skeleton-shimmer" style="width: 76px; height: 18px; border-radius: 999px;"></div>
+            </div>
+            <div class="mg-skeleton-shimmer" style="width: 220px; height: 11px; border-radius: 5px;"></div>
+          </div>
+          <div class="mg-skeleton-shimmer" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+        </div>
+        <div class="mg-skel-streak-days-row">
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 50%;"></div>
+        </div>
+        <div class="mg-skel-streak-bottom">
+          <div class="mg-skeleton-shimmer" style="width: 180px; height: 14px; border-radius: 5px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 68px; height: 20px; border-radius: 999px;"></div>
+        </div>
+      </div>
+
+      <!-- 7. Skeleton Today's Goal Card -->
+      <div class="mg-skel-goal-card">
+        <div class="mg-skeleton-shimmer" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+          <div class="mg-skeleton-shimmer" style="width: 140px; height: 16px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 100%; height: 8px; border-radius: 999px;"></div>
+        </div>
+        <div class="mg-skeleton-shimmer" style="width: 72px; height: 22px; border-radius: 999px;"></div>
       </div>
     </div>
+
+    <!-- Error Box for Offline / Heavy Timeout -->
     <div class="mg-loader-error" id="mg-loader-error-box">
       <div class="error-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
@@ -10837,6 +10929,46 @@
   <main>
 
     <section id="home" class="hero tab-panel active">
+
+      <!-- Home Skeleton Shimmer (Duolingo/Apple Standard - for in-app data loading states) -->
+      <div id="home-skeleton-loading" class="home-skeleton-wrapper" style="display:none;" aria-hidden="true">
+        <!-- 1. Minimal Spinner & Status -->
+        <div class="mg-skeleton-header-bar" style="margin-bottom:4px;">
+          <div class="mg-skeleton-status-wrap">
+            <div class="mg-minimal-spinner"></div>
+            <span class="mg-skeleton-status-title">ثواني وبنحدّث مستواك ودروسك...</span>
+          </div>
+        </div>
+        <!-- 2. Hero Card Skeleton -->
+        <div class="mg-skel-hero-card">
+          <div class="mg-skeleton-shimmer" style="width: 130px; height: 22px; border-radius: 999px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 78%; height: 24px; border-radius: 8px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 55%; height: 14px; border-radius: 6px;"></div>
+          <div class="mg-skeleton-shimmer" style="width: 100%; height: 10px; border-radius: 999px; margin-top: 4px;"></div>
+          <div class="mg-skel-hero-bottom">
+            <div class="mg-skeleton-shimmer" style="width: 70px; height: 14px; border-radius: 6px;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 110px; height: 38px; border-radius: 14px;"></div>
+          </div>
+        </div>
+        <!-- 3. Stat Cards Skeleton -->
+        <div class="mg-skel-stats-grid">
+          <div class="mg-skel-stat-box">
+            <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 32px; height: 20px; border-radius: 6px;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 60px; height: 10px; border-radius: 4px;"></div>
+          </div>
+          <div class="mg-skel-stat-box">
+            <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 32px; height: 20px; border-radius: 6px;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 60px; height: 10px; border-radius: 4px;"></div>
+          </div>
+          <div class="mg-skel-stat-box">
+            <div class="mg-skeleton-shimmer" style="width: 38px; height: 38px; border-radius: 50%;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 42px; height: 20px; border-radius: 6px;"></div>
+            <div class="mg-skeleton-shimmer" style="width: 50px; height: 10px; border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
 
       <!-- 1. User Greeting & Monogram -->
       <div class="greeting-section">
@@ -14137,8 +14269,19 @@
         }
       } catch (e) {
         console.warn('hydrateHomeFromCacheSync error:', e);
+      } finally {
+        if (typeof window.hideHomeSkeleton === 'function') window.hideHomeSkeleton();
       }
     }
+
+    window.showHomeSkeleton = function() {
+      const skel = document.getElementById('home-skeleton-loading');
+      if (skel) skel.style.display = 'flex';
+    };
+    window.hideHomeSkeleton = function() {
+      const skel = document.getElementById('home-skeleton-loading');
+      if (skel) skel.style.display = 'none';
+    };
 
     let isSyncingHomeProgress = false;
     async function syncHomeLearningProgress() {
@@ -14389,6 +14532,7 @@
         console.warn('syncHomeLearningProgress error:', e);
       } finally {
         isSyncingHomeProgress = false;
+        if (typeof window.hideHomeSkeleton === 'function') window.hideHomeSkeleton();
       }
     }
 

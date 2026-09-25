@@ -31,7 +31,7 @@
     var subtext = document.getElementById('mg-loader-subtext');
     var slowBox = document.getElementById('mg-slow-notice');
     if (subtext) {
-      subtext.textContent = 'ثواني وبنكمّل معاك...';
+      subtext.textContent = 'النت بطيء شوية، ثواني وبنكمّل...';
     }
     if (slowBox) {
       slowBox.style.display = 'inline-flex';

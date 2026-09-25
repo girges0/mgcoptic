@@ -1,6 +1,7 @@
 /**
- * MG COPTIC - Premium Parchment Preloader & Network Handler
- * Eliminates blank/black screen completely with solid theme background.
+ * MG COPTIC - Universal Skeleton Shimmer Loading & Minimal Spinner
+ * Industry-standard skeleton architecture matching Duolingo, Apple & YouTube.
+ * Eliminates blank screens & content jumping with smooth ivory-gold shimmer wave.
  */
 
 #mg-preloader {
@@ -14,16 +15,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-family: 'Cairo', system-ui, -apple-system, sans-serif;
   direction: rtl;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition: opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.38s ease;
   user-select: none;
   -webkit-user-select: none;
-  padding: 20px;
+  padding: 14px 16px 40px;
   box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 #mg-preloader.loaded {
@@ -32,99 +36,225 @@
   pointer-events: none;
 }
 
-.mg-preloader-content {
+/* Master Skeleton Container */
+.mg-skeleton-screen {
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  max-width: 340px;
-  width: 100%;
+  gap: 16px;
+  animation: mgSkelFadeIn 0.3s ease-out;
 }
 
-/* الشعار داخل شاشة التحميل */
-.mg-loader-logo-wrap {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 20px;
+@keyframes mgSkelFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 1. Minimal Spinner & Live Status Indicator */
+.mg-skeleton-header-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  justify-content: space-between;
+  background: rgba(255, 253, 249, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(217, 201, 160, 0.45);
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 16px rgba(38, 25, 18, 0.04);
+  margin-bottom: 2px;
 }
 
-.mg-loader-logo-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  animation: mgLogoPulse 2.2s ease-in-out infinite alternate;
-  filter: drop-shadow(0 4px 12px rgba(107, 21, 48, 0.15));
-}
-
-@keyframes mgLogoPulse {
-  0% { transform: scale(0.96); opacity: 0.9; }
-  100% { transform: scale(1.04); opacity: 1; }
-}
-
-/* حلقة التحميل الدائرية */
-.mg-spinner-wrap {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 16px;
+.mg-skeleton-status-wrap {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
-.mg-spinner {
-  width: 100%;
-  height: 100%;
-  border: 3.5px solid rgba(107, 21, 48, 0.12);
-  border-top-color: #6B1530;
-  border-right-color: #B8892E;
+.mg-minimal-spinner {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
+  border: 2.5px solid rgba(140, 36, 48, 0.15);
+  border-top-color: #8C2430;
   animation: mgSpin 0.75s linear infinite;
-  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 @keyframes mgSpin {
   to { transform: rotate(360deg); }
 }
 
-/* نصوص التحميل */
-.mg-loading-text {
-  font-size: 1.05rem;
-  font-weight: 800;
+.mg-skeleton-status-title {
+  font-size: 0.88rem;
+  font-weight: 700;
   color: #261912;
-  margin-bottom: 6px;
-  font-family: 'Cairo', sans-serif;
   letter-spacing: -0.2px;
 }
 
-.mg-loading-subtext {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #6E5B4F;
-  font-family: 'Tajawal', sans-serif;
-  transition: all 0.3s ease;
-  min-height: 22px;
+.mg-skeleton-logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* رسالة تنبيه عند ضعف الإنترنت */
+.mg-skeleton-logo-badge img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.mg-skeleton-brand-text {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #8C2430;
+  letter-spacing: 0.5px;
+}
+
+/* 2. Shimmer Effect Core (Ivory & Gold Shimmer Wave) */
+.mg-skeleton-shimmer,
+.lb-skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(217, 201, 160, 0.28) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(217, 201, 160, 0.28) 100%);
+  background-size: 200% 100%;
+  animation: mgSkeletonShimmer 1.5s infinite linear;
+  border-radius: 8px;
+}
+
+@keyframes mgSkeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 3. Skeleton Topbar Mockup */
+.mg-skel-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 2px 8px;
+}
+
+.mg-skel-topbar-chips {
+  display: flex;
+  gap: 8px;
+}
+
+/* 4. Skeleton Greeting Section */
+.mg-skel-greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 4px;
+}
+
+.mg-skel-greeting-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+/* 5. Skeleton 3 Stat Cards Row */
+.mg-skel-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.mg-skel-stat-box {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.45);
+  border-radius: 18px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(38, 25, 18, 0.03);
+}
+
+/* 6. Skeleton Hero Lesson Banner Card */
+.mg-skel-hero-card {
+  background: #FFFDF9;
+  border: 1px solid rgba(217, 201, 160, 0.5);
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(38, 25, 18, 0.04);
+}
+
+.mg-skel-hero-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+/* 7. Skeleton 7-Day Streak Challenge Card */
+.mg-skel-streak-card {
+  background: #FAF6E9;
+  border: 1.5px solid #EAE0C8;
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 14px rgba(38, 25, 18, 0.03);
+}
+
+.mg-skel-streak-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mg-skel-streak-days-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background: rgba(234, 224, 200, 0.25);
+  border-radius: 16px;
+}
+
+.mg-skel-streak-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(217, 201, 160, 0.5);
+}
+
+/* 8. Skeleton Today's Goal Card */
+.mg-skel-goal-card {
+  background: #FFFDF9;
+  border: 1px solid #EAE0C8;
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(38, 25, 18, 0.03);
+}
+
+/* Network Slow Notice */
 .mg-slow-notice {
-  margin-top: 10px;
-  font-size: 0.84rem;
+  margin-top: 4px;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #8C2438;
   background: rgba(107, 21, 48, 0.08);
   border: 1px solid rgba(184, 137, 46, 0.25);
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 20px;
   animation: mgFadeIn 0.3s ease;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  align-self: center;
 }
 
 @keyframes mgFadeIn {
@@ -132,7 +262,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* صندوق الخطأ عند انقطاع الاتصال أو بطء الشبكة الشديد */
+/* Error Box for Offline or Heavy Timeout */
 .mg-loader-error {
   display: none;
   flex-direction: column;
@@ -140,6 +270,8 @@
   text-align: center;
   padding: 24px 20px;
   width: 100%;
+  max-width: 420px;
+  margin: 40px auto;
   background: #FAF4E9;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(38, 25, 18, 0.08);
@@ -199,4 +331,12 @@
 .mg-btn-retry:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #4A0E21;
+}
+
+/* Home Section In-App Dynamic Skeleton (Reusable) */
+.home-skeleton-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
 }
