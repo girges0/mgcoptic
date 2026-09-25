@@ -51,6 +51,59 @@
     }
   }
 
+  // ─── Hardware Model to Commercial Name Dictionary ──────────
+  const HARDWARE_MODEL_DICT = {
+    '23117RA68G': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro 4G' },
+    '23117RA68I': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro' },
+    '2312DRA50G': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '2312DRA50C': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '2312DRA50I': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '23124RA7EO': { brand: 'Xiaomi', model: 'Redmi Note 13 4G' },
+    '23129RAA4G': { brand: 'Xiaomi', model: 'Redmi Note 13 5G' },
+    '2311DRK48G': { brand: 'POCO', model: 'POCO X6 Pro 5G' },
+    '23122PCD1G': { brand: 'POCO', model: 'POCO X6 5G' },
+    '23049PCD8G': { brand: 'POCO', model: 'POCO F5 5G' },
+    '24053PY09G': { brand: 'POCO', model: 'POCO F6 5G' },
+    '24069PC21G': { brand: 'POCO', model: 'POCO F6 Pro' },
+    '2201116SG':  { brand: 'Xiaomi', model: 'Redmi Note 11 Pro' },
+    '2201116SR':  { brand: 'Xiaomi', model: 'Redmi Note 11 Pro' },
+    '2201117TY':  { brand: 'Xiaomi', model: 'Redmi Note 11' },
+    '22101316G':  { brand: 'Xiaomi', model: 'Redmi Note 12 Pro 5G' },
+    '23021RAAEG': { brand: 'Xiaomi', model: 'Redmi Note 12 4G' },
+    '23028RA60G': { brand: 'Xiaomi', model: 'Redmi Note 12' },
+    '2109119DG':  { brand: 'Xiaomi', model: 'Xiaomi 11 Lite 5G NE' },
+    '2201123G':   { brand: 'Xiaomi', model: 'Xiaomi 12' },
+    '2203129G':   { brand: 'Xiaomi', model: 'Xiaomi 12 Pro' },
+    '22071212AG': { brand: 'Xiaomi', model: 'Xiaomi 12T' },
+    '22081212UG': { brand: 'Xiaomi', model: 'Xiaomi 12T Pro' },
+    '2306EPN60G': { brand: 'Xiaomi', model: 'Xiaomi 13T' },
+    '23078PND5G': { brand: 'Xiaomi', model: 'Xiaomi 13T Pro' },
+    '2407FPN8EG': { brand: 'Xiaomi', model: 'Xiaomi 14T' },
+    '2407FPN8ER': { brand: 'Xiaomi', model: 'Xiaomi 14T Pro' },
+    '23127PN0CG': { brand: 'Xiaomi', model: 'Xiaomi 14' },
+    '24030PN60G': { brand: 'Xiaomi', model: 'Xiaomi 14 Ultra' },
+    'SM-S928B': { brand: 'Samsung', model: 'Galaxy S24 Ultra' },
+    'SM-S926B': { brand: 'Samsung', model: 'Galaxy S24+' },
+    'SM-S921B': { brand: 'Samsung', model: 'Galaxy S24' },
+    'SM-S918B': { brand: 'Samsung', model: 'Galaxy S23 Ultra' },
+    'SM-S916B': { brand: 'Samsung', model: 'Galaxy S23+' },
+    'SM-S911B': { brand: 'Samsung', model: 'Galaxy S23' },
+    'SM-A556B': { brand: 'Samsung', model: 'Galaxy A55 5G' },
+    'SM-A546B': { brand: 'Samsung', model: 'Galaxy A54 5G' },
+    'SM-A536B': { brand: 'Samsung', model: 'Galaxy A53 5G' },
+    'SM-A528B': { brand: 'Samsung', model: 'Galaxy A52s 5G' },
+    'SM-A525F': { brand: 'Samsung', model: 'Galaxy A52' },
+    'SM-A356B': { brand: 'Samsung', model: 'Galaxy A35 5G' },
+    'SM-A346B': { brand: 'Samsung', model: 'Galaxy A34 5G' },
+    'SM-A256B': { brand: 'Samsung', model: 'Galaxy A25 5G' },
+    'SM-A245F': { brand: 'Samsung', model: 'Galaxy A24' },
+    'SM-A155F': { brand: 'Samsung', model: 'Galaxy A15 4G' },
+    'SM-A156B': { brand: 'Samsung', model: 'Galaxy A15 5G' },
+    'SM-A145F': { brand: 'Samsung', model: 'Galaxy A14' },
+    'SM-A057F': { brand: 'Samsung', model: 'Galaxy A05s' },
+    'SM-A055F': { brand: 'Samsung', model: 'Galaxy A05' }
+  };
+
   // ─── User Agent Parsing ───────────────────────────────────
   function parseUserAgent() {
     const ua = navigator.userAgent || '';
@@ -126,29 +179,55 @@
         // Clean up known prefixes
         rawModel = rawModel.replace(/^Linux;\s*/i, '').replace(/^U;\s*/i, '').replace(/^Android\s*\d+[\.\d]*;\s*/i, '');
         
-        // Try to extract manufacturer
-        const knownBrands = [
-          'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'Huawei', 'HONOR', 'Oppo', 'Vivo', 
-          'OnePlus', 'Realme', 'Motorola', 'LG', 'Sony', 'Nokia', 'Google', 'Pixel',
-          'Tecno', 'Infinix', 'Itel', 'ZTE', 'Lenovo', 'Asus', 'Nothing', 'Fairphone'
-        ];
-        
-        for (const brand of knownBrands) {
-          if (rawModel.toLowerCase().startsWith(brand.toLowerCase())) {
-            result.manufacturer = brand;
-            result.model = rawModel;
-            break;
+        // 1. فحص القاموس المباشر (مثل 23117RA68G -> Xiaomi Redmi Note 13 Pro)
+        if (HARDWARE_MODEL_DICT[rawModel]) {
+          result.manufacturer = HARDWARE_MODEL_DICT[rawModel].brand;
+          result.model = `${HARDWARE_MODEL_DICT[rawModel].model} (${rawModel})`;
+        } else {
+          // 2. مطابقة بالبادئة
+          for (const [k, v] of Object.entries(HARDWARE_MODEL_DICT)) {
+            if (rawModel.startsWith(k.substring(0, 7)) && rawModel.length >= 7) {
+              result.manufacturer = v.brand;
+              result.model = `${v.model} (${rawModel})`;
+              break;
+            }
           }
         }
-        
-        // Samsung specific patterns
+
+        // 3. فحص أسماء الشركات المعروفة
+        if (!result.manufacturer) {
+          const knownBrands = [
+            'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'Huawei', 'HONOR', 'Oppo', 'Vivo', 
+            'OnePlus', 'Realme', 'Motorola', 'LG', 'Sony', 'Nokia', 'Google', 'Pixel',
+            'Tecno', 'Infinix', 'Itel', 'ZTE', 'Lenovo', 'Asus', 'Nothing', 'Fairphone'
+          ];
+          for (const brand of knownBrands) {
+            if (rawModel.toLowerCase().startsWith(brand.toLowerCase())) {
+              result.manufacturer = brand;
+              result.model = rawModel;
+              break;
+            }
+          }
+        }
+
+        // 4. نمط هواتف شاومي وريدمي بالأكواد الرقمية (مثل 23117RA68G)
+        if (!result.manufacturer && /^\d{4,5}[A-Z]{1,3}\d{1,4}[A-Z0-9]/i.test(rawModel)) {
+          result.manufacturer = 'Xiaomi';
+          result.model = `Redmi (${rawModel})`;
+        }
+
+        // 5. نمط هواتف سامسونج جالاكسي (SM-)
         if (!result.manufacturer && /^SM-/i.test(rawModel)) {
           result.manufacturer = 'Samsung';
-          result.model = rawModel;
+          const match = rawModel.match(/^SM-([A-Z])(\d{1,2})/i);
+          const series = match ? match[1].toUpperCase() : '';
+          const num = match ? match[2] : '';
+          const friendly = series === 'S' ? `Galaxy S${num}` : (series === 'A' ? `Galaxy A${num}` : `Galaxy ${series}-Series`);
+          result.model = `${friendly} (${rawModel})`;
         }
-        
-        // If no brand detected, use the full model string
-        if (!result.manufacturer && rawModel.length > 1 && rawModel.length < 60) {
+
+        // 6. في حال لم يتم التعرف على الشركة، حفظ الموديل كما هو
+        if (!result.model && rawModel.length > 1 && rawModel.length < 60) {
           result.model = rawModel;
         }
       }

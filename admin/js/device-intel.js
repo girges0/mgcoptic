@@ -107,15 +107,182 @@
     });
   }
 
-  function getDeviceDisplayName(device) {
-    if (device.model && device.model.length > 0) {
-      return device.model;
+  // ─── Hardware Model to Commercial Name Dictionary ──────────
+  const HARDWARE_MODEL_DICT = {
+    // Xiaomi / Redmi / POCO
+    '23117RA68G': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro 4G' },
+    '23117RA68I': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro' },
+    '2312DRA50G': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '2312DRA50C': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '2312DRA50I': { brand: 'Xiaomi', model: 'Redmi Note 13 Pro+ 5G' },
+    '23124RA7EO': { brand: 'Xiaomi', model: 'Redmi Note 13 4G' },
+    '23129RAA4G': { brand: 'Xiaomi', model: 'Redmi Note 13 5G' },
+    '2311DRK48G': { brand: 'POCO', model: 'POCO X6 Pro 5G' },
+    '23122PCD1G': { brand: 'POCO', model: 'POCO X6 5G' },
+    '23049PCD8G': { brand: 'POCO', model: 'POCO F5 5G' },
+    '24053PY09G': { brand: 'POCO', model: 'POCO F6 5G' },
+    '24069PC21G': { brand: 'POCO', model: 'POCO F6 Pro' },
+    '2201116SG':  { brand: 'Xiaomi', model: 'Redmi Note 11 Pro' },
+    '2201116SR':  { brand: 'Xiaomi', model: 'Redmi Note 11 Pro' },
+    '2201117TY':  { brand: 'Xiaomi', model: 'Redmi Note 11' },
+    '22101316G':  { brand: 'Xiaomi', model: 'Redmi Note 12 Pro 5G' },
+    '23021RAAEG': { brand: 'Xiaomi', model: 'Redmi Note 12 4G' },
+    '23028RA60G': { brand: 'Xiaomi', model: 'Redmi Note 12' },
+    '2109119DG':  { brand: 'Xiaomi', model: 'Xiaomi 11 Lite 5G NE' },
+    '2201123G':   { brand: 'Xiaomi', model: 'Xiaomi 12' },
+    '2203129G':   { brand: 'Xiaomi', model: 'Xiaomi 12 Pro' },
+    '22071212AG': { brand: 'Xiaomi', model: 'Xiaomi 12T' },
+    '22081212UG': { brand: 'Xiaomi', model: 'Xiaomi 12T Pro' },
+    '2306EPN60G': { brand: 'Xiaomi', model: 'Xiaomi 13T' },
+    '23078PND5G': { brand: 'Xiaomi', model: 'Xiaomi 13T Pro' },
+    '2407FPN8EG': { brand: 'Xiaomi', model: 'Xiaomi 14T' },
+    '2407FPN8ER': { brand: 'Xiaomi', model: 'Xiaomi 14T Pro' },
+    '23127PN0CG': { brand: 'Xiaomi', model: 'Xiaomi 14' },
+    '24030PN60G': { brand: 'Xiaomi', model: 'Xiaomi 14 Ultra' },
+
+    // Samsung Galaxy Flagships & A-Series
+    'SM-S928B': { brand: 'Samsung', model: 'Galaxy S24 Ultra' },
+    'SM-S928U': { brand: 'Samsung', model: 'Galaxy S24 Ultra' },
+    'SM-S926B': { brand: 'Samsung', model: 'Galaxy S24+' },
+    'SM-S921B': { brand: 'Samsung', model: 'Galaxy S24' },
+    'SM-S918B': { brand: 'Samsung', model: 'Galaxy S23 Ultra' },
+    'SM-S918U': { brand: 'Samsung', model: 'Galaxy S23 Ultra' },
+    'SM-S916B': { brand: 'Samsung', model: 'Galaxy S23+' },
+    'SM-S911B': { brand: 'Samsung', model: 'Galaxy S23' },
+    'SM-S908B': { brand: 'Samsung', model: 'Galaxy S22 Ultra' },
+    'SM-S906B': { brand: 'Samsung', model: 'Galaxy S22+' },
+    'SM-S901B': { brand: 'Samsung', model: 'Galaxy S22' },
+    'SM-G998B': { brand: 'Samsung', model: 'Galaxy S21 Ultra' },
+    'SM-G996B': { brand: 'Samsung', model: 'Galaxy S21+' },
+    'SM-G991B': { brand: 'Samsung', model: 'Galaxy S21' },
+    'SM-G780G': { brand: 'Samsung', model: 'Galaxy S20 FE' },
+    'SM-G781B': { brand: 'Samsung', model: 'Galaxy S20 FE 5G' },
+    'SM-S711B': { brand: 'Samsung', model: 'Galaxy S23 FE' },
+    'SM-S721B': { brand: 'Samsung', model: 'Galaxy S24 FE' },
+    'SM-A556B': { brand: 'Samsung', model: 'Galaxy A55 5G' },
+    'SM-A546B': { brand: 'Samsung', model: 'Galaxy A54 5G' },
+    'SM-A536B': { brand: 'Samsung', model: 'Galaxy A53 5G' },
+    'SM-A528B': { brand: 'Samsung', model: 'Galaxy A52s 5G' },
+    'SM-A525F': { brand: 'Samsung', model: 'Galaxy A52' },
+    'SM-A515F': { brand: 'Samsung', model: 'Galaxy A51' },
+    'SM-A356B': { brand: 'Samsung', model: 'Galaxy A35 5G' },
+    'SM-A346B': { brand: 'Samsung', model: 'Galaxy A34 5G' },
+    'SM-A336B': { brand: 'Samsung', model: 'Galaxy A33 5G' },
+    'SM-A256B': { brand: 'Samsung', model: 'Galaxy A25 5G' },
+    'SM-A245F': { brand: 'Samsung', model: 'Galaxy A24' },
+    'SM-A235F': { brand: 'Samsung', model: 'Galaxy A23' },
+    'SM-A155F': { brand: 'Samsung', model: 'Galaxy A15 4G' },
+    'SM-A156B': { brand: 'Samsung', model: 'Galaxy A15 5G' },
+    'SM-A145F': { brand: 'Samsung', model: 'Galaxy A14' },
+    'SM-A146P': { brand: 'Samsung', model: 'Galaxy A14 5G' },
+    'SM-A135F': { brand: 'Samsung', model: 'Galaxy A13' },
+    'SM-A127F': { brand: 'Samsung', model: 'Galaxy A12 Nacho' },
+    'SM-A125F': { brand: 'Samsung', model: 'Galaxy A12' },
+    'SM-A057F': { brand: 'Samsung', model: 'Galaxy A05s' },
+    'SM-A055F': { brand: 'Samsung', model: 'Galaxy A05' },
+    'SM-A047F': { brand: 'Samsung', model: 'Galaxy A04s' },
+    'SM-A045F': { brand: 'Samsung', model: 'Galaxy A04' },
+    'SM-M546B': { brand: 'Samsung', model: 'Galaxy M54 5G' },
+    'SM-M346B': { brand: 'Samsung', model: 'Galaxy M34 5G' },
+    'SM-F946B': { brand: 'Samsung', model: 'Galaxy Z Fold5' },
+    'SM-F956B': { brand: 'Samsung', model: 'Galaxy Z Fold6' },
+    'SM-F731B': { brand: 'Samsung', model: 'Galaxy Z Flip5' },
+    'SM-F741B': { brand: 'Samsung', model: 'Galaxy Z Flip6' }
+  };
+
+  function resolveDeviceBrandAndModel(device) {
+    let brand = (device.manufacturer || '').trim();
+    let rawModel = (device.model || '').trim();
+    let baseCode = rawModel;
+
+    // 1. Direct match
+    if (HARDWARE_MODEL_DICT[baseCode]) {
+      const entry = HARDWARE_MODEL_DICT[baseCode];
+      return {
+        brand: entry.brand,
+        model: `${entry.model} (${baseCode})`,
+        displayName: `${entry.brand} ${entry.model}`
+      };
     }
-    if (device.manufacturer) return device.manufacturer;
-    if (device.os_name === 'Windows') return 'Windows PC';
-    if (device.os_name === 'macOS') return 'Mac';
-    if (device.os_name === 'Linux') return 'Linux PC';
-    return device.device_type === 'mobile' ? 'جهاز محمول' : (device.device_type === 'tablet' ? 'جهاز لوحي' : 'جهاز');
+
+    // 2. Prefix match (first 7 chars)
+    for (const [k, v] of Object.entries(HARDWARE_MODEL_DICT)) {
+      if (baseCode.startsWith(k.substring(0, 7)) && baseCode.length >= 7) {
+        return {
+          brand: v.brand,
+          model: `${v.model} (${baseCode})`,
+          displayName: `${v.brand} ${v.model}`
+        };
+      }
+    }
+
+    // 3. Xiaomi / Redmi pattern: \d{4,5}[A-Z]{1,3}\d{1,4}[A-Z0-9]
+    if (/^\d{4,5}[A-Z]{1,3}\d{1,4}[A-Z0-9]/i.test(baseCode)) {
+      brand = brand || 'Xiaomi';
+      return {
+        brand: brand,
+        model: `Redmi (${baseCode})`,
+        displayName: `${brand} Redmi (${baseCode})`
+      };
+    }
+
+    // 4. Samsung Galaxy pattern: SM-[A-Z]\d+
+    if (/^SM-([A-Z])(\d+)/i.test(baseCode)) {
+      const match = baseCode.match(/^SM-([A-Z])(\d{1,2})/i);
+      brand = 'Samsung';
+      const series = match ? match[1].toUpperCase() : '';
+      const num = match ? match[2] : '';
+      const friendlySeries = series === 'S' ? `Galaxy S${num}` : (series === 'A' ? `Galaxy A${num}` : `Galaxy ${series}-Series`);
+      return {
+        brand: brand,
+        model: `${friendlySeries} (${baseCode})`,
+        displayName: `Samsung ${friendlySeries}`
+      };
+    }
+
+    // 5. Apple iPhone screen matching
+    if ((device.os_name === 'iOS' || device.platform === 'ios') && (!rawModel || rawModel === 'iPhone')) {
+      brand = 'Apple';
+      const w = device.screen_width || 0;
+      const h = device.screen_height || 0;
+      let ipModel = 'iPhone';
+      if ((w === 430 && h === 932) || (w === 932 && h === 430)) ipModel = 'iPhone 15/16 Pro Max';
+      else if ((w === 393 && h === 852) || (w === 852 && h === 393)) ipModel = 'iPhone 15/16 Pro';
+      else if ((w === 390 && h === 844) || (w === 844 && h === 390)) ipModel = 'iPhone 13/14';
+      else if ((w === 428 && h === 926) || (w === 926 && h === 428)) ipModel = 'iPhone 13/14 Pro Max';
+      else if ((w === 375 && h === 812) || (w === 812 && h === 375)) ipModel = 'iPhone X / 11 Pro';
+      else if ((w === 414 && h === 896) || (w === 896 && h === 414)) ipModel = 'iPhone 11 / XR';
+      else if ((w === 375 && h === 667) || (w === 667 && h === 375)) ipModel = 'iPhone SE';
+      return {
+        brand: brand,
+        model: ipModel,
+        displayName: `Apple ${ipModel}`
+      };
+    }
+
+    // 6. Windows / macOS / Linux
+    if (device.os_name === 'Windows') {
+      return { brand: 'Microsoft', model: 'Windows PC', displayName: 'Windows PC' };
+    }
+    if (device.os_name === 'macOS') {
+      return { brand: 'Apple', model: 'Mac', displayName: 'Apple Mac' };
+    }
+    if (device.os_name === 'Linux') {
+      return { brand: 'Linux', model: 'Linux PC', displayName: 'Linux PC' };
+    }
+
+    // 7. General Fallback
+    const disp = rawModel ? (brand && !rawModel.toLowerCase().includes(brand.toLowerCase()) ? `${brand} ${rawModel}` : rawModel) : (brand || (device.device_type === 'mobile' ? 'هاتف محمول' : 'جهاز'));
+    return {
+      brand: brand || '-',
+      model: rawModel || '-',
+      displayName: disp
+    };
+  }
+
+  function getDeviceDisplayName(device) {
+    const info = resolveDeviceBrandAndModel(device);
+    return info.displayName;
   }
 
   // ─── Load Devices from Supabase ─────────────────────────────
@@ -453,7 +620,8 @@
     if (!device) return;
 
     const status = getDeviceStatus(device.last_seen_at);
-    const deviceName = getDeviceDisplayName(device);
+    const resolved = resolveDeviceBrandAndModel(device);
+    const deviceName = resolved.displayName;
     const icon = getDeviceIcon(device.device_type);
     const osIcon = getOsIcon(device.os_name);
 
@@ -483,11 +651,11 @@
               </div>
               <div class="detail-row">
                 <span class="detail-label">${DEVICE_ICONS.info} الشركة المصنعة</span>
-                <span class="detail-value">${esc(device.manufacturer || '-')}</span>
+                <span class="detail-value">${esc(resolved.brand || '-')}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">${DEVICE_ICONS.layers} الموديل</span>
-                <span class="detail-value">${esc(device.model || '-')}</span>
+                <span class="detail-value">${esc(resolved.model || '-')}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">${DEVICE_ICONS.globe} المنصة</span>
