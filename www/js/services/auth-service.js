@@ -286,7 +286,13 @@
         return;
       }
       try {
-        const redirectUrl = window.location.origin + window.location.pathname.replace(/\/(login|signup)\.html$/, '/index.html');
+        let redirectUrl = window.location.origin + window.location.pathname;
+        if (redirectUrl.endsWith('/login.html') || redirectUrl.endsWith('/signup.html')) {
+          redirectUrl = redirectUrl.replace(/\/(login|signup)\.html$/, '/index.html');
+        }
+        if (redirectUrl.startsWith('file://')) {
+          redirectUrl = 'https://girges0.github.io/mgcoptic/index.html';
+        }
         const { data, error } = await sb.auth.signInWithOAuth({
           provider: 'google',
           options: {
