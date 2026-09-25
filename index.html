@@ -10995,10 +10995,10 @@
           <div class="duo-streak-top-row">
             <div class="duo-streak-text-side">
               <div class="duo-streak-title" id="duo-streak-title">
-                <span>حماسة يوم واحد</span>
-                <span class="duo-streak-badge">تحدي ٧ أيام</span>
+                <span>حماستك يوم واحد!</span>
+                <span class="duo-streak-badge">تحدي الـ ٧ أيام</span>
               </div>
-              <div class="duo-streak-desc" id="duo-streak-desc">هذه أطول حماسة وصلت إليها على الإطلاق! أكمل 7 أيام لتكسب +10 XP وشحن القلوب.</div>
+              <div class="duo-streak-desc" id="duo-streak-desc">عاش يا بطل! كمّل ٧ أيام ورا بعض عشان تكسب +10 XP وتشحن كل قلوبك ببلاش.</div>
             </div>
             <!-- Clean Minimalist SVG Flame Matching User Reference -->
             <div class="duo-streak-flame-wrap">
@@ -11063,7 +11063,7 @@
                 <span class="duo-day-letter">يوم ٧</span>
                 <div class="duo-day-circle-wrap">
                   <div class="duo-day-circle"><span class="duo-day-num">٧</span></div>
-                  <div class="duo-day-reward-badge" title="جائزة اليوم السابع: +10% XP وشحن القلوب">
+                  <div class="duo-day-reward-badge" title="جايزة اليوم السابع: +10 XP وشحن كل القلوب">
                     <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
                       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
@@ -11078,15 +11078,15 @@
             <div class="duo-streak-reward-hint" id="duo-streak-reward-hint">
               <div class="streak-reward-hint-right">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <span>جائزة الـ ٧ أيام: <strong>+10% XP وشحن القلوب مجاناً</strong></span>
+                <span>جايزة الـ ٧ أيام: <strong>+10 XP وشحن كل قلوبك ببلاش</strong></span>
               </div>
               <div class="streak-reward-chip-left" id="streak-reward-chip-left">
-                متبقي ٦ أيام
+                فاضلك ٦ أيام
               </div>
             </div>
             <button type="button" class="duo-claim-reward-btn" id="duo-claim-reward-btn" style="display:none;" onclick="claimWeeklyStreakReward()">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <span>استلم الجائزة الكبرى (+10% XP & ❤️)</span>
+              <span>استلم جايزتك دلوقتي (+10 XP & ❤️)</span>
             </button>
           </div>
         </div>
@@ -14487,22 +14487,22 @@
       const claimBtn = document.getElementById('duo-claim-reward-btn');
       const hintEl = document.getElementById('duo-streak-reward-hint');
 
-      // Title formatting in Arabic
+      // Title formatting in Egyptian Arabic
       if (titleEl) {
-        let label = 'حماسة يوم واحد';
-        if (streakDays === 2) label = 'حماسة يومين';
-        else if (streakDays >= 3 && streakDays <= 10) label = `حماسة ${streakDays} أيام`;
-        else if (streakDays > 10) label = `حماسة ${streakDays} يوماً`;
-        titleEl.innerHTML = `<span>${label}</span><span class="duo-streak-badge">تحدي ٧ أيام</span>`;
+        let label = 'حماستك يوم واحد!';
+        if (streakDays === 2) label = 'حماستك يومين!';
+        else if (streakDays >= 3 && streakDays <= 10) label = `حماستك ${streakDays} أيام!`;
+        else if (streakDays > 10) label = `حماستك ${streakDays} يوم!`;
+        titleEl.innerHTML = `<span>${label}</span><span class="duo-streak-badge">تحدي الـ ٧ أيام</span>`;
       }
 
       if (descEl) {
         if (cycleDay === 7 && !isClaimed) {
-          descEl.textContent = 'أكملت 7 أيام متتالية بنجاح! مبروك يا بطل، جائزتك الكبرى جاهزة للاستلام الآن!';
+          descEl.textContent = 'مبروك يا وحش! كملت ٧ أيام ورا بعض، جايزتك جاهزة تقدر تستلمها دلوقتي!';
         } else if (cycleDay === 7 && isClaimed) {
-          descEl.textContent = 'تم استلام مكافأة الأسبوع! استمر في الحفاظ على شعلتك غداً لتبدأ دورة جديدة.';
+          descEl.textContent = 'استلمت جايزة الأسبوع خلاص! مكمّل معانا بكرة عشان تبدأ أسبوع جديد بحماس.';
         } else {
-          descEl.textContent = 'هذه أطول حماسة وصلت إليها على الإطلاق! أكمل 7 أيام لتكسب +10 XP وشحن القلوب.';
+          descEl.textContent = 'عاش يا بطل! كمّل ٧ أيام ورا بعض عشان تكسب +10 XP وتشحن كل قلوبك ببلاش.';
         }
       }
 
@@ -14538,7 +14538,7 @@
           let rewardBadge = '';
           if (isDay7) {
             rewardBadge = `
-              <div class="duo-day-reward-badge" title="جائزة اليوم السابع: +10% XP وشحن القلوب">
+              <div class="duo-day-reward-badge" title="جايزة اليوم السابع: +10 XP وشحن كل القلوب">
                 <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
@@ -14577,14 +14577,22 @@
           const left = 7 - cycleDay;
           const chipEl = document.getElementById('streak-reward-chip-left');
           if (chipEl) {
-            if (left > 0) {
-              chipEl.textContent = `متبقي ${left} أيام`;
+            if (left === 1) {
+              chipEl.textContent = 'فاضلك يوم واحد بس!';
               chipEl.style.background = '#FFF3D1';
               chipEl.style.color = '#8C5E0E';
-            } else {
-              chipEl.textContent = `تم الاستلام بنجاح ✓`;
+            } else if (left > 1) {
+              chipEl.textContent = `فاضلك ${left} أيام`;
+              chipEl.style.background = '#FFF3D1';
+              chipEl.style.color = '#8C5E0E';
+            } else if (isClaimed) {
+              chipEl.textContent = 'استلمتها خلاص ✓';
               chipEl.style.background = '#E8F5E9';
               chipEl.style.color = '#2E7D32';
+            } else {
+              chipEl.textContent = 'جاهزة للاستلام! 🌟';
+              chipEl.style.background = '#FFF3D1';
+              chipEl.style.color = '#8C5E0E';
             }
           }
         }
@@ -14599,7 +14607,7 @@
       const milestoneKey = `cycle_${Math.floor((streakDays - 1) / 7)}_${data.lastDate}`;
       if (!data.claimedMilestones) data.claimedMilestones = [];
       if (data.claimedMilestones.includes(milestoneKey)) {
-        showToast('تم استلام هذه المكافأة بالفعل!');
+        showToast('استلمت جايزة الأسبوع دي قبل كده يا بطل!');
         return;
       }
 
@@ -14643,7 +14651,7 @@
             title: 'مبروك يا بطل الاستمرارية! 🌟',
             html: `
               <div style="font-size:0.95rem; line-height:1.6; color:#241B12; margin-top:8px;">
-                أكملت <strong>٧ أيام متتالية</strong> بنجاح من تعلّم وممارسة اللغة القبطية!<br>
+                عاش يا وحش! كملت <strong>٧ أيام ورا بعض</strong> في تعلّم القبطي!<br>
                 <div style="display:flex; justify-content:center; gap:12px; margin:16px 0; flex-wrap:wrap;">
                   <div style="background:#FFF9E6; border:1.5px solid #E6CA65; border-radius:14px; padding:10px 18px; font-weight:900; color:#8C5E0E; display:flex; align-items:center; gap:6px;">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="#F59E0B"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -14651,19 +14659,19 @@
                   </div>
                   <div style="background:#FDF2F4; border:1.5px solid #F5C6CB; border-radius:14px; padding:10px 18px; font-weight:900; color:#7D1D35; display:flex; align-items:center; gap:6px;">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="#E11D48"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    <span>شحن القلوب (5/5)</span>
+                    <span>شحن كل القلوب (5/5)</span>
                   </div>
                 </div>
-                تمت إضافة النقاط وملء قلوبك بالكامل (+10% XP وشحن القلوب). واصل حماسك يومياً لتتصدر قائمة الأبطال!
+                ضفنالك نقاط الـ XP وملينا قلوبك كلها على الآخر ببلاش. كمّل كل يوم عشان تفضل دايماً في الصدارة!
               </div>
             `,
             icon: 'success',
-            confirmButtonText: 'رائع، استمرارية مباركة!',
+            confirmButtonText: 'حبيبي، مكمّل بحماس! 🔥',
             confirmButtonColor: '#6B1530',
             backdrop: 'rgba(58, 8, 26, 0.45)'
           });
         } else {
-          showToast('مبروك! تم شحن القلوب (5/5) وإضافة 10 XP بنجاح!');
+          showToast('مبروك يا بطل! شحنا قلوبك كلها وضفنا 10 XP بنجاح!');
         }
 
         renderStreakWeeklyUI(data);
