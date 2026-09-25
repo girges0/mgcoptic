@@ -3991,26 +3991,24 @@
       color: var(--madder);
     }
 
-    /* ============ MODERN 7-DAY STREAK CARD ============ */
+    /* ============ SIMPLE & EYE-COMFORTABLE 7-DAY STREAK CARD ============ */
     .duo-streak-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(168, 130, 58, 0.18);
+      background: var(--parchment-card, #FAF6E9);
+      border: 1px solid rgba(168, 130, 58, 0.16);
       border-radius: 20px;
-      padding: 16px 18px 14px;
-      box-shadow: 0 4px 20px rgba(107, 21, 48, 0.04), 0 1px 3px rgba(36, 27, 18, 0.02);
+      padding: 18px 20px 16px;
+      box-shadow: 0 4px 18px rgba(36, 27, 18, 0.04);
       direction: rtl;
       text-align: right;
       width: 100%;
       box-sizing: border-box;
       position: relative;
-      overflow: hidden;
       margin-bottom: 8px;
-      transition: transform 0.22s var(--ease-float), box-shadow 0.22s, border-color 0.22s;
+      transition: transform 0.2s var(--ease-float), box-shadow 0.2s;
     }
 
     .duo-streak-card:hover {
-      box-shadow: 0 8px 26px rgba(107, 21, 48, 0.08);
-      border-color: rgba(168, 130, 58, 0.32);
+      box-shadow: 0 6px 22px rgba(36, 27, 18, 0.07);
     }
 
     .duo-streak-top-row {
@@ -4018,7 +4016,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .duo-streak-text-side {
@@ -4029,9 +4027,9 @@
 
     .duo-streak-title {
       font-family: var(--font-display, 'Cairo', sans-serif);
-      font-weight: 900;
-      font-size: clamp(1.05rem, 3.2vw, 1.22rem);
-      color: #1F1F1F;
+      font-weight: 800;
+      font-size: clamp(1.05rem, 3.2vw, 1.2rem);
+      color: var(--ink, #241B12);
       line-height: 1.25;
       display: flex;
       align-items: center;
@@ -4039,11 +4037,10 @@
     }
 
     .duo-streak-title .duo-streak-badge {
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 800;
       color: var(--madder, #6B1530);
       background: rgba(107, 21, 48, 0.08);
-      border: 1px solid rgba(107, 21, 48, 0.16);
       padding: 2px 9px;
       border-radius: 999px;
       display: inline-flex;
@@ -4051,16 +4048,16 @@
     }
 
     .duo-streak-desc {
-      font-size: clamp(0.76rem, 2.2vw, 0.84rem);
-      font-weight: 600;
+      font-size: clamp(0.76rem, 2.2vw, 0.83rem);
+      font-weight: 500;
       color: var(--ink-soft, #5A4A34);
       margin-top: 4px;
       line-height: 1.45;
     }
 
     .duo-streak-flame-wrap {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: #FDE8D7;
       color: #E06D1A;
@@ -4068,51 +4065,18 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(224, 109, 26, 0.12);
-      animation: duoFlameFloat 3s ease-in-out infinite;
     }
 
-    @keyframes duoFlameFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    /* Modern Connecting Progress Rail */
+    /* Clean, Eye-Comfortable Days Row */
     .duo-streak-days-container {
-      position: relative;
-      background: #F9F6F0;
-      border-radius: 18px;
-      padding: 12px 10px 14px;
-      border: 1px solid rgba(168, 130, 58, 0.16);
+      background: rgba(168, 130, 58, 0.06);
+      border-radius: 16px;
+      padding: 12px 8px 12px;
       width: 100%;
       box-sizing: border-box;
-      overflow: hidden;
-    }
-
-    .duo-streak-track-rail {
-      position: absolute;
-      top: 43px;
-      right: 28px;
-      left: 28px;
-      height: 3.5px;
-      background: rgba(168, 130, 58, 0.15);
-      border-radius: 999px;
-      z-index: 1;
-    }
-
-    .duo-streak-track-fill {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      background: linear-gradient(to left, var(--madder, #6B1530) 0%, var(--gold, #A8823A) 100%);
-      border-radius: 999px;
-      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .duo-streak-days-bar {
-      position: relative;
-      z-index: 2;
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
@@ -4141,13 +4105,13 @@
       color: #8C7A65;
       line-height: 1;
       white-space: nowrap;
-      transition: color 0.2s, font-weight 0.2s;
+      transition: color 0.2s;
     }
 
     .duo-day-col.completed .duo-day-letter,
     .duo-day-col.active-today .duo-day-letter {
       color: var(--madder, #6B1530);
-      font-weight: 900;
+      font-weight: 800;
     }
 
     .duo-day-circle-wrap {
@@ -4158,11 +4122,11 @@
     }
 
     .duo-day-circle {
-      width: 34px;
-      height: 34px;
+      width: 33px;
+      height: 33px;
       border-radius: 50%;
       background: #FFFFFF;
-      border: 1.5px solid rgba(168, 130, 58, 0.22);
+      border: 1px solid rgba(168, 130, 58, 0.18);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -4171,8 +4135,8 @@
       font-weight: 800;
       font-family: var(--font-display, 'Cairo', sans-serif);
       box-sizing: border-box;
-      box-shadow: 0 2px 6px rgba(36, 27, 18, 0.04);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 1px 4px rgba(36, 27, 18, 0.03);
+      transition: all 0.22s ease;
       position: relative;
     }
 
@@ -4182,90 +4146,63 @@
       font-weight: 800;
     }
 
-    /* Completed day circle (Royal Madder with White checkmark) */
+    /* Completed day circle (Gentle Madder with White checkmark) */
     .duo-day-col.completed .duo-day-circle {
-      background: linear-gradient(135deg, var(--madder, #6B1530) 0%, #4A0D20 100%);
-      border: 1.5px solid #FFE8A3;
+      background: var(--madder, #6B1530);
+      border: 1px solid #FFE8A3;
       color: #FFFFFF;
-      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.28);
-      animation: streakDayPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-      animation-delay: calc(var(--day-idx, 1) * 60ms);
-    }
-
-    @keyframes streakDayPop {
-      0% { transform: scale(0.7); opacity: 0.5; }
-      60% { transform: scale(1.15); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
+      box-shadow: 0 2px 8px rgba(107, 21, 48, 0.22);
     }
 
     .duo-day-col.completed .duo-day-circle svg {
       stroke: #FFFFFF;
-      stroke-width: 3.2;
+      stroke-width: 3;
     }
 
-    /* Today / Current Day: Visually distinct highlighted ring / pulsing border, slightly larger */
+    /* Today / Current Day: Soft warm ring, calming highlight */
     .duo-day-col.active-today .duo-day-circle {
       border: 2px solid var(--gold, #A8823A);
-      box-shadow: 0 0 0 3.5px rgba(212, 175, 55, 0.3), 0 4px 12px rgba(107, 21, 48, 0.25);
-      transform: scale(1.1);
-      animation: duoActivePulse 2s ease-in-out infinite;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.22), 0 3px 8px rgba(107, 21, 48, 0.18);
+      transform: scale(1.08);
     }
 
     .duo-day-col.active-today:not(.completed) .duo-day-circle {
       background: #FFFFFF;
-      border: 2px solid var(--gold, #A8823A);
       color: var(--gold, #A8823A);
     }
 
-    @keyframes duoActivePulse {
-      0%, 100% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4), 0 3px 8px rgba(107, 21, 48, 0.25);
-      }
-      50% {
-        transform: scale(1.16);
-        box-shadow: 0 0 0 5px rgba(212, 175, 55, 0.22), 0 4px 12px rgba(107, 21, 48, 0.32);
-      }
-    }
-
-    /* Day 7 Specifically: Luxury Grand Reward Tile */
+    /* Day 7 Specifically: Attached Reward Icon directly on the day marker */
     .duo-day-col.day-7-reward .duo-day-circle {
-      background: linear-gradient(135deg, #FFF9E6 0%, #FFE9B8 100%);
-      border: 1.5px solid #D4AF37;
+      background: #FFFDF5;
+      border: 1.5px solid var(--gold, #A8823A);
       color: #8C5E0E;
     }
 
     .duo-day-reward-badge {
       position: absolute;
-      top: -5px;
-      left: -5px;
-      width: 17px;
-      height: 17px;
+      top: -4px;
+      left: -4px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #D4AF37 0%, #A8823A 100%);
+      background: #D4AF37;
       border: 1.5px solid #FFFFFF;
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(168, 130, 58, 0.5);
-      z-index: 3;
-      animation: rewardBadgeFloat 2.2s ease-in-out infinite;
-    }
-
-    @keyframes rewardBadgeFloat {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-2px) scale(1.1); }
+      box-shadow: 0 1px 4px rgba(168, 130, 58, 0.35);
+      z-index: 2;
     }
 
     .duo-day-col.day-7-reward.completed .duo-day-circle {
-      background: linear-gradient(135deg, #E5B338 0%, #A87E1B 100%);
+      background: linear-gradient(135deg, #D4AF37 0%, #A8823A 100%);
       border-color: #FFF2D6;
-      box-shadow: 0 0 14px rgba(201, 150, 50, 0.65);
+      box-shadow: 0 2px 10px rgba(201, 150, 50, 0.45);
       color: #FFFFFF;
     }
 
-    /* Bottom Modern Reward Hint / Claim Ribbon */
+    /* Bottom Calm Reward Hint */
     .duo-streak-bottom-bar {
       margin-top: 10px;
       width: 100%;
@@ -4276,11 +4213,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(168, 130, 58, 0.16);
-      border-radius: 14px;
-      padding: 8px 12px;
-      box-shadow: 0 1px 4px rgba(36, 27, 18, 0.03);
+      padding: 4px 2px;
       width: 100%;
       box-sizing: border-box;
     }
@@ -4288,43 +4221,27 @@
     .streak-reward-hint-right {
       display: flex;
       align-items: center;
-      gap: 7px;
-      min-width: 0;
+      gap: 6px;
+      font-size: 0.77rem;
+      font-weight: 600;
+      color: var(--ink-soft, #5A4A34);
     }
 
-    .streak-reward-star-pill {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #FFF9E6;
-      border: 1px solid #FFE082;
-      color: #D4AF37;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .streak-reward-hint-right svg {
+      color: var(--gold, #A8823A);
       flex-shrink: 0;
     }
 
-    .streak-reward-text-content {
-      font-size: 0.77rem;
-      font-weight: 700;
-      color: var(--ink-soft, #5A4A34);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .streak-reward-text-content strong {
+    .streak-reward-hint-right strong {
       color: var(--madder, #6B1530);
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .streak-reward-chip-left {
       font-size: 0.70rem;
-      font-weight: 800;
+      font-weight: 700;
       color: #8C5E0E;
-      background: #FFF3D1;
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.12);
       padding: 2px 8px;
       border-radius: 999px;
       white-space: nowrap;
@@ -4348,24 +4265,18 @@
       justify-content: center;
       gap: 6px;
       width: 100%;
-      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.28);
-      animation: duoClaimPulse 1.6s infinite ease-in-out;
+      box-shadow: 0 3px 10px rgba(107, 21, 48, 0.22);
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .duo-claim-reward-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(107, 21, 48, 0.38);
-    }
-
-    @keyframes duoClaimPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(107, 21, 48, 0.3);
     }
 
     @media (max-width: 480px) {
       .duo-streak-card {
-        padding: 13px 12px 11px;
+        padding: 14px 14px 12px;
         border-radius: 18px;
       }
       .duo-streak-top-row {
@@ -4373,23 +4284,16 @@
         margin-bottom: 10px;
       }
       .duo-streak-flame-wrap {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
+        width: 36px;
+        height: 36px;
       }
       .duo-streak-flame-wrap svg {
-        width: 19px;
-        height: 19px;
+        width: 18px;
+        height: 18px;
       }
       .duo-streak-days-container {
-        padding: 10px 4px 12px;
+        padding: 10px 4px;
         border-radius: 14px;
-      }
-      .duo-streak-track-rail {
-        top: 38px;
-        right: 18px;
-        left: 18px;
-        height: 3px;
       }
       .duo-day-col {
         gap: 4px;
@@ -4406,32 +4310,24 @@
         font-size: 0.72rem;
       }
       .duo-day-col.active-today .duo-day-circle {
-        transform: scale(1.08);
+        transform: scale(1.06);
       }
       .duo-day-reward-badge {
-        width: 15px;
-        height: 15px;
-        top: -4px;
-        left: -4px;
+        width: 14px;
+        height: 14px;
+        top: -3px;
+        left: -3px;
       }
       .duo-day-reward-badge svg {
         width: 8px;
         height: 8px;
       }
-      .duo-streak-reward-hint {
-        padding: 6px 8px;
-        border-radius: 12px;
-      }
-      .streak-reward-text-content {
+      .streak-reward-hint-right {
         font-size: 0.70rem;
       }
       .streak-reward-chip-left {
         font-size: 0.64rem;
         padding: 2px 6px;
-      }
-      .duo-claim-reward-btn {
-        font-size: 0.80rem;
-        padding: 8px 12px;
       }
     }
 
@@ -4446,11 +4342,6 @@
       }
       .duo-day-letter {
         font-size: 0.64rem;
-      }
-      .duo-streak-track-rail {
-        top: 36px;
-        right: 14px;
-        left: 14px;
       }
     }
 
@@ -11117,12 +11008,8 @@
             </div>
           </div>
 
-          <!-- Connected Days Container with Progress Rail -->
+          <!-- Days Container in Soft Harmonious Palette -->
           <div class="duo-streak-days-container">
-            <div class="duo-streak-track-rail">
-              <div class="duo-streak-track-fill" id="duo-streak-track-fill" style="width: 0%;"></div>
-            </div>
-
             <!-- Days Bar: 7 Days Challenge Row (Day 1 to 7) in Parchment Palette -->
             <div class="duo-streak-days-bar" id="duo-streak-days-bar" dir="rtl">
               <!-- Day 1 (Default active/completed for Day 1) -->
@@ -11190,12 +11077,8 @@
           <div class="duo-streak-bottom-bar" id="duo-streak-bottom-bar">
             <div class="duo-streak-reward-hint" id="duo-streak-reward-hint">
               <div class="streak-reward-hint-right">
-                <div class="streak-reward-star-pill">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-                <div class="streak-reward-text-content">
-                  جائزة الـ ٧ أيام: <strong>+10% XP وشحن القلوب مجاناً</strong>
-                </div>
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>جائزة الـ ٧ أيام: <strong>+10% XP وشحن القلوب مجاناً</strong></span>
               </div>
               <div class="streak-reward-chip-left" id="streak-reward-chip-left">
                 متبقي ٦ أيام
