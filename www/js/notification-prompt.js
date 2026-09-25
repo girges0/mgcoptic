@@ -982,12 +982,9 @@
       bodyEl.innerHTML = `
         <div class="mg-notif-empty-box">
           <div class="mg-notif-empty-svg">
-            <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="rgba(168, 130, 58, 0.75)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M32 10a14 14 0 0 0-14 14c0 14-6 18-6 18h40s-6-4-6-18a14 14 0 0 0-14-14z" />
-              <path d="M26.5 48a5.5 5.5 0 0 0 11 0" />
-              <line x1="12" y1="52" x2="52" y2="52" stroke="#6B1530" stroke-width="2.2" stroke-linecap="round" />
-              <circle cx="48" cy="16" r="3" fill="#A8823A" stroke="none" />
-              <circle cx="16" cy="20" r="2.2" fill="#A8823A" stroke="none" />
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="rgba(140, 36, 48, 0.06)" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </div>
           <div class="mg-notif-empty-title">${emptyTitle}</div>
