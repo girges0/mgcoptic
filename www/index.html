@@ -2232,6 +2232,50 @@
       box-shadow: 0 4px 0 #C62828, 0 6px 14px rgba(198, 40, 40, 0.12) !important;
     }
 
+    /* شارات خيارات الاختبار (أ، ب، ج، د) */
+    .options button.quiz-opt-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+      text-align: right;
+      padding: 12px 18px;
+    }
+    .quiz-opt-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: #FAF6EE;
+      border: 1.5px solid #E2D9CB;
+      color: var(--madder);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .options button:hover:not(:disabled) .quiz-opt-badge {
+      background: #FFFFFF;
+      border-color: #D4AF37;
+    }
+    .options button.correct .quiz-opt-badge {
+      background: #2E7D32 !important;
+      color: #FFFFFF !important;
+      border-color: #2E7D32 !important;
+    }
+    .options button.wrong .quiz-opt-badge {
+      background: #C62828 !important;
+      color: #FFFFFF !important;
+      border-color: #C62828 !important;
+    }
+    .quiz-opt-text {
+      flex: 1;
+      text-align: right;
+    }
+
     /* بطاقة التغذية الراجعة أسفل الخيارات */
     .quiz-feedback-box {
       margin-top: 16px;
@@ -13283,10 +13327,12 @@
       articlesData = (articlesRes.data || []).map(a => ({ title: a.title, html: sanitizeGrammarHtml(a.content_html) }));
 
       quizQuestionsFromDB = (quizRes.data || []).map(q => ({
+        id: q.id,
         type: q.type, question: q.question, options: q.options, correctIndex: q.correct_index,
         modelAnswer: q.model_answer, category: q.category, difficulty: q.difficulty || 'medium',
         timeSeconds: q.time_seconds || DEFAULT_QUESTION_TIME,
-        linkUrl: q.link_url || null, linkLabel: q.link_label || null
+        linkUrl: q.link_url || null, linkLabel: q.link_label || null,
+        sort_order: q.sort_order ?? 0
       }));
 
       const categoryCounts = {};
@@ -13346,10 +13392,12 @@
       ]);
       if (!quizRes.error && quizRes.data) {
         quizQuestionsFromDB = quizRes.data.map(q => ({
+          id: q.id,
           type: q.type, question: q.question, options: q.options, correctIndex: q.correct_index,
           modelAnswer: q.model_answer, category: q.category, difficulty: q.difficulty || 'medium',
           timeSeconds: q.time_seconds || DEFAULT_QUESTION_TIME,
-          linkUrl: q.link_url || null, linkLabel: q.link_label || null
+          linkUrl: q.link_url || null, linkLabel: q.link_label || null,
+          sort_order: q.sort_order ?? 0
         }));
       }
       if (!quizCatSettingsRes.error && quizCatSettingsRes.data) {
@@ -14198,6 +14246,81 @@
       return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
+    /**
+     * دالة تجزئة نصية حتمية 100% (FNV-1a 32-bit) لتوليد بذور مطابقة تماماً عبر جميع الحسابات والأجهزة
+     */
+    function hashStringDeterministic(str) {
+      let hash = 2166136261;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        hash ^= s.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return (hash >>> 0);
+    }
+    window.hashStringDeterministic = hashStringDeterministic;
+
+    /**
+     * يقوم بإعادة ترتيب خيارات الأسئلة بشكل حتمي 100% وموحد بين جميع الحسابات،
+     * مع توزيع الإجابة الصحيحة بعدالة تامة على الخيارات (أ، ب، ج، د) ومنع تكرار نفس المكان
+     * في سؤالين متتاليين نهائياً (حل مشكلة تركّز 90% من الإجابات في أ).
+     */
+    function shuffleOptionsDeterministically(options, correctIdxOrFlag, questionKey, seqIndex = 0, lastSlot = -1) {
+      if (!Array.isArray(options) || options.length < 2) {
+        return { options: options ? [...options] : [], correctIndex: (typeof correctIdxOrFlag === 'number' ? correctIdxOrFlag : 0) };
+      }
+
+      const n = options.length;
+      let origCorrectIdx = 0;
+      if (typeof correctIdxOrFlag === 'number') {
+        origCorrectIdx = Math.max(0, Math.min(n - 1, correctIdxOrFlag));
+      } else {
+        const found = options.findIndex(o => o && (o.is_correct === true || o.is_correct === 'true' || o.isCorrect === true));
+        if (found !== -1) origCorrectIdx = found;
+      }
+
+      const cleanKey = String(questionKey || '').trim();
+      const hash = hashStringDeterministic(cleanKey + '_len_' + n);
+
+      // حساب المكان الجديد للإجابة الصحيحة بحيث يتغير مع كل سؤال في الترتيب (seqIndex)
+      // ويمنع التكرار المتتالي في نفس الحرف
+      let targetSlot = (seqIndex + (hash % n)) % n;
+      if (lastSlot >= 0 && n > 1 && targetSlot === lastSlot) {
+        targetSlot = (targetSlot + 1) % n;
+      }
+
+      const correctOpt = options[origCorrectIdx];
+      const otherOpts = options.filter((_, i) => i !== origCorrectIdx);
+
+      // خلط الخيارات الخاطئة الباقية حتمياً باستخدام بذرة الهاش و PRNG حتمي
+      let seed = (hash ^ (seqIndex * 2654435761)) >>> 0;
+      for (let i = otherOpts.length - 1; i > 0; i--) {
+        seed = (seed + 0x6D2B79F5) >>> 0;
+        let t = Math.imul(seed ^ (seed >>> 15), seed | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        const rand = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        const j = Math.floor(rand * (i + 1));
+        const temp = otherOpts[i];
+        otherOpts[i] = otherOpts[j];
+        otherOpts[j] = temp;
+      }
+
+      const newOptions = new Array(n);
+      newOptions[targetSlot] = correctOpt;
+      let otherIdx = 0;
+      for (let i = 0; i < n; i++) {
+        if (i !== targetSlot) {
+          newOptions[i] = otherOpts[otherIdx++];
+        }
+      }
+
+      return {
+        options: newOptions,
+        correctIndex: targetSlot
+      };
+    }
+    window.shuffleOptionsDeterministically = shuffleOptionsDeterministically;
+
     let quizBest = { correct: 0, total: 0 }; // أفضل نتيجة محفوظة (عدد صح من إجمالي) لأسئلة الاختيار من متعدد
     let quizFilters = { cats: new Set(), diff: 'all' }; // cats فاضية = كل الأقسام
     let quizSession = null; // {questions, index, answers, correct}
@@ -14213,8 +14336,7 @@
         });
     }
 
-    // بيبني مجموعة أسئلة الاختبار: من كل فئة موجودة في الـ pool، ياخد العدد
-    // المحدد لها من إعدادات لوحة التحكم (أو عدد افتراضي لو مفيش إعداد محفوظ)
+    // بيبني مجموعة أسئلة الاختبار بشكل حتمي وموحد تماماً بين جميع الحسابات
     function buildQuizSelection() {
       const pool = buildQuizPool();
       const byCategory = {};
@@ -14223,12 +14345,25 @@
         (byCategory[cat] = byCategory[cat] || []).push(q);
       });
       let selected = [];
-      Object.keys(byCategory).forEach(cat => {
+      const sortedCats = Object.keys(byCategory).sort((a, b) => a.localeCompare(b, 'ar'));
+      sortedCats.forEach(cat => {
         const count = quizSettings.categoryCounts[cat] ?? DEFAULT_CATEGORY_COUNT;
-        const shuffledCat = [...byCategory[cat]].sort(() => Math.random() - 0.5);
-        selected.push(...shuffledCat.slice(0, count));
+        // ترتيب حتمي ثابت وموحد بين جميع الحسابات للأسئلة داخل كل قسم
+        const sortedCat = [...byCategory[cat]].sort((a, b) => {
+          const ordA = Number(a.sort_order ?? 0);
+          const ordB = Number(b.sort_order ?? 0);
+          if (ordA !== ordB) return ordA - ordB;
+          return String(a.id || a.question || '').localeCompare(String(b.id || b.question || ''));
+        });
+        selected.push(...sortedCat.slice(0, count));
       });
-      return selected.sort(() => Math.random() - 0.5);
+
+      // ترتيب نهائي حتمي موحد ومتوازن بين جميع الطلاب والمنافسات
+      return selected.sort((a, b) => {
+        const hashA = hashStringDeterministic(String(a.id || a.question || ''));
+        const hashB = hashStringDeterministic(String(b.id || b.question || ''));
+        return hashA - hashB;
+      });
     }
 
     function renderQuizSetup() {
@@ -14318,8 +14453,23 @@
       }
 
       refreshVocabAll();
-      const questions = buildQuizSelection();
-      if (questions.length === 0) return;
+      const rawQuestions = buildQuizSelection();
+      if (rawQuestions.length === 0) return;
+
+      // تطبيق خلط الخيارات الحتمي والمتوازن والموحد بين جميع الحسابات لضمان عدم تركز الإجابات في (أ)
+      let lastQuizSlot = -1;
+      const questions = rawQuestions.map((origQ, qIdx) => {
+        const q = { ...origQ };
+        if (q.type === 'mcq' && Array.isArray(q.options) && q.options.length >= 2) {
+          const qKey = String(q.id || q.question || qIdx);
+          const res = shuffleOptionsDeterministically(q.options, q.correctIndex, qKey, qIdx, lastQuizSlot);
+          q.options = res.options;
+          q.correctIndex = res.correctIndex;
+          lastQuizSlot = res.correctIndex;
+        }
+        return q;
+      });
+
       quizSession = { questions, index: 0, answers: [], correct: 0 };
       document.getElementById('quiz-setup').style.display = 'none';
       document.getElementById('quiz-result').style.display = 'none';
@@ -14344,7 +14494,13 @@
       if (fb) { fb.style.display = 'none'; fb.className = 'quiz-feedback-box'; fb.textContent = ''; }
 
       if (item.type === 'mcq') {
-        optsDiv.innerHTML = item.options.map((o, i) => `<button data-i="${i}">${escHtml(o)}</button>`).join('');
+        const letters = ['أ', 'ب', 'ج', 'د', 'هـ', 'و'];
+        optsDiv.innerHTML = item.options.map((o, i) => `
+          <button data-i="${i}" class="quiz-opt-btn">
+            <span class="quiz-opt-badge">${letters[i] || (i + 1)}</span>
+            <span class="quiz-opt-text">${escHtml(o)}</span>
+          </button>
+        `).join('');
         optsDiv.querySelectorAll('button').forEach(btn => {
           btn.addEventListener('click', () => submitAnswer(parseInt(btn.dataset.i)));
         });
@@ -18974,6 +19130,25 @@
           console.warn('Error adding comprehensive lesson overview:', e);
         }
 
+        // تطبيق الخلط الحتمي المتوازن لخيارات التمارين لضمان عدم تركز الإجابات في (أ) وتوحيدها بين جميع الحسابات
+        let lastChSlot = -1;
+        currentChallenges = currentChallenges.map((ch, idx) => {
+          if (!ch) return ch;
+          if (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') {
+            if (Array.isArray(ch.options) && ch.options.length >= 2) {
+              const qKey = String(lesson.id || '') + '_' + String(ch.id || ch.question || ch.coptic_display || idx);
+              const res = shuffleOptionsDeterministically(ch.options, null, qKey, idx, lastChSlot);
+              lastChSlot = res.correctIndex;
+              return {
+                ...ch,
+                options: res.options,
+                _optionsShuffled: true
+              };
+            }
+          }
+          return ch;
+        });
+
         // تهيئة قائمة التمارين المُجاب عليها للجلسة الحالية
         sessionAnsweredChallenges = new Set();
 
@@ -19523,6 +19698,14 @@
       function renderChallengeContent(ch) {
         const runnerBody = document.getElementById('runner-body-content');
         if (!runnerBody) return;
+
+        // التحقق من خلط الخيارات حتمياً لضمان عدم تركز الإجابات في (أ) وتوحيدها بين جميع الحسابات
+        if (!ch._optionsShuffled && (ch.type === 'select' || ch.type === 'listen' || ch.type === 'read_select' || ch.type === 'image_select') && Array.isArray(ch.options) && ch.options.length >= 2) {
+          const qKey = String(ch.id || ch.question || ch.coptic_display || currentChallengeIndex);
+          const res = shuffleOptionsDeterministically(ch.options, null, qKey, currentChallengeIndex);
+          ch.options = res.options;
+          ch._optionsShuffled = true;
+        }
 
         const activeOptions = ch.options || [];
         let html = '';
