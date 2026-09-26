@@ -2153,10 +2153,26 @@ class GamificationService {
         // لا نسمح إطلاقاً بأن تنقص النقاط عن رصيد الطالب الفعلي
         currentLocalPoints = Math.max(currentLocalPoints, serverPointsReturned);
         if(recData?.hearts != null) curProg.hearts = Number(recData.hearts);
-        if(recData?.streak_days != null) curProg.streak_days = Number(recData.streak_days);
+        if(recData?.streak_days != null) {
+          curProg.streak_days = Number(recData.streak_days);
+        } else {
+          try {
+            const rawCycle = localStorage.getItem(`mg_coptic_streak_cycle_${uid}`);
+            if (rawCycle) {
+              const parsedCycle = JSON.parse(rawCycle);
+              if (parsedCycle && parsedCycle.streakDays) curProg.streak_days = Number(parsedCycle.streakDays);
+            }
+          } catch (_) {}
+        }
       } catch (recErr) {
         console.warn('record_lesson_completion error:', recErr);
       }
+
+      // حساب تاريخ اليوم المحلي بدقة
+      const localTodayDate = (function(){
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      })();
 
       // تأكيد مزامنة النقاط والدروس عبر sync_full_user_gamification
       try {
@@ -2178,7 +2194,7 @@ class GamificationService {
           total_points: currentLocalPoints,
           hearts: curProg.hearts || 5,
           streak_days: curProg.streak_days || 1,
-          last_active_date: new Date().toISOString().split('T')[0]
+          last_active_date: localTodayDate
         }).eq('user_id', uid);
 
         await activeSb.from('user_lesson_progress').upsert({

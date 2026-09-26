@@ -6119,8 +6119,477 @@
       }
     }
 
+    /* ============ بوابة الأمان والاقتراحات في الإعدادات ============ */
+    .settings-security-gateway-card {
+      border: 1px solid rgba(168, 130, 58, 0.35);
+      position: relative;
+      overflow: hidden;
+      background: var(--parchment-card);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+    .settings-security-gateway-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #DC2626 0%, #B8892E 50%, #10B981 100%);
+    }
+    .sec-gate-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .sec-gate-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(107, 21, 48, 0.12) 0%, rgba(184, 137, 46, 0.18) 100%);
+      color: var(--madder);
+      border: 1px solid rgba(168, 130, 58, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sec-gate-title-wrap {
+      flex: 1;
+    }
+    .sec-gate-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec-gate-sub {
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .sec-gate-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sec-gate-btn,
+    .sec-gate-btn.primary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(168, 130, 58, 0.25);
+      background: #FFFFFF;
+      cursor: pointer;
+      text-align: right;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .sec-gate-btn:hover,
+    .sec-gate-btn.primary:hover {
+      background: #FFFFFF;
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(36, 27, 18, 0.08);
+    }
+    .sec-gate-btn-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    .sec-gate-btn-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(184, 137, 46, 0.16);
+      color: var(--gold);
+      border: 1px solid rgba(184, 137, 46, 0.25);
+    }
+    .sec-gate-btn-icon.shield-icon {
+      background: rgba(220, 38, 38, 0.1);
+      color: #DC2626;
+      border-color: rgba(220, 38, 38, 0.22);
+    }
+    .sec-gate-btn-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sec-gate-btn-text strong {
+      font-family: var(--font-display);
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .sec-gate-btn-text small {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+    .sec-gate-btn .arrow-icon {
+      color: var(--ink-soft);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .sec-gate-btn:hover .arrow-icon {
+      transform: translateX(-4px);
+      color: var(--madder);
+    }
 
-        /* ============ FOOTER تصميم احترافي فخم ومتناسق ============ */
+    /* ============ صفحة الأمان وتطوير الموقع المستقلة ============ */
+    #suggestions.tab-panel {
+      max-width: 760px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+    .sugg-top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 22px;
+      padding: 4px 0;
+    }
+    .sugg-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #FFFFFF;
+      border: 1.5px solid rgba(168, 130, 58, 0.35);
+      color: var(--ink);
+      padding: 9px 20px;
+      border-radius: 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(36, 27, 18, 0.06);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sugg-back-btn svg {
+      width: 18px;
+      height: 18px;
+      color: var(--madder);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+    .sugg-back-btn:hover {
+      background: #FFFDF9;
+      border-color: var(--madder);
+      color: var(--madder);
+      box-shadow: 0 4px 14px rgba(107, 21, 48, 0.15);
+    }
+    .sugg-back-btn:hover svg {
+      transform: translateX(4px);
+    }
+    .sugg-back-btn:active {
+      transform: scale(0.97);
+    }
+    .suggestions-page-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .suggestions-header-desc {
+      font-family: var(--font-body);
+      font-size: 0.94rem;
+      color: var(--ink-soft);
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .suggestions-subnav {
+      display: flex;
+      gap: 8px;
+      background: rgba(168, 130, 58, 0.12);
+      padding: 6px;
+      border-radius: 999px;
+      margin: 20px auto 26px;
+      max-width: 480px;
+      border: 1px solid rgba(168, 130, 58, 0.22);
+    }
+    .sugg-subnav-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .sugg-subnav-btn.active {
+      background: linear-gradient(135deg, var(--madder) 0%, var(--madder-dark) 100%);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(107, 21, 48, 0.28);
+    }
+    .sugg-pane {
+      display: none;
+      animation: suggFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .sugg-pane.active {
+      display: block;
+    }
+    @keyframes suggFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* فورم الاقتراحات */
+    .sugg-form-card {
+      background: var(--parchment-card);
+      border: 1px solid rgba(168, 130, 58, 0.32);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .sugg-form-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .sugg-form-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(184, 137, 46, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(184, 137, 46, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sugg-form-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 0 0 4px 0;
+    }
+    .sugg-form-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.86rem;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+    .sugg-field-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .sugg-textarea-wrap {
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .sugg-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 130px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(168, 130, 58, 0.35);
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 0.94rem;
+      line-height: 1.6;
+      resize: vertical;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .sugg-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 137, 46, 0.18);
+      background: #FFFFFF;
+    }
+    .sugg-char-counter {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      direction: ltr;
+      pointer-events: none;
+    }
+    .sugg-contact-row {
+      margin-bottom: 20px;
+    }
+    .sugg-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid rgba(168, 130, 58, 0.35);
+      background: rgba(255, 255, 255, 0.85);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+    .sugg-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184, 137, 46, 0.18);
+      background: #FFFFFF;
+    }
+    .sugg-btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-sugg-submit {
+      flex: 1;
+      min-width: 180px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--madder) 0%, var(--madder-dark) 100%);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(107, 21, 48, 0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-sugg-submit:hover {
+      background: linear-gradient(135deg, var(--madder-light) 0%, var(--madder) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(107, 21, 48, 0.35);
+    }
+    .btn-sugg-whatsapp {
+      flex: 1;
+      min-width: 180px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #FFFFFF !important;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28);
+      transition: all 0.2s ease;
+    }
+    .btn-sugg-whatsapp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.42);
+    }
+
+    /* مميزات الأمان والنزاهة */
+    .security-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+    .sec-feature-box {
+      background: var(--parchment-card);
+      border: 1px solid rgba(168, 130, 58, 0.22);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sec-feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(168, 130, 58, 0.12);
+      color: var(--gold);
+    }
+    .sec-feature-text h5 {
+      font-family: var(--font-display);
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 2px 0;
+    }
+    .sec-feature-text p {
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .sugg-success-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #065F46;
+      margin-bottom: 18px;
+      animation: suggFadeIn 0.3s ease;
+    }
+    .sugg-success-banner svg {
+      flex-shrink: 0;
+      color: #10B981;
+    }
+    .sugg-success-banner strong {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .sugg-success-banner p {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    /* ============ FOOTER تصميم احترافي فخم ومتناسق ============ */
     footer,
     footer.site-footer {
       width: 100%;
@@ -11131,7 +11600,7 @@
           <div class="duo-streak-top-row">
             <div class="duo-streak-text-side">
               <div class="duo-streak-title" id="duo-streak-title">
-                <span>استمراريتك يوم واحد!</span>
+                <span>أيام الاستمرارية: يوم واحد!</span>
                 <span class="duo-streak-badge">تحدي الـ ٧ أيام</span>
               </div>
               <div class="duo-streak-desc" id="duo-streak-desc">عاش يا بطل! كمّل ٧ أيام ورا بعض عشان تكسب +10 XP وتشحن كل قلوبك ببلاش.</div>
@@ -12324,83 +12793,63 @@
           </div>
         </div>
 
-        <!-- 2. بطاقة الأمان والنزاهة ومكافآت الإبلاغ عن الثغرات -->
-        <div class="settings-card settings-security-card" id="settings-security-card">
-          <h3 class="settings-card-title">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="M12 8v4"/>
-              <path d="M12 16h.01"/>
-            </svg>
-            <span>الأمان ومكافآت الإبلاغ عن الثغرات</span>
-          </h3>
-
-          <!-- صندوق التحذير الأمني الصارم -->
-          <div class="settings-alert-box warning">
-            <div class="settings-alert-icon">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
+        <!-- 2. بطاقة بوابة الأمان والاقتراحات وتطوير المنصة -->
+        <div class="settings-card settings-security-gateway-card" id="settings-security-gateway-card">
+          <div class="sec-gate-header">
+            <div class="sec-gate-icon">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M12 8v4"/>
+                <path d="M12 16h.01"/>
               </svg>
             </div>
-            <div class="settings-alert-content">
-              <h4 class="settings-alert-title">تحذير هام لجميع المستخدمين</h4>
-              <p class="settings-alert-text">
-                يُحظر تماماً استخدام أي ثغرات برمجية أو أدوات خارجية أو أساليب غير قانونية للتلاعب بالقلوب أو النقاط (XP) أو التقدم في الدروس. في حال ثبوت أي تلاعب، <strong>سيتم حظر الحساب نهائياً وفورياً</strong> وإلغاء كافة إنجازاته دون سابق إنذار.
-              </p>
+            <div class="sec-gate-title-wrap">
+              <h3 class="sec-gate-title">
+                <span>الأمان والاقتراحات وتطوير الموقع</span>
+              </h3>
+              <p class="sec-gate-sub">تحذير الأمان الصارم، مكافآت الإبلاغ عن الثغرات، ومشاركة مقترحاتك لتطوير المنصة.</p>
             </div>
           </div>
 
-          <!-- صندوق مكافآت الإبلاغ عن الثغرات -->
-          <div class="settings-alert-box reward">
-            <div class="settings-alert-icon">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 12 20 22 4 22 4 12"/>
-                <rect x="2" y="7" width="20" height="5"/>
-                <line x1="12" y1="22" x2="12" y2="7"/>
-                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-              </svg>
-            </div>
-            <div class="settings-alert-content">
-              <h4 class="settings-alert-title">هدايا ومكافآت قيّمة للمُبلّغين عن الثغرات</h4>
-              <p class="settings-alert-text">
-                حرصاً على أمان وتطوير المنصة، كل من يكتشف ثغرة ويقوم بالإبلاغ عنها فوراً، <strong>سيحصل على هدايا ومكافآت وجوائز خاصة</strong> تقديراً لأمانته ودعمه لمجتمعنا التعليمي.
-              </p>
-            </div>
-          </div>
-
-          <!-- زر ورابط واتساب لخدمة العملاء والتبليغ عن الثغرات -->
-          <a href="https://wa.me/ggirges?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%A7%D9%84%D8%AF%D8%B9%D9%85%20%D8%A7%D9%84%D9%81%D9%86%D9%8A%20%D9%84%D9%85%D9%86%D8%B5%D8%A9%20MG%20Coptic%20%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D9%88%D8%A7%D9%84%D8%A5%D8%A8%D9%84%D8%A7%D8%BA%20%D8%B9%D9%86%20%D8%AB%D8%BA%D8%B1%D8%A9" 
-             target="_blank" 
-             rel="noopener noreferrer" 
-             class="settings-wa-link"
-             id="settings-wa-support-btn"
-             onclick="if(window.openWhatsAppSupport){event.preventDefault();openWhatsAppSupport('مرحباً الدعم الفني لمنصة MG Coptic 👋\nأود التواصل مع خدمة العملاء والإبلاغ عن ثغرة.');}">
-            <div class="settings-wa-main">
-              <div class="settings-wa-icon-box">
-                <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
-                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                </svg>
-              </div>
-              <div class="settings-wa-text">
-                <div class="settings-wa-title">خدمة العملاء والتبليغ عن الثغرات</div>
-                <div class="settings-wa-subtitle">
-                  <span>تواصل مباشر عبر واتساب:</span>
-                  <span class="settings-wa-badge">@ggirges</span>
+          <div class="sec-gate-actions">
+            <button type="button" class="sec-gate-btn" onclick="switchTab('suggestions'); setTimeout(() => { if (typeof switchSuggestionsSubTab === 'function') switchSuggestionsSubTab('suggestions'); }, 50);">
+              <div class="sec-gate-btn-content">
+                <span class="sec-gate-btn-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                </span>
+                <div class="sec-gate-btn-text">
+                  <strong>الاقتراحات وتطوير الموقع</strong>
+                  <small>شاركنا أفكارك ومقترحاتك لتحسين وتطوير المنصة</small>
                 </div>
               </div>
-            </div>
-            <div class="settings-wa-action">
-              <span>تواصل الآن</span>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
-            </div>
-          </a>
+            </button>
+
+            <button type="button" class="sec-gate-btn" onclick="switchTab('suggestions'); setTimeout(() => { if (typeof switchSuggestionsSubTab === 'function') switchSuggestionsSubTab('security'); }, 50);">
+              <div class="sec-gate-btn-content">
+                <span class="sec-gate-btn-icon shield-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M12 8v4"/>
+                    <path d="M12 16h.01"/>
+                  </svg>
+                </span>
+                <div class="sec-gate-btn-text">
+                  <strong>تحذير الثغرات ومكافآت الإبلاغ</strong>
+                  <small>شروط النزاهة ومكافآت مكتشفي الثغرات الأمنية</small>
+                </div>
+              </div>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- 3. بطاقة حالة الحساب والمصادقة (في نهاية الصفحة) -->
@@ -12447,6 +12896,230 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ SUGGESTIONS & SECURITY / صفحة الأمان وتطوير الموقع ============ -->
+    <section id="suggestions" class="tab-panel">
+      <!-- شريط التنقل العلوي وزر الرجوع للإعدادات -->
+      <div class="sugg-top-nav">
+        <button type="button" class="sugg-back-btn" onclick="switchTab('settings')" aria-label="العودة للإعدادات">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+          <span>العودة للإعدادات</span>
+        </button>
+      </div>
+
+      <!-- رأس الصفحة -->
+      <div class="suggestions-page-header">
+        <h2 class="rubric" style="margin: 4px 0 6px 0;">الأمان، الثغرات وتطوير الموقع</h2>
+        <p class="suggestions-header-desc">
+          معاً للحفاظ على نزاهة وأمان MG COPTIC ومشاركتنا بالأفكار التي تجعل تجربة تعلّم اللغة القبطية أكثر متعة وإفادة.
+        </p>
+      </div>
+
+      <!-- مبدل الأقسام الداخلي -->
+      <div class="suggestions-subnav" role="tablist">
+        <button type="button" class="sugg-subnav-btn active" id="btn-subnav-suggestions" onclick="switchSuggestionsSubTab('suggestions')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+          <span>الاقتراحات وتطوير الموقع</span>
+        </button>
+        <button type="button" class="sugg-subnav-btn" id="btn-subnav-security" onclick="switchSuggestionsSubTab('security')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M12 8v4"/>
+            <path d="M12 16h.01"/>
+          </svg>
+          <span>الأمان ومكافآت الثغرات</span>
+        </button>
+      </div>
+
+      <!-- تبويب 1: الاقتراحات وتطوير الموقع -->
+      <div class="sugg-pane active" id="sugg-tab-pane-suggestions">
+        <div class="sugg-form-card">
+          <div class="sugg-form-header">
+            <div class="sugg-form-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="sugg-form-title">شاركنا فكرتك أو مقترحك لتطوير المنصة</h3>
+              <p class="sugg-form-subtitle">كل فكرة أو تحسين تقترحه يساعدنا في الارتقاء بمحتوى وخدمات المنصة لجميع الطلاب.</p>
+            </div>
+          </div>
+
+          <div id="sugg-success-banner" class="sugg-success-banner" style="display:none;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <div>
+              <strong>تم استلام مقترحك بنجاح!</strong>
+              <p>شكراً لمساهمتك القيمة. يقوم فريق العمل بمراجعة كل مقترح والعمل على تنفيذه.</p>
+            </div>
+          </div>
+
+          <!-- تفاصيل الاقتراح -->
+          <label for="sugg-text-input" class="sugg-field-label">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" y1="10" x2="3" y2="10"/>
+              <line x1="21" y1="6" x2="3" y2="6"/>
+              <line x1="21" y1="14" x2="3" y2="14"/>
+              <line x1="21" y1="18" x2="3" y2="18"/>
+            </svg>
+            <span>تفاصيل فكرتك أو مقترحك:</span>
+          </label>
+          <div class="sugg-textarea-wrap">
+            <textarea id="sugg-text-input" class="sugg-textarea" placeholder="اكتب اقتراحك بالتفصيل هنا... ما الذي تود إضافته أو تعديله في المنصة؟" maxlength="500" oninput="handleSuggestionTextareaInput(this)"></textarea>
+            <span id="sugg-char-count" class="sugg-char-counter">0 / 500</span>
+          </div>
+
+          <!-- وسيلة التواصل (اختياري) -->
+          <div class="sugg-contact-row">
+            <label for="sugg-contact-input" class="sugg-field-label">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>اسم الطالب أو وسيلة التواصل (اختياري للرد عليك):</span>
+            </label>
+            <input type="text" id="sugg-contact-input" class="sugg-input" placeholder="اسم الطالب أو وسيلة التواصل...">
+          </div>
+
+          <!-- أزرار الإرسال -->
+          <div class="sugg-btn-row">
+            <button type="button" class="btn-sugg-submit" id="btn-sugg-submit-action" onclick="handleSuggestionSubmit(event)">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              <span>إرسال الاقتراح للمنصة</span>
+            </button>
+
+            <button type="button" class="btn-sugg-whatsapp" onclick="sendSuggestionViaWhatsApp()">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+              </svg>
+              <span>مشاركة الفكرة عبر واتساب</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويب 2: الأمان ومكافآت الثغرات -->
+      <div class="sugg-pane" id="sugg-tab-pane-security">
+        <!-- صندوق التحذير الأمني الصارم -->
+        <div class="settings-alert-box warning">
+          <div class="settings-alert-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="settings-alert-content">
+            <h4 class="settings-alert-title">تحذير هام لجميع المستخدمين</h4>
+            <p class="settings-alert-text">
+              يُحظر تماماً استخدام أي ثغرات برمجية أو أدوات خارجية أو أساليب غير قانونية للتلاعب بالقلوب أو النقاط (XP) أو التقدم في الدروس. في حال ثبوت أي تلاعب، <strong>سيتم حظر الحساب نهائياً وفورياً</strong> وإلغاء كافة إنجازاته دون سابق إنذار.
+            </p>
+          </div>
+        </div>
+
+        <!-- صندوق مكافآت الإبلاغ عن الثغرات -->
+        <div class="settings-alert-box reward">
+          <div class="settings-alert-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 12 20 22 4 22 4 12"/>
+              <rect x="2" y="7" width="20" height="5"/>
+              <line x1="12" y1="22" x2="12" y2="7"/>
+              <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+              <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+            </svg>
+          </div>
+          <div class="settings-alert-content">
+            <h4 class="settings-alert-title">هدايا ومكافآت قيّمة للمُبلّغين عن الثغرات</h4>
+            <p class="settings-alert-text">
+              حرصاً على أمان وتطوير المنصة، كل من يكتشف ثغرة ويقوم بالإبلاغ عنها فوراً، <strong>سيحصل على هدايا ومكافآت وجوائز خاصة</strong> تقديراً لأمانته ودعمه لمجتمعنا التعليمي.
+            </p>
+          </div>
+        </div>
+
+        <!-- مميزات النزاهة والإبلاغ الأخلاقي -->
+        <div class="security-features-grid">
+          <div class="sec-feature-box">
+            <div class="sec-feature-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            </div>
+            <div class="sec-feature-text">
+              <h5>وسام النزاهة والأمان</h5>
+              <p>شعار رسمي وشكر علني في لوحة شرف المطورين.</p>
+            </div>
+          </div>
+
+          <div class="sec-feature-box">
+            <div class="sec-feature-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"/>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+              </svg>
+            </div>
+            <div class="sec-feature-text">
+              <h5>جوائز ومكافآت تذكارية</h5>
+              <p>نقاط XP إضافية وميزات حصرية داخل التطبيق.</p>
+            </div>
+          </div>
+
+          <div class="sec-feature-box">
+            <div class="sec-feature-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="sec-feature-text">
+              <h5>سرية تامة وفورية</h5>
+              <p>معالجة سريعة ومباشرة من الإدارة لجميع البلاغات.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- زر ورابط واتساب لخدمة العملاء والتبليغ عن الثغرات -->
+        <a href="https://wa.me/ggirges?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%A7%D9%84%D8%AF%D8%B9%D9%85%20%D8%A7%D9%84%D9%81%D9%86%D9%8A%20%D9%84%D9%85%D9%86%D8%B5%D8%A9%20MG%20Coptic%20%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84%20%D9%85%D8%B9%20%D8%AE%D8%AF%D9%85%D8%A9%20%D8%A7%D9%84%D8%B9%D9%85%D9%84%D8%A7%D8%A1%20%D9%88%D8%A7%D9%84%D8%A5%D8%A8%D9%84%D8%A7%D8%BA%20%D8%B9%D9%86%20%D8%AB%D8%BA%D8%B1%D8%A9" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="settings-wa-link"
+           id="settings-wa-support-btn-dedicated"
+           onclick="if(window.openWhatsAppSupport){event.preventDefault();openWhatsAppSupport('مرحباً الدعم الفني لمنصة MG Coptic، أود التواصل مع خدمة العملاء والإبلاغ عن ثغرة أمنية.');}">
+          <div class="settings-wa-main">
+            <div class="settings-wa-icon-box">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+              </svg>
+            </div>
+            <div class="settings-wa-text">
+              <div class="settings-wa-title">خدمة العملاء والتبليغ عن الثغرات</div>
+              <div class="settings-wa-subtitle">
+                <span>تواصل مباشر عبر واتساب:</span>
+                <span class="settings-wa-badge">@ggirges</span>
+              </div>
+            </div>
+          </div>
+          <div class="settings-wa-action">
+            <span>تواصل الآن</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </div>
+        </a>
       </div>
     </section>
   </main>
@@ -12827,7 +13500,10 @@
         'quizzes': 'quiz',
         'profile': 'settings',
         'dictionary': 'vocab',
-        'words': 'vocab'
+        'words': 'vocab',
+        'security': 'suggestions',
+        'feedback': 'suggestions',
+        'suggestions': 'suggestions'
       };
 
       const cleanHash = hash.split('?')[0].trim();
@@ -12848,15 +13524,15 @@
       return String(n).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
     }
     /* ============ TABS (topbar + mobile bottom nav, kept in sync) ============ */
-    const tabOrder = ['home', 'learn', 'leaderboard', 'settings', 'alphabet', 'vocab', 'grammar', 'quiz', 'competitions'];
+    const tabOrder = ['home', 'learn', 'leaderboard', 'settings', 'alphabet', 'vocab', 'grammar', 'quiz', 'competitions', 'suggestions'];
     window.tabOrder = tabOrder;
     const bottomNavSections = ['home', 'learn', 'leaderboard', 'settings'];
 
     function switchTab(tabName, updateUrl = true) {
       if (!tabOrder.includes(tabName)) return;
 
-      // حماية الأقسام غير الرئيسية في نسخة الويب
-      if (tabName !== 'home') {
+      // حماية الأقسام غير الرئيسية في نسخة الويب (مع إتاحة صفحة الاقتراحات والأمان للجميع)
+      if (tabName !== 'home' && tabName !== 'suggestions') {
         const isAuthed = typeof window.isUserAuthenticated === 'function' ? window.isUserAuthenticated() : !!(window.currentAuthUser || (window.currentAuthSession && window.currentAuthSession.user));
         if (!isAuthed) {
           if (typeof window.requireAuthOrPrompt === 'function') {
@@ -12876,13 +13552,33 @@
       const slideFrom = toIndex > fromIndex ? '-24px' : '24px';
 
       document.querySelectorAll('nav.tabs button, .bottom-nav .bn-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.tab === tabName);
+        b.classList.toggle('active', b.dataset.tab === tabName || (tabName === 'suggestions' && b.dataset.tab === 'settings'));
       });
       document.querySelectorAll('.tab-panel').forEach(p => {
         const isTarget = p.id === tabName;
         if (isTarget) p.style.setProperty('--slide-from', slideFrom);
         p.classList.toggle('active', isTarget);
       });
+
+      // تمرير إلى أعلى الصفحة بسلاسة عند فتح قسم مستقل
+      if (tabName === 'suggestions') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // تعبئة بيانات الطالب تلقائياً في خانة الاقتراحات
+        try {
+          const contactInp = document.getElementById('sugg-contact-input');
+          const studentName = typeof getStudentDisplayName === 'function' ? getStudentDisplayName() : '';
+          const user = (typeof currentAuthUser !== 'undefined' && currentAuthUser) || (typeof getUserProfileData === 'function' ? getUserProfileData() : null);
+          if (contactInp) {
+            if (studentName) {
+              if (!contactInp.value || (user && user.email && contactInp.value === user.email)) {
+                contactInp.value = studentName;
+              }
+            } else if (!contactInp.value && user && user.email) {
+              contactInp.value = user.email;
+            }
+          }
+        } catch (_) {}
+      }
 
       if (updateUrl) {
         const newHash = tabName === 'home' ? '' : '#' + tabName;
@@ -12937,6 +13633,188 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     window.switchTab = switchTab;
+
+    /* ============ SUGGESTIONS & SECURITY INDEPENDENT PAGE ============ */
+    function switchSuggestionsSubTab(tab) {
+      const paneSugg = document.getElementById('sugg-tab-pane-suggestions');
+      const paneSec = document.getElementById('sugg-tab-pane-security');
+      const btnSugg = document.getElementById('btn-subnav-suggestions');
+      const btnSec = document.getElementById('btn-subnav-security');
+      if (!paneSugg || !paneSec) return;
+
+      if (tab === 'security') {
+        paneSugg.classList.remove('active');
+        paneSec.classList.add('active');
+        if (btnSugg) btnSugg.classList.remove('active');
+        if (btnSec) btnSec.classList.add('active');
+      } else {
+        paneSec.classList.remove('active');
+        paneSugg.classList.add('active');
+        if (btnSec) btnSec.classList.remove('active');
+        if (btnSugg) btnSugg.classList.add('active');
+      }
+    }
+    window.switchSuggestionsSubTab = switchSuggestionsSubTab;
+
+    function handleSuggestionTextareaInput(el) {
+      const counter = document.getElementById('sugg-char-count');
+      if (counter && el) {
+        counter.textContent = `${el.value.length} / 500`;
+      }
+    }
+    window.handleSuggestionTextareaInput = handleSuggestionTextareaInput;
+
+    function getStudentDisplayName() {
+      try {
+        const user = (typeof currentAuthUser !== 'undefined' && currentAuthUser) || (typeof getUserProfileData === 'function' ? getUserProfileData() : null);
+        if (user) {
+          if (user.full_name && typeof user.full_name === 'string' && user.full_name.trim()) return user.full_name.trim();
+          if (user.user_metadata) {
+            const m = user.user_metadata;
+            const metaName = m.full_name || m.name || m.display_name || m.username;
+            if (metaName && typeof metaName === 'string' && metaName.trim()) return metaName.trim();
+          }
+        }
+        const raw = localStorage.getItem('mg_coptic_user');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.full_name && parsed.full_name.trim()) return parsed.full_name.trim();
+        }
+        const sInput = document.getElementById('settings-name-input');
+        if (sInput && sInput.value && sInput.value.trim()) return sInput.value.trim();
+      } catch (_) {}
+      return '';
+    }
+    window.getStudentDisplayName = getStudentDisplayName;
+
+    function sendSuggestionViaWhatsApp() {
+      const textEl = document.getElementById('sugg-text-input');
+      const text = textEl ? textEl.value.trim() : '';
+
+      let msg = 'مرحباً فريق تطوير منصة MG Coptic، أود تقديم مقترح لتطوير المنصة:\n';
+      if (text) {
+        msg += `• تفاصيل المقترح:\n${text}`;
+      } else {
+        msg += '• تفاصيل المقترح:\n(أود مناقشة فكرة جديدة لتطوير المنصة)';
+      }
+
+      const contactEl = document.getElementById('sugg-contact-input');
+      const studentName = typeof getStudentDisplayName === 'function' ? getStudentDisplayName() : '';
+      const contact = contactEl ? contactEl.value.trim() : '';
+      if (contact) {
+        msg += `\n• اسم الطالب / وسيلة التواصل: ${contact}`;
+      } else if (studentName) {
+        msg += `\n• اسم الطالب: ${studentName}`;
+      } else if (window.currentAuthUser && window.currentAuthUser.email) {
+        msg += `\n• الحساب: ${window.currentAuthUser.email}`;
+      }
+
+      if (typeof window.openWhatsAppSupport === 'function') {
+        window.openWhatsAppSupport(msg);
+      } else {
+        window.open(`https://wa.me/ggirges?text=${encodeURIComponent(msg)}`, '_blank');
+      }
+    }
+    window.sendSuggestionViaWhatsApp = sendSuggestionViaWhatsApp;
+
+    async function handleSuggestionSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const textEl = document.getElementById('sugg-text-input');
+      const text = textEl ? textEl.value.trim() : '';
+      if (!text || text.length < 5) {
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            title: 'اكتب تفاصيل مقترحك',
+            text: 'يرجى كتابة مقترحك أولاً قبل الإرسال (على الأقل 5 أحرف).',
+            icon: 'info',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#6B1530'
+          });
+        } else {
+          alert('يرجى كتابة تفاصيل مقترحك أولاً (على الأقل 5 أحرف).');
+        }
+        if (textEl) textEl.focus();
+        return;
+      }
+
+      const contactEl = document.getElementById('sugg-contact-input');
+      const studentName = typeof getStudentDisplayName === 'function' ? getStudentDisplayName() : '';
+      const user = (typeof currentAuthUser !== 'undefined' && currentAuthUser) || (typeof getUserProfileData === 'function' ? getUserProfileData() : null);
+      const contact = (contactEl && contactEl.value.trim()) || studentName || (user ? (user.email || user.id) : 'زائر');
+
+      const submitBtn = document.getElementById('btn-sugg-submit-action');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;">
+            <line x1="12" y1="2" x2="12" y2="6"></line>
+            <line x1="12" y1="18" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="6" y2="12"></line>
+            <line x1="18" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+          </svg>
+          <span>جارٍ الإرسال...</span>
+        `;
+      }
+
+      try {
+        // محاولة الحفظ في Supabase إذا كان الجدول متاحاً
+        if (window.sb && typeof window.sb.from === 'function') {
+          try {
+            await window.sb.from('platform_suggestions').insert([{
+              suggestion: text,
+              contact_info: contact,
+              user_id: window.currentAuthUser ? window.currentAuthUser.id : null,
+              created_at: new Date().toISOString()
+            }]);
+          } catch (_) {}
+        }
+
+        // حفظ محلي في المتصفح كنسخة احتياطية
+        try {
+          const list = JSON.parse(localStorage.getItem('mg_coptic_saved_suggestions') || '[]');
+          list.push({ text, contact, date: new Date().toISOString() });
+          localStorage.setItem('mg_coptic_saved_suggestions', JSON.stringify(list));
+        } catch (_) {}
+
+        // إعادة ضبط الحقول
+        if (textEl) textEl.value = '';
+        handleSuggestionTextareaInput(textEl);
+
+        const successAlert = document.getElementById('sugg-success-banner');
+        if (successAlert) {
+          successAlert.style.display = 'flex';
+          setTimeout(() => { successAlert.style.display = 'none'; }, 6000);
+        }
+
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            title: 'تم استلام مقترحك بنجاح',
+            text: 'شكراً لمساهمتك القيمة في تطوير منصة MG COPTIC! سيقوم فريق العمل بمراجعة فكرتك والعمل على تنفيذها.',
+            icon: 'success',
+            confirmButtonText: 'ممتاز',
+            confirmButtonColor: '#6B1530'
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span>إرسال الاقتراح للمنصة</span>
+          `;
+        }
+      }
+    }
+    window.handleSuggestionSubmit = handleSuggestionSubmit;
 
     window.addEventListener('hashchange', () => {
         handleDeepLink(window.location.href);
@@ -13568,6 +14446,9 @@
         quizBest = { correct, total: mcqCount };
         try { localStorage.setItem(STORAGE_KEY_QUIZ_BEST, JSON.stringify(quizBest)); } catch (e) { }
       }
+      try {
+        if (typeof recordStreakActivity === 'function') recordStreakActivity('quiz');
+      } catch (_) {}
 
       document.getElementById('quiz-run').style.display = 'none';
       document.getElementById('quiz-result').style.display = '';
@@ -14496,7 +15377,18 @@
         // 1. استعادة نقاط XP والستريك والرتبة
         const prog = getUserProgressData();
         const xp = prog.points ?? prog.total_points ?? 0;
-        const streak = prog.streak_days ?? 1;
+        const streak = (function(){
+          try {
+            if (typeof getStreakCycleStorageKey === 'function') {
+              const rawCycle = localStorage.getItem(getStreakCycleStorageKey());
+              if (rawCycle) {
+                const parsed = JSON.parse(rawCycle);
+                if (parsed && parsed.streakDays) return Math.max(1, parsed.streakDays);
+              }
+            }
+          } catch(_) {}
+          return prog.streak_days ?? 1;
+        })();
 
         const cardXp = document.getElementById('home-card-xp');
         if (cardXp) cardXp.textContent = xp;
@@ -14901,8 +15793,35 @@
     }
 
     // ============================================================
-    // نظام تحدي الـ ٧ أيام للاستمرارية والمكافآت (7-Day Streak System)
+    // نظام أيام الاستمرارية المعتمد والموثوق (7-Day Streak & Consistency System)
     // ============================================================
+
+    // 1. حساب التاريخ التقويمي المحلي بدقة (تجنب انزياح التوقيت العالمي UTC)
+    function getLocalCalendarDateStr(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // 2. حساب الفارق بالأيام بين تاريخين تقويميين (d2 - d1)
+    function getCalendarDaysDiff(dateStr1, dateStr2) {
+      if (!dateStr1 || !dateStr2) return null;
+      try {
+        const parts1 = dateStr1.split('-').map(Number);
+        const parts2 = dateStr2.split('-').map(Number);
+        if (parts1.length !== 3 || parts2.length !== 3) return null;
+        if (isNaN(parts1[0]) || isNaN(parts1[1]) || isNaN(parts1[2])) return null;
+        if (isNaN(parts2[0]) || isNaN(parts2[1]) || isNaN(parts2[2])) return null;
+        const utc1 = Date.UTC(parts1[0], parts1[1] - 1, parts1[2]);
+        const utc2 = Date.UTC(parts2[0], parts2[1] - 1, parts2[2]);
+        return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // 3. مفتاح تخزين بيانات دورة الاستمرارية لكل مستخدم
     function getStreakCycleStorageKey() {
       const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : 'guest');
       return `mg_coptic_streak_cycle_${uid}`;
@@ -14924,61 +15843,143 @@
       } catch (e) {}
     }
 
-    function checkAndSyncStreakCycle() {
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
-      
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+    // 4. المزامنة الشاملة لأيام الاستمرارية في كل طبقات التطبيق (ذاكرة + تخزين محلي + واجهات + سحابة)
+    function syncStreakEverywhere(streakDays, lastDateStr) {
+      const safeStreak = Math.max(1, parseInt(streakDays, 10) || 1);
+      const safeDate = lastDateStr || getLocalCalendarDateStr();
+      const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : null);
 
+      // أ) تحديث كاش الذاكرة المؤقتة RAM
+      if (typeof _memUserProgress === 'object' && _memUserProgress !== null) {
+        _memUserProgress.streak_days = safeStreak;
+        _memUserProgress.last_active_date = safeDate;
+      }
+
+      // ب) تحديث كائن التقدم في localStorage
+      try {
+        const userKey = uid ? `mg_coptic_progress_${uid}` : 'mg_coptic_progress';
+        const rawProg = (uid ? localStorage.getItem(userKey) : null) || localStorage.getItem('mg_coptic_progress');
+        let progObj = rawProg ? JSON.parse(rawProg) : { points: 0, hearts: 5, streak_days: 1 };
+        progObj.streak_days = safeStreak;
+        progObj.last_active_date = safeDate;
+        localStorage.setItem('mg_coptic_progress', JSON.stringify(progObj));
+        if (uid) {
+          localStorage.setItem(`mg_coptic_progress_${uid}`, JSON.stringify(progObj));
+        }
+      } catch (e) {}
+
+      // جـ) تحديث كاش خدمة GamificationService
+      try {
+        if (window.gamificationService && typeof window.gamificationService.getProgressLocal === 'function') {
+          const gProg = window.gamificationService.getProgressLocal(uid);
+          if (gProg) {
+            gProg.streak_days = safeStreak;
+            gProg.last_active_date = safeDate;
+            window.gamificationService.saveProgressLocal(gProg, uid, false);
+          }
+        }
+      } catch (e) {}
+
+      // د) تحديث جميع عدادات وأرقام الاستمرارية في واجهات التطبيق بلحظية تامة
+      const cardStreak = document.getElementById('home-card-streak');
+      if (cardStreak) cardStreak.textContent = safeStreak;
+
+      const tbStreak = document.getElementById('topbar-streak-val') || document.getElementById('streak-val');
+      if (tbStreak) tbStreak.textContent = safeStreak;
+
+      const homeStatStreak = document.getElementById('home-stat-streak');
+      if (homeStatStreak) homeStatStreak.textContent = safeStreak + ' يوم';
+
+      // هـ) المزامنة مع قاعدة بيانات Supabase (في الخلفية بدون أي تعطيل للواجهة)
+      if (window.sb && uid && uid !== 'guest') {
+        window.sb.from('user_progress').update({
+          streak_days: safeStreak,
+          last_active_date: safeDate
+        }).eq('user_id', uid).then(() => {}).catch(() => {});
+      }
+    }
+
+    // 5. فحص ومزامنة دورة أيام الاستمرارية المعتمدة
+    function checkAndSyncStreakCycle(triggerSource = 'view') {
+      const todayStr = getLocalCalendarDateStr();
       let data = getStreakCycleData();
       const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { streak_days: 1 };
-      const generalStreak = prog.streak_days || 1;
+      const fallbackStreak = Math.max(1, parseInt(prog?.streak_days, 10) || 1);
 
       if (!data) {
+        // أول مرة يتم فيها تشغيل دورة الاستمرارية
         data = {
-          streakDays: generalStreak,
-          cycleDay: ((generalStreak - 1) % 7) + 1,
+          streakDays: fallbackStreak,
+          cycleDay: ((fallbackStreak - 1) % 7) + 1,
           lastDate: todayStr,
           claimedMilestones: []
         };
       } else {
-        if (data.lastDate === todayStr) {
-          // Already logged in today, keep cycleDay aligned with progress
-          if (data.streakDays !== generalStreak) {
-            data.streakDays = generalStreak;
-            data.cycleDay = ((generalStreak - 1) % 7) + 1;
-          }
-        } else if (data.lastDate === yesterdayStr) {
-          // Consecutive day!
+        data.streakDays = Math.max(1, parseInt(data.streakDays, 10) || fallbackStreak || 1);
+        const lastDate = data.lastDate;
+        const diff = getCalendarDaysDiff(lastDate, todayStr);
+
+        if (diff === null || diff === 0) {
+          // نشاط في نفس اليوم الحالي: الحفاظ على الستريك المحقق اليوم وتوحيده عبر كل المنصة
+          data.lastDate = todayStr;
+          data.cycleDay = Math.min(7, Math.max(1, ((data.streakDays - 1) % 7) + 1));
+        } else if (diff === 1) {
+          // يوم متتالٍ جديد! (اليوم التالي مباشرة) -> زيادة أيام الاستمرارية بمقدار 1
           data.streakDays = (data.streakDays || 0) + 1;
           data.cycleDay = ((data.streakDays - 1) % 7) + 1;
           data.lastDate = todayStr;
-        } else {
-          // Streak broken (missed more than 1 day)
-          data.streakDays = generalStreak > 0 ? generalStreak : 1;
-          data.cycleDay = ((data.streakDays - 1) % 7) + 1;
+        } else if (diff > 1) {
+          // انقطاع الاستمرارية (فات يوم أو أكثر دون نشاط) -> إعادة ضبط البداية ليوم 1 جديد اليوم
+          data.streakDays = 1;
+          data.cycleDay = 1;
+          data.lastDate = todayStr;
+        } else if (diff < 0) {
+          // تغير في ساعة الجهاز أو تاريخ مستقبلي
           data.lastDate = todayStr;
         }
       }
 
       saveStreakCycleData(data);
+      syncStreakEverywhere(data.streakDays, data.lastDate);
       renderStreakWeeklyUI(data);
       return data;
     }
 
+    // تسجيل نشاط تعليمي يضمن احتساب يوم الاستمرارية
+    function recordStreakActivity(source = 'activity') {
+      return checkAndSyncStreakCycle(source);
+    }
+    window.recordStreakActivity = recordStreakActivity;
+
+    // دالة فحص وتجربة لأي عدد أيام استمرارية
+    window.debugSetStreakDays = function(days) {
+      const safeDays = Math.max(1, parseInt(days, 10) || 1);
+      const todayStr = getLocalCalendarDateStr();
+      const data = {
+        streakDays: safeDays,
+        cycleDay: ((safeDays - 1) % 7) + 1,
+        lastDate: todayStr,
+        claimedMilestones: []
+      };
+      saveStreakCycleData(data);
+      syncStreakEverywhere(safeDays, todayStr);
+      renderStreakWeeklyUI(data);
+      console.log(`[Streak] تم تحديث أيام الاستمرارية تجريبياً إلى: ${safeDays} يوم (يوم الدورة: ${data.cycleDay})`);
+      return data;
+    };
+
+    // 6. رسم واجهة كارت تحدي أيام الاستمرارية السبعة
     function renderStreakWeeklyUI(data) {
       if (!data) {
         try { data = getStreakCycleData(); } catch(e) {}
       }
       if (!data) {
         const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { streak_days: 1 };
-        const s = prog.streak_days || 1;
+        const s = Math.max(1, parseInt(prog?.streak_days, 10) || 1);
         data = {
           streakDays: s,
           cycleDay: ((s - 1) % 7) + 1,
-          lastDate: new Date().toISOString().split('T')[0],
+          lastDate: getLocalCalendarDateStr(),
           claimedMilestones: []
         };
       }
@@ -14988,19 +15989,19 @@
       const milestoneKey = `cycle_${Math.floor((streakDays - 1) / 7)}_${data.lastDate}`;
       const isClaimed = (data.claimedMilestones || []).includes(milestoneKey);
 
-      // Elements
+      // العناصر المراد تحديثها في الكارت
       const titleEl = document.getElementById('duo-streak-title');
       const descEl = document.getElementById('duo-streak-desc');
       const daysBarEl = document.getElementById('duo-streak-days-bar');
       const claimBtn = document.getElementById('duo-claim-reward-btn');
       const hintEl = document.getElementById('duo-streak-reward-hint');
 
-      // Title formatting in Egyptian Arabic
+      // صياغة اسم وعنوان أيام الاستمرارية بدقة واحترافية
       if (titleEl) {
-        let label = 'استمراريتك يوم واحد!';
-        if (streakDays === 2) label = 'استمراريتك يومين!';
-        else if (streakDays >= 3 && streakDays <= 10) label = `استمراريتك ${streakDays} أيام!`;
-        else if (streakDays > 10) label = `استمراريتك ${streakDays} يوم!`;
+        let label = 'أيام الاستمرارية: يوم واحد!';
+        if (streakDays === 2) label = 'أيام الاستمرارية: يومين!';
+        else if (streakDays >= 3 && streakDays <= 10) label = `أيام الاستمرارية: ${streakDays} أيام!`;
+        else if (streakDays > 10) label = `أيام الاستمرارية: ${streakDays} يوم!`;
         titleEl.innerHTML = `<span>${label}</span><span class="duo-streak-badge">تحدي الـ ٧ أيام</span>`;
       }
 
@@ -15014,7 +16015,7 @@
         }
       }
 
-      // Eastern Arabic Numerals
+      // أرقام الأيام باللغة العربية (الأرقام المشرقية)
       const easternNums = ['١', '٢', '٣', '٤', '٥', '٦', '٧'];
 
       if (daysBarEl) {
@@ -15031,18 +16032,18 @@
 
           let circleContent = '';
           if (isCompleted) {
-            // Completed days: filled circle with checkmark
+            // أيام مكتملة: علامة صح SVG نقية
             circleContent = `
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             `;
           } else {
-            // Upcoming/locked days: outlined/muted circle showing Eastern Arabic day number
+            // أيام قادمة: رقم اليوم
             circleContent = `<span class="duo-day-num">${easternNums[dayNum - 1]}</span>`;
           }
 
-          // Day 7 specifically: attached small reward icon directly attached to the day marker
+          // اليوم السابع: وسام النجمة الذهبية للمكافأة
           let rewardBadge = '';
           if (isDay7) {
             rewardBadge = `
@@ -15067,14 +16068,14 @@
         daysBarEl.innerHTML = barHtml;
       }
 
-      // Update connected progress rail fill
+      // تحديث شريط التقدم الرابط
       const trackFillEl = document.getElementById('duo-streak-track-fill');
       if (trackFillEl) {
         const fillPct = Math.round(((cycleDay - 1) / 6) * 100);
         trackFillEl.style.width = `${Math.min(100, Math.max(0, fillPct))}%`;
       }
 
-      // Claim button and hint
+      // شريط استلام الجائزة أو الأيام المتبقية
       if (cycleDay === 7 && !isClaimed) {
         if (claimBtn) claimBtn.style.display = 'inline-flex';
         if (hintEl) hintEl.style.display = 'none';
@@ -15124,15 +16125,14 @@
 
       const uid = (typeof getAuthUserId === 'function' ? getAuthUserId() : null) || (window.currentAuthUser ? window.currentAuthUser.id : null);
 
-      // Award +10 XP and Refill Hearts to max (5/5)
+      // منح +10 XP وشحن القلوب بالكامل (5/5)
       try {
         if (window.gamificationService && typeof window.gamificationService.updateProgress === 'function' && uid) {
           await window.gamificationService.updateProgress(uid, {
             addPoints: 10,
-            addHearts: 5 // Refills hearts
+            addHearts: 5
           });
         } else {
-          // Direct fallback
           const prog = (typeof getUserProgressData === 'function') ? getUserProgressData() : { points: 0, hearts: 5 };
           prog.points = (prog.points || 0) + 10;
           prog.total_points = (prog.total_points || 0) + 10;
@@ -15146,14 +16146,14 @@
         if (typeof window.invalidateMGCache === 'function') window.invalidateMGCache();
         if (typeof hydrateHomeFromCacheSync === 'function') hydrateHomeFromCacheSync();
 
-        // Play fanfare sound
+        // صوت تشجيعي
         try {
           if (window.gamificationService && typeof window.gamificationService.playFanfare === 'function') {
             window.gamificationService.playFanfare();
           }
         } catch(e) {}
 
-        // Confetti / Celebration modal
+        // رسالة الاحتفال
         if (typeof Swal !== 'undefined') {
           Swal.fire({
             title: 'مبروك يا بطل الاستمرارية! 🌟',
@@ -15162,7 +16162,7 @@
                 عاش يا وحش! كملت <strong>٧ أيام ورا بعض</strong> في تعلّم القبطي!<br>
                 <div style="display:flex; justify-content:center; gap:12px; margin:16px 0; flex-wrap:wrap;">
                   <div style="background:#FFF9E6; border:1.5px solid #E6CA65; border-radius:14px; padding:10px 18px; font-weight:900; color:#8C5E0E; display:flex; align-items:center; gap:6px;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#F59E0B"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                     <span>+10 نقاط XP</span>
                   </div>
                   <div style="background:#FDF2F4; border:1.5px solid #F5C6CB; border-radius:14px; padding:10px 18px; font-weight:900; color:#7D1D35; display:flex; align-items:center; gap:6px;">
@@ -15174,7 +16174,7 @@
               </div>
             `,
             icon: 'success',
-            confirmButtonText: 'حبيبي، مكمّل بحماس! 🔥',
+            confirmButtonText: 'مكمّل بحماس! 🔥',
             confirmButtonColor: '#6B1530',
             backdrop: 'rgba(58, 8, 26, 0.45)'
           });
@@ -15189,10 +16189,11 @@
       }
     }
 
-    // Attach to global window scope
+    // إتاحة الدوال على النطاق العام window
     window.checkAndSyncStreakCycle = checkAndSyncStreakCycle;
     window.renderStreakWeeklyUI = renderStreakWeeklyUI;
     window.claimWeeklyStreakReward = claimWeeklyStreakReward;
+    window.syncStreakEverywhere = syncStreakEverywhere;
 
     function syncUserProfileUI() {
       const user = currentAuthUser || getUserProfileData();
@@ -15226,7 +16227,18 @@
 
       // 2. Homepage learning card stats
       const totalXP = prog.points ?? prog.total_points ?? 0;
-      const streakDays = prog.streak_days ?? 1;
+      const streakDays = (function(){
+        try {
+          if (typeof getStreakCycleStorageKey === 'function') {
+            const rawCycle = localStorage.getItem(getStreakCycleStorageKey());
+            if (rawCycle) {
+              const parsed = JSON.parse(rawCycle);
+              if (parsed && parsed.streakDays) return Math.max(1, parsed.streakDays);
+            }
+          }
+        } catch(_) {}
+        return prog.streak_days ?? 1;
+      })();
 
       const cardStreak = document.getElementById('home-card-streak');
       if (cardStreak) cardStreak.textContent = streakDays;
@@ -15311,6 +16323,17 @@
             sFallback.innerHTML = '<span style="font-size:2.2rem;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;color:#FFFFFF;width:100%;height:100%;">' + initial + '</span>';
           }
         }
+
+        // مزامنة اسم الطالب في حقل الاقتراحات بدلاً من الإيميل
+        try {
+          const suggContact = document.getElementById('sugg-contact-input');
+          if (suggContact) {
+            const studentName = (user.full_name && user.full_name.trim()) || (typeof getStudentDisplayName === 'function' ? getStudentDisplayName() : '');
+            if (studentName && (!suggContact.value || (user.email && suggContact.value === user.email))) {
+              suggContact.value = studentName;
+            }
+          }
+        } catch (_) {}
       } else {
         if (accDetails) accDetails.style.display = 'none';
         if (accGuest) accGuest.style.display = 'block';
@@ -15533,7 +16556,7 @@
               </div>
               <div class="podium-name" title="${second.full_name || ''}">${second.full_name || 'متعلم قبطي'}</div>
               <div class="podium-xp">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>${second.points || 0} XP</span>
               </div>
               <div class="podium-step silver-step">
@@ -15565,7 +16588,7 @@
               </div>
               <div class="podium-name" title="${first.full_name || ''}">${first.full_name || 'متعلم قبطي'}</div>
               <div class="podium-xp" style="background:#FFF9E6; border-color:#E6CA65; color:#8C5E0E;">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>${first.points || 0} XP</span>
               </div>
               <div class="podium-step gold-step">
@@ -15592,7 +16615,7 @@
               </div>
               <div class="podium-name" title="${third.full_name || ''}">${third.full_name || 'متعلم قبطي'}</div>
               <div class="podium-xp">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>${third.points || 0} XP</span>
               </div>
               <div class="podium-step bronze-step">
@@ -15622,7 +16645,7 @@
                 ${isMe ? '<span class="lb-you-badge">أنت</span>' : ''}
               </span>
               <span class="lb-xp">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.85;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" style="opacity:0.85;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <span>${item.points || 0} XP</span>
               </span>
             </div>
@@ -15684,7 +16707,7 @@
           }
           if (rXp) {
             rXp.innerHTML = `
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFE8A3"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="#FFE8A3"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               <span>${myProg.points || myProg.total_points || 0} XP</span>
             `;
           }
@@ -20269,6 +21292,8 @@
               const gainedVal = res?.added_xp ?? (isReplayingLesson ? 0 : (sessionXpEarned > 0 ? sessionXpEarned : fullConfiguredXp));
               vXp.textContent = isReplayingLesson ? 'مراجعة (0 XP)' : `+${gainedVal} XP`;
             }
+            if (typeof recordStreakActivity === 'function') recordStreakActivity('lesson');
+            else if (typeof checkAndSyncStreakCycle === 'function') checkAndSyncStreakCycle('lesson');
             if (typeof refreshStatsDisplay === 'function') refreshStatsDisplay();
             if (typeof syncHomeLearningProgress === 'function') syncHomeLearningProgress();
           }).catch(e => {
